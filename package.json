@@ -1,0 +1,24 @@
+{
+  "name": "claude-kit",
+  "version": "2.0.0",
+  "description": "AI 거버넌스 밀키트. TDD 강제 + Hexagonal + Clean Architecture + Rich Domain Model. 도메인 분리 지원.",
+  "scripts": {
+    "postinstall": "node scripts/setup.js"
+  },
+  "files": [
+    "src/",
+    "scripts/",
+    "mcp-servers.json"
+  ],
+  "keywords": [
+    "claude-code",
+    "tdd",
+    "governance",
+    "hexagonal-architecture",
+    "domain-separation"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "license": "MIT"
+}

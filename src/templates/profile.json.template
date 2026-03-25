@@ -1,0 +1,17 @@
+{
+  "project": {
+    "name": "{{PROJECT_NAME}}",
+    "description": "{{PROJECT_DESCRIPTION}}",
+    "type": "monorepo"
+  },
+  "domains": ["core", "dev"],
+  "monorepo": {
+    "packageManager": "{{PACKAGE_MANAGER}}",
+    "framework": "turborepo"
+  },
+  "stack": {
+    "language": "typescript",
+    "testRunner": "vitest",
+    "architecture": "hexagonal"
+  }
+}
