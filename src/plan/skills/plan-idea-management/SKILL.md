@@ -11,7 +11,7 @@ description: >
 ## Prerequisites
 
 - `.plans/ideas/` 디렉토리가 존재할 것
-- `.plans/ideas/backlog.md` 파일이 초기화되어 있을 것 (없으면 자동 생성)
+- `.plans/ideas/backlog.md` 인덱스 파일이 초기화되어 있을 것 (없으면 자동 생성)
 
 ## Workflow Steps
 
@@ -21,9 +21,12 @@ description: >
 4. **태그 추천**: 도메인, 기술 스택, 영향 범위 기반 태그 자동 추천
 5. **유사도 분석**: 기존 아이디어와 키워드 매칭으로 중복/유사 탐지
 6. **ID 채번**: IDEA-{NNN} 형식으로 순차 채번
-7. **백로그 등록**: `backlog.md`에 항목 추가
+7. **개별 파일 생성**: `.plans/ideas/IDEA-{NNN}.md` 파일 생성
+8. **인덱스 업데이트**: `backlog.md` 인덱스 테이블에 행 추가
 
 ## 아이디어 문서 구조
+
+각 아이디어는 `.plans/ideas/IDEA-{NNN}.md` 개별 파일로 저장됩니다:
 
 ```markdown
 ### IDEA-{NNN}: {제목}
@@ -42,6 +45,17 @@ description: >
 - {IDEA-XXX 또는 "없음"}
 ```
 
+`backlog.md`는 인덱스 테이블로만 사용됩니다:
+
+```markdown
+# Idea Backlog
+> 마지막 채번 ID: IDEA-{NNN}
+
+| ID | 제목 | 카테고리 | 상태 | 등록일 |
+|---|---|---|---|---|
+| IDEA-001 | 검색 기능 개선 | improvement | draft | 2026-03-25 |
+```
+
 ## 상태 관리
 
 | 상태 | 설명 |
@@ -55,6 +69,7 @@ description: >
 
 ## Output Format
 
-- 파일 위치: `.plans/ideas/backlog.md`
+- 개별 파일: `.plans/ideas/IDEA-{NNN}.md`
+- 인덱스: `.plans/ideas/backlog.md`
 - ID 형식: IDEA-{NNN} (3자리 0-패딩)
 - 카테고리: feature / improvement / fix / research

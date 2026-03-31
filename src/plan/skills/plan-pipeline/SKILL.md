@@ -29,7 +29,7 @@ description: >
 
 ### P1: 아이디어 수집 (/plan-idea)
 - 입력: 자연어, 메모, 파일
-- 출력: `.plans/ideas/backlog.md` (IDEA-{NNN})
+- 출력: `.plans/ideas/IDEA-{NNN}.md` + `backlog.md` 인덱스
 - 에이전트: plan-idea-collector (sonnet)
 
 ### P2: RICE 스크리닝 (/plan-screen)

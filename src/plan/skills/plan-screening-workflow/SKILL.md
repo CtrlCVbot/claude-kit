@@ -10,7 +10,7 @@ RICE 프레임워크 기반 아이디어 스크리닝 워크플로우를 정의�
 
 ## Prerequisites
 
-- 스크리닝 대상 아이디어가 `.plans/ideas/backlog.md`에 등록되어 있을 것
+- 스크리닝 대상 아이디어가 `.plans/ideas/IDEA-{NNN}.md` 개별 파일로 존재할 것
 - 아이디어 상태가 `draft` 또는 `submitted`일 것
 
 ## Workflow Steps

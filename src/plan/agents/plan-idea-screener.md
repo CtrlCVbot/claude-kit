@@ -34,7 +34,7 @@ color: yellow
   </Constraints>
 
   <Investigation_Protocol>
-    1) 대상 아이디어 로드: `.plans/ideas/backlog.md`에서 IDEA-{NNN} 상세 읽기
+    1) 대상 아이디어 로드: `.plans/ideas/IDEA-{NNN}.md` 개별 파일에서 상세 읽기
     2) 프로젝트 컨텍스트 수집: CLAUDE.md, 아키텍처 문서, 기술 스택 정보 확인
     3) 5축 평가 수행:
        - 비즈니스 가치 (30%): 매출 영향, 비용 절감, 경쟁 우위
