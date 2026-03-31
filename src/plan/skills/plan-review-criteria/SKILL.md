@@ -76,7 +76,7 @@ description: >
 
 | PCC | 검증 | 시점 | 비교 대상 | 항목 수 |
 |---|---|---|---|---|
-| PCC-01 | Idea ↔ Screen | /plan-screen 후 | 모든 아이디어가 스크리닝됨 | 3 |
+| PCC-01 | Idea ↔ Screen | /plan-screen 후 | 모든 아이디어가 스크리닝됨 + 승인 상태 확인 | 4 |
 | PCC-02 | Screen ↔ Feature | /plan-draft 후 | 승인 아이디어에 기획 존재 | 3 |
 | PCC-03 | Feature ↔ PRD | /plan-prd 후 | 기획 범위가 PRD에 반영 | 5 |
 | PCC-04 | PRD ↔ Wireframe | /plan-wireframe 후 | PRD 화면에 와이어프레임 존재 | 4 |

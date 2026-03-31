@@ -29,14 +29,15 @@ description: >
 
 ### P1: 아이디어 수집 (/plan-idea)
 - 입력: 자연어, 메모, 파일
-- 출력: `.plans/ideas/IDEA-{NNN}.md` + `backlog.md` 인덱스
+- 출력: `.plans/ideas/00-inbox/IDEA-{YYYYMMDD}-{NNN}.md` + `backlog.md` 인덱스
 - 에이전트: plan-idea-collector (sonnet)
 
-### P2: RICE 스크리닝 (/plan-screen)
-- 입력: Backlog / IDEA ID
-- 출력: `.plans/ideas/screening-matrix.md`
+### P2: RICE 스크리닝 + 승인 (/plan-screen)
+- 입력: IDEA ID (00-inbox/ 또는 10-screening/)
+- 출력: `.plans/ideas/10-screening/SCREENING-{YYYYMMDD}-{NNN}.md` + `screening-matrix.md` 인덱스
 - 에이전트: plan-idea-screener (sonnet)
-- Human Checkpoint: 점수 확인/오버라이드
+- Human Checkpoint 1: 점수 확인/오버라이드
+- Human Checkpoint 2: **승인 게이트** — 승인 시 `20-approved/`로 이동, 보류/반려 시 `90-archive/`로 이동
 
 ### P3: 1차 기능 기획 (/plan-draft)
 - 입력: 승인된 IDEA ID

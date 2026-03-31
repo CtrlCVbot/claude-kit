@@ -10,7 +10,7 @@ description: >
 
 ## Prerequisites
 
-- `.plans/ideas/` 디렉토리가 존재할 것
+- `.plans/ideas/` 디렉토리와 하위 폴더(`00-inbox/`, `10-screening/`, `20-approved/`, `90-archive/`)가 존재할 것
 - `.plans/ideas/backlog.md` 인덱스 파일이 초기화되어 있을 것 (없으면 자동 생성)
 
 ## Workflow Steps
@@ -20,19 +20,31 @@ description: >
 3. **카테고리 분류**: feature / improvement / fix / research 중 자동 판별
 4. **태그 추천**: 도메인, 기술 스택, 영향 범위 기반 태그 자동 추천
 5. **유사도 분석**: 기존 아이디어와 키워드 매칭으로 중복/유사 탐지
-6. **ID 채번**: IDEA-{NNN} 형식으로 순차 채번
-7. **개별 파일 생성**: `.plans/ideas/IDEA-{NNN}.md` 파일 생성
-8. **인덱스 업데이트**: `backlog.md` 인덱스 테이블에 행 추가
+6. **ID 채번**: `IDEA-{YYYYMMDD}-{NNN}` 형식으로 채번 (날짜 + 일별 순번)
+7. **개별 파일 생성**: `.plans/ideas/00-inbox/IDEA-{YYYYMMDD}-{NNN}.md` 파일 생성
+8. **인덱스 업데이트**: `backlog.md` 인덱스 테이블에 행 추가 (위치 컬럼 포함)
 
 ## 아이디어 문서 구조
 
-각 아이디어는 `.plans/ideas/IDEA-{NNN}.md` 개별 파일로 저장됩니다:
+각 아이디어는 상태별 폴더에 개별 파일로 저장됩니다:
+
+```
+.plans/ideas/
+  00-inbox/              ← 신규 아이디어 (new)
+  10-screening/          ← 스크리닝 중/완료 대기 (screening/screened)
+  20-approved/           ← 사용자 승인 완료 (approved) → /plan-draft 가능
+  90-archive/            ← 반려/보류 (rejected/on-hold)
+  backlog.md             ← 전체 인덱스
+  screening-matrix.md    ← 스크리닝 인덱스
+```
+
+### 아이디어 파일 형식 (`IDEA-{YYYYMMDD}-{NNN}.md`)
 
 ```markdown
-### IDEA-{NNN}: {제목}
+### IDEA-{YYYYMMDD}-{NNN}: {제목}
 - **카테고리**: {feature|improvement|fix|research}
 - **태그**: {tag1}, {tag2}
-- **상태**: draft
+- **상태**: {new|screening|screened|approved|on-hold|rejected}
 - **등록일**: {YYYY-MM-DD}
 
 #### 설명
@@ -42,34 +54,45 @@ description: >
 {예상 가치}
 
 #### 관련 아이디어
-- {IDEA-XXX 또는 "없음"}
+- {IDEA-XXXXXXXX-XXX 또는 "없음"}
 ```
 
-`backlog.md`는 인덱스 테이블로만 사용됩니다:
+### backlog.md 인덱스 형식
 
 ```markdown
 # Idea Backlog
-> 마지막 채번 ID: IDEA-{NNN}
+> 마지막 채번: IDEA-{YYYYMMDD}-{NNN}
 
-| ID | 제목 | 카테고리 | 상태 | 등록일 |
-|---|---|---|---|---|
-| IDEA-001 | 검색 기능 개선 | improvement | draft | 2026-03-25 |
+| ID | 제목 | 카테고리 | 상태 | 위치 | 등록일 |
+|---|---|---|---|---|---|
+| IDEA-20260325-001 | 검색 기능 개선 | improvement | new | 00-inbox | 2026-03-25 |
 ```
+
+### 폴더 전환 규칙
+
+| 이벤트 | 이동 | 상태 전환 |
+|--------|------|----------|
+| `/plan-idea` 등록 | → `00-inbox/` | `new` |
+| `/plan-screen` 시작 | `00-inbox/` → `10-screening/` | `screening` |
+| 스크리닝 완료 | `10-screening/`에 유지 | `screened` |
+| 사용자 승인 | `10-screening/` → `20-approved/` | `approved` |
+| 사용자 보류/반려 | `10-screening/` → `90-archive/` | `on-hold` / `rejected` |
+| 보류 → 재스크리닝 | `90-archive/` → `10-screening/` | `screening` |
 
 ## 상태 관리
 
-| 상태 | 설명 |
-|------|------|
-| draft | 초안 등록 |
-| submitted | 스크리닝 대기 |
-| screening | 스크리닝 진행 중 |
-| approved | 승인 (Go 판정) |
-| rejected | 반려 (Kill 판정) |
-| on-hold | 보류 (Hold 판정) |
+| 상태 | 설명 | 폴더 |
+|------|------|------|
+| new | 신규 등록 | `00-inbox/` |
+| screening | 스크리닝 진행 중 | `10-screening/` |
+| screened | 스크리닝 완료, 승인 대기 | `10-screening/` |
+| approved | 사용자 명시적 승인 | `20-approved/` |
+| rejected | 반려 | `90-archive/` |
+| on-hold | 보류 | `90-archive/` |
 
 ## Output Format
 
-- 개별 파일: `.plans/ideas/IDEA-{NNN}.md`
+- 개별 파일: `.plans/ideas/{폴더}/IDEA-{YYYYMMDD}-{NNN}.md`
 - 인덱스: `.plans/ideas/backlog.md`
-- ID 형식: IDEA-{NNN} (3자리 0-패딩)
+- ID 형식: `IDEA-{YYYYMMDD}-{NNN}` (날짜 + 일별 순번)
 - 카테고리: feature / improvement / fix / research
