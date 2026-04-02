@@ -1,8 +1,9 @@
-# 기획 파이프라인 (P1~P7)
+# 기획 파이프라인 (P1~P8)
 
-아이디어 발굴부터 개발 핸드오프까지의 End-to-End 기획 파이프라인.
-7단계 파이프라인 + /plan-review 리뷰 루프 + PCC 일관성 검증 5종으로
-기획 산출물의 품질과 일관성을 보장한다.
+아이디어 발굴부터 개발 핸드오프, 아카이브까지의 End-to-End 기획 파이프라인.
+P1~P7 기획 + P8 아카이브 + /plan-review 리뷰 루프 + PCC 일관성 검증 5종으로
+기획 산출물의 품질과 일관성을 보장한다. 완료된 기능은 P8에서 아카이빙하고,
+개선요청 시 `/plan-improve`로 파이프라인에 선택적 재진입한다.
 
 ---
 
@@ -150,6 +151,12 @@ PCC(Planning Consistency Check)는 파이프라인의 **단계 간 일관성**�
     {slug}/
   stitch/               # P6: Stitch 디자인
     {slug}/
+  archive/              # P8: 완료 기능 아카이브
+    index.md            # 아카이브 인덱스
+    {slug}/
+      ARCHIVE-{KEY}.md  # 통합 번들 (전체 산출물 인라인)
+      sources/          # 원본 파일 보관
+      improvements/     # 개선요청 (IMP-{KEY}-{NNN}.md)
 ```
 
 ---
@@ -165,3 +172,4 @@ PCC(Planning Consistency Check)는 파이프라인의 **단계 간 일관성**�
 | `docs/06-plan-wireframe.md` | P5: `/plan-wireframe` 와이어프레임 상세 |
 | `docs/07-plan-stitch.md` | P6: `/plan-stitch` Stitch 디자인 상세 |
 | `docs/08-plan-bridge.md` | P7: `/plan-bridge` 기획->개발 핸드오프 상세 |
+| `docs/11-archive-improve.md` | P8: `/plan-archive` 아카이브 + `/plan-improve` 개선요청 상세 |
