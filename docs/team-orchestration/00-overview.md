@@ -71,6 +71,7 @@ Blueprint source spec
 
 | # | 문서 | 설명 |
 |---|------|------|
+| -- | [QUICKSTART.md](./QUICKSTART.md) | **실행 가이드: 팀 AI 시작하기** |
 | 00 | **이 문서** | 개요, 불변 계약, 설계 원칙 |
 | 01 | [01-orchestration-input-model.md](./01-orchestration-input-model.md) | 입력 계약: Feature Registry 정의 |
 | 02 | [02-operating-model.md](./02-operating-model.md) | 운영 모델: Team Lead / Feature Agent / Specialist 역할 분리 |
@@ -84,9 +85,10 @@ Blueprint source spec
 
 | 독자 | 순서 |
 |------|------|
+| 처음 사용 | **QUICKSTART** → 06 |
 | 전체 이해 | 00 → 01 → 02 → 03 → 04 → 05 → 07 |
 | 구현 담당자 | 00 → 02 → 03 → 04 → 05 → 07 |
-| 파일럿 운영자 | 00 → 01 → 06 |
+| 파일럿 운영자 | QUICKSTART → 00 → 01 → 06 |
 
 ---
 
