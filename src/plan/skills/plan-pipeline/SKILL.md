@@ -82,6 +82,32 @@ description: >
 - P4, P5 완료 시 자동으로 `/plan-review` 호출
 - 수동 호출: `/plan-review <path> --type={stage}`
 
+### P8: 아카이브 (/plan-archive) [선택]
+
+기능 개발 완료 후 산출물을 아카이빙한다.
+
+- 입력: 완료된 기능의 슬러그
+- 출력: `.plans/archive/{slug}/ARCHIVE-{KEY}.md` 번들 + 원본 이동
+- 조건: P1~P7 + Dev 모두 완료 상태
+- 스킬: plan-archive-workflow
+
+```
+P1 → P2 → P3 → [P4] → P5 → [P6] → P7 → Dev → [P8 Archive]
+                                                      │
+                                                      ▼
+                                              /plan-improve
+                                              (개선요청 루프)
+```
+
+### 개선요청 루프 (/plan-improve)
+
+아카이브된 기능에 대한 개선요청을 처리한다.
+변경 규모에 따라 파이프라인 선택적 재진입:
+- 경량 변경 → Dev only
+- 중간 변경 → P5/P7 재진입
+- 대규모 변경 → P3 재진입
+- 근본적 재설계 → P1 새 Idea
+
 ## 상태 추적
 
 `.plans/pipeline-status.json`에 각 Feature의 파이프라인 진행 상태를 기록합니다.
@@ -99,6 +125,25 @@ description: >
   }
 }
 ```
+
+Archived 기능은 `currentStage: "archived"`로 표시되며, `archivePath` 필드가 추가됩니다:
+
+```json
+{
+  "feature-slug": {
+    "currentStage": "archived",
+    "archivePath": ".plans/archive/{slug}/ARCHIVE-{KEY}.md",
+    "improvements": [],
+    "stages": { "...": "..." }
+  }
+}
+```
+
+## 상태 표시
+
+파이프라인 상태 조회 시:
+- **Active 기능**: P1~P7 + Dev 단계별 진행 상태 표시 (기존과 동일)
+- **Archived 기능**: 별도 "Archived" 섹션에 표시 (번들 경로 + 개선요청 수)
 
 ## Output Format
 

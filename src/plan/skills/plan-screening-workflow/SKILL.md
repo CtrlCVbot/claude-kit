@@ -59,6 +59,15 @@ Standard로 판정되는 6개 트리거 (하나라도 해당 시):
 5. 2개 이상 도메인 영향
 6. 예상 구현 기간 1주 이상
 
+## Archived 상태 처리
+
+`screening-matrix.md`에서 상태가 `archived`인 항목은:
+- 스크리닝 대상에서 제외
+- 조회 시 별도 "Archived" 섹션에 표시
+- 파일 링크는 아카이브 번들 경로를 가리킴
+
+`/plan-archive` 실행 시 `screening-matrix.md`의 해당 항목 경로가 자동으로 아카이브 경로로 갱신된다.
+
 ## Output Format
 
 - 개별 파일: `.plans/ideas/10-screening/SCREENING-{YYYYMMDD}-{NNN}.md`

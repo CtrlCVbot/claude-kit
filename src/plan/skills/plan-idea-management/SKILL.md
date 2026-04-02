@@ -90,6 +90,30 @@ description: >
 | rejected | 반려 | `90-archive/` |
 | on-hold | 보류 | `90-archive/` |
 
+## 개선요청 라우팅
+
+새 아이디어 등록 시, 카테고리가 `improvement`이고 대상 기능이 이미 아카이브되어 있으면:
+
+1. `.plans/archive/index.md`에서 대상 슬러그 확인
+2. 아카이브 존재 시 → `/plan-improve {slug} "제목"` 안내
+3. 아카이브 미존재 시 → 일반 IDEA 등록 진행
+
+이렇게 하면 완료된 기능에 대한 개선요청이 새 IDEA가 아닌 기존 아카이브의 improvement으로 자연스럽게 흘러간다.
+
+## 경로 탐색 확장 (Archive Fallback)
+
+IDEA 파일 탐색 시 active + archive 양쪽을 탐색한다:
+
+1. 먼저 기존 active 경로에서 탐색 (`.plans/ideas/`)
+2. 없으면 archive 경로에서 탐색 (`.plans/archive/*/sources/`)
+3. 둘 다 없으면 "파일 없음" 에러
+
+## 폴더 전환 규칙 (확장)
+
+| 이벤트 | 이동 | 상태 전환 |
+|--------|------|----------|
+| `/plan-archive` 아카이빙 | `20-approved/` → `archive/{slug}/sources/` | `archived` |
+
 ## Output Format
 
 - 개별 파일: `.plans/ideas/{폴더}/IDEA-{YYYYMMDD}-{NNN}.md`
