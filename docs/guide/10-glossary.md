@@ -13,7 +13,7 @@
 | PDC | PRD-Document Consistency. PRD와 Feature Overview 일치 검증 |
 | AIR | Artifact Integrity Review. Phase A 산출물 무결성 검토 |
 | DPC | Document-Package Consistency. Overview와 Feature Package 일치 검증 |
-| DVC | Document-Verification Consistency. Package와 구현 코드 일치 검증 |
+| DVC | Document-Verification Consistency. Package와 구현 코드 일치 검증 (Phase E 6항목). 파이프라인 통합 시 PCC 5종 + Dev 4종 = 전체 9종 검증 |
 | PRD | Product Requirements Document. 10개 섹션으로 구성된 요구사항 정의서 |
 | Lite / Standard | 기능 규모 판정. Lite는 단일 파일 기획으로 종료, Standard는 전체 파이프라인 수행 |
 | Go / Hold / Kill | 스크리닝 판정. Go(70+점)=실행, Hold(40-69)=보류, Kill(<40)=폐기 |
@@ -162,7 +162,7 @@ new → screening → screened → approved → (P3~P7) → dev
 |-------|------|------|
 | P | Planning | 기획 파이프라인 7단계 (P1 Idea에서 P7 Bridge) |
 | A | Artifact | Feature Overview 생성 + PDC/AIR 검증 |
-| B | Blueprint | Human Review -- Overview 승인/수정/거부 |
+| B | Human Review | Overview 승인/수정/거부 |
 | C | Code | Feature Package 생성 + DPC 검증 |
 | D | Delivery | TDD 기반 구현 + Quality Gate |
 | E | Evaluate | DVC 검증 + 테스트 품질 확인 + 커밋 |

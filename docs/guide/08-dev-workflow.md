@@ -14,7 +14,7 @@ Phase P (기획)                    Phase A~E (개발)
 PRD (10-approved/)  ─────>  A: Feature Package 생성
                                       |
                                       v
-                               B: Human Review (승인/수정)
+                               B: Human Review (승인/수정/거부)
                                       |
                                       v
                                C: Package 생성 (11개 문서)
@@ -72,7 +72,7 @@ A6.5: AIR 검증 (Phase A 산출물 무결성)
 
 ---
 
-## Phase B: 코드 리뷰
+## Phase B: Human Review
 
 사람이 Feature Overview를 리뷰하고 승인/수정을 결정하는 단계다.
 
@@ -193,7 +193,7 @@ pending --> in_progress --> done
 
 ### `/dev-verify` 검증
 
-DVC(Development Verification Check) 6개 항목을 검증한다:
+`/dev-verify`는 DVC 6항목 검증을 수행한다:
 
 | ID | 검증 항목 | 심각도 |
 |----|----------|-------|
@@ -319,4 +319,5 @@ Phase E: DVC (전체 TASK 완료 후)
 - [06-dev-handoff.md](./06-dev-handoff.md) -- 기획에서 개발로의 핸드오프
 - [12-blueprint-fast-track.md](./12-blueprint-fast-track.md) -- 블루프린트 Fast-Track (출처 무관, approved PRD = execution SSOT)
 - 09-architecture (앱 구조 + Multi-App 상세)
+- [11-archive-improve.md](./11-archive-improve.md) -- 개발 완료 후 선택적 Phase P8 (`/plan-archive`)
 - [00-overview.md](./00-overview.md) -- claude-kit 전체 개요

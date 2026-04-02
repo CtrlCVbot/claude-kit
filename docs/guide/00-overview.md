@@ -20,7 +20,7 @@ Phase A~E (개발 워크플로우):                                             
                                                                                        ↓
   /dev-feature → Human Review → Package Gen → /dev-run → /dev-verify → /dev-commit
   Feature        사람 확인       코드 생성      TDD 구현    품질 검증      커밋
-  Package 생성   + 승인          Rules 적용     자동 루프    9종 검증
+  Package 생성   + 승인          Rules 적용     자동 루프    DVC 6항목
 
 Phase P8 (아카이브 & 개선):
 
@@ -48,7 +48,7 @@ Blueprint Fast-Track (기존 설계 자산 정규화):
 | P7 | `/plan-bridge` | PRD를 `.plans/prd/10-approved/`에 배치, 개발 핸드오프 |
 | A | `/dev-feature` | 승인된 PRD로 Feature Package 생성 |
 | D | `/dev-run` | TDD 기반 자동 구현 루프 |
-| E | `/dev-verify` | 테스트 + 빌드 + 9종 일관성 검증 |
+| E | `/dev-verify` | 테스트 + 빌드 + DVC 6항목 검증 |
 | P8 | `/plan-archive` | 완료된 기능 산출물 아카이빙, 단일 번들 생성 |
 | - | `/plan-improve` | 아카이브 기능 개선요청 등록/분석/파이프라인 재진입 |
 
@@ -123,6 +123,22 @@ Standard 판정된 아이디어에 대해 10개 섹션 PRD를 작성한다. `pla
 
 Bridge가 PRD를 `10-approved/`에 배치하면, `/dev-feature`가 Feature Package를 생성하고 TDD 기반 개발 루프가 시작된다.
 
+### Step 6. 아카이브 (개발 완료 후)
+
+```
+/plan-archive realtime-filter
+```
+
+개발 완료된 기능의 산출물을 단일 번들(`ARCHIVE-{KEY}.md`)로 아카이빙한다. 원본 파일은 `archive/{slug}/sources/`로 이동.
+
+### Step 7. 개선요청 (선택)
+
+```
+/plan-improve realtime-filter "모바일 반응형 개선"
+```
+
+아카이브된 기능에 대해 개선요청을 등록하면, 영향도 분석 후 P3/P5/P7/Dev 중 적절한 지점으로 파이프라인에 재진입한다.
+
 ---
 
 ## 아이디어 폴더 구조
@@ -141,7 +157,7 @@ Bridge가 PRD를 `10-approved/`에 배치하면, `/dev-feature`가 Feature Packa
 
 ## 검증 체계
 
-기획 5종(PCC) + 개발 4종(PDC/AIR/DPC/DVC) = **총 9종 일관성 검증**이 파이프라인 전체에 걸쳐 자동 실행된다.
+기획 5종(PCC) + 개발 4종(PDC/AIR/DPC/DVC) = **총 9종 일관성 검증**이 파이프라인 전체에 걸쳐 자동 실행된다. Phase E의 `/dev-verify`는 DVC 6항목을 검증한다.
 
 ```
 Phase P:  P1─P2─[PCC-01]─P3─[PCC-02]─P4─[PCC-03]─P5─[PCC-04]─P6─[PCC-05]─P7
@@ -154,14 +170,15 @@ Phase A~E: A─[PDC]─[AIR]──B──C─[DPC]──D──[DVC]
 
 | # | 문서 | 설명 |
 |---|------|------|
-| 1 | [00-start-here](v6-claude/00-start-here.md) | 상황별 읽기 경로 안내 |
-| 2 | [01-overview](v6-claude/01-overview.md) | v6 전체 구조 지도 (Phase 1~4 상세) |
-| 3 | [PLAYBOOK](v6-claude/PLAYBOOK.md) | Phase별 실행 순서 + 체크리스트 |
-| 4 | [profile-schema](v6-claude/profile-schema.md) | profile.json v2.0 스키마 |
-| 5 | [Phase 1: 설치](v6-claude/phase-1-install/00-install-guide.md) | claude-kit v2.0 도메인 선택 설치 |
-| 6 | [Phase 2: 기획](v6-claude/phase-2-planning/00-planning-pipeline-overview.md) | 7단계 기획 파이프라인 아키텍처 |
-| 7 | [Phase 3: 개발](v6-claude/phase-3-dev-system/00-overview.md) | Vertical Slice + Dev Loop 설계 |
-| 8 | [Phase 4: 모노레포](v6-claude/phase-4-monorepo/00-monorepo-scaffolding.md) | pnpm + Turbo 스캐폴딩 |
-| 9 | [workflow-guide](v6-claude/docs/workflow-guide.md) | Phase P + Phase A~E 통합 워크플로우 상세 |
-| 10 | [workflow-cheatsheet](v6-claude/docs/workflow-cheatsheet.md) | 3분 빠른 참조 치트시트 |
-| 11 | [GLOSSARY](v6-claude/GLOSSARY.md) | 약어, 명령 매핑, 핵심 개념 사전 |
+| 1 | [01-planning-pipeline](./01-planning-pipeline.md) | 기획 파이프라인 P1~P8 전체 구조 |
+| 2 | [02-idea-management](./02-idea-management.md) | P1: 아이디어 수집 + 관리 |
+| 3 | [03-screening](./03-screening.md) | P2: RICE 스크리닝 + 승인 게이트 |
+| 4 | [04-feature-planning](./04-feature-planning.md) | P3: 1차 기능 기획 (Lite/Standard) |
+| 5 | [05-design](./05-design.md) | P5~P6: 와이어프레임 + Stitch 디자인 |
+| 6 | [06-dev-handoff](./06-dev-handoff.md) | P7: 기획->개발 핸드오프 |
+| 7 | [07-review-pcc](./07-review-pcc.md) | 리뷰 루프 + PCC 검증 |
+| 8 | [08-dev-workflow](./08-dev-workflow.md) | 개발 워크플로우 Phase A~E |
+| 9 | [09-architecture](./09-architecture.md) | 아키텍처 + 컴포넌트 카탈로그 |
+| 10 | [10-glossary](./10-glossary.md) | 용어집 + 커맨드 레퍼런스 |
+| 11 | [11-archive-improve](./11-archive-improve.md) | P8: 아카이브 + 개선요청 |
+| 12 | [12-blueprint-fast-track](./12-blueprint-fast-track.md) | 블루프린트 Fast-Track |

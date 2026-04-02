@@ -118,7 +118,6 @@ Bridge Context 파일(`03~05`)은 Phase A~E에서 읽기 전용으로 참조된�
 
 | 문서 | 설명 |
 |------|------|
-| [Planning Pipeline](01-planning-pipeline.md) | Phase P 전체 구조 |
-| [P7: Bridge 상세](v6-claude/phase-2-planning/07-plan-bridge.md) | Bridge 커맨드 명세 + 산출물 형식 |
-| [Blueprint Fast-Track](12-blueprint-fast-track.md) | 기존 설계 자산의 P3 정규화 진입 — Fast-Track 경로의 Bridge 처리 |
-| [워크플로우 통합](v6-claude/phase-2-planning/11-workflow-integration.md) | Phase P <-> A~E 전체 연결 |
+| [01-planning-pipeline.md](./01-planning-pipeline.md) | Phase P 전체 구조 |
+| [08-dev-workflow.md](./08-dev-workflow.md) | 개발 워크플로우 Phase A~E |
+| [12-blueprint-fast-track.md](./12-blueprint-fast-track.md) | 기존 설계 자산의 P3 정규화 진입 — Fast-Track 경로의 Bridge 처리 |

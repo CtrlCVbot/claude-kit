@@ -165,12 +165,10 @@ PCC(Planning Consistency Check)는 파이프라인의 **단계 간 일관성**�
 
 | 문서 | 설명 |
 |------|------|
-| `docs/02-plan-idea.md` | P1: `/plan-idea` 아이디어 수집 상세 |
-| `docs/03-plan-screen.md` | P2: `/plan-screen` RICE 스크리닝 + 승인 게이트 상세 |
-| `docs/04-plan-draft.md` | P3: `/plan-draft` 1차 기능 기획 상세 |
-| `docs/05-plan-prd.md` | P4: `/plan-prd` PRD 상세 작성 |
-| `docs/06-plan-wireframe.md` | P5: `/plan-wireframe` 와이어프레임 상세 |
-| `docs/07-plan-stitch.md` | P6: `/plan-stitch` Stitch 디자인 상세 |
-| `docs/08-plan-bridge.md` | P7: `/plan-bridge` 기획->개발 핸드오프 상세 |
-| `docs/11-archive-improve.md` | P8: `/plan-archive` 아카이브 + `/plan-improve` 개선요청 상세 |
-| `docs/12-blueprint-fast-track.md` | 블루프린트 Fast-Track: 기존 설계 자산의 P3 정규화 진입 |
+| [02-idea-management.md](./02-idea-management.md) | P1: `/plan-idea` 아이디어 수집 상세 |
+| [03-screening.md](./03-screening.md) | P2: `/plan-screen` RICE 스크리닝 + 승인 게이트 상세 |
+| [04-feature-planning.md](./04-feature-planning.md) | P3: `/plan-draft` 1차 기능 기획 상세 |
+| [05-design.md](./05-design.md) | P4~P6: PRD + 와이어프레임 + Stitch 디자인 상세 |
+| [06-dev-handoff.md](./06-dev-handoff.md) | P7: `/plan-bridge` 기획->개발 핸드오프 상세 |
+| [11-archive-improve.md](./11-archive-improve.md) | P8: `/plan-archive` 아카이브 + `/plan-improve` 개선요청 상세 |
+| [12-blueprint-fast-track.md](./12-blueprint-fast-track.md) | 블루프린트 Fast-Track: 기존 설계 자산의 P3 정규화 진입 |
