@@ -23,6 +23,19 @@
 5. **PCC-02 검증**: 승인된 아이디어에 기획이 존재하는지 확인
 6. **Human Checkpoint**: Scope 확인
 
+## Blueprint Fast-Track 진입
+
+블루프린트 기반 imported IDEA (태그: `blueprint-import`)의 경우:
+
+- `20-approved/` 폴더에 승인 껍데기 산출물(imported IDEA + imported screening record)이 존재하면 정상 진입
+- 블루프린트 feature plan을 source spec으로 참조하여 first-pass 또는 Lite plan을 파생
+- Lite/Standard 판정은 claude-kit 6개 트리거 기준으로 수행 (블루프린트의 기존 판정은 참고만)
+- stage-manifest.json에 `entryPoint: "P3-blueprint-fast-track"`, `blueprintSource: "{경로}"` 기록
+- P1/P2 단계는 `status: "skipped", reason: "blueprint-fast-track"`으로 기록
+- 상세: `docs/guide/12-blueprint-fast-track.md` 참조
+
+**불변 계약**: Blueprint = source spec, Approved PRD = execution SSOT. 블루프린트를 직접 `/dev-feature` 입력으로 사용하는 것은 불가하다.
+
 ## Output
 
 - Lite: `.plans/features/active/{slug}.md`

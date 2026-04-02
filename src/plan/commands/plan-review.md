@@ -27,8 +27,31 @@
 4. **판정**: PASS / WARN / FAIL
 5. **리뷰 리포트 출력**: 요약, 발견 사항, 권고, Approve/Revise/Reject 판정
 
+## reviewPassed 상태 기록
+
+PASS 판정 시, `.plans/stage-manifest.json`에 해당 단계의 reviewPassed 상태를 기록한다:
+
+```json
+{
+  "{slug}": {
+    "stages": {
+      "P4": {
+        "status": "done",
+        "reviewPassed": true,
+        "reviewedAt": "{YYYY-MM-DD}"
+      }
+    }
+  }
+}
+```
+
+이 상태는 `/plan-bridge` pre-check와 `/dev-feature` Phase A에서 참조된다.
+- `reviewPassed: true` → 정상 진행
+- `reviewPassed: false` 또는 미기록 → Bridge 실행 차단, `/plan-review` 먼저 통과 필요
+
 ## Output
 
-- 리뷰 리포트 콘솔 출력 (파일 미생성 — 읽기 전용 에이전트)
+- 리뷰 리포트 콘솔 출력
+- **PASS 시**: stage-manifest.json에 `reviewPassed: true` 기록
 - 심각도별 이슈 목록과 개선 방향 제시
 - FAIL 판정 시 수정 후 재리뷰 안내

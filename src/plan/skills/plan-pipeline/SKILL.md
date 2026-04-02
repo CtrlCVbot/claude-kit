@@ -16,6 +16,7 @@ description: >
 ## Pipeline Architecture
 
 ```
+정규 경로:
 /plan-idea(P1) → /plan-screen(P2) → /plan-draft(P3) → /plan-prd(P4)
                                                               │
                                                               ▼
@@ -23,6 +24,13 @@ description: >
        │
        ▼
   Phase A~E (개발 워크플로우)
+
+Blueprint Fast-Track (기존 설계 자산 정규화):
+  블루프린트(source spec)
+       ↓ Entry Assessment (진입점 판정)
+  imported IDEA(20-approved/) → /plan-draft(P3) → 이후 정규 흐름
+  * Blueprint = source spec, Approved PRD = execution SSOT
+  * 상세: docs/guide/12-blueprint-fast-track.md
 ```
 
 ## Workflow Steps
