@@ -23,6 +23,12 @@
      v                          (자동 트리거)
 Phase A~E
 (개발 워크플로우)
+     |
+     v  (개발 완료 후, 선택)
+  P8 /plan-archive ──→ archive/{slug}/ARCHIVE-{KEY}.md
+                            |
+                            v  (개선요청 시)
+                       /plan-improve ──→ P3/P5/P7/Dev 선택적 재진입
 
 
   ┌─────────────────────────────────────────────┐
@@ -53,6 +59,7 @@ P3(/plan-draft) 이후 단계로 진입할 수 있다. 이 승인 게이트가 �
 | P5 | 와이어프레임 | `/plan-wireframe` | plan-wireframe-designer (opus) | Approved PRD 경로 | `.plans/wireframes/{slug}/` | - (auto-review) |
 | P6 | Stitch 디자인 | `/plan-stitch` | plan-stitch-integrator (sonnet) | PRD + Wireframe 경로 | `.plans/stitch/{slug}/` | Stitch 실행 (수동) |
 | P7 | 기획->개발 핸드오프 | `/plan-bridge` | - (routing) | PRD + Wireframe + Stitch | Bridge context 파일들 | - |
+| P8 | 아카이브 (선택) | `/plan-archive` | - | 완료된 기능 slug | `.plans/archive/{slug}/ARCHIVE-{KEY}.md` | - |
 
 ### P2 승인 게이트 상세
 

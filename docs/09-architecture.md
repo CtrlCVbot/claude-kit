@@ -118,6 +118,8 @@ src/plan/agents/plan-prd-writer.md  -> .claude/agents/plan-prd-writer.md
 | /plan-wireframe | P5 | 와이어프레임 생성 | plan-wireframe-designer |
 | /plan-stitch | P6 | PRD + Wireframe 통합 | plan-stitch-integrator |
 | /plan-bridge | P7 | 기획 -> 개발 핸드오프 | (직접 처리) |
+| /plan-archive | P8 | 완료 기능 아카이빙 + 번들 생성 | (직접 처리) |
+| /plan-improve | - | 아카이브 개선요청 등록/분석/실행 | (직접 처리) |
 | /plan-review | 전체 | 산출물 품질 리뷰 | plan-reviewer |
 
 #### Dev 도메인 커맨드 (20)
@@ -166,6 +168,7 @@ src/plan/agents/plan-prd-writer.md  -> .claude/agents/plan-prd-writer.md
 | plan-wireframe-design | /plan-wireframe | ASCII 와이어프레임, Mermaid 패턴 |
 | plan-stitch-workflow | /plan-stitch | Stitch 프롬프트, HTML 검증 |
 | plan-review-criteria | /plan-review | 리뷰 기준, PCC 로직, 심각도 판정 |
+| plan-archive-workflow | /plan-archive, /plan-improve | 아카이브 워크플로우, 번들 생성, 개선요청 연계 |
 
 ### 훅 (8)
 

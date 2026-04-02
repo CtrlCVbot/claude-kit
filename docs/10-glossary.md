@@ -21,6 +21,10 @@
 | approved | 사용자 명시적 승인 완료. `/plan-draft` 진행 가능 |
 | on-hold | 보류 상태. 90-archive로 이동, 조건 충족 시 재평가 가능 |
 | rejected | 반려 상태. 90-archive로 이동 |
+| archived | 아카이브 완료 상태. `archive/{slug}/`로 이동, 산출물 번들화 |
+| ARCHIVE-{KEY}.md | 완료된 기능의 통합 번들. 전체 산출물을 인라인하여 Read 1회로 컨텍스트 로드 |
+| IMP-{KEY}-{NNN} | 개선요청 문서 ID. 아카이브 기능별 순번 채번 |
+| Archive Fallback | 파일 탐색 시 active 경로 → archive/*/sources/ 순서로 조회하는 패턴 |
 | Feature Overview | Phase A에서 생성하는 기능 개요 문서 (Section 1~10) |
 | Feature Package | Phase C에서 생성하는 구현 작업 명세서 (최대 11개 문서) |
 | Bridge Context | Phase P7에서 생성하는 Planning에서 Dev 전환 문서 |
@@ -47,6 +51,8 @@
 | `/plan-wireframe` | ASCII + Mermaid 와이어프레임 | P5 | `/plan-wireframe .plans/prd/00-draft/tracking-prd.md` |
 | `/plan-stitch` | Stitch 디자인 통합 | P6 | `/plan-stitch .plans/wireframes/tracking/` |
 | `/plan-bridge` | 기획에서 개발 핸드오프 | P7 | `/plan-bridge tracking` |
+| `/plan-archive` | 완료 기능 아카이빙 + 번들 생성 | P8 | `/plan-archive optic-landing-page` |
+| `/plan-improve` | 아카이브 개선요청 등록/분석/실행 | - | `/plan-improve optic-landing-page "모바일 개선"` |
 | `/plan-review` | 반복 리뷰 + PCC 검증 | any | `/plan-review <path> --type=prd` |
 
 ### Dev 커맨드 (Phase A~E)

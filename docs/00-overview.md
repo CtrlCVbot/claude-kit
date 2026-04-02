@@ -21,6 +21,12 @@ Phase A~E (개발 워크플로우):                                             
   /dev-feature → Human Review → Package Gen → /dev-run → /dev-verify → /dev-commit
   Feature        사람 확인       코드 생성      TDD 구현    품질 검증      커밋
   Package 생성   + 승인          Rules 적용     자동 루프    9종 검증
+
+Phase P8 (아카이브 & 개선):
+
+  /plan-archive {slug}                     /plan-improve {slug} "제목"
+  완료 검증 → 소스 수집 → 번들 생성        ARCHIVE 로드 → 영향도 분석 → 재진입
+  → 원본 이동 → 인덱스 갱신                → P3/P5/P7/Dev 선택적 재진입
 ```
 
 | 단계 | 커맨드 | 설명 |
@@ -35,6 +41,8 @@ Phase A~E (개발 워크플로우):                                             
 | A | `/dev-feature` | 승인된 PRD로 Feature Package 생성 |
 | D | `/dev-run` | TDD 기반 자동 구현 루프 |
 | E | `/dev-verify` | 테스트 + 빌드 + 9종 일관성 검증 |
+| P8 | `/plan-archive` | 완료된 기능 산출물 아카이빙, 단일 번들 생성 |
+| - | `/plan-improve` | 아카이브 기능 개선요청 등록/분석/파이프라인 재진입 |
 
 ---
 
