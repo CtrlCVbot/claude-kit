@@ -302,7 +302,7 @@ Fast-Track으로 진입한 피처의 stage-manifest.json 기록 방식이다.
 | G4 | 개발 워크플로우 출처-무관 원칙 | `08-dev-workflow.md` 섹션 추가 | 문서 |
 | W2 | 정규화 결정 로그 운영 규칙 | 운영 규칙 문서 | 운영 규칙 |
 | W3 | sourceRef 전파 규칙 강화 | stage-manifest, archive metadata | 운영 규칙 |
-| F06 | reviewPassed 상태 영속화 | `plan-review.md` 프롬프트 수정 | 프롬프트 수정 |
+| F06 | reviewPassed 상태 영속화 | `plan-review.md` 프롬프트 수정 | ~~프롬프트 수정~~ 구현 완료 |
 
 ### P2: 반복 사용 확인 후
 

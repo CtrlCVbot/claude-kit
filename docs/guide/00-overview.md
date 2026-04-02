@@ -34,7 +34,7 @@ Blueprint Fast-Track (기존 설계 자산 정규화):
        ↓ Entry Assessment (진입점 판정)
   imported IDEA(20-approved/) → /plan-draft(P3) → 이후 정규 흐름
   * Blueprint = source spec, Approved PRD = execution SSOT
-  * 상세: docs/guide/12-blueprint-fast-track.md
+  * 불변 계약 4가지 + 상세: 12-blueprint-fast-track.md
 ```
 
 | 단계 | 커맨드 | 설명 |

@@ -29,6 +29,8 @@
 | Fast-Track | Entry Assessment에서 P3 진입이 선택된 경우의 정규화 경로. `12-blueprint-fast-track.md` 참조 |
 | Blueprint source spec | 블루프린트 원본 문서. 수정하지 않고 참조만 하며, PRD 파생의 근거로 사용 |
 | Entry Decision Record | 블루프린트 진입점 판정 결과와 근거를 기록하는 최소 문서 |
+| imported IDEA | Fast-Track 진입 시 생성하는 승인 껍데기 IDEA. 태그 `blueprint-import`, 상태 `approved` |
+| imported screening record | Fast-Track 진입 시 생성하는 최소 스크리닝 기록. RICE 스크리닝 대체 |
 | Feature Overview | Phase A에서 생성하는 기능 개요 문서 (Section 1~10) |
 | Feature Package | Phase C에서 생성하는 구현 작업 명세서 (최대 11개 문서) |
 | Bridge Context | Phase P7에서 생성하는 Planning에서 Dev 전환 문서 |
