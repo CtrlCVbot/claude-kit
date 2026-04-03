@@ -1,0 +1,748 @@
+version: "1.0"
+scope: claude-kit-operating-system-v1
+
+scopeRules:
+  docsInclude:
+    - docs/guide/*.md
+    - docs/team-orchestration/*.md
+    - docs/operating-system/*.md
+  docsExclude:
+    - docs/**/revision/**
+    - docs/**/archive/**
+  inventoryRule: 수기 합계는 문서에 쓰지 않고 asset-registry에서 artifactType별로 계산한다.
+
+freshnessRules:
+  rule-agent-contract: agent prompt contract, 역할 책임, 호출 stage가 바뀌면 갱신한다.
+  rule-command-contract: command entrypoint, stage routing, 연결 agent가 바뀌면 갱신한다.
+  rule-skill-contract: workflow checklist, invoked command set, guardrail이 바뀌면 갱신한다.
+  rule-hook-policy: event, matcher, blocking policy가 바뀌면 갱신한다.
+  rule-doc-boundary: 참조 registry ID, SSOT 경계, 단계 명칭이 바뀌면 갱신한다.
+
+assets:
+  - artifactId: agent-dev-architect
+    artifactType: agent
+    sourcePathPattern: src/dev/agents/dev-architect.md
+    ownerRoleId: role-delivery-architecture-lead
+    consumerIds: [stage-delivery-a-feature-package, stage-delivery-d-implementation]
+    freshnessRule: rule-agent-contract
+
+  - artifactId: agent-dev-code-reviewer
+    artifactType: agent
+    sourcePathPattern: src/dev/agents/dev-code-reviewer.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [command-dev-review, gate-phase-e-dvc]
+    freshnessRule: rule-agent-contract
+
+  - artifactId: agent-dev-database-reviewer
+    artifactType: agent
+    sourcePathPattern: src/dev/agents/dev-database-reviewer.md
+    ownerRoleId: role-delivery-architecture-lead
+    consumerIds: [command-dev-plan, command-dev-review]
+    freshnessRule: rule-agent-contract
+
+  - artifactId: agent-dev-doc-updater
+    artifactType: agent
+    sourcePathPattern: src/dev/agents/dev-doc-updater.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [command-dev-sync-docs, stage-ops-doc-refresh]
+    freshnessRule: rule-agent-contract
+
+  - artifactId: agent-dev-security-reviewer
+    artifactType: agent
+    sourcePathPattern: src/dev/agents/dev-security-reviewer.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [command-dev-security-review, gate-phase-e-dvc]
+    freshnessRule: rule-agent-contract
+
+  - artifactId: agent-dev-verify-agent
+    artifactType: agent
+    sourcePathPattern: src/dev/agents/dev-verify-agent.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [command-dev-handoff-verify, stage-delivery-e-verification]
+    freshnessRule: rule-agent-contract
+
+  - artifactId: agent-plan-idea-collector
+    artifactType: agent
+    sourcePathPattern: src/plan/agents/plan-idea-collector.md
+    ownerRoleId: role-planning-ops-lead
+    consumerIds: [command-plan-idea, stage-plan-p1-idea]
+    freshnessRule: rule-agent-contract
+
+  - artifactId: agent-plan-idea-screener
+    artifactType: agent
+    sourcePathPattern: src/plan/agents/plan-idea-screener.md
+    ownerRoleId: role-planning-ops-lead
+    consumerIds: [command-plan-screen, stage-plan-p2-screen]
+    freshnessRule: rule-agent-contract
+
+  - artifactId: agent-plan-prd-writer
+    artifactType: agent
+    sourcePathPattern: src/plan/agents/plan-prd-writer.md
+    ownerRoleId: role-design-prd-lead
+    consumerIds: [command-plan-prd, stage-plan-p4-prd]
+    freshnessRule: rule-agent-contract
+
+  - artifactId: agent-plan-reviewer
+    artifactType: agent
+    sourcePathPattern: src/plan/agents/plan-reviewer.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [command-plan-review, gate-p4-review-pass, gate-p5-review-pass]
+    freshnessRule: rule-agent-contract
+
+  - artifactId: agent-plan-stitch-integrator
+    artifactType: agent
+    sourcePathPattern: src/plan/agents/plan-stitch-integrator.md
+    ownerRoleId: role-design-prd-lead
+    consumerIds: [command-plan-stitch, stage-plan-p6-stitch]
+    freshnessRule: rule-agent-contract
+
+  - artifactId: agent-plan-wireframe-designer
+    artifactType: agent
+    sourcePathPattern: src/plan/agents/plan-wireframe-designer.md
+    ownerRoleId: role-design-prd-lead
+    consumerIds: [command-plan-wireframe, stage-plan-p5-wireframe]
+    freshnessRule: rule-agent-contract
+
+  - artifactId: command-dev-build-fix
+    artifactType: command
+    sourcePathPattern: src/dev/commands/dev-build-fix.md
+    ownerRoleId: role-delivery-engineering-lead
+    consumerIds: [stage-delivery-d-implementation]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-dev-checkpoint
+    artifactType: command
+    sourcePathPattern: src/dev/commands/dev-checkpoint.md
+    ownerRoleId: role-delivery-engineering-lead
+    consumerIds: [stage-delivery-d-implementation, stage-ops-overview-refresh]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-dev-commit
+    artifactType: command
+    sourcePathPattern: src/dev/commands/dev-commit.md
+    ownerRoleId: role-delivery-engineering-lead
+    consumerIds: [stage-delivery-e-verification]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-dev-commit-push-pr
+    artifactType: command
+    sourcePathPattern: src/dev/commands/dev-commit-push-pr.md
+    ownerRoleId: role-delivery-engineering-lead
+    consumerIds: [stage-delivery-e-verification, stage-ops-overview-refresh]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-dev-continue
+    artifactType: command
+    sourcePathPattern: src/dev/commands/dev-continue.md
+    ownerRoleId: role-delivery-engineering-lead
+    consumerIds: [stage-delivery-d-implementation]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-dev-explore
+    artifactType: command
+    sourcePathPattern: src/dev/commands/dev-explore.md
+    ownerRoleId: role-delivery-engineering-lead
+    consumerIds: [stage-delivery-a-feature-package, stage-delivery-d-implementation]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-dev-feature
+    artifactType: command
+    sourcePathPattern: src/dev/commands/dev-feature.md
+    ownerRoleId: role-delivery-engineering-lead
+    consumerIds: [stage-delivery-a-feature-package]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-dev-handoff-verify
+    artifactType: command
+    sourcePathPattern: src/dev/commands/dev-handoff-verify.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [stage-delivery-e-verification, stage-ops-overview-refresh]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-dev-learn
+    artifactType: command
+    sourcePathPattern: src/dev/commands/dev-learn.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [stage-ops-team-review, stage-ops-doc-refresh]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-dev-plan
+    artifactType: command
+    sourcePathPattern: src/dev/commands/dev-plan.md
+    ownerRoleId: role-delivery-engineering-lead
+    consumerIds: [stage-delivery-a-feature-package]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-dev-refactor
+    artifactType: command
+    sourcePathPattern: src/dev/commands/dev-refactor.md
+    ownerRoleId: role-delivery-engineering-lead
+    consumerIds: [stage-delivery-d-implementation]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-dev-review
+    artifactType: command
+    sourcePathPattern: src/dev/commands/dev-review.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [gate-phase-e-dvc, stage-ops-team-review]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-dev-run
+    artifactType: command
+    sourcePathPattern: src/dev/commands/dev-run.md
+    ownerRoleId: role-delivery-engineering-lead
+    consumerIds: [stage-delivery-d-implementation]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-dev-security-review
+    artifactType: command
+    sourcePathPattern: src/dev/commands/dev-security-review.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [gate-phase-e-dvc, stage-ops-blocker-triage]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-dev-sync
+    artifactType: command
+    sourcePathPattern: src/dev/commands/dev-sync.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [stage-ops-doc-refresh]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-dev-sync-docs
+    artifactType: command
+    sourcePathPattern: src/dev/commands/dev-sync-docs.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [stage-ops-doc-refresh]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-dev-test-verify
+    artifactType: command
+    sourcePathPattern: src/dev/commands/dev-test-verify.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [gate-phase-e-dvc]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-dev-verify
+    artifactType: command
+    sourcePathPattern: src/dev/commands/dev-verify.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [gate-phase-e-dvc, stage-delivery-e-verification]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-dev-verify-all
+    artifactType: command
+    sourcePathPattern: src/dev/commands/dev-verify-all.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [gate-phase-e-dvc, stage-ops-team-review]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-dev-verify-fe
+    artifactType: command
+    sourcePathPattern: src/dev/commands/dev-verify-fe.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [gate-phase-e-dvc]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-plan-archive
+    artifactType: command
+    sourcePathPattern: src/plan/commands/plan-archive.md
+    ownerRoleId: role-planning-ops-lead
+    consumerIds: [stage-plan-p8-archive-improve]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-plan-bridge
+    artifactType: command
+    sourcePathPattern: src/plan/commands/plan-bridge.md
+    ownerRoleId: role-planning-ops-lead
+    consumerIds: [stage-plan-p7-bridge]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-plan-draft
+    artifactType: command
+    sourcePathPattern: src/plan/commands/plan-draft.md
+    ownerRoleId: role-planning-ops-lead
+    consumerIds: [stage-plan-p3-draft]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-plan-idea
+    artifactType: command
+    sourcePathPattern: src/plan/commands/plan-idea.md
+    ownerRoleId: role-planning-ops-lead
+    consumerIds: [stage-plan-p1-idea]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-plan-improve
+    artifactType: command
+    sourcePathPattern: src/plan/commands/plan-improve.md
+    ownerRoleId: role-planning-ops-lead
+    consumerIds: [stage-plan-p8-archive-improve]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-plan-prd
+    artifactType: command
+    sourcePathPattern: src/plan/commands/plan-prd.md
+    ownerRoleId: role-design-prd-lead
+    consumerIds: [stage-plan-p4-prd]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-plan-review
+    artifactType: command
+    sourcePathPattern: src/plan/commands/plan-review.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [gate-p4-review-pass, gate-p5-review-pass]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-plan-screen
+    artifactType: command
+    sourcePathPattern: src/plan/commands/plan-screen.md
+    ownerRoleId: role-planning-ops-lead
+    consumerIds: [stage-plan-p2-screen]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-plan-stitch
+    artifactType: command
+    sourcePathPattern: src/plan/commands/plan-stitch.md
+    ownerRoleId: role-design-prd-lead
+    consumerIds: [stage-plan-p6-stitch]
+    freshnessRule: rule-command-contract
+
+  - artifactId: command-plan-wireframe
+    artifactType: command
+    sourcePathPattern: src/plan/commands/plan-wireframe.md
+    ownerRoleId: role-design-prd-lead
+    consumerIds: [stage-plan-p5-wireframe]
+    freshnessRule: rule-command-contract
+
+  - artifactId: skill-continuous-learning
+    artifactType: skill
+    sourcePathPattern: src/core/skills/continuous-learning/SKILL.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [command-dev-learn, stage-ops-team-review]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-dev-domain-modeling
+    artifactType: skill
+    sourcePathPattern: src/dev/skills/dev-domain-modeling/SKILL.md
+    ownerRoleId: role-delivery-architecture-lead
+    consumerIds: [command-dev-plan, stage-delivery-a-feature-package]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-dev-feature-module
+    artifactType: skill
+    sourcePathPattern: src/dev/skills/dev-feature-module/SKILL.md
+    ownerRoleId: role-delivery-engineering-lead
+    consumerIds: [command-dev-feature, stage-delivery-a-feature-package]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-dev-feature-plan
+    artifactType: skill
+    sourcePathPattern: src/dev/skills/dev-feature-plan/SKILL.md
+    ownerRoleId: role-delivery-engineering-lead
+    consumerIds: [command-dev-plan, stage-delivery-a-feature-package]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-dev-frontend-patterns
+    artifactType: skill
+    sourcePathPattern: src/dev/skills/dev-frontend-patterns/SKILL.md
+    ownerRoleId: role-delivery-engineering-lead
+    consumerIds: [command-dev-run, stage-delivery-d-implementation]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-dev-layered-architecture
+    artifactType: skill
+    sourcePathPattern: src/dev/skills/dev-layered-architecture/SKILL.md
+    ownerRoleId: role-delivery-architecture-lead
+    consumerIds: [command-dev-plan, command-dev-refactor]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-dev-observability
+    artifactType: skill
+    sourcePathPattern: src/dev/skills/dev-observability/SKILL.md
+    ownerRoleId: role-delivery-engineering-lead
+    consumerIds: [command-dev-run, stage-delivery-e-verification]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-dev-refactoring
+    artifactType: skill
+    sourcePathPattern: src/dev/skills/dev-refactoring/SKILL.md
+    ownerRoleId: role-delivery-engineering-lead
+    consumerIds: [command-dev-refactor, stage-delivery-d-implementation]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-dev-security-pipeline
+    artifactType: skill
+    sourcePathPattern: src/dev/skills/dev-security-pipeline/SKILL.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [command-dev-security-review, gate-phase-e-dvc]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-dev-tdd-workflow
+    artifactType: skill
+    sourcePathPattern: src/dev/skills/dev-tdd-workflow/SKILL.md
+    ownerRoleId: role-delivery-engineering-lead
+    consumerIds: [command-dev-run, stage-delivery-d-implementation]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-dev-testing-backend
+    artifactType: skill
+    sourcePathPattern: src/dev/skills/dev-testing-backend/SKILL.md
+    ownerRoleId: role-delivery-engineering-lead
+    consumerIds: [command-dev-test-verify, stage-delivery-d-implementation]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-dev-testing-e2e
+    artifactType: skill
+    sourcePathPattern: src/dev/skills/dev-testing-e2e/SKILL.md
+    ownerRoleId: role-delivery-engineering-lead
+    consumerIds: [command-dev-test-verify, stage-delivery-e-verification]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-dev-testing-frontend
+    artifactType: skill
+    sourcePathPattern: src/dev/skills/dev-testing-frontend/SKILL.md
+    ownerRoleId: role-delivery-engineering-lead
+    consumerIds: [command-dev-test-verify, stage-delivery-d-implementation]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-dev-verification-engine
+    artifactType: skill
+    sourcePathPattern: src/dev/skills/dev-verification-engine/SKILL.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [command-dev-handoff-verify, stage-delivery-e-verification]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-dev-workflow
+    artifactType: skill
+    sourcePathPattern: src/dev/skills/dev-workflow/SKILL.md
+    ownerRoleId: role-delivery-engineering-lead
+    consumerIds: [command-dev-feature, command-dev-run]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-plan-archive-workflow
+    artifactType: skill
+    sourcePathPattern: src/plan/skills/plan-archive-workflow/SKILL.md
+    ownerRoleId: role-planning-ops-lead
+    consumerIds: [command-plan-archive, command-plan-improve]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-plan-idea-management
+    artifactType: skill
+    sourcePathPattern: src/plan/skills/plan-idea-management/SKILL.md
+    ownerRoleId: role-planning-ops-lead
+    consumerIds: [command-plan-idea, stage-plan-p1-idea]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-plan-pipeline
+    artifactType: skill
+    sourcePathPattern: src/plan/skills/plan-pipeline/SKILL.md
+    ownerRoleId: role-planning-ops-lead
+    consumerIds: [command-plan-draft, command-plan-bridge]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-plan-prd-authoring
+    artifactType: skill
+    sourcePathPattern: src/plan/skills/plan-prd-authoring/SKILL.md
+    ownerRoleId: role-design-prd-lead
+    consumerIds: [command-plan-prd, stage-plan-p4-prd]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-plan-review-criteria
+    artifactType: skill
+    sourcePathPattern: src/plan/skills/plan-review-criteria/SKILL.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [command-plan-review, gate-p4-review-pass, gate-p5-review-pass]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-plan-screening-workflow
+    artifactType: skill
+    sourcePathPattern: src/plan/skills/plan-screening-workflow/SKILL.md
+    ownerRoleId: role-planning-ops-lead
+    consumerIds: [command-plan-screen, stage-plan-p2-screen]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-plan-stitch-workflow
+    artifactType: skill
+    sourcePathPattern: src/plan/skills/plan-stitch-workflow/SKILL.md
+    ownerRoleId: role-design-prd-lead
+    consumerIds: [command-plan-stitch, stage-plan-p6-stitch]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-plan-wireframe-design
+    artifactType: skill
+    sourcePathPattern: src/plan/skills/plan-wireframe-design/SKILL.md
+    ownerRoleId: role-design-prd-lead
+    consumerIds: [command-plan-wireframe, stage-plan-p5-wireframe]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: skill-session-wrap
+    artifactType: skill
+    sourcePathPattern: src/core/skills/session-wrap/SKILL.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [command-dev-sync-docs, stage-ops-doc-refresh]
+    freshnessRule: rule-skill-contract
+
+  - artifactId: hook-code-quality-reminder
+    artifactType: hook
+    sourcePathPattern: src/core/hooks/code-quality-reminder.js
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [pipe-delivery-lifecycle]
+    freshnessRule: rule-hook-policy
+
+  - artifactId: hook-dev-db-guard
+    artifactType: hook
+    sourcePathPattern: src/dev/hooks/dev-db-guard.js
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [pipe-delivery-lifecycle]
+    freshnessRule: rule-hook-policy
+
+  - artifactId: hook-dev-tdd-guard
+    artifactType: hook
+    sourcePathPattern: src/dev/hooks/dev-tdd-guard.js
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [pipe-delivery-lifecycle]
+    freshnessRule: rule-hook-policy
+
+  - artifactId: hook-edit-tracker
+    artifactType: hook
+    sourcePathPattern: src/core/hooks/edit-tracker.js
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [pipe-delivery-lifecycle, pipe-planning-lifecycle]
+    freshnessRule: rule-hook-policy
+
+  - artifactId: hook-output-secret-filter
+    artifactType: hook
+    sourcePathPattern: src/core/hooks/output-secret-filter.js
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [pipe-delivery-lifecycle, pipe-planning-lifecycle]
+    freshnessRule: rule-hook-policy
+
+  - artifactId: hook-plan-doc-guard
+    artifactType: hook
+    sourcePathPattern: src/plan/hooks/plan-doc-guard.js
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [pipe-planning-lifecycle]
+    freshnessRule: rule-hook-policy
+
+  - artifactId: hook-security-auto-trigger
+    artifactType: hook
+    sourcePathPattern: src/core/hooks/security-auto-trigger.js
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [pipe-delivery-lifecycle, pipe-operating-review]
+    freshnessRule: rule-hook-policy
+
+  - artifactId: hook-session-wrap-suggest
+    artifactType: hook
+    sourcePathPattern: src/core/hooks/session-wrap-suggest.js
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [pipe-operating-review]
+    freshnessRule: rule-hook-policy
+
+  - artifactId: doc-guide-00-overview
+    artifactType: doc
+    sourcePathPattern: docs/guide/00-overview.md
+    ownerRoleId: role-portfolio-director
+    consumerIds: [role-planning-ops-lead, role-delivery-engineering-lead, role-quality-governance-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-guide-01-planning-pipeline
+    artifactType: doc
+    sourcePathPattern: docs/guide/01-planning-pipeline.md
+    ownerRoleId: role-planning-ops-lead
+    consumerIds: [role-planning-ops-lead, role-design-prd-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-guide-02-idea-management
+    artifactType: doc
+    sourcePathPattern: docs/guide/02-idea-management.md
+    ownerRoleId: role-planning-ops-lead
+    consumerIds: [role-planning-ops-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-guide-03-screening
+    artifactType: doc
+    sourcePathPattern: docs/guide/03-screening.md
+    ownerRoleId: role-planning-ops-lead
+    consumerIds: [role-planning-ops-lead, role-portfolio-director]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-guide-04-feature-planning
+    artifactType: doc
+    sourcePathPattern: docs/guide/04-feature-planning.md
+    ownerRoleId: role-planning-ops-lead
+    consumerIds: [role-planning-ops-lead, role-design-prd-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-guide-05-design
+    artifactType: doc
+    sourcePathPattern: docs/guide/05-design.md
+    ownerRoleId: role-design-prd-lead
+    consumerIds: [role-design-prd-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-guide-06-dev-handoff
+    artifactType: doc
+    sourcePathPattern: docs/guide/06-dev-handoff.md
+    ownerRoleId: role-planning-ops-lead
+    consumerIds: [role-planning-ops-lead, role-delivery-engineering-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-guide-07-review-pcc
+    artifactType: doc
+    sourcePathPattern: docs/guide/07-review-pcc.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [role-quality-governance-lead, role-design-prd-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-guide-08-dev-workflow
+    artifactType: doc
+    sourcePathPattern: docs/guide/08-dev-workflow.md
+    ownerRoleId: role-delivery-engineering-lead
+    consumerIds: [role-delivery-engineering-lead, role-quality-governance-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-guide-09-architecture
+    artifactType: doc
+    sourcePathPattern: docs/guide/09-architecture.md
+    ownerRoleId: role-delivery-architecture-lead
+    consumerIds: [role-delivery-architecture-lead, role-quality-governance-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-guide-10-glossary
+    artifactType: doc
+    sourcePathPattern: docs/guide/10-glossary.md
+    ownerRoleId: role-portfolio-director
+    consumerIds: [role-planning-ops-lead, role-delivery-engineering-lead, role-quality-governance-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-guide-11-archive-improve
+    artifactType: doc
+    sourcePathPattern: docs/guide/11-archive-improve.md
+    ownerRoleId: role-planning-ops-lead
+    consumerIds: [role-planning-ops-lead, role-quality-governance-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-guide-12-blueprint-fast-track
+    artifactType: doc
+    sourcePathPattern: docs/guide/12-blueprint-fast-track.md
+    ownerRoleId: role-planning-ops-lead
+    consumerIds: [role-planning-ops-lead, role-portfolio-director]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-team-00-overview
+    artifactType: doc
+    sourcePathPattern: docs/team-orchestration/00-overview.md
+    ownerRoleId: role-portfolio-director
+    consumerIds: [role-portfolio-director, role-quality-governance-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-team-01-input-model
+    artifactType: doc
+    sourcePathPattern: docs/team-orchestration/01-orchestration-input-model.md
+    ownerRoleId: role-portfolio-director
+    consumerIds: [role-planning-ops-lead, role-quality-governance-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-team-02-operating-model
+    artifactType: doc
+    sourcePathPattern: docs/team-orchestration/02-operating-model.md
+    ownerRoleId: role-portfolio-director
+    consumerIds: [role-portfolio-director, role-delivery-engineering-lead, role-quality-governance-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-team-03-scheduler-and-dependencies
+    artifactType: doc
+    sourcePathPattern: docs/team-orchestration/03-scheduler-and-dependencies.md
+    ownerRoleId: role-delivery-architecture-lead
+    consumerIds: [role-delivery-architecture-lead, role-quality-governance-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-team-04-state-gates-lifecycle
+    artifactType: doc
+    sourcePathPattern: docs/team-orchestration/04-state-gates-lifecycle.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [role-quality-governance-lead, role-portfolio-director]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-team-05-assets-and-integration
+    artifactType: doc
+    sourcePathPattern: docs/team-orchestration/05-assets-and-integration.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [role-quality-governance-lead, role-portfolio-director]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-team-06-ds-customizer-pilot
+    artifactType: doc
+    sourcePathPattern: docs/team-orchestration/06-ds-customizer-pilot.md
+    ownerRoleId: role-portfolio-director
+    consumerIds: [role-portfolio-director, role-delivery-engineering-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-team-07-rollout-roadmap
+    artifactType: doc
+    sourcePathPattern: docs/team-orchestration/07-rollout-roadmap.md
+    ownerRoleId: role-portfolio-director
+    consumerIds: [role-portfolio-director, role-quality-governance-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-team-quickstart
+    artifactType: doc
+    sourcePathPattern: docs/team-orchestration/QUICKSTART.md
+    ownerRoleId: role-portfolio-director
+    consumerIds: [role-portfolio-director, role-planning-ops-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-operating-system-00-overview
+    artifactType: doc
+    sourcePathPattern: docs/operating-system/00-overview.md
+    ownerRoleId: role-portfolio-director
+    consumerIds: [role-portfolio-director, role-quality-governance-lead, role-planning-ops-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-operating-system-01-company-map
+    artifactType: doc
+    sourcePathPattern: docs/operating-system/01-company-map.md
+    ownerRoleId: role-portfolio-director
+    consumerIds: [role-portfolio-director, role-delivery-engineering-lead, role-quality-governance-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-operating-system-02-pipeline-map
+    artifactType: doc
+    sourcePathPattern: docs/operating-system/02-pipeline-map.md
+    ownerRoleId: role-planning-ops-lead
+    consumerIds: [role-planning-ops-lead, role-delivery-engineering-lead, role-quality-governance-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-operating-system-03-data-contracts
+    artifactType: doc
+    sourcePathPattern: docs/operating-system/03-data-contracts.md
+    ownerRoleId: role-delivery-architecture-lead
+    consumerIds: [role-delivery-architecture-lead, role-quality-governance-lead, role-portfolio-director]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-operating-system-04-visualization-spec
+    artifactType: doc
+    sourcePathPattern: docs/operating-system/04-visualization-spec.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [role-quality-governance-lead, role-portfolio-director, role-planning-ops-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-operating-system-05-dashboard-ia
+    artifactType: doc
+    sourcePathPattern: docs/operating-system/05-dashboard-ia.md
+    ownerRoleId: role-portfolio-director
+    consumerIds: [role-portfolio-director, role-planning-ops-lead, role-delivery-engineering-lead]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-operating-system-06-operating-rhythm
+    artifactType: doc
+    sourcePathPattern: docs/operating-system/06-operating-rhythm.md
+    ownerRoleId: role-quality-governance-lead
+    consumerIds: [role-quality-governance-lead, role-portfolio-director]
+    freshnessRule: rule-doc-boundary
+
+  - artifactId: doc-operating-system-07-rollout-roadmap
+    artifactType: doc
+    sourcePathPattern: docs/operating-system/07-rollout-roadmap.md
+    ownerRoleId: role-portfolio-director
+    consumerIds: [role-portfolio-director, role-quality-governance-lead, role-planning-ops-lead]
+    freshnessRule: rule-doc-boundary

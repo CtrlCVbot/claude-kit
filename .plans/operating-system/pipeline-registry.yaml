@@ -1,0 +1,319 @@
+version: "1.0"
+scope: claude-kit-operating-system-v1
+
+pipelines:
+  - pipelineId: pipe-planning-lifecycle
+    name: Planning Lifecycle
+    stageIds:
+      - stage-plan-p1-idea
+      - stage-plan-p2-screen
+      - stage-plan-p3-draft
+      - stage-plan-p4-prd
+      - stage-plan-p5-wireframe
+      - stage-plan-p6-stitch
+      - stage-plan-p7-bridge
+      - stage-plan-p8-archive-improve
+    gateIds:
+      - gate-p2-approval
+      - gate-p4-review-pass
+      - gate-p5-review-pass
+    entryCriteria: 새 아이디어 또는 Fast-Track으로 정규화된 feature 입력이 존재한다.
+    exitCriteria: 승인된 PRD가 bridge path로 배치되거나 archive/improve loop로 닫힌다.
+    primaryOwnerRoleId: role-planning-ops-lead
+
+  - pipelineId: pipe-delivery-lifecycle
+    name: Delivery Lifecycle
+    stageIds:
+      - stage-delivery-a-feature-package
+      - stage-delivery-b-human-review
+      - stage-delivery-c-package-generation
+      - stage-delivery-d-implementation
+      - stage-delivery-e-verification
+    gateIds:
+      - gate-phase-b-human-review
+      - gate-phase-e-dvc
+    entryCriteria: P7 bridge output 또는 approved PRD execution path가 존재한다.
+    exitCriteria: dev-verify가 PASS이고 dev-commit로 종료 가능한 상태가 된다.
+    primaryOwnerRoleId: role-delivery-engineering-lead
+
+  - pipelineId: pipe-orchestration-control
+    name: Orchestration Control
+    stageIds:
+      - stage-orch-registry-sync
+      - stage-orch-dependency-schedule
+      - stage-orch-gate-watch
+      - stage-orch-run-aggregate
+    gateIds:
+      - gate-dependency-ready
+      - gate-stage-manifest-synced
+    entryCriteria: featureRegistry, dependencyGraph, stage-manifest가 참조 가능한 상태다.
+    exitCriteria: run snapshot과 blocker view가 최신 상태로 재생성된다.
+    primaryOwnerRoleId: role-quality-governance-lead
+
+  - pipelineId: pipe-operating-review
+    name: Operating Review
+    stageIds:
+      - stage-ops-overview-refresh
+      - stage-ops-team-review
+      - stage-ops-blocker-triage
+      - stage-ops-doc-refresh
+    gateIds:
+      - gate-registry-coverage-check
+      - gate-doc-freshness-check
+    entryCriteria: 주간 운영 리뷰 주기 또는 주요 변경 이벤트가 발생한다.
+    exitCriteria: blocker, improvement, doc refresh 액션 아이템이 갱신된다.
+    primaryOwnerRoleId: role-portfolio-director
+
+stages:
+  - stageId: stage-plan-p1-idea
+    pipelineId: pipe-planning-lifecycle
+    purpose: 자유 입력을 추적 가능한 idea 파일과 backlog 항목으로 정규화한다.
+    inputs: [free-text idea, source note]
+    outputs: [ideas/00-inbox, ideas/backlog]
+    blockingGates: []
+    upstreamStages: []
+    downstreamStages: [stage-plan-p2-screen]
+
+  - stageId: stage-plan-p2-screen
+    pipelineId: pipe-planning-lifecycle
+    purpose: RICE와 승인 게이트를 통해 idea의 진행 여부를 판정한다.
+    inputs: [ideas/00-inbox, screening-matrix]
+    outputs: [ideas/10-screening, screening report, approval decision]
+    blockingGates: [gate-p2-approval]
+    upstreamStages: [stage-plan-p1-idea]
+    downstreamStages: [stage-plan-p3-draft]
+
+  - stageId: stage-plan-p3-draft
+    pipelineId: pipe-planning-lifecycle
+    purpose: 승인된 idea를 first-pass feature draft로 확장한다.
+    inputs: [approved idea]
+    outputs: [features/drafts, lite-or-standard decision]
+    blockingGates: []
+    upstreamStages: [stage-plan-p2-screen]
+    downstreamStages: [stage-plan-p4-prd]
+
+  - stageId: stage-plan-p4-prd
+    pipelineId: pipe-planning-lifecycle
+    purpose: first-pass draft를 execution 가능한 PRD로 상세화한다.
+    inputs: [features/drafts]
+    outputs: [prd/00-draft, review report]
+    blockingGates: [gate-p4-review-pass]
+    upstreamStages: [stage-plan-p3-draft]
+    downstreamStages: [stage-plan-p5-wireframe]
+
+  - stageId: stage-plan-p5-wireframe
+    pipelineId: pipe-planning-lifecycle
+    purpose: PRD를 화면, 상태, 흐름이 드러나는 설계 뷰로 바꾼다.
+    inputs: [approved prd]
+    outputs: [wireframes/{slug}, review report]
+    blockingGates: [gate-p5-review-pass]
+    upstreamStages: [stage-plan-p4-prd]
+    downstreamStages: [stage-plan-p6-stitch]
+
+  - stageId: stage-plan-p6-stitch
+    pipelineId: pipe-planning-lifecycle
+    purpose: PRD와 wireframe을 Stitch 및 시각 설계용 입력으로 정리한다.
+    inputs: [approved prd, wireframes/{slug}]
+    outputs: [stitch/{slug}, design notes]
+    blockingGates: []
+    upstreamStages: [stage-plan-p5-wireframe]
+    downstreamStages: [stage-plan-p7-bridge]
+
+  - stageId: stage-plan-p7-bridge
+    pipelineId: pipe-planning-lifecycle
+    purpose: planning 산출물을 delivery가 바로 소비할 수 있는 bridge context로 연결한다.
+    inputs: [approved prd, wireframes/{slug}, stitch/{slug}]
+    outputs: [bridge context, approved execution path]
+    blockingGates: []
+    upstreamStages: [stage-plan-p6-stitch]
+    downstreamStages: [stage-delivery-a-feature-package]
+
+  - stageId: stage-plan-p8-archive-improve
+    pipelineId: pipe-planning-lifecycle
+    purpose: 완료 기능을 archive bundle로 정리하고 improvement loop를 유지한다.
+    inputs: [completed feature bundle, improvement request]
+    outputs: [archive/{slug}, improvement backlog]
+    blockingGates: []
+    upstreamStages: [stage-delivery-e-verification]
+    downstreamStages: []
+
+  - stageId: stage-delivery-a-feature-package
+    pipelineId: pipe-delivery-lifecycle
+    purpose: bridge path를 feature package와 구현 backlog로 바꾼다.
+    inputs: [approved execution path, bridge context]
+    outputs: [feature package, implementation backlog]
+    blockingGates: []
+    upstreamStages: [stage-plan-p7-bridge]
+    downstreamStages: [stage-delivery-b-human-review]
+
+  - stageId: stage-delivery-b-human-review
+    pipelineId: pipe-delivery-lifecycle
+    purpose: 사람이 feature overview와 진행 방향을 확인한다.
+    inputs: [feature package, feature overview]
+    outputs: [approval decision, revision note]
+    blockingGates: [gate-phase-b-human-review]
+    upstreamStages: [stage-delivery-a-feature-package]
+    downstreamStages: [stage-delivery-c-package-generation]
+
+  - stageId: stage-delivery-c-package-generation
+    pipelineId: pipe-delivery-lifecycle
+    purpose: 구현 전 코드 생성과 규칙 적용을 마친다.
+    inputs: [approved feature package]
+    outputs: [generated scaffolding, applied rules]
+    blockingGates: []
+    upstreamStages: [stage-delivery-b-human-review]
+    downstreamStages: [stage-delivery-d-implementation]
+
+  - stageId: stage-delivery-d-implementation
+    pipelineId: pipe-delivery-lifecycle
+    purpose: TDD 기반 구현과 리팩터링을 수행한다.
+    inputs: [feature package, tests, generated scaffolding]
+    outputs: [implemented code, test evidence]
+    blockingGates: []
+    upstreamStages: [stage-delivery-c-package-generation]
+    downstreamStages: [stage-delivery-e-verification]
+
+  - stageId: stage-delivery-e-verification
+    pipelineId: pipe-delivery-lifecycle
+    purpose: build, test, DVC 6항목을 통과하는지 확인한다.
+    inputs: [implemented code, test and build evidence]
+    outputs: [verify report, commit-ready state]
+    blockingGates: [gate-phase-e-dvc]
+    upstreamStages: [stage-delivery-d-implementation]
+    downstreamStages: [stage-plan-p8-archive-improve]
+
+  - stageId: stage-orch-registry-sync
+    pipelineId: pipe-orchestration-control
+    purpose: 여러 SSOT를 운영용 normalized view로 정렬한다.
+    inputs: [feature registry, dependency graph, stage-manifest]
+    outputs: [normalized registry view]
+    blockingGates: [gate-stage-manifest-synced]
+    upstreamStages: []
+    downstreamStages: [stage-orch-dependency-schedule]
+
+  - stageId: stage-orch-dependency-schedule
+    pipelineId: pipe-orchestration-control
+    purpose: hard dependency와 wave/ready queue를 계산한다.
+    inputs: [normalized registry view]
+    outputs: [ready queue, wave order, blocked list]
+    blockingGates: [gate-dependency-ready]
+    upstreamStages: [stage-orch-registry-sync]
+    downstreamStages: [stage-orch-gate-watch]
+
+  - stageId: stage-orch-gate-watch
+    pipelineId: pipe-orchestration-control
+    purpose: 사람 승인과 자동 검증 게이트를 관찰해 예외를 드러낸다.
+    inputs: [ready queue, approval states, review states]
+    outputs: [approval queue, exception list]
+    blockingGates: []
+    upstreamStages: [stage-orch-dependency-schedule]
+    downstreamStages: [stage-orch-run-aggregate]
+
+  - stageId: stage-orch-run-aggregate
+    pipelineId: pipe-orchestration-control
+    purpose: run snapshot, run-state board, blocker board를 만든다.
+    inputs: [stage-manifest, ready queue, approval queue]
+    outputs: [run snapshot, run-state board, blocker board]
+    blockingGates: []
+    upstreamStages: [stage-orch-gate-watch]
+    downstreamStages: [stage-ops-overview-refresh]
+
+  - stageId: stage-ops-overview-refresh
+    pipelineId: pipe-operating-review
+    purpose: 최신 run snapshot과 metrics를 요약한다.
+    inputs: [run snapshot, metric catalog]
+    outputs: [overview summary, KPI digest]
+    blockingGates: []
+    upstreamStages: [stage-orch-run-aggregate]
+    downstreamStages: [stage-ops-team-review]
+
+  - stageId: stage-ops-team-review
+    pipelineId: pipe-operating-review
+    purpose: 팀별 상태와 KPI를 읽고 다음 액션을 정한다.
+    inputs: [overview summary, team KPIs]
+    outputs: [team decisions, owners]
+    blockingGates: [gate-registry-coverage-check]
+    upstreamStages: [stage-ops-overview-refresh]
+    downstreamStages: [stage-ops-blocker-triage]
+
+  - stageId: stage-ops-blocker-triage
+    pipelineId: pipe-operating-review
+    purpose: blocker와 approval queue를 우선순위 기반으로 정리한다.
+    inputs: [blocker board, approval queue]
+    outputs: [escalation list, resolved blockers]
+    blockingGates: []
+    upstreamStages: [stage-ops-team-review]
+    downstreamStages: [stage-ops-doc-refresh]
+
+  - stageId: stage-ops-doc-refresh
+    pipelineId: pipe-operating-review
+    purpose: registry 변경과 dashboard 결정이 canonical docs에 반영되었는지 닫는다.
+    inputs: [changed registries, escalation list, resolved blockers]
+    outputs: [refreshed docs, freshness exceptions]
+    blockingGates: [gate-doc-freshness-check]
+    upstreamStages: [stage-ops-blocker-triage]
+    downstreamStages: []
+
+gates:
+  - gateId: gate-p2-approval
+    type: human-approval
+    decider: user
+    sla: 24h
+    passCriteria: Go 또는 Hold/Reject가 명시적으로 결정되어 idea 상태가 확정된다.
+    failAction: on-hold 또는 rejected로 이동하고 다음 planning stage 진입을 막는다.
+
+  - gateId: gate-p4-review-pass
+    type: automated-review
+    decider: plan-reviewer
+    sla: immediate
+    passCriteria: PCC-03과 리뷰 기준이 PASS이거나 수용된 WARN 상태다.
+    failAction: PRD authoring stage로 되돌려 수정 후 재검토한다.
+
+  - gateId: gate-p5-review-pass
+    type: automated-review
+    decider: plan-reviewer
+    sla: immediate
+    passCriteria: 와이어프레임이 PRD 화면과 핵심 상태를 빠짐없이 반영한다.
+    failAction: wireframe stage로 되돌려 누락 화면과 흐름을 보완한다.
+
+  - gateId: gate-phase-b-human-review
+    type: human-approval
+    decider: user
+    sla: 12h
+    passCriteria: feature overview와 구현 방향이 승인되어 package generation으로 넘어간다.
+    failAction: revision 또는 rejected로 처리하고 delivery 진행을 멈춘다.
+
+  - gateId: gate-phase-e-dvc
+    type: automated-verification
+    decider: dev-verify
+    sla: immediate
+    passCriteria: DVC 6항목 기준에서 PASS 상태를 획득한다.
+    failAction: 구현 루프로 되돌리거나 retry 한도 초과 시 escalation한다.
+
+  - gateId: gate-dependency-ready
+    type: auto-release
+    decider: dag-engine
+    sla: immediate
+    passCriteria: 모든 hard dependency가 /dev-verify PASS 상태다.
+    failAction: 해당 feature를 blocked 상태로 유지하고 blocker board에 노출한다.
+
+  - gateId: gate-stage-manifest-synced
+    type: system-check
+    decider: team-lead-single-writer
+    sla: immediate
+    passCriteria: stage-manifest와 registry 참조가 최신이며 single-writer 규칙을 위반하지 않는다.
+    failAction: run snapshot 재생성을 중단하고 stale-state alert를 생성한다.
+
+  - gateId: gate-registry-coverage-check
+    type: automated-review
+    decider: role-quality-governance-lead
+    sla: weekly
+    passCriteria: 모든 canonical asset이 asset-registry에 존재하고 ownerRoleId가 해석된다.
+    failAction: asset gap backlog를 생성하고 운영 리뷰에서 닫을 때까지 추적한다.
+
+  - gateId: gate-doc-freshness-check
+    type: automated-review
+    decider: role-quality-governance-lead
+    sla: weekly
+    passCriteria: 변경된 registry와 pipeline 계약이 관련 canonical docs에 반영되었거나 예외가 기록된다.
+    failAction: doc refresh action item을 생성하고 Metrics 섹션에 stale-doc 경고를 표시한다.

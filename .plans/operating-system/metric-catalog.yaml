@@ -1,0 +1,66 @@
+version: "1.0"
+scope: claude-kit-operating-system-v1
+
+metrics:
+  - metricId: metric-active-feature-runs
+    name: Active Feature Runs
+    definition: RunSnapshot에서 status가 active, queued, awaiting-approval인 feature 개수
+    sourceRegistry: run-snapshot
+    refreshRule: stage-manifest 또는 dependency graph 변경 시 즉시 갱신
+    dashboardPlacement: Runs
+
+  - metricId: metric-blocked-feature-count
+    name: Blocked Feature Count
+    definition: blocker board에서 blocked 상태로 남아 있는 feature 개수
+    sourceRegistry: run-snapshot
+    refreshRule: gate-dependency-ready 평가 후 즉시 갱신
+    dashboardPlacement: Blockers
+
+  - metricId: metric-approval-wait-hours
+    name: Approval Wait Hours
+    definition: P2와 Phase B 승인 대기 중인 항목의 평균 대기 시간
+    sourceRegistry: run-snapshot
+    refreshRule: approval queue 갱신 시 재계산
+    dashboardPlacement: Overview
+
+  - metricId: metric-plan-review-pass-rate
+    name: Plan Review Pass Rate
+    definition: P4/P5 review gate가 첫 시도에 PASS한 비율
+    sourceRegistry: run-snapshot
+    refreshRule: plan-review 결과가 기록될 때마다 갱신
+    dashboardPlacement: Pipelines
+
+  - metricId: metric-dev-verify-pass-rate
+    name: Dev Verify Pass Rate
+    definition: Phase E verification이 첫 시도에 PASS한 feature 비율
+    sourceRegistry: run-snapshot
+    refreshRule: dev-verify 결과가 기록될 때마다 갱신
+    dashboardPlacement: Metrics
+
+  - metricId: metric-handoff-latency-hours
+    name: Handoff Latency Hours
+    definition: approved PRD 생성부터 feature package 시작까지 걸린 평균 시간
+    sourceRegistry: run-snapshot
+    refreshRule: bridge 완료와 delivery A 시작 시 재계산
+    dashboardPlacement: Pipelines
+
+  - metricId: metric-registry-coverage-ratio
+    name: Registry Coverage Ratio
+    definition: canonical asset 중 asset-registry에 ownerRoleId와 consumerIds가 연결된 항목 비율
+    sourceRegistry: asset-registry
+    refreshRule: asset-registry 변경 시 재계산
+    dashboardPlacement: Assets
+
+  - metricId: metric-doc-freshness-ratio
+    name: Document Freshness Ratio
+    definition: 관련 registry 변경 이후 freshness rule을 만족하는 canonical docs 비율
+    sourceRegistry: asset-registry
+    refreshRule: doc refresh cycle 완료 후 재계산
+    dashboardPlacement: Metrics
+
+  - metricId: metric-orphan-asset-count
+    name: Orphan Asset Count
+    definition: ownerRoleId가 없거나 consumerIds가 비어 있는 canonical asset 개수
+    sourceRegistry: asset-registry
+    refreshRule: asset-registry 변경 시 즉시 갱신
+    dashboardPlacement: Assets
