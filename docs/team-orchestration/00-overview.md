@@ -8,7 +8,7 @@
 
 현재 claude-kit은 하나의 세션이 하나의 Feature를 순차 처리한다. 다수 Feature가 P1~P7 + A~E 파이프라인을 거쳐야 하는 경우 직렬 병목, 컨텍스트 단절, 수동 게이트 관리, 상태 파편화 문제가 발생한다.
 
-Team Orchestration은 정규화된 Feature 단위를 DAG 기반 의존성과 Phase Gate로 **병렬 조율**하는 계층이다.
+Team Orchestration은 정규화된 feature registry를 입력으로 받아, Feature Agent에게 P1~E 파이프라인 실행을 위임하고, 의존성·게이트·상태를 조율하는 계층이다.
 
 ---
 
@@ -31,7 +31,7 @@ Team Orchestration은 정규화된 Feature 단위를 DAG 기반 의존성과 Pha
 
 ### 원칙 1: 기존 에이전트/스킬 재사용 우선
 
-오케스트라 지휘자가 악기를 연주하지 않듯이, Orchestration Layer는 `/plan-prd`나 `/dev-run`을 직접 실행하지 않고 적절한 에이전트에게 위임한다. 기존 12개 에이전트와 23개 스킬을 그대로 호출한다.
+오케스트라 지휘자가 악기를 연주하지 않듯이, Orchestration Layer는 `/plan-prd`나 `/dev-run`을 직접 실행하지 않고 적절한 에이전트에게 위임한다. 기존 12개 에이전트와 23개 스킬을 그대로 호출한다 (인벤토리 상세: [guide/09-architecture.md](../guide/09-architecture.md)).
 
 ### 원칙 2: Feature 단위 격리 (slug 기반)
 

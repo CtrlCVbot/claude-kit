@@ -85,7 +85,7 @@ claude-kit 현재 repo 기준:
 | 자산 | 위치 (제안) | 역할 | 도메인 |
 |------|-----------|------|--------|
 | `team-lead.md` | `src/core/agents/` | Feature Orchestration 총괄 | core |
-| `team-orchestrate/SKILL.md` | `src/core/skills/` | `/team-orchestrate` 커맨드 진입점 | core |
+| `team-orchestrate/SKILL.md` | `src/core/skills/` | `/team-orchestrate` 커맨드 진입점 — 기존 `/orchestrate` 스킬의 claude-kit 내장 버전 | core |
 | `feature-dependency-graph.yaml` | `src/core/templates/` | 의존성 그래프 템플릿 | core |
 | `team-orchestrate-hook.js` | `src/core/hooks/` | (선택) 진행 상황 자동 기록 | core |
 

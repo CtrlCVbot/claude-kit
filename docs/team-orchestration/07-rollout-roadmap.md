@@ -24,7 +24,7 @@
 
 ## Impl Phase 1: 순차 실행
 
-Team Lead가 1개 Feature씩 P1~E 전체 파이프라인을 순차 실행한다.
+Team Lead가 Feature Agent에게 P1~E 파이프라인 실행을 위임하되, 1개 Feature씩 순차 처리한다.
 
 **구현 범위**:
 - `src/core/agents/team-lead.md` (신규)
@@ -68,7 +68,7 @@ DAG 기반 Wave spawn으로 독립 Feature를 병렬 실행한다.
 
 ## `/team-orchestrate` 커맨드 인터페이스 (Proposal)
 
-> 이 커맨드는 현재 구현되어 있지 않다. Impl Phase 1에서 구현 예정.
+> 이 커맨드는 현재 구현되어 있지 않다. 기존 `/orchestrate` 스킬(`~/.claude/skills/team-orchestrator/`)의 기능을 claude-kit 패키지에 내장하는 것이 목표다. Impl Phase 1에서 구현 예정.
 
 ```bash
 # 기본 실행 (순차)

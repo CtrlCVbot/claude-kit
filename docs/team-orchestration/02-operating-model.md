@@ -8,7 +8,7 @@
 
 | 주체 | 책임 | 금지되는 오해 |
 |------|------|---------------|
-| **Team Lead** | spawn, queue control, approval, aggregation, manifest write | 직접 feature stage를 수행하지 않음 |
+| **Team Lead** | spawn, queue control, approval, aggregation, manifest write | 직접 feature stage를 수행하지 않음. Feature Agent에게 위임만 한다 |
 | **Feature Agent** | feature 단위 stage execution, stage result report | 중앙 상태 writer가 아님 |
 | **Specialist Agent** | 특정 command 내부 전문 작업 | 독립 orchestrator가 아님 |
 
@@ -32,6 +32,7 @@ Team Lead (Main Session)
 | 승인 큐 관리 | Feature Agent의 P2/B 승인 요청을 수집, 사용자에게 전달, 결과 회신 |
 | 진행 보고 | 전체 Feature 상태를 테이블로 사용자에게 주기적 보고 |
 | Manifest write | `stage-manifest.json`에 상태 기록 (single-writer) |
+| 파이프라인 위임 | Feature Agent에게 P1~E 파이프라인 실행을 위임 (직접 실행하지 않음) |
 | 에이전트 생명주기 | Feature Agent spawn, monitoring, shutdown |
 
 **Single-Writer 규칙**: Team Lead만 `stage-manifest.json`을 기록한다. Feature Agent는 상태 메시지를 보고하고, Team Lead가 이를 manifest에 반영한다.

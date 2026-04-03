@@ -10,7 +10,9 @@ Team Orchestration은 신규 `orchestration-state.json`을 공식 SSOT로 도입
 
 Feature Agent는 각 stage 완료/실패/승인 대기 상태를 메시지로 보고하고, Team Lead가 이를 manifest에 반영한다.
 
-### stage-manifest.json 확장 스키마
+### stage-manifest.json 확장 스키마 (Proposed Extension)
+
+> 아래 스키마는 **제안된 확장**이다. 현재 `stage-manifest.json`은 `stages` 필드(guide 기준: `stages.idea.status`, `stages.prd.status` 등)만 사용한다. `orchestration` + `gates` 필드는 Team Orchestration 런타임 구현 시 추가될 예정이다.
 
 ```json
 {

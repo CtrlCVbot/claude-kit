@@ -73,7 +73,7 @@ featureRegistry:
 | PRD 정규화 | execution SSOT 복원까지는 오케스트레이션 전 단계 |
 | raw blueprint intake | 상위 source spec을 직접 실행 입력으로 쓰면 계약 위반 |
 
-오케스트레이터는 위 과정의 **결과물**을 받아 feature 실행 순서와 gate를 관리한다.
+오케스트레이터는 위 과정의 **결과물**(feature registry)을 받아, Feature Agent에게 P1~E 파이프라인 실행을 위임하고, 실행 순서와 gate를 관리한다. 오케스트레이터 자신이 P1~E를 직접 실행하지 않는다.
 
 ---
 
