@@ -99,7 +99,7 @@ function resolveActiveDomains(projectRoot) {
   const profilePath = path.join(projectRoot, 'profile.json');
   if (fs.existsSync(profilePath)) {
     try {
-      const profile = JSON.parse(fs.readFileSync(profilePath, 'utf8'));
+      const profile = readJsonSafe(profilePath);
       if (Array.isArray(profile.domains) && profile.domains.length > 0) {
         domains = profile.domains;
       }
@@ -121,7 +121,7 @@ function resolveTargets(projectRoot) {
   const profilePath = path.join(projectRoot, 'profile.json');
   if (fs.existsSync(profilePath)) {
     try {
-      const profile = JSON.parse(fs.readFileSync(profilePath, 'utf8'));
+      const profile = readJsonSafe(profilePath);
       if (Array.isArray(profile.targets) && profile.targets.length > 0) {
         targets = profile.targets;
       }
@@ -191,6 +191,15 @@ function substituteVars(content, vars) {
     result = result.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
   }
   return result;
+}
+
+function readJsonSafe(filePath) {
+  let content = fs.readFileSync(filePath, 'utf8');
+  // UTF-8 BOM 제거 (Windows 에디터 호환)
+  if (content.charCodeAt(0) === 0xFEFF) {
+    content = content.slice(1);
+  }
+  return JSON.parse(content);
 }
 
 function copyDirRecursive(src, dest) {
@@ -518,9 +527,22 @@ function emitCodex(projectRoot, activeDomains, mode) {
     }
   }
 
-  // 3. hooks.json 생성 (호환 훅만)
+  // 3. hooks.json 생성 + 호환 hook JS 파일 복사
   const allHookFiles = collectHookFiles(activeDomains);
   const { compatible, skipped } = filterCodexHooks(allHookFiles);
+
+  // 호환 hook JS 파일을 plugins/claude-kit/hooks/에 복사
+  fs.mkdirSync(path.join(pluginRoot, 'hooks'), { recursive: true });
+  for (const hookFile of compatible) {
+    for (const domain of activeDomains) {
+      const srcHook = path.join(SRC_DIR, domain, 'hooks', hookFile);
+      if (fs.existsSync(srcHook)) {
+        fs.copyFileSync(srcHook, path.join(pluginRoot, 'hooks', hookFile));
+        break;
+      }
+    }
+  }
+
   const hooksJson = buildCodexHooksJson(compatible, activeDomains);
   fs.writeFileSync(
     path.join(pluginRoot, 'hooks.json'),
@@ -604,14 +626,14 @@ function buildCodexHooksJson(compatibleHooks, activeDomains) {
   if (preToolUse.length > 0) {
     hooks.hooks.PreToolUse = preToolUse.map(h => ({
       matcher: h.matcher,
-      hooks: [{ type: 'command', command: `./scripts/${h.hookFile}` }]
+      hooks: [{ type: 'command', command: `./hooks/${h.hookFile}` }]
     }));
   }
 
   if (postToolUse.length > 0) {
     hooks.hooks.PostToolUse = postToolUse.map(h => ({
       matcher: h.matcher,
-      hooks: [{ type: 'command', command: `./scripts/${h.hookFile}` }]
+      hooks: [{ type: 'command', command: `./hooks/${h.hookFile}` }]
     }));
   }
 
@@ -702,7 +724,7 @@ function writeMetadata(projectRoot, mode, allCounts, allByDomain, activeDomains,
       agents: claudeCounts.agents || (allCounts.codex || {}).agents || 0,
       commands: claudeCounts.commands || (allCounts.codex || {}).commands || 0,
       skills: claudeCounts.skills || (allCounts.codex || {}).skills || 0,
-      hooks: claudeCounts.hooks || 0,
+      hooks: claudeCounts.hooks || (allCounts.codex || {}).hooks || 0,
       rules: claudeCounts.rules || 0
     },
     byDomain: cleanByDomain,

@@ -75,8 +75,8 @@ Codex 타겟 설치 시 아래 구조가 생성된다:
         ├── agents/                     ← 에이전트 (12개)
         ├── commands/                   ← 커맨드 (30개)
         ├── skills/                     ← 스킬 (23개)
-        ├── hooks.json                  ← 호환 가능한 훅만
-        └── assets/                     ← 기타 자산
+        ├── hooks/                      ← 호환 가능한 훅 JS 파일
+        └── hooks.json                  ← 훅 선언 (hooks/ 내 파일 참조)
 ```
 
 Claude + Codex 동시 설치 시, `.claude/`와 `plugins/claude-kit/`이 **독립적으로** 생성된다. 서로 덮어쓰지 않는다.
@@ -87,9 +87,9 @@ Claude + Codex 동시 설치 시, `.claude/`와 `plugins/claude-kit/`이 **독�
 
 | 자산 유형 | 지원 수준 | 설명 |
 |---------|:--------:|------|
-| Skills | **Full** | plugin 내부 `skills/`에 배치 |
-| Commands | **Full** | plugin 내부 `commands/`에 배치 |
-| Agents | **Full** | plugin 내부 `agents/`에 배치 |
+| Skills | **Full (path copy)** | plugin 내부 `skills/`에 배치. 내부 Claude 참조는 v1에서 미변환 |
+| Commands | **Full (path copy)** | plugin 내부 `commands/`에 배치. 내부 Claude 참조는 v1에서 미변환 |
+| Agents | **Full (path copy)** | plugin 내부 `agents/`에 배치. 내부 Claude 참조는 v1에서 미변환 |
 | Hooks | **Partial** | Codex 호환 훅만. Claude 전용 env/세션 의존 훅은 제외 |
 | Rules | **Partial** | 직접 배치 안 함. `AGENTS.md`에서 참조 |
 | MCP | **Excluded** | v1 범위 제외 (인증/transport 설계 필요) |
@@ -119,6 +119,7 @@ Claude + Codex 동시 설치 시, `.claude/`와 `plugins/claude-kit/`이 **독�
 | MCP 미지원 | 인증, transport, app/plugin 연결 구조가 동반되어야 함 |
 | 전역 설치 미지원 | `~/.codex`가 아닌 repo-local 플러그인만 (충돌 정책 미정) |
 | Rules 간접 참조 | Codex plugin 1급 배치 단위로 미확인, `AGENTS.md`에 흡수 |
+| 자산 내부 Claude 참조 미변환 | 복사된 자산의 `.claude/` 경로 참조는 v1에서 자동 치환하지 않음. v2 범위 |
 | 런타임 100% 동일성 없음 | 설치 가능성 우선, 동작 parity는 v2 |
 
 ---

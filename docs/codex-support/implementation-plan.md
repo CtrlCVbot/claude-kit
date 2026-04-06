@@ -515,9 +515,9 @@ source assets
 
 | 자산 유형 | Claude 출력 | Codex 출력 | 처리 방식 | 이유 |
 |------|------|------|------|------|
-| `skills` | `.claude/skills/` | `plugins/claude-kit/skills/` | 기본 지원 | 문서형 자산이며 plugin 내부 skill 구조와 잘 맞는다 |
-| `commands` | `.claude/commands/` | `plugins/claude-kit/commands/` | 기본 지원 | Codex plugin 예제에도 command 자산이 존재하며 배치 의미가 분명하다 |
-| `agents` | `.claude/agents/` | `plugins/claude-kit/agents/` | 기본 지원 | plugin 내부 agent 구조가 확인되며, authoring 자산으로 이식 가능성이 높다 |
+| `skills` | `.claude/skills/` | `plugins/claude-kit/skills/` | 기본 지원 (path copy) | 파일 그대로 복사. 내부 `.claude/` 참조는 v1에서 미변환 |
+| `commands` | `.claude/commands/` | `plugins/claude-kit/commands/` | 기본 지원 (path copy) | 파일 그대로 복사. 내부 `.claude/` 참조는 v1에서 미변환 |
+| `agents` | `.claude/agents/` | `plugins/claude-kit/agents/` | 기본 지원 (path copy) | 파일 그대로 복사. 내부 `.claude/` 참조는 v1에서 미변환 |
 | `hooks` | `.claude/hooks/` | `plugins/claude-kit/hooks.json` + 필요 시 보조 스크립트 | 부분 지원 | 가장 플랫폼 의존적이며 잘못 이식하면 설치는 되지만 실행 중 오동작 위험이 크다 |
 | `rules` | `.claude/rules/` | 직접 배치 안 함, `AGENTS.md` 또는 plugin 문서에서 참조 | 부분 지원 | Codex plugin의 1급 배치 단위로 확인되지 않았고, 우선은 컨텍스트 문서에 흡수하는 편이 안전하다 |
 | `templates` | `CLAUDE.md`, `.claude/settings.json`, `profile.json` | `AGENTS.md`, plugin manifest, marketplace | 타깃별 생성 | 플랫폼별 컨텍스트 문서와 설정 단위가 다르므로 공용 템플릿 복제로 해결되지 않는다 |

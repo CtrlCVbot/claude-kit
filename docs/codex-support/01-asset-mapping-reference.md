@@ -8,9 +8,11 @@
 
 | 자산 유형 | Claude 출력 | Codex 출력 | 지원 수준 | 변환 유형 |
 |---------|------------|-----------|:--------:|----------|
-| `skills` | `.claude/skills/` | `plugins/claude-kit/skills/` | Full | 경로 변환 |
-| `commands` | `.claude/commands/` | `plugins/claude-kit/commands/` | Full | 경로 변환 |
-| `agents` | `.claude/agents/` | `plugins/claude-kit/agents/` | Full | 경로 변환 |
+| `skills` | `.claude/skills/` | `plugins/claude-kit/skills/` | Full (path copy) | 경로 변환 |
+| `commands` | `.claude/commands/` | `plugins/claude-kit/commands/` | Full (path copy) | 경로 변환 |
+| `agents` | `.claude/agents/` | `plugins/claude-kit/agents/` | Full (path copy) | 경로 변환 |
+
+> **"Full (path copy)"의 의미**: 파일은 그대로 복사된다. 자산 내부의 `.claude/` 경로 참조는 v1에서 자동 변환하지 않는다. 내부 참조 정규화는 v2 범위.
 | `hooks` | `.claude/hooks/*.js` | `plugins/claude-kit/hooks.json` | Partial | 구조 변환 (JS → JSON 선언) |
 | `rules` | `.claude/rules/*.md` | `AGENTS.md` 참조 | Partial | 내용 흡수 |
 | `templates` | `CLAUDE.md`, `.claude/settings.json` | `AGENTS.md`, `plugin.json`, `marketplace.json` | Target-specific | 타겟별 생성 |
