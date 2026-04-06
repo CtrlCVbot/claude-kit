@@ -1,8 +1,12 @@
 # Codex 설치 지원 v1 구현계획
 
+> **Document Status**: Approved Design / Pre-Implementation. 구현 착수 전 설계 명세.
+>
 > 목적: `claude-kit`를 Claude 전용 설치기에서 Claude + Codex 멀티타깃 설치기로 확장하기 위한 v1 구현 명세를 고정한다.
 >
 > 이 문서는 아이디어 제안서가 아니라, 구현 전에 읽고 바로 작업에 들어갈 수 있는 설계 명세이자 근거 문서다.
+>
+> 관련 문서: [00-codex-quickstart.md](./00-codex-quickstart.md) (사용자 가이드), [01-asset-mapping-reference.md](./01-asset-mapping-reference.md) (자산 매핑 레퍼런스)
 
 ---
 
@@ -17,7 +21,7 @@ Codex 쪽 설계는 Claude 자산을 억지로 이식하는 방식이 아니라,
 **왜 필요한가**
 
 - 현재 설치기 [`scripts/setup.js`](../../scripts/setup.js)는 `.claude/`, `CLAUDE.md`, `.claude/settings.json`을 중심으로 설계되어 있다.
-- 반면 로컬 Codex 구조에서는 plugin manifest, `skills/`, `hooks.json`, `commands/`, `agents/`가 plugin 단위로 조직되어 있다.
+- 반면 로컬 Codex 구조에서는 plugin manifest, `skills/`, `hooks.json`, `commands/`, `agents/`가 plugin 단위로 조직되어 있다. (이 구조는 현시점 Codex 공식 플러그인 스펙 기준이며, Codex 플랫폼 변경 시 재검토가 필요하다.)
 - 두 플랫폼의 출력 구조와 런타임 계약이 다르므로, Claude 구조를 강제 복제하면 Codex에서는 "설치는 됐지만 반쯤만 맞는 상태"가 될 위험이 크다.
 
 **이 원칙이 의미하는 것**
@@ -623,6 +627,8 @@ v1에서 지원하는 항목은 아래와 같다.
 - Codex로 이식 가능한 최소 hook 연결
 - Codex 제외 자산 목록 메타데이터 기록
 
+> **team-orchestration 연결**: Team Orchestration 문서(`docs/team-orchestration/`)는 claude-kit 자산(12 agents / 30 commands / 23 skills)을 전제한다. Codex 타겟 시 Full 지원 자산(skills, commands, agents)은 동일하게 사용 가능하지만, Partial/Excluded 자산(hooks, rules, mcp)의 차이는 팀 오케스트레이션 운영 시 고려해야 한다.
+
 ### 왜 이것들은 지금 해야 하는가
 
 - 이것들이 있어야 비로소 "Codex 지원"이라고 부를 수 있다.
@@ -669,22 +675,67 @@ v1에서 지원하는 항목은 아래와 같다.
 
 ### 시나리오 A: `claude only`
 
-- `targets=["claude"]`
+- `targets=["claude"]` (또는 targets 필드 생략)
 - 기존 설치 결과가 유지되는지 확인
+
+```bash
+# 실행
+echo '{"domains":["core","dev"]}' > profile.json && pnpm run setup
+
+# 기대 결과
+# - .claude/ 폴더 정상 생성
+# - CLAUDE.md 생성
+# - plugins/ 폴더 미생성
+# - .claude-kit-meta.json에 targets: ["claude"]
+```
 
 ### 시나리오 B: `codex only`
 
 - `targets=["codex"]`
 - Codex plugin 구조가 완전 생성되는지 확인
 
+```bash
+# 실행
+echo '{"domains":["core","dev"],"targets":["codex"]}' > profile.json && pnpm run setup
+
+# 기대 결과
+# - plugins/claude-kit/ 폴더 생성
+# - plugins/claude-kit/.codex-plugin/plugin.json 생성
+# - AGENTS.md 생성
+# - .agents/plugins/marketplace.json 생성 또는 병합
+# - .claude/ 폴더 미생성
+# - .claude-kit-meta.json에 skippedForCodex 기록
+```
+
 ### 시나리오 C: `claude + codex`
 
 - `targets=["claude","codex"]`
 - `.claude/`와 Codex plugin이 동시에 생성되고 서로 덮어쓰지 않는지 확인
 
+```bash
+# 실행
+echo '{"domains":["core","dev"],"targets":["claude","codex"]}' > profile.json && pnpm run setup
+
+# 기대 결과
+# - .claude/ 폴더 정상 생성
+# - plugins/claude-kit/ 폴더 정상 생성
+# - CLAUDE.md + AGENTS.md 각각 생성
+# - 두 타겟의 자산이 서로 덮어쓰지 않음
+```
+
 ### 시나리오 D: `update install`
 
 - 기존 `CLAUDE.md`, `AGENTS.md`, marketplace 파일이 있을 때 병합/보존 규칙이 유지되는지 확인
+
+```bash
+# 실행 (이미 설치된 프로젝트에서 재설치)
+pnpm run setup
+
+# 기대 결과
+# - 기존 CLAUDE.md, AGENTS.md 보존 (덮어쓰기 안 함)
+# - marketplace.json 기존 엔트리 유지 + claude-kit 엔트리 병합
+# - 중복 plugin 엔트리 생성 안 함
+```
 
 ## 7.2 검증 항목
 
