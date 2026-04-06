@@ -1,19 +1,22 @@
 /**
- * setup.js — claude-kit v2.0 postinstall 스크립트
+ * setup.js — claude-kit v2.1 postinstall 스크립트
  *
- * npm 패키지의 AI 거버넌스 컴포넌트를 프로젝트의 .claude/ 디렉토리에 복사한다.
- * Husky 패턴: npm 패키지 → postinstall → 로컬 경로 복사.
+ * npm 패키지의 AI 거버넌스 컴포넌트를 프로젝트에 설치한다.
  *
  * v2.0: 도메인 분리 (core/dev/plan) + 도메인별 플래트닝
+ * v2.1: 멀티타겟 (Claude + Codex) + 3-stage 아키텍처
+ *
+ * 3-stage 아키텍처:
+ *   source assets → normalization → target emitter(s)
  *
  * 8단계 흐름:
  * 1. 프로젝트 루트 탐색 (INIT_CWD)
  * 2. 설치 모드 판별 (신규 vs 업데이트)
- * 3. 도메인 감지 (profile.json domains 필드)
- * 4. .claude/ 디렉토리 구조 생성
- * 5. 도메인별 플래트닝 복사
- * 6. 템플릿 처리 (CLAUDE.md, profile.json, settings.json)
- * 7. 메타데이터 기록 (.claude-kit-meta.json)
+ * 3. 도메인 + 타겟 감지
+ * 4. 타겟별 디렉토리 구조 생성
+ * 5. 도메인별 플래트닝 복사 (타겟별 emitter)
+ * 6. 템플릿 처리
+ * 7. 메타데이터 기록
  * 8. 결과 출력
  */
 
@@ -22,28 +25,53 @@
 const fs = require('fs');
 const path = require('path');
 const { mergeSettings } = require('./merge-settings');
+const { filterCodexHooks } = require('./codex-hook-compat');
 
 const SRC_DIR = path.resolve(__dirname, '..', 'src');
 
 const COMPONENT_DIRS = ['agents', 'commands', 'skills', 'hooks', 'rules'];
+const CODEX_COMPONENT_DIRS = ['agents', 'commands', 'skills'];
 
 function main() {
   try {
     const projectRoot = detectProjectRoot();
     const mode = detectMode(projectRoot);
     const activeDomains = resolveActiveDomains(projectRoot);
-    createDirectories(projectRoot);
-    const { counts, byDomain } = copyComponents(projectRoot, activeDomains);
-    processTemplates(projectRoot, mode, activeDomains);
-    writeMetadata(projectRoot, mode, counts, byDomain, activeDomains);
-    printResult(mode, counts, activeDomains);
+    const activeTargets = resolveTargets(projectRoot);
+
+    const allCounts = {};
+    const allByDomain = {};
+    const codexSkipped = [];
+
+    // --- Claude emitter ---
+    if (activeTargets.includes('claude')) {
+      createClaudeDirectories(projectRoot);
+      const { counts, byDomain } = emitClaude(projectRoot, activeDomains);
+      processClaudeTemplates(projectRoot, mode, activeDomains);
+      allCounts.claude = counts;
+      allByDomain.claude = byDomain;
+    }
+
+    // --- Codex emitter ---
+    if (activeTargets.includes('codex')) {
+      const { counts, byDomain, skipped } = emitCodex(projectRoot, activeDomains, mode);
+      allCounts.codex = counts;
+      allByDomain.codex = byDomain;
+      codexSkipped.push(...skipped);
+    }
+
+    writeMetadata(projectRoot, mode, allCounts, allByDomain, activeDomains, activeTargets, codexSkipped);
+    printResult(mode, allCounts, activeDomains, activeTargets);
   } catch (error) {
     console.error(`claude-kit 설치 실패: ${error.message}`);
     process.exit(0);
   }
 }
 
-// 1단계: 프로젝트 루트 탐색
+// ═══════════════════════════════════════════
+// 공통 단계
+// ═══════════════════════════════════════════
+
 function detectProjectRoot() {
   if (process.env.INIT_CWD) {
     return process.env.INIT_CWD;
@@ -60,16 +88,11 @@ function detectProjectRoot() {
   throw new Error('프로젝트 루트를 찾을 수 없습니다 (package.json 없음)');
 }
 
-// 2단계: 설치 모드 판별
 function detectMode(projectRoot) {
   const metaPath = path.join(projectRoot, '.claude-kit-meta.json');
-  if (fs.existsSync(metaPath)) {
-    return 'update';
-  }
-  return 'fresh';
+  return fs.existsSync(metaPath) ? 'update' : 'fresh';
 }
 
-// 3단계: 도메인 감지 (v2 신규)
 function resolveActiveDomains(projectRoot) {
   let domains = ['core', 'dev'];
 
@@ -85,7 +108,6 @@ function resolveActiveDomains(projectRoot) {
     }
   }
 
-  // core는 항상 포함
   if (!domains.includes('core')) {
     domains.unshift('core');
   }
@@ -93,52 +115,82 @@ function resolveActiveDomains(projectRoot) {
   return domains;
 }
 
-// 4단계: 디렉토리 구조 생성
-function createDirectories(projectRoot) {
-  const claudeDir = path.join(projectRoot, '.claude');
-  for (const dir of COMPONENT_DIRS) {
-    fs.mkdirSync(path.join(claudeDir, dir), { recursive: true });
+function resolveTargets(projectRoot) {
+  let targets = ['claude'];
+
+  const profilePath = path.join(projectRoot, 'profile.json');
+  if (fs.existsSync(profilePath)) {
+    try {
+      const profile = JSON.parse(fs.readFileSync(profilePath, 'utf8'));
+      if (Array.isArray(profile.targets) && profile.targets.length > 0) {
+        targets = profile.targets;
+      }
+    } catch {
+      // profile.json 파싱 실패 시 기본값 사용
+    }
+  }
+
+  return targets;
+}
+
+function resolveVariables(projectRoot) {
+  let projectName = 'my-project';
+  let projectDescription = '';
+  let packageManager = 'pnpm';
+
+  const pkgPath = path.join(projectRoot, 'package.json');
+  if (fs.existsSync(pkgPath)) {
+    try {
+      const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+      projectName = pkg.name || projectName;
+      projectDescription = pkg.description || projectDescription;
+    } catch {
+      // ignore
+    }
+  }
+
+  if (fs.existsSync(path.join(projectRoot, 'pnpm-lock.yaml'))) {
+    packageManager = 'pnpm';
+  } else if (fs.existsSync(path.join(projectRoot, 'yarn.lock'))) {
+    packageManager = 'yarn';
+  } else if (fs.existsSync(path.join(projectRoot, 'bun.lockb'))) {
+    packageManager = 'bun';
+  } else {
+    packageManager = 'npm';
+  }
+
+  const today = new Date().toISOString().split('T')[0];
+
+  return {
+    PROJECT_NAME: projectName,
+    PROJECT_DESCRIPTION: projectDescription,
+    PACKAGE_MANAGER: packageManager,
+    DATE: today,
+    VERSION: resolveVersion()
+  };
+}
+
+function resolveVersion() {
+  const pkgPath = path.join(__dirname, '..', 'package.json');
+  try {
+    return JSON.parse(fs.readFileSync(pkgPath, 'utf8')).version || '2.0.0';
+  } catch {
+    return '2.0.0';
   }
 }
 
-// 5단계: 도메인별 플래트닝 복사 (v2 변경)
-function copyComponents(projectRoot, activeDomains) {
-  const byDomain = {};
+function readTemplate(templateDir, filename) {
+  const filePath = path.join(templateDir, filename);
+  if (!fs.existsSync(filePath)) return null;
+  return fs.readFileSync(filePath, 'utf8');
+}
 
-  for (const domain of activeDomains) {
-    byDomain[domain] = {};
-    const srcDomainDir = path.join(SRC_DIR, domain);
-
-    if (!fs.existsSync(srcDomainDir)) {
-      for (const cat of COMPONENT_DIRS) {
-        byDomain[domain][cat] = 0;
-      }
-      continue;
-    }
-
-    for (const category of COMPONENT_DIRS) {
-      const srcPath = path.join(srcDomainDir, category);
-      if (!fs.existsSync(srcPath)) {
-        byDomain[domain][category] = 0;
-        continue;
-      }
-
-      const destPath = path.join(projectRoot, '.claude', category);
-      copyDirRecursive(srcPath, destPath);
-      byDomain[domain][category] = countFiles(srcPath, category);
-    }
+function substituteVars(content, vars) {
+  let result = content;
+  for (const [key, value] of Object.entries(vars)) {
+    result = result.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
   }
-
-  // 합계 계산
-  const counts = {};
-  for (const cat of COMPONENT_DIRS) {
-    counts[cat] = Object.values(byDomain).reduce(
-      (sum, domainCounts) => sum + (domainCounts[cat] || 0),
-      0
-    );
-  }
-
-  return { counts, byDomain };
+  return result;
 }
 
 function copyDirRecursive(src, dest) {
@@ -175,8 +227,83 @@ function countFiles(dir, type) {
     .length;
 }
 
-// 6단계: 템플릿 처리
-function processTemplates(projectRoot, mode, activeDomains) {
+function collectDomainComponents(activeDomains, categories) {
+  const byDomain = {};
+
+  for (const domain of activeDomains) {
+    byDomain[domain] = {};
+    const srcDomainDir = path.join(SRC_DIR, domain);
+
+    if (!fs.existsSync(srcDomainDir)) {
+      for (const cat of categories) {
+        byDomain[domain][cat] = 0;
+      }
+      continue;
+    }
+
+    for (const category of categories) {
+      const srcPath = path.join(srcDomainDir, category);
+      if (!fs.existsSync(srcPath)) {
+        byDomain[domain][category] = 0;
+        continue;
+      }
+      byDomain[domain][category] = countFiles(srcPath, category);
+    }
+  }
+
+  return byDomain;
+}
+
+// ═══════════════════════════════════════════
+// Claude Emitter
+// ═══════════════════════════════════════════
+
+function createClaudeDirectories(projectRoot) {
+  const claudeDir = path.join(projectRoot, '.claude');
+  for (const dir of COMPONENT_DIRS) {
+    fs.mkdirSync(path.join(claudeDir, dir), { recursive: true });
+  }
+}
+
+function emitClaude(projectRoot, activeDomains) {
+  const byDomain = {};
+
+  for (const domain of activeDomains) {
+    byDomain[domain] = {};
+    const srcDomainDir = path.join(SRC_DIR, domain);
+
+    if (!fs.existsSync(srcDomainDir)) {
+      for (const cat of COMPONENT_DIRS) {
+        byDomain[domain][cat] = 0;
+      }
+      continue;
+    }
+
+    for (const category of COMPONENT_DIRS) {
+      const srcPath = path.join(srcDomainDir, category);
+      if (!fs.existsSync(srcPath)) {
+        byDomain[domain][category] = 0;
+        continue;
+      }
+
+      const destPath = path.join(projectRoot, '.claude', category);
+      copyDirRecursive(srcPath, destPath);
+      byDomain[domain][category] = countFiles(srcPath, category);
+    }
+  }
+
+  const counts = {};
+  for (const cat of COMPONENT_DIRS) {
+    counts[cat] = Object.values(byDomain).reduce(
+      (sum, domainCounts) => sum + (domainCounts[cat] || 0),
+      0
+    );
+  }
+
+  return { counts, byDomain };
+}
+
+function processClaudeTemplates(projectRoot, mode, activeDomains) {
   const templateDir = path.join(SRC_DIR, 'templates');
   if (!fs.existsSync(templateDir)) return;
 
@@ -217,7 +344,6 @@ function processTemplates(projectRoot, mode, activeDomains) {
   fs.writeFileSync(settingsPath, JSON.stringify(merged, null, 2) + '\n');
 }
 
-// settings.json 동적 생성 (도메인 조건부 훅 등록)
 function buildSettingsTemplate(activeDomains) {
   const settings = {
     permissions: {
@@ -325,7 +451,6 @@ function buildHooksConfig(activeDomains) {
   const hooks = {
     PreToolUse: [],
     PostToolUse: [
-      // Core 훅 — 항상 등록
       { matcher: 'Edit|Write', hooks: ['node .claude/hooks/edit-tracker.js'] },
       { matcher: 'Edit|Write', hooks: ['node .claude/hooks/code-quality-reminder.js'] },
       { matcher: '*', hooks: ['node .claude/hooks/output-secret-filter.js'] },
@@ -336,7 +461,6 @@ function buildHooksConfig(activeDomains) {
     ]
   };
 
-  // Dev 도메인 훅 — 조건부
   if (activeDomains.includes('dev')) {
     hooks.PreToolUse.push(
       { matcher: 'Edit|Write', hooks: ['node .claude/hooks/dev-tdd-guard.js'] },
@@ -344,7 +468,6 @@ function buildHooksConfig(activeDomains) {
     );
   }
 
-  // Planning 도메인 훅 — 조건부
   if (activeDomains.includes('plan')) {
     hooks.PreToolUse.push(
       { matcher: 'Edit|Write', hooks: ['node .claude/hooks/plan-doc-guard.js'] }
@@ -354,59 +477,184 @@ function buildHooksConfig(activeDomains) {
   return hooks;
 }
 
-function readTemplate(templateDir, filename) {
-  const filePath = path.join(templateDir, filename);
-  if (!fs.existsSync(filePath)) return null;
-  return fs.readFileSync(filePath, 'utf8');
-}
+// ═══════════════════════════════════════════
+// Codex Emitter
+// ═══════════════════════════════════════════
 
-function substituteVars(content, vars) {
-  let result = content;
-  for (const [key, value] of Object.entries(vars)) {
-    result = result.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
+function emitCodex(projectRoot, activeDomains, mode) {
+  const pluginRoot = path.join(projectRoot, 'plugins', 'claude-kit');
+  const templateDir = path.join(SRC_DIR, 'templates');
+  const vars = resolveVariables(projectRoot);
+
+  // 1. 디렉토리 생성
+  for (const dir of CODEX_COMPONENT_DIRS) {
+    fs.mkdirSync(path.join(pluginRoot, dir), { recursive: true });
   }
-  return result;
-}
+  fs.mkdirSync(path.join(pluginRoot, '.codex-plugin'), { recursive: true });
 
-function resolveVariables(projectRoot) {
-  let projectName = 'my-project';
-  let projectDescription = '';
-  let packageManager = 'pnpm';
+  // 2. 자산 복사 (skills, commands, agents만 — hooks, rules 제외)
+  const byDomain = {};
+  for (const domain of activeDomains) {
+    byDomain[domain] = {};
+    const srcDomainDir = path.join(SRC_DIR, domain);
 
-  const pkgPath = path.join(projectRoot, 'package.json');
-  if (fs.existsSync(pkgPath)) {
-    try {
-      const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
-      projectName = pkg.name || projectName;
-      projectDescription = pkg.description || projectDescription;
-    } catch {
-      // ignore parse errors
+    if (!fs.existsSync(srcDomainDir)) {
+      for (const cat of CODEX_COMPONENT_DIRS) {
+        byDomain[domain][cat] = 0;
+      }
+      continue;
+    }
+
+    for (const category of CODEX_COMPONENT_DIRS) {
+      const srcPath = path.join(srcDomainDir, category);
+      if (!fs.existsSync(srcPath)) {
+        byDomain[domain][category] = 0;
+        continue;
+      }
+
+      const destPath = path.join(pluginRoot, category);
+      copyDirRecursive(srcPath, destPath);
+      byDomain[domain][category] = countFiles(srcPath, category);
     }
   }
 
-  // lockfile로 패키지 매니저 감지
-  if (fs.existsSync(path.join(projectRoot, 'pnpm-lock.yaml'))) {
-    packageManager = 'pnpm';
-  } else if (fs.existsSync(path.join(projectRoot, 'yarn.lock'))) {
-    packageManager = 'yarn';
-  } else if (fs.existsSync(path.join(projectRoot, 'bun.lockb'))) {
-    packageManager = 'bun';
-  } else {
-    packageManager = 'npm';
+  // 3. hooks.json 생성 (호환 훅만)
+  const allHookFiles = collectHookFiles(activeDomains);
+  const { compatible, skipped } = filterCodexHooks(allHookFiles);
+  const hooksJson = buildCodexHooksJson(compatible, activeDomains);
+  fs.writeFileSync(
+    path.join(pluginRoot, 'hooks.json'),
+    JSON.stringify(hooksJson, null, 2) + '\n'
+  );
+
+  // 4. plugin.json manifest 생성
+  const pluginTemplate = readTemplate(templateDir, 'plugin.json.template');
+  if (pluginTemplate) {
+    fs.writeFileSync(
+      path.join(pluginRoot, '.codex-plugin', 'plugin.json'),
+      substituteVars(pluginTemplate, vars)
+    );
   }
 
-  const today = new Date().toISOString().split('T')[0];
+  // 5. marketplace.json 생성/병합
+  const marketplaceTemplate = readTemplate(templateDir, 'marketplace-entry.json.template');
+  if (marketplaceTemplate) {
+    mergeMarketplace(projectRoot, substituteVars(marketplaceTemplate, vars));
+  }
 
-  return {
-    PROJECT_NAME: projectName,
-    PROJECT_DESCRIPTION: projectDescription,
-    PACKAGE_MANAGER: packageManager,
-    DATE: today
-  };
+  // 6. AGENTS.md — 신규 설치 시에만 생성
+  const agentsMdPath = path.join(projectRoot, 'AGENTS.md');
+  if (mode === 'fresh' && !fs.existsSync(agentsMdPath)) {
+    const template = readTemplate(templateDir, 'AGENTS.md.template');
+    if (template) {
+      fs.writeFileSync(agentsMdPath, substituteVars(template, vars));
+    }
+  }
+
+  // 합계 계산
+  const counts = {};
+  for (const cat of CODEX_COMPONENT_DIRS) {
+    counts[cat] = Object.values(byDomain).reduce(
+      (sum, domainCounts) => sum + (domainCounts[cat] || 0),
+      0
+    );
+  }
+  counts.hooks = compatible.length;
+
+  return { counts, byDomain, skipped };
 }
 
-// 7단계: 메타데이터 기록
-function writeMetadata(projectRoot, mode, counts, byDomain, activeDomains) {
+function collectHookFiles(activeDomains) {
+  const hookFiles = [];
+
+  for (const domain of activeDomains) {
+    const hooksDir = path.join(SRC_DIR, domain, 'hooks');
+    if (!fs.existsSync(hooksDir)) continue;
+
+    const files = fs.readdirSync(hooksDir).filter(f => f.endsWith('.js'));
+    hookFiles.push(...files);
+  }
+
+  return hookFiles;
+}
+
+function buildCodexHooksJson(compatibleHooks, activeDomains) {
+  const hooks = { hooks: {} };
+
+  // 이벤트별 분류
+  const preToolUse = [];
+  const postToolUse = [];
+
+  for (const hookFile of compatibleHooks) {
+    // PreToolUse 훅 (blocking guards)
+    if (['dev-tdd-guard.js', 'dev-db-guard.js', 'plan-doc-guard.js'].includes(hookFile)) {
+      if (hookFile === 'dev-db-guard.js') {
+        preToolUse.push({ matcher: 'Bash', hookFile });
+      } else {
+        preToolUse.push({ matcher: 'Edit|Write', hookFile });
+      }
+    } else {
+      // PostToolUse 훅
+      if (['edit-tracker.js', 'code-quality-reminder.js', 'security-auto-trigger.js'].includes(hookFile)) {
+        postToolUse.push({ matcher: 'Edit|Write', hookFile });
+      }
+    }
+  }
+
+  if (preToolUse.length > 0) {
+    hooks.hooks.PreToolUse = preToolUse.map(h => ({
+      matcher: h.matcher,
+      hooks: [{ type: 'command', command: `./scripts/${h.hookFile}` }]
+    }));
+  }
+
+  if (postToolUse.length > 0) {
+    hooks.hooks.PostToolUse = postToolUse.map(h => ({
+      matcher: h.matcher,
+      hooks: [{ type: 'command', command: `./scripts/${h.hookFile}` }]
+    }));
+  }
+
+  return hooks;
+}
+
+function mergeMarketplace(projectRoot, entryJson) {
+  const marketplaceDir = path.join(projectRoot, '.agents', 'plugins');
+  fs.mkdirSync(marketplaceDir, { recursive: true });
+
+  const marketplacePath = path.join(marketplaceDir, 'marketplace.json');
+  let marketplace = { plugins: [] };
+
+  if (fs.existsSync(marketplacePath)) {
+    try {
+      marketplace = JSON.parse(fs.readFileSync(marketplacePath, 'utf8'));
+      if (!Array.isArray(marketplace.plugins)) {
+        marketplace.plugins = [];
+      }
+    } catch {
+      marketplace = { plugins: [] };
+    }
+  }
+
+  const newEntry = JSON.parse(entryJson);
+
+  // 중복 체크
+  const existingIndex = marketplace.plugins.findIndex(p => p.name === newEntry.name);
+  if (existingIndex >= 0) {
+    // 기존 엔트리 업데이트
+    marketplace.plugins[existingIndex] = { ...marketplace.plugins[existingIndex], ...newEntry };
+  } else {
+    marketplace.plugins.push(newEntry);
+  }
+
+  fs.writeFileSync(marketplacePath, JSON.stringify(marketplace, null, 2) + '\n');
+}
+
+// ═══════════════════════════════════════════
+// 메타데이터 + 결과 출력
+// ═══════════════════════════════════════════
+
+function writeMetadata(projectRoot, mode, allCounts, allByDomain, activeDomains, activeTargets, codexSkipped) {
   const metaPath = path.join(projectRoot, '.claude-kit-meta.json');
 
   let meta = {};
@@ -418,22 +666,17 @@ function writeMetadata(projectRoot, mode, counts, byDomain, activeDomains) {
     }
   }
 
-  const pkgPath = path.join(__dirname, '..', 'package.json');
-  let version = '0.0.0';
-  if (fs.existsSync(pkgPath)) {
-    try {
-      version = JSON.parse(fs.readFileSync(pkgPath, 'utf8')).version || version;
-    } catch {
-      // ignore
-    }
-  }
-
+  const version = resolveVersion();
   const now = new Date().toISOString();
-  const total = Object.values(counts).reduce((a, b) => a + b, 0);
 
-  // byDomain에서 0값 제거
+  // Claude 카운트 (기존 호환)
+  const claudeCounts = allCounts.claude || {};
+  const total = Object.values(claudeCounts).reduce((a, b) => a + b, 0);
+
+  // byDomain 정리
   const cleanByDomain = {};
-  for (const [domain, domainCounts] of Object.entries(byDomain)) {
+  const primaryByDomain = allByDomain.claude || allByDomain.codex || {};
+  for (const [domain, domainCounts] of Object.entries(primaryByDomain)) {
     const filtered = {};
     for (const [cat, count] of Object.entries(domainCounts)) {
       if (count > 0) {
@@ -445,41 +688,72 @@ function writeMetadata(projectRoot, mode, counts, byDomain, activeDomains) {
     }
   }
 
+  const preservedFiles = ['profile.json'];
+  if (activeTargets.includes('claude')) preservedFiles.push('CLAUDE.md');
+  if (activeTargets.includes('codex')) preservedFiles.push('AGENTS.md');
+
   const updated = {
     version,
     installedAt: meta.installedAt || now,
     updatedAt: now,
     domains: activeDomains,
+    targets: activeTargets,
     components: {
-      agents: counts.agents || 0,
-      commands: counts.commands || 0,
-      skills: counts.skills || 0,
-      hooks: counts.hooks || 0,
-      rules: counts.rules || 0
+      agents: claudeCounts.agents || (allCounts.codex || {}).agents || 0,
+      commands: claudeCounts.commands || (allCounts.codex || {}).commands || 0,
+      skills: claudeCounts.skills || (allCounts.codex || {}).skills || 0,
+      hooks: claudeCounts.hooks || 0,
+      rules: claudeCounts.rules || 0
     },
     byDomain: cleanByDomain,
-    totalComponents: total,
-    preservedFiles: ['CLAUDE.md', 'profile.json']
+    totalComponents: total || Object.values(allCounts.codex || {}).reduce((a, b) => a + b, 0),
+    preservedFiles
   };
+
+  // Codex 출력 정보
+  if (activeTargets.includes('codex')) {
+    updated.outputs = updated.outputs || {};
+    updated.outputs.codex = {
+      root: 'plugins/claude-kit',
+      generated: [
+        'AGENTS.md',
+        'plugins/claude-kit/.codex-plugin/plugin.json',
+        '.agents/plugins/marketplace.json',
+        'plugins/claude-kit/hooks.json'
+      ]
+    };
+  }
+
+  if (activeTargets.includes('claude')) {
+    updated.outputs = updated.outputs || {};
+    updated.outputs.claude = {
+      root: '.claude',
+      generated: ['CLAUDE.md', '.claude/settings.json']
+    };
+  }
+
+  // Codex skip 기록
+  if (codexSkipped.length > 0) {
+    updated.skippedForCodex = codexSkipped;
+  }
 
   fs.writeFileSync(metaPath, JSON.stringify(updated, null, 2) + '\n');
 }
 
-// 8단계: 결과 출력
-function printResult(mode, counts, activeDomains) {
-  const total = Object.values(counts).reduce((a, b) => a + b, 0);
+function printResult(mode, allCounts, activeDomains, activeTargets) {
+  const version = resolveVersion();
   const verb = mode === 'fresh' ? '설치 완료' : '업데이트 완료';
 
-  const pkgPath = path.join(__dirname, '..', 'package.json');
-  let version = '2.0.0';
-  try {
-    version = JSON.parse(fs.readFileSync(pkgPath, 'utf8')).version || version;
-  } catch {
-    // ignore
+  for (const target of activeTargets) {
+    const counts = allCounts[target] || {};
+    const total = Object.values(counts).reduce((a, b) => a + b, 0);
+    const targetLabel = target === 'claude' ? 'Claude (.claude/)' : 'Codex (plugins/claude-kit/)';
+
+    console.log(`\nclaude-kit v${version} ${verb} [${targetLabel}]`);
+    console.log(`  ${counts.agents || 0} agents, ${counts.commands || 0} commands, ${counts.skills || 0} skills, ${counts.hooks || 0} hooks, ${counts.rules || 0} rules`);
+    console.log(`  총 ${total}개 컴포넌트 (domains: ${activeDomains.join(',')})`);
   }
 
-  console.log(`\nclaude-kit v${version} ${verb} (${total}개 컴포넌트, domains: ${activeDomains.join(',')})`);
-  console.log(`  ${counts.agents || 0} agents, ${counts.commands || 0} commands, ${counts.skills || 0} skills, ${counts.hooks || 0} hooks, ${counts.rules || 0} rules`);
   console.log(`  모드: ${mode === 'fresh' ? '신규 설치' : '업데이트'}\n`);
 }
 

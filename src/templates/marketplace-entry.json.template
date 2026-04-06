@@ -1,0 +1,6 @@
+{
+  "name": "claude-kit",
+  "version": "{{VERSION}}",
+  "path": "./plugins/claude-kit",
+  "enabled": true
+}

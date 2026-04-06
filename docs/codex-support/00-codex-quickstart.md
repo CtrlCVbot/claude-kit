@@ -1,6 +1,6 @@
 # Codex에서 claude-kit 사용하기
 
-> **Document Status**: Pre-Implementation. 이 가이드는 v1 구현 완료 후 실제 동작 기준으로 갱신 예정.
+> **Document Status**: v1 Available. `profile.json`에 `targets: ["codex"]` 추가 후 `pnpm run setup`으로 설치.
 
 ---
 

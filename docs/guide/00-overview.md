@@ -2,7 +2,7 @@
 
 ## 한눈에 보기
 
-claude-kit은 AI-First 기획+개발 파이프라인이다. 아이디어 발굴부터 RICE 스크리닝, 기획, PRD 작성, 개발 핸드오프까지 하나의 파이프라인으로 자동화한다. `pnpm add -D claude-kit` 한 줄로 ~86개 AI 거버넌스 컴포넌트가 설치되며, `/plan-idea`로 아이디어를 등록하면 `/dev-feature`로 개발이 시작될 때까지 모든 단계가 커맨드 기반으로 연결된다.
+claude-kit은 AI-First 기획+개발 파이프라인이다. 아이디어 발굴부터 RICE 스크리닝, 기획, PRD 작성, 개발 핸드오프까지 하나의 파이프라인으로 자동화한다. `pnpm add -D claude-kit` 한 줄로 AI 거버넌스 컴포넌트가 설치되며, Claude(`.claude/`)와 Codex(`plugins/claude-kit/`) 모두 지원한다. `/plan-idea`로 아이디어를 등록하면 `/dev-feature`로 개발이 시작될 때까지 모든 단계가 커맨드 기반으로 연결된다.
 
 ---
 
@@ -61,6 +61,10 @@ claude-kit은 3개 도메인으로 분리된다. 소스는 도메인별로 나�
 - **core** -- 공유 규칙, 공통 hooks/skills/templates. 접두사 없음 (항상 설치)
 - **dev** -- 개발 전용 에이전트, 커맨드, 스킬, 훅. `dev-` 접두사
 - **plan** -- 기획 전용 에이전트, 커맨드, 스킬, 훅, 템플릿. `plan-` 접두사 (선택 설치)
+
+**설치 타겟** (`profile.json`의 `targets`):
+- `claude` (기본) -- `.claude/` 폴더 구조, `CLAUDE.md` 컨텍스트
+- `codex` (선택) -- `plugins/claude-kit/` 플러그인 구조, `AGENTS.md` 컨텍스트
 
 ```
 src/

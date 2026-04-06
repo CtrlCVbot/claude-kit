@@ -1,0 +1,17 @@
+# {{PROJECT_NAME}}
+
+{{PROJECT_DESCRIPTION}}
+
+## 핵심 원칙
+- **TDD 필수**: 테스트 먼저 -> 구현 -> 리팩토링
+- **Rich Domain Model** + Hexagonal Architecture
+- **축약어 금지**: repository, service (전체 이름)
+
+## 구조
+- `apps/` -- 앱 | `packages/` -- 공유 패키지
+
+## Skills
+`plugins/claude-kit/skills/`에서 자동 로드. 컨텍스트에 맞는 스킬이 자동 활성화됨.
+
+# currentDate
+Today's date is {{DATE}}.

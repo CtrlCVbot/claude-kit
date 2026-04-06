@@ -5,6 +5,7 @@
     "type": "monorepo"
   },
   "domains": ["core", "dev"],
+  "targets": ["claude"],
   "monorepo": {
     "packageManager": "{{PACKAGE_MANAGER}}",
     "framework": "turborepo"

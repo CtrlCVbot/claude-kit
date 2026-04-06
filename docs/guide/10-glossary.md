@@ -39,7 +39,10 @@
 | Stage Manifest | `.plans/stage-manifest.json`. feature별 기획 단계 상태 추적 |
 | SSOT | Single Source of Truth. 하나의 정보는 하나의 문서에서만 정의 |
 | Quality Gate | Phase D TASK별 통과 기준 5개. 3회 연속 실패 시 blocked |
-| 플래트닝 | `src/{domain}/{category}/`에서 `.claude/{category}/`로 빌드하는 과정 |
+| 플래트닝 | `src/{domain}/{category}/`에서 타겟별 출력 경로로 빌드하는 과정. Claude: `.claude/{category}/`, Codex: `plugins/claude-kit/{category}/` |
+| targets | 설치 출력 타겟. `claude`(기본) = `.claude/` 구조, `codex`(선택) = `plugins/claude-kit/` 플러그인 |
+| Codex Plugin | repo-local 플러그인. `plugins/claude-kit/` 아래에 skills/commands/agents/hooks.json 배치 |
+| AGENTS.md | Codex 프로젝트 컨텍스트 문서. Claude의 `CLAUDE.md`에 대응 |
 | IDEA-{YYYYMMDD}-{NNN} | 아이디어 ID 형식. 날짜 + 일별 순번 채번 |
 
 ---

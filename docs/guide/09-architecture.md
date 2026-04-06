@@ -39,20 +39,33 @@ plan ──> core <── dev
 
 ### 플래트닝 (소스 -> 설치)
 
+**Claude 타겟** (기본):
+
 ```
 src/core/hooks/edit-tracker.js      -> .claude/hooks/edit-tracker.js
 src/dev/commands/dev-commit.md      -> .claude/commands/dev-commit.md
 src/plan/agents/plan-prd-writer.md  -> .claude/agents/plan-prd-writer.md
 ```
 
-### 도메인 선택 (`profile.json`)
+**Codex 타겟** (선택):
 
-| 시나리오 | domains 값 | 설치 결과 |
-|---------|-----------|----------|
-| 기본 (미지정) | (없음) | core, dev |
-| 개발만 | `["core", "dev"]` | core, dev |
-| 기획 포함 | `["core", "dev", "plan"]` | core, dev, plan |
-| core 생략 시도 | `["dev"]` | core, dev (core 자동 추가) |
+```
+src/dev/agents/dev-architect.md     -> plugins/claude-kit/agents/dev-architect.md
+src/dev/commands/dev-commit.md      -> plugins/claude-kit/commands/dev-commit.md
+src/core/hooks/edit-tracker.js      -> plugins/claude-kit/hooks.json 엔트리
+```
+
+> Codex에서는 hooks가 개별 JS 파일이 아니라 `hooks.json` 선언으로 변환된다. 호환되지 않는 훅은 skip 처리되어 `.claude-kit-meta.json`의 `skippedForCodex`에 기록된다.
+
+### 도메인 + 타겟 선택 (`profile.json`)
+
+| 시나리오 | domains | targets | 설치 결과 |
+|---------|---------|---------|----------|
+| 기본 (미지정) | (없음) | (없음) | core+dev, Claude만 |
+| 개발만 | `["core", "dev"]` | `["claude"]` | core+dev, Claude만 |
+| 기획 포함 | `["core", "dev", "plan"]` | `["claude"]` | core+dev+plan, Claude만 |
+| Codex만 | `["core", "dev"]` | `["codex"]` | core+dev, Codex만 |
+| 동시 설치 | `["core", "dev"]` | `["claude", "codex"]` | core+dev, 양쪽 |
 
 ---
 
@@ -314,6 +327,7 @@ idea -> screening -> screened -> feature -> prd -> wireframe -> stitch -> bridge
 | `project.name` | 프로젝트명 (kebab-case) | -- |
 | `project.domain` | 비즈니스 도메인 | -- |
 | `domains` | 활성 도메인 | `["core", "dev"]` |
+| `targets` | 설치 타겟 (`claude`, `codex`) | `["claude"]` |
 | `bootstrap.mode` | 부트스트랩 단계 | `pre-monorepo` |
 | `stack.language` | 언어 | `typescript` |
 | `monorepo.framework` | 프레임워크 | `next` |
