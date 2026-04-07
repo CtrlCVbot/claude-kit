@@ -6,6 +6,32 @@ Phase 0-3이 완료된 상태에서, Codex 또는 다른 AI 에이전트가 이 
 
 ---
 
+## 0. Phase 0→4 전환점
+
+Phase 0-3에서는 Codex install이 임시로 Claude source(`SRC_CLAUDE`)에 의존했다. Phase 4부터는 Codex install의 정식 source를 `src/codex/`로 전환한다. pairing-registry와 Codex 템플릿/스키마가 이 전환을 가능하게 한다.
+
+### SSOT 선언
+
+이 문서(`08-phase4-codex-implementation.md`)가 Phase 4 구현의 **최종 SSOT**이다. `02-commands-spec.md`와 `05-implementation-roadmap.md`에 이미 포함된 Phase 4 개념(--target, pairing, C7)은 방향 참조이며, 구현 세부사항은 이 문서를 따른다.
+
+### 현재 repo 반영 상태
+
+| Task | 상태 | 설명 |
+|------|------|------|
+| T1 | `new` | pairing-registry.json 미존재 |
+| T2-T5 | `new` | Codex 템플릿 4종 미존재 |
+| T6-T9 | `new` | Codex 스키마 4종 미존재 |
+| T10 | `new` | kit-create.md에 --target/--skip-codex 미반영 |
+| T11 | `new` | kit-validate.md에 --target 미반영 |
+| T12 | `partial` | kit-list.md는 src/codex/ 스캔 언급하지만 --target/--pairing 미반영 |
+| T13 | `new` | kit-audit.md에 C7 미반영 |
+| T14 | `verify-only` | kit-naming-guard.js가 이미 `src/(claude|codex)/` 지원 |
+| T15 | `partial` | kit-maintainer.md가 이미 듀얼 스캔 언급하지만 Codex 스키마/C7 미반영 |
+| T16 | `new` | kit-scaffolding SKILL.md 아직 8종만 기술 |
+| T17 | `new` | kit-validation SKILL.md 아직 5종만 기술 |
+
+---
+
 ## 1. 현재 상태 (Phase 0-3 완료)
 
 ### .claude/ 구조 (22 파일)
@@ -71,6 +97,55 @@ Layer 5: T12 (kit-list.md) + T13 (kit-audit.md) + T15 (kit-maintainer.md)
 | `codex` | string \| null | 경로 (예: `src/codex/dev/agents/dev-architect.md`) |
 | `createdAt` | string | ISO 8601 날짜 |
 
+### pairing-registry lifecycle 계약
+
+| 이벤트 | 동작 |
+|--------|------|
+| `/kit-create --target both` | 엔트리 추가, status: `paired` |
+| `/kit-create --skip-codex "reason"` | 엔트리 추가, status: `codex-skip`, reason 필수 |
+| `/kit-create --target codex` | 엔트리 추가, status: `codex-native-only` |
+| 컴포넌트 rename | 기존 엔트리 삭제 + 새 이름으로 재생성 (수동) |
+| 컴포넌트 delete | 엔트리 삭제 (수동, `/kit-audit C7`이 감지) |
+| 이미 존재하는 identity | 기존 엔트리 업데이트 (덮어쓰기) |
+
+**status 정의**:
+- `paired`: Claude + Codex 양쪽 모두 authoring source 존재
+- `codex-skip`: Claude만 존재, Codex sibling 의도적 생략 (reason 필수)
+- `codex-native-only`: Codex만 존재 (Claude 대응 없음)
+
+**reason 규칙**: `codex-skip`일 때만 필수. 그 외 상태에서는 null.
+
+### /kit-create target 정책 매트릭스
+
+| 타입 | `--target claude` | `--target codex` | `--target both` | `--skip-codex` |
+|------|-------------------|-------------------|-----------------|----------------|
+| agent | WARN (required sibling) | 허용 | 기본값 | 허용 (reason 필수) |
+| command | WARN (required sibling) | 허용 | 기본값 | 허용 (reason 필수) |
+| skill | 기본값 | 허용 | 허용 | 불필요 (optional) |
+| hook | 기본값 | 허용 | 허용 | 불필요 (optional) |
+| rule | 기본값 | **거부** (claude-origin shared) | **거부** | 불필요 |
+
+- WARN: 생성은 진행하되 "required codex sibling" 경고 출력
+- 거부: 생성 중단 + 오류 메시지
+
+### /kit-validate 책임 경계
+
+`/kit-validate`는 **authoring source 검증**만 담당한다.
+
+| 대상 | 검증 범위 |
+|------|----------|
+| `src/claude/` | Claude authoring source (schema-{type}.md) |
+| `src/codex/` | Codex authoring source (schema-codex-{type}.md) |
+| `.codex/agents/*.toml` | **검증 대상 아님** (runtime artifact, setup/emitter 검증 단계) |
+| `.codex/hooks.json` | **검증 대상 아님** (runtime artifact) |
+
+### rule 처리 원칙
+
+- `src/claude/core/rules/*.md`는 **claude-origin shared guidance**이다.
+- Codex에서는 `AGENTS.md` guidance로 소비한다.
+- `.codex/rules/*.rules` (exec-policy)는 Phase 4 기본 범위가 아니다.
+- `/kit-create rule --target codex`는 거부한다.
+
 ---
 
 ### T2: .claude/skills/kit-scaffolding/references/template-codex-skill.md
@@ -135,8 +210,9 @@ TODO: 출력 형식을 정의하세요.
 
 ## Codex 참고 사항
 
+- 이 파일은 **authoring source**이다. runtime file이 아니다.
+- 설치/emit 단계에서 `.codex/agents/*.toml` (Codex 공식 subagent runtime surface)로 연결된다.
 - Claude sibling: `src/claude/{{DOMAIN}}/agents/{{FULL_NAME}}.md`
-- Codex subagent로 실행됩니다. Claude의 Agent_Prompt XML과 다른 형식입니다.
 ```
 
 ---
@@ -196,7 +272,11 @@ Claude pre-hook과 동일한 JS 구조 + Codex 등록 주석:
  * Codex 등록 포맷:
  *   hooks.json: { type: "command", command: "./hooks/{{FULL_NAME}}.js" }
  *
- * 주의: Codex에서는 Stop 이벤트가 지원되지 않습니다.
+ * Codex hooks 현황 (2026-04 기준):
+ *   - Stop 이벤트: 공식 지원되나, runtime 구현 상태 확인 필요
+ *   - PreToolUse/PostToolUse matcher: 현재 runtime에서 Bash만 실질 매칭
+ *   - Windows: hooks 현재 비활성화 상태
+ *   - hooks는 experimental 기능
  */
 
 const fs = require("fs");
@@ -323,6 +403,10 @@ main();
 | Agent_Prompt XML 없음 | FAIL | `<Agent_Prompt>` 태그가 없어야 함 |
 | YAML frontmatter 없음 | WARN | Claude 스타일 6필드 frontmatter 없어야 함 |
 
+## authoring source 경계
+
+이 스키마는 `src/codex/.../agents/*.md` (authoring source)를 검증한다. `.codex/agents/*.toml` (runtime artifact) 검증은 setup/emitter 검증 단계에서 다룬다.
+
 ## 페어링 검증
 
 | 검증 항목 | 수준 | 기준 |
@@ -408,9 +492,19 @@ main();
 
 | 검증 항목 | 수준 | 기준 |
 |-----------|------|------|
-| Stop 이벤트 미사용 | FAIL | `Event: Stop` 없어야 함 |
+| Stop 이벤트 주의 | WARN | `Event: Stop` 사용 시 Codex runtime 호환 확인 필요 |
 | Codex 등록 주석 | WARN | `hooks.json` 또는 `type: "command"` 언급 |
 | codex-hook-compat 호환 | WARN | `scripts/codex-hook-compat.js`의 isCodexCompatible() 통과 |
+
+## Codex hooks 제약 사항
+
+| 항목 | 상태 |
+|------|------|
+| hooks 전체 | experimental |
+| Windows | 현재 비활성화 |
+| PreToolUse/PostToolUse matcher | 현재 runtime에서 `Bash`만 실질 매칭 |
+| Stop 이벤트 | 공식 지원되나 runtime 구현 상태 확인 필요 |
+| 등록 위치 | `~/.codex/hooks.json` 또는 `<repo>/.codex/hooks.json` |
 ```
 
 ---
@@ -560,7 +654,7 @@ argument-hint: <type> <domain> <name> [--target claude|codex|both] [--skip-codex
 - 생성 후 git add는 하지 않는다 (사용자가 직접 커밋).
 - agent/command를 `--target claude`로만 생성하면 "required codex sibling" 경고를 표시한다.
 - rule 타입은 `--target codex`를 거부한다 (claude-origin shared).
-- hook `--stop`은 `--target codex`를 거부한다 (Codex에 Stop 이벤트 없음).
+- hook `--stop`과 `--target codex`를 조합할 경우 Codex Stop 지원 상태를 경고한다 (experimental).
 ```
 
 ---
@@ -610,6 +704,7 @@ argument-hint: '[component] [--type <type>] [--domain <domain>] [--target claude
 1. `--target`에 따라 스캔 대상을 결정한다:
    - `--target claude` (기본): `src/claude/` 스캔, `schema-{type}.md` 사용
    - `--target codex`: `src/codex/` 스캔, `schema-codex-{type}.md` 사용
+   주의: /kit-validate는 authoring source만 검증한다. `.codex/agents/*.toml` 등 runtime artifact는 대상 아님.
 ```
 
 ---
@@ -873,21 +968,81 @@ grep "claude|codex" .claude/hooks/kit-naming-guard.js
 
 ## 5. 검증 계획
 
-17개 작업 완료 후 아래 명령으로 검증한다.
+17개 작업 완료 후 아래 명령으로 검증한다. 플랫폼 중립(Bash/PowerShell 모두 작동) 기준.
 
-| # | 명령 | 기대값 |
-|---|------|--------|
-| 1 | `find .claude -name "template-codex-*" \| wc -l` | 4 |
-| 2 | `find .claude -name "schema-codex-*" \| wc -l` | 4 |
-| 3 | `cat src/pairing-registry.json \| python3 -c "import json,sys; json.load(sys.stdin); print('OK')"` | OK |
-| 4 | `grep -c "{{FULL_NAME}}" .claude/skills/kit-scaffolding/references/template-codex-agent.md` | 3+ |
-| 5 | `grep -c "src/codex/" .claude/skills/kit-validation/references/schema-codex-agent.md` | 1+ |
-| 6 | `grep -c "\-\-target" .claude/commands/kit-create.md` | 5+ |
-| 7 | `grep -c "\-\-pairing" .claude/commands/kit-list.md` | 2+ |
-| 8 | `grep -c "C7" .claude/commands/kit-audit.md` | 2+ |
-| 9 | `grep "claude\|codex" .claude/hooks/kit-naming-guard.js` | matches existing regex |
-| 10 | `grep -c "template-codex" .claude/skills/kit-scaffolding/SKILL.md` | 4+ |
-| 11 | `grep -c "schema-codex" .claude/skills/kit-validation/SKILL.md` | 4+ |
+### 파일 존재 검증
+
+```bash
+# Codex 템플릿 4개
+node -e "const g=require('glob');console.log(g.sync('.claude/**/template-codex-*').length)"
+# 기대: 4
+
+# Codex 스키마 4개
+node -e "const g=require('glob');console.log(g.sync('.claude/**/schema-codex-*').length)"
+# 기대: 4
+
+# pairing-registry.json 유효
+node -e "JSON.parse(require('fs').readFileSync('src/pairing-registry.json','utf8'));console.log('OK')"
+# 기대: OK
+```
+
+### 내용 검증
+
+| # | 대상 | 확인 사항 | 방법 |
+|---|------|----------|------|
+| 1 | template-codex-agent.md | `{{FULL_NAME}}` 3+회 | Grep |
+| 2 | template-codex-agent.md | "authoring source" 문구 | Grep |
+| 3 | schema-codex-agent.md | `src/codex/` 경로 | Grep |
+| 4 | schema-codex-hook.md | "experimental" 또는 "Bash matcher" 언급 | Grep |
+| 5 | kit-create.md | `--target` 5+회 | Grep |
+| 6 | kit-create.md | `--skip-codex` 3+회 | Grep |
+| 7 | kit-list.md | `--pairing` 2+회 | Grep |
+| 8 | kit-audit.md | `C7` 2+회 | Grep |
+| 9 | kit-naming-guard.js | `claude|codex` 정규식 | Grep |
+| 10 | kit-scaffolding SKILL.md | `template-codex` 4+회 | Grep |
+| 11 | kit-validation SKILL.md | `schema-codex` 4+회 | Grep |
+
+### pairing-registry 예시 검증
+
+구현 완료 후 `/kit-create`로 생성한 엔트리가 아래 패턴과 일치하는지 확인:
+
+```json
+// paired 예시: dev-architect (agent, Claude + Codex 양쪽 존재)
+{
+  "identity": "dev-architect",
+  "type": "agent",
+  "domain": "dev",
+  "status": "paired",
+  "reason": null,
+  "claude": "src/claude/dev/agents/dev-architect.md",
+  "codex": "src/codex/dev/agents/dev-architect.md",
+  "createdAt": "2026-04-07T..."
+}
+
+// codex-skip 예시: dev-run (command, Claude 전용 + 사유 명시)
+{
+  "identity": "dev-run",
+  "type": "command",
+  "domain": "dev",
+  "status": "codex-skip",
+  "reason": "Codex entry flow 미설계",
+  "claude": "src/claude/dev/commands/dev-run.md",
+  "codex": null,
+  "createdAt": "2026-04-07T..."
+}
+
+// codex-native-only 예시: 가상의 Codex 전용 subagent helper
+{
+  "identity": "dev-codex-helper",
+  "type": "agent",
+  "domain": "dev",
+  "status": "codex-native-only",
+  "reason": null,
+  "claude": null,
+  "codex": "src/codex/dev/agents/dev-codex-helper.md",
+  "createdAt": "2026-04-07T..."
+}
+```
 
 모든 검증이 통과하면 Phase 4 완료.
 
