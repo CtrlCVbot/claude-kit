@@ -5,6 +5,7 @@
  *
  * v2.0: 도메인 분리 (core/dev/plan) + 도메인별 플래트닝
  * v2.1: 멀티타겟 (Claude + Codex) + 3-stage 아키텍처
+ * v2.2: target-separated source (src/claude/ + src/codex/) + 공유 templates
  *
  * 3-stage 아키텍처:
  *   source assets → normalization → target emitter(s)
@@ -27,7 +28,10 @@ const path = require('path');
 const { mergeSettings } = require('./merge-settings');
 const { filterCodexHooks } = require('./codex-hook-compat');
 
-const SRC_DIR = path.resolve(__dirname, '..', 'src');
+const SRC_BASE   = path.resolve(__dirname, '..', 'src');
+const SRC_CLAUDE = path.join(SRC_BASE, 'claude');
+const SRC_CODEX  = path.join(SRC_BASE, 'codex');
+const TEMPLATES  = path.join(SRC_BASE, 'templates');
 
 const COMPONENT_DIRS = ['agents', 'commands', 'skills', 'hooks', 'rules'];
 const CODEX_COMPONENT_DIRS = ['agents', 'commands', 'skills'];
@@ -241,7 +245,7 @@ function collectDomainComponents(activeDomains, categories) {
 
   for (const domain of activeDomains) {
     byDomain[domain] = {};
-    const srcDomainDir = path.join(SRC_DIR, domain);
+    const srcDomainDir = path.join(SRC_CLAUDE, domain);
 
     if (!fs.existsSync(srcDomainDir)) {
       for (const cat of categories) {
@@ -279,7 +283,7 @@ function emitClaude(projectRoot, activeDomains) {
 
   for (const domain of activeDomains) {
     byDomain[domain] = {};
-    const srcDomainDir = path.join(SRC_DIR, domain);
+    const srcDomainDir = path.join(SRC_CLAUDE, domain);
 
     if (!fs.existsSync(srcDomainDir)) {
       for (const cat of COMPONENT_DIRS) {
@@ -313,7 +317,7 @@ function emitClaude(projectRoot, activeDomains) {
 }
 
 function processClaudeTemplates(projectRoot, mode, activeDomains) {
-  const templateDir = path.join(SRC_DIR, 'templates');
+  const templateDir = TEMPLATES;
   if (!fs.existsSync(templateDir)) return;
 
   const vars = resolveVariables(projectRoot);
@@ -493,7 +497,7 @@ function buildHooksConfig(activeDomains) {
 
 function emitCodex(projectRoot, activeDomains, mode) {
   const pluginRoot = path.join(projectRoot, 'plugins', 'claude-kit');
-  const templateDir = path.join(SRC_DIR, 'templates');
+  const templateDir = TEMPLATES;
   const vars = resolveVariables(projectRoot);
 
   // 1. 디렉토리 생성
@@ -507,7 +511,7 @@ function emitCodex(projectRoot, activeDomains, mode) {
   for (const domain of activeDomains) {
     byDomain[domain] = {};
     byDomain[domain].hooks = 0;
-    const srcDomainDir = path.join(SRC_DIR, domain);
+    const srcDomainDir = path.join(SRC_CLAUDE, domain);
 
     if (!fs.existsSync(srcDomainDir)) {
       for (const cat of CODEX_COMPONENT_DIRS) {
@@ -537,7 +541,7 @@ function emitCodex(projectRoot, activeDomains, mode) {
   fs.mkdirSync(path.join(pluginRoot, 'hooks'), { recursive: true });
   for (const hookFile of compatible) {
     for (const domain of activeDomains) {
-      const srcHook = path.join(SRC_DIR, domain, 'hooks', hookFile);
+      const srcHook = path.join(SRC_CLAUDE, domain, 'hooks', hookFile);
       if (fs.existsSync(srcHook)) {
         fs.copyFileSync(srcHook, path.join(pluginRoot, 'hooks', hookFile));
         break;
@@ -547,7 +551,7 @@ function emitCodex(projectRoot, activeDomains, mode) {
 
   const compatibleSet = new Set(compatible);
   for (const domain of activeDomains) {
-    const hooksDir = path.join(SRC_DIR, domain, 'hooks');
+    const hooksDir = path.join(SRC_CLAUDE, domain, 'hooks');
     if (!fs.existsSync(hooksDir)) {
       byDomain[domain].hooks = 0;
       continue;
@@ -605,7 +609,7 @@ function collectHookFiles(activeDomains) {
   const hookFiles = [];
 
   for (const domain of activeDomains) {
-    const hooksDir = path.join(SRC_DIR, domain, 'hooks');
+    const hooksDir = path.join(SRC_CLAUDE, domain, 'hooks');
     if (!fs.existsSync(hooksDir)) continue;
 
     const files = fs.readdirSync(hooksDir).filter(f => f.endsWith('.js'));
