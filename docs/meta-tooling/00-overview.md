@@ -142,4 +142,5 @@ kit-maintainer 에이전트
 | [04-agent-and-hook.md](04-agent-and-hook.md) | 에이전트 + 훅 명세 (듀얼 경로) |
 | [05-implementation-roadmap.md](05-implementation-roadmap.md) | 구현 로드맵 (Phase 0-4, MVCI) |
 | [07-phase0-migration-plan.md](07-phase0-migration-plan.md) | Phase 0 마이그레이션 상세 구현 계획 |
+| [08-phase4-codex-implementation.md](08-phase4-codex-implementation.md) | Phase 4 Codex 통합 상세 구현 명세 (자기 완결형) |
 | [feedback-review.md](feedback-review.md) | 피드백 리뷰 + Codex 통합 반영 현황 |
