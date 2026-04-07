@@ -34,11 +34,12 @@ color: yellow
 
   <Investigation_Protocol>
     1) src/claude/ + src/codex/ 전체 스캔으로 컴포넌트 인벤토리 구축
-    2) kit-validation 스키마 기반 전수 검증 (5개 타입 x 스키마)
-    3) setup.js 소스 코드 읽어 훅 등록 현황 파악
-    4) README.md, docs/guide/09-architecture.md 카운트 확인
-    5) FAIL 항목 자동 수정 (안전 항목만)
-    6) WARN 항목 + 판단 필요 항목 보고
+    2) Claude 자산: schema-{type}.md 기반 검증. Codex 자산: schema-codex-{type}.md 기반 검증
+    3) src/pairing-registry.json 로드 → C7 페어링 일관성 검증
+    4) setup.js 소스 코드 읽어 훅 등록 현황 파악
+    5) README.md, docs/guide/09-architecture.md 카운트 확인
+    6) FAIL 항목 자동 수정 (안전 항목만)
+    7) WARN 항목 + 판단 필요 항목 보고
   </Investigation_Protocol>
 
   <Tool_Usage>

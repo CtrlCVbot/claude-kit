@@ -1,7 +1,7 @@
 ---
 allowed-tools: Read, Grep, Glob
 description: claude-kit의 모든 컴포넌트를 도메인/타입별로 조회합니다.
-argument-hint: '[--domain <domain>] [--type <type>] [--verbose]'
+argument-hint: '[--domain <domain>] [--type <type>] [--target claude|codex|both] [--pairing] [--verbose]'
 ---
 
 # /kit-list
@@ -24,6 +24,8 @@ argument-hint: '[--domain <domain>] [--type <type>] [--verbose]'
 | `--domain` | 도메인 필터 (`core`, `dev`, `plan`) | 전체 |
 | `--type` | 타입 필터 (`skill`, `agent`, `command`, `hook`, `rule`) | 전체 |
 | `--verbose` | description 포함 출력 | 꺼짐 |
+| `--target` | 타깃 필터 (`claude`/`codex`/`both`) | `both` |
+| `--pairing` | 페어링 상태 표시 | 꺼짐 |
 
 ## Workflow
 

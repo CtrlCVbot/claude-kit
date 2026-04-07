@@ -1,15 +1,17 @@
 ---
 name: kit-validation
 description: |
-  claude-kit 컴포넌트 검증 엔진. 5개 Claude 스키마로 skill, agent, command, hook, rule의
-  표준 준수 여부를 검증한다. /kit-validate와 /kit-audit가 이 스킬을 참조한다.
+  claude-kit 컴포넌트 검증 엔진. 9개 스키마(Claude 5 + Codex 4)로 skill, agent, command,
+  hook, rule의 표준 준수 여부를 검증한다. /kit-validate와 /kit-audit가 이 스킬을 참조한다.
 ---
 
 # kit-validation
 
 컴포넌트가 표준 패턴을 준수하는지 스키마 기반으로 검증한다.
 
-## 스키마 목록 (5종)
+## 스키마 목록 (9종: Claude 5 + Codex 4)
+
+### Claude 스키마
 
 | # | 스키마 | 대상 | 핵심 검증 |
 |---|--------|------|-----------|
@@ -18,6 +20,15 @@ description: |
 | 3 | schema-command.md | `src/claude/{domain}/commands/` | 간단/복합 판별, 제목 패턴, Phase 구조 |
 | 4 | schema-hook.md | `src/claude/{domain}/hooks/` | shebang, JSDoc, 이벤트별 exit 코드, fail-open |
 | 5 | schema-rule.md | `src/claude/core/rules/` | frontmatter 없음, 도메인 접두사 없음, Why/How |
+
+### Codex 스키마
+
+| # | 스키마 | 대상 | 핵심 검증 |
+|---|--------|------|-----------|
+| 6 | schema-codex-skill.md | `src/codex/{domain}/skills/` | frontmatter, Codex 참고 사항 |
+| 7 | schema-codex-agent.md | `src/codex/{domain}/agents/` | 헤딩 기반 섹션, Agent_Prompt XML 없음 |
+| 8 | schema-codex-command.md | `src/codex/{domain}/commands/` | Entry Flow, 슬래시 커맨드 없음 |
+| 9 | schema-codex-hook.md | `src/codex/{domain}/hooks/` | Codex hooks 제약, 등록 주석 |
 
 ## 검증 수준
 

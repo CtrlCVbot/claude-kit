@@ -23,7 +23,7 @@ argument-hint: '[--category <cat>] [--fix] [--verbose]'
 
 | 인자 | 설명 | 기본값 |
 |------|------|--------|
-| `--category` | 감사 카테고리 필터 (`C1`~`C6`) | 전체 |
+| `--category` | 감사 카테고리 필터 (`C1`~`C7`) | 전체 |
 | `--fix` | 자동 수정 가능 항목 처리 | 꺼짐 |
 | `--verbose` | 상세 출력 | 꺼짐 |
 
@@ -63,6 +63,14 @@ argument-hint: '[--category <cat>] [--fix] [--verbose]'
 
 - README.md의 컴포넌트 카운트가 실제와 일치하는지
 - `docs/guide/09-architecture.md`의 컴포넌트 목록이 최신인지
+
+### C7: 페어링 일관성 (필수)
+
+- `src/pairing-registry.json` 존재 여부
+- 레지스트리에 있는 자산이 파일시스템에 실제 존재하는지 (FAIL)
+- 파일시스템의 agent/command가 레지스트리에 등록되어 있는지 (WARN)
+- `codex-skip` 상태인데 reason이 비어있는 항목 (FAIL)
+- `paired` 상태인데 한쪽 파일만 존재하는 항목 (FAIL)
 
 ## Workflow
 

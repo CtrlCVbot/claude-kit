@@ -1,7 +1,7 @@
 ---
 allowed-tools: Read, Grep, Glob
 description: claude-kit 컴포넌트의 표준 준수 여부를 검증합니다.
-argument-hint: '[component] [--type <type>] [--domain <domain>] [--verbose]'
+argument-hint: '[component] [--type <type>] [--domain <domain>] [--target claude|codex] [--verbose]'
 ---
 
 # /kit-validate
@@ -27,12 +27,17 @@ argument-hint: '[component] [--type <type>] [--domain <domain>] [--verbose]'
 | `--type` | 타입 필터 (`skill`, `agent`, `command`, `hook`, `rule`) | 전체 |
 | `--domain` | 도메인 필터 (`core`, `dev`, `plan`) | 전체 |
 | `--verbose` | 상세 출력 | 꺼짐 |
+| `--target` | 타깃 플랫폼 (`claude` / `codex`) | `claude` |
+
+주의: /kit-validate는 authoring source만 검증한다. `.codex/agents/*.toml` 등 runtime artifact는 대상 아님.
 
 ## Workflow
 
 ### Phase 1: 대상 식별
 
-1. 인자가 있으면 해당 컴포넌트만, 없으면 `src/claude/` 전체를 스캔한다.
+1. `--target`에 따라 스캔 대상을 결정한다:
+   - `--target claude` (기본): `src/claude/` 스캔, `schema-{type}.md` 사용
+   - `--target codex`: `src/codex/` 스캔, `schema-codex-{type}.md` 사용
 2. `--type`이나 `--domain`으로 필터링한다.
 3. 각 컴포넌트의 타입을 경로 기반으로 판별한다:
    - `src/claude/{domain}/skills/{name}/SKILL.md` → skill

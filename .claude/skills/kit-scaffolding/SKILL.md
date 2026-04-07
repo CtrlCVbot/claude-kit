@@ -1,8 +1,8 @@
 ---
 name: kit-scaffolding
 description: |
-  claude-kit 컴포넌트 스캐폴딩 엔진. 8개 Claude 템플릿으로 skill, agent, command(2종),
-  hook(3종), rule을 표준 패턴에 맞게 생성한다. /kit-create 커맨드가 이 스킬을 참조한다.
+  claude-kit 컴포넌트 스캐폴딩 엔진. 12개 템플릿(Claude 8 + Codex 4)으로 듀얼 타깃
+  컴포넌트를 표준 패턴에 맞게 생성한다. /kit-create 커맨드가 이 스킬을 참조한다.
 ---
 
 # kit-scaffolding
@@ -34,7 +34,9 @@ description: |
 2. 치환: `DOMAIN` → `NAME` → `FULL_NAME` → 나머지 (FULL_NAME이 NAME을 포함하므로)
 3. 치환 후 YAML/JSON 구문 확인
 
-## 템플릿 목록 (8종)
+## 템플릿 목록 (12종: Claude 8 + Codex 4)
+
+### Claude 템플릿
 
 | # | 템플릿 | 대상 타입 | 생성 경로 |
 |---|--------|----------|-----------|
@@ -46,6 +48,15 @@ description: |
 | 6 | template-hook-post.md | hook (--post) | `src/claude/{domain}/hooks/{full_name}.js` |
 | 7 | template-hook-stop.md | hook (--stop) | `src/claude/{domain}/hooks/{full_name}.js` |
 | 8 | template-rule.md | rule | `src/claude/core/rules/{name}.md` |
+
+### Codex 템플릿
+
+| # | 템플릿 | 대상 타입 | 생성 경로 |
+|---|--------|----------|-----------|
+| 9 | template-codex-skill.md | skill | `src/codex/{domain}/skills/{full_name}/SKILL.md` |
+| 10 | template-codex-agent.md | agent | `src/codex/{domain}/agents/{full_name}.md` |
+| 11 | template-codex-command.md | command | `src/codex/{domain}/commands/{full_name}.md` |
+| 12 | template-codex-hook.md | hook | `src/codex/{domain}/hooks/{full_name}.js` |
 
 ## 에이전트 아키타입 (3종)
 

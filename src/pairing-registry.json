@@ -1,0 +1,5 @@
+{
+  "$schema": "pairing-registry-v1",
+  "description": "Claude/Codex 자산 페어링 상태 추적. /kit-create가 자동 갱신, /kit-audit C7이 검증.",
+  "entries": []
+}

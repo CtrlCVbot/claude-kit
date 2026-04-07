@@ -1,7 +1,7 @@
 ---
 allowed-tools: Read, Write, Glob, Grep, Bash(git:*)
 description: claude-kit 컴포넌트를 표준 패턴으로 스캐폴딩합니다.
-argument-hint: <type> <domain> <name> [--pre|--post|--stop] [--simple|--complex] [--readonly|--write|--monitor]
+argument-hint: <type> <domain> <name> [--target claude|codex|both] [--skip-codex "reason"] [--pre|--post|--stop] [--simple|--complex] [--readonly|--write|--monitor]
 ---
 
 # /kit-create
@@ -38,6 +38,28 @@ argument-hint: <type> <domain> <name> [--pre|--post|--stop] [--simple|--complex]
 | `--pre` | hook | PreToolUse (차단 가능) | 기본값 |
 | `--post` | hook | PostToolUse (로깅) | |
 | `--stop` | hook | Stop (세션 종료) | |
+| `--target` | 전체 | 타깃 플랫폼 (`claude`/`codex`/`both`) | 타입별 기본값 |
+| `--skip-codex` | agent, command | Codex sibling 생략 + 사유 | |
+
+### 타깃 기본값
+
+| 타입 | 기본 --target | 근거 |
+|------|--------------|------|
+| agent | `both` | required codex sibling |
+| command | `both` | required codex sibling |
+| skill | `claude` | optional codex sibling |
+| hook | `claude` | optional codex sibling |
+| rule | `claude` | claude-origin shared |
+
+### target 정책 매트릭스
+
+| 타입 | `--target claude` | `--target codex` | `--target both` | `--skip-codex` |
+|------|-------------------|-------------------|-----------------|----------------|
+| agent | WARN (required sibling) | 허용 | 기본값 | 허용 (reason 필수) |
+| command | WARN (required sibling) | 허용 | 기본값 | 허용 (reason 필수) |
+| skill | 기본값 | 허용 | 허용 | 불필요 (optional) |
+| hook | 기본값 | 허용 | 허용 | 불필요 (optional) |
+| rule | 기본값 | **거부** (claude-origin shared) | **거부** | 불필요 |
 
 ## Workflow
 
@@ -61,7 +83,17 @@ argument-hint: <type> <domain> <name> [--pre|--post|--stop] [--simple|--complex]
 | hook | `src/claude/{domain}/hooks/{full_name}.js` |
 | rule | `src/claude/core/rules/{name}.md` |
 
-7. 해당 경로에 이미 파일/디렉토리가 존재하면 중단하고 안내한다.
+**Codex 경로** (`--target codex` 또는 `both` 시):
+
+| 타입 | Codex 경로 |
+|------|-----------|
+| skill | `src/codex/{domain}/skills/{full_name}/SKILL.md` |
+| agent | `src/codex/{domain}/agents/{full_name}.md` |
+| command | `src/codex/{domain}/commands/{full_name}.md` |
+| hook | `src/codex/{domain}/hooks/{full_name}.js` |
+| rule | (Codex 대상 아님) |
+
+7. 해당 경로에 이미 파일/디렉토리가 존재하면 중단하고 안내한다. `--target both`인 경우 양쪽 모두 확인.
 
 ### Phase 3: 템플릿 로드 + 변수 치환
 
@@ -77,6 +109,15 @@ argument-hint: <type> <domain> <name> [--pre|--post|--stop] [--simple|--complex]
 | hook --post | `template-hook-post.md` |
 | hook --stop | `template-hook-stop.md` |
 | rule | `template-rule.md` |
+
+**Codex 템플릿** (`--target codex` 또는 `both`에서 Codex 측에 사용):
+
+| 타입 | Codex 템플릿 |
+|------|-------------|
+| skill | `template-codex-skill.md` |
+| agent | `template-codex-agent.md` |
+| command | `template-codex-command.md` |
+| hook | `template-codex-hook.md` |
 
 9. 변수를 치환한다:
    - `{{DOMAIN}}` = domain
@@ -117,6 +158,20 @@ argument-hint: <type> <domain> <name> [--pre|--post|--stop] [--simple|--complex]
 12. hook인 경우 추가 안내:
     - "scripts/setup.js:buildHooksConfig()에 등록이 필요합니다"
 
+### Phase 6: 페어링 레지스트리 갱신
+
+13. `src/pairing-registry.json`을 읽는다 (없으면 빈 구조 생성).
+14. 새 엔트리를 추가한다:
+
+| 조건 | status | claude | codex |
+|------|--------|--------|-------|
+| `--target both` | `paired` | Claude 경로 | Codex 경로 |
+| `--target claude` (agent/command) | 경고 출력 | Claude 경로 | null |
+| `--skip-codex "사유"` | `codex-skip` | Claude 경로 | null |
+| `--target codex` | `codex-native-only` | null | Codex 경로 |
+
+15. 레지스트리를 저장한다.
+
 ## Rules
 
 - kebab-case가 아닌 이름은 거부한다.
@@ -124,3 +179,6 @@ argument-hint: <type> <domain> <name> [--pre|--post|--stop] [--simple|--complex]
 - rule 타입은 항상 `src/claude/core/rules/`에 생성하며 도메인 접두사를 붙이지 않는다.
 - 템플릿의 TODO 마커는 사용자가 직접 채울 부분이므로 치환하지 않는다.
 - 생성 후 git add는 하지 않는다 (사용자가 직접 커밋).
+- agent/command를 `--target claude`로만 생성하면 "required codex sibling" 경고를 표시한다.
+- rule 타입은 `--target codex`를 거부한다 (claude-origin shared).
+- hook `--stop`과 `--target codex` 조합 시 Codex Stop 지원 상태를 경고한다 (experimental).
