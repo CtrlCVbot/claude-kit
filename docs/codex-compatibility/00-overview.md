@@ -96,5 +96,5 @@
 - Codex installer가 `src/claude/dev/agents`나 `src/claude/dev/commands`를 직접 해석해 runtime UX를 만든다고 쓰지 않는다.
 - target-specific source 없이 installer만 똑똑해지면 해결된다고 가정하지 않는다.
 - target 분리 이후에도 `agents/commands` direct copy를 허용하지 않는다.
-- `src/core/rules/*.md` 같은 guidance 자산을 자동으로 Codex `.rules`로 컴파일한다고 전제하지 않는다.
+- `src/claude/core/rules/*.md` 같은 guidance 자산을 자동으로 Codex `.rules`로 컴파일한다고 전제하지 않는다.
 

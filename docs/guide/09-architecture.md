@@ -6,7 +6,7 @@
 
 ## 도메인 분리
 
-소스는 도메인별 디렉토리(`src/{domain}/`)로 분리되어 있지만, 설치 결과는 타겟별 네이티브 구조로 출력된다. Claude는 **플랫 구조**(`.claude/{category}/`)를 쓰고, Codex는 **repo-local plugin 구조**(`plugins/claude-kit/{category}/`)를 쓴다. 접두사가 도메인 소속을 보장하는 점은 두 타겟 모두 동일하다.
+소스는 타깃별·도메인별 디렉토리(`src/claude/{domain}/`, `src/codex/{domain}/`)로 분리되어 있지만, 설치 결과는 타겟별 네이티브 구조로 출력된다. Claude는 **플랫 구조**(`.claude/{category}/`)를 쓰고, Codex는 **repo-local plugin 구조**(`plugins/claude-kit/{category}/`)를 쓴다. 접두사가 도메인 소속을 보장하는 점은 두 타겟 모두 동일하다.
 
 ### 3개 도메인
 
@@ -42,17 +42,17 @@ plan ──> core <── dev
 **Claude 타겟** (기본):
 
 ```
-src/core/hooks/edit-tracker.js      -> .claude/hooks/edit-tracker.js
-src/dev/commands/dev-commit.md      -> .claude/commands/dev-commit.md
-src/plan/agents/plan-prd-writer.md  -> .claude/agents/plan-prd-writer.md
+src/claude/core/hooks/edit-tracker.js      -> .claude/hooks/edit-tracker.js
+src/claude/dev/commands/dev-commit.md      -> .claude/commands/dev-commit.md
+src/claude/plan/agents/plan-prd-writer.md  -> .claude/agents/plan-prd-writer.md
 ```
 
 **Codex 타겟** (선택):
 
 ```
-src/dev/agents/dev-architect.md     -> plugins/claude-kit/agents/dev-architect.md
-src/dev/commands/dev-commit.md      -> plugins/claude-kit/commands/dev-commit.md
-src/core/hooks/edit-tracker.js      -> plugins/claude-kit/hooks/edit-tracker.js
+src/claude/dev/agents/dev-architect.md     -> plugins/claude-kit/agents/dev-architect.md
+src/claude/dev/commands/dev-commit.md      -> plugins/claude-kit/commands/dev-commit.md
+src/claude/core/hooks/edit-tracker.js      -> plugins/claude-kit/hooks/edit-tracker.js
                                     -> plugins/claude-kit/hooks.json 엔트리
 ```
 
@@ -234,14 +234,14 @@ Codex 타겟을 설치하면 `.claude-kit-meta.json`에 Codex 출력과 skip 정
 설치기는 3-stage 구조로 동작한다.
 
 ```text
-source assets (src/{domain}/{category})
+source assets (src/claude/{domain}/{category})
   -> normalization (도메인 계산 + 타겟 계산 + skip 판정)
   -> target emitter (Claude emitter | Codex emitter)
 ```
 
 | Stage | 역할 |
 |-------|------|
-| Source | `src/core/`, `src/dev/`, `src/plan/`와 `templates/` 수집 |
+| Source | `src/claude/{core,dev,plan}/`과 `src/templates/` 수집 |
 | Normalization | 활성 domains/targets 계산, 자산별 처리 방식 판정, skip 사유 기록 |
 | Claude emitter | `.claude/` 폴더 구조 출력과 `settings.json` 병합 |
 | Codex emitter | `plugins/claude-kit/` plugin 구조, `AGENTS.md`, `plugin.json`, `marketplace.json`, `hooks.json` 생성 |

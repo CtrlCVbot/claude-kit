@@ -443,7 +443,7 @@ argument-hint: '[--domain <domain>] [--type <type>] [--verbose]'
 
   C1: 구조 규약
     [PASS] 모든 컴포넌트가 올바른 디렉토리 구조
-    [FAIL] src/dev/hooks/ 에 package.json 누락
+    [FAIL] src/claude/dev/hooks/ 에 package.json 누락
 
   C2: 네이밍 규약
     [PASS] 전체 kebab-case 준수

@@ -8,9 +8,9 @@
 
 현재 저장소의 source는 아래처럼 domain-first 구조다.
 
-- `src/core`
-- `src/dev`
-- `src/plan`
+- `src/claude/core`
+- `src/claude/dev`
+- `src/claude/plan`
 
 그리고 각 도메인 아래에 `agents`, `commands`, `skills`, `hooks`, `rules`가 섞여 있다.
 
@@ -22,7 +22,7 @@
 
 ### 2.1 `agent/command`의 target 불명확성
 
-현재 `src/dev/agents`, `src/dev/commands`, `src/plan/agents`, `src/plan/commands`의 자산은 사실상 Claude용 문법과 흐름을 기준으로 작성되어 있다.
+현재 `src/claude/dev/agents`, `src/claude/dev/commands`, `src/claude/plan/agents`, `src/claude/plan/commands`의 자산은 사실상 Claude용 문법과 흐름을 기준으로 작성되어 있다.
 
 - Claude command 사용 예시
 - Claude agent frontmatter

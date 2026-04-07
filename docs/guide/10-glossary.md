@@ -39,7 +39,7 @@
 | Stage Manifest | `.plans/stage-manifest.json`. feature별 기획 단계 상태 추적 |
 | SSOT | Single Source of Truth. 하나의 정보는 하나의 문서에서만 정의 |
 | Quality Gate | Phase D TASK별 통과 기준 5개. 3회 연속 실패 시 blocked |
-| 플래트닝 | `src/{domain}/{category}/`에서 타겟별 출력 경로로 빌드하는 과정. Claude: `.claude/{category}/`, Codex: `plugins/claude-kit/{category}/` |
+| 플래트닝 | `src/claude/{domain}/{category}/`에서 타겟별 출력 경로로 빌드하는 과정. Claude: `.claude/{category}/`, Codex: `plugins/claude-kit/{category}/` |
 | targets | 설치 출력 타겟. `claude`(기본) = `.claude/` 구조, `codex`(선택) = `plugins/claude-kit/` 플러그인 |
 | Codex Plugin | repo-local 플러그인. `plugins/claude-kit/` 아래에 `agents/`, `commands/`, `skills/`, `hooks/`, `hooks.json`, `.codex-plugin/plugin.json` 배치 |
 | Full (path copy) | Codex v1 자산 복사 방식. 출력 경로만 바꾸고 자산 본문 문자열은 수정하지 않음 |

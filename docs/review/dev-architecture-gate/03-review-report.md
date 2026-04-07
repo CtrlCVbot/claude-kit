@@ -28,9 +28,9 @@
 
 | 자산 | 경로 | 구현 상태 |
 |------|------|----------|
-| 명령 | `src/dev/commands/dev-architecture.md` | 119줄, frontmatter 포함 |
-| 스킬 | `src/dev/skills/dev-architecture-decision/SKILL.md` | 125줄, 4축 결정 매트릭스 |
-| 훅 | `src/dev/hooks/dev-feature-scope-guard.js` | 183줄, setup.js 양쪽 등록 |
+| 명령 | `src/claude/dev/commands/dev-architecture.md` | 119줄, frontmatter 포함 |
+| 스킬 | `src/claude/dev/skills/dev-architecture-decision/SKILL.md` | 125줄, 4축 결정 매트릭스 |
+| 훅 | `src/claude/dev/hooks/dev-feature-scope-guard.js` | 183줄, setup.js 양쪽 등록 |
 
 ---
 
@@ -46,7 +46,7 @@
 | 4 | 설치 경로 매핑 | Claude(`.claude/`) + Codex(`plugins/claude-kit/`) 양쪽 설치 보장 |
 | 5 | 훅 이벤트 패턴 | PreToolUse + Edit\|Write + stdin JSON + exit 0/2. 기존 BLOCKING 훅과 동일 패턴 |
 | 6 | 선행조건 체인 | plan-bridge → dev-architecture → dev-feature 선형 체인. 순환 시 교착 |
-| 7 | 도메인 경계 | `src/dev/` 소속. plan-bridge만 교차 도메인 접점 (기존 예외 패턴) |
+| 7 | 도메인 경계 | `src/claude/dev/` 소속. plan-bridge만 교차 도메인 접점 (기존 예외 패턴) |
 
 ### 컴포넌트별 판정
 

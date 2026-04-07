@@ -292,6 +292,6 @@ Idea <-> Screen 일관성 검증 항목:
 | [P1: 아이디어 수집](./02-idea-collection.md) | 이전 단계 -- 백로그 입력 |
 | [P3: 1차 기능 기획](./04-feature-draft.md) | 다음 단계 -- approved 아이디어 기획 |
 | [Pipeline Overview](./01-pipeline-overview.md) | 파이프라인 전체 구조 |
-| [plan-screen 커맨드](../src/plan/commands/plan-screen.md) | 커맨드 명세 |
-| [plan-screening-workflow 스킬](../src/plan/skills/plan-screening-workflow/SKILL.md) | 스킬 상세 |
-| [plan-idea-screener 에이전트](../src/plan/agents/plan-idea-screener.md) | 에이전트 명세 |
+| [plan-screen 커맨드](../src/claude/plan/commands/plan-screen.md) | 커맨드 명세 |
+| [plan-screening-workflow 스킬](../src/claude/plan/skills/plan-screening-workflow/SKILL.md) | 스킬 상세 |
+| [plan-idea-screener 에이전트](../src/claude/plan/agents/plan-idea-screener.md) | 에이전트 명세 |

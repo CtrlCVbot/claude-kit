@@ -22,7 +22,7 @@
 
 | # | 작업 | 산출물 | 유형 |
 |---|------|--------|------|
-| 1.1 | `plan-intake-workflow` 스킬 작성 | `src/plan/skills/plan-intake-workflow/SKILL.md` | skill |
+| 1.1 | `plan-intake-workflow` 스킬 작성 | `src/claude/plan/skills/plan-intake-workflow/SKILL.md` | skill |
 | 1.2 | intake config.json 기본 템플릿 | `src/templates/intake-config.json` | template |
 | 1.3 | IDEA 프론트매터 확장 가이드 반영 | `docs/guide/02-idea-management.md` 업데이트 | docs |
 | 1.4 | PCC-01 #5, #6 항목 추가 | `docs/guide/07-review-pcc.md` 업데이트 | docs |
@@ -42,9 +42,9 @@
 
 | # | 작업 | 산출물 | 유형 |
 |---|------|--------|------|
-| 2.1 | `plan-intake-reader` 에이전트 작성 | `src/plan/agents/plan-intake-reader.md` | agent |
-| 2.2 | `/plan-intake-sync` 커맨드 작성 (schema discovery + fetch + normalize + classify 서브 단계) | `src/plan/commands/plan-intake-sync.md` | command |
-| 2.3 | `plan-intake-env-guard` hook 작성 | `src/plan/hooks/plan-intake-env-guard.js` | hook |
+| 2.1 | `plan-intake-reader` 에이전트 작성 | `src/claude/plan/agents/plan-intake-reader.md` | agent |
+| 2.2 | `/plan-intake-sync` 커맨드 작성 (schema discovery + fetch + normalize + classify 서브 단계) | `src/claude/plan/commands/plan-intake-sync.md` | command |
+| 2.3 | `plan-intake-env-guard` hook 작성 | `src/claude/plan/hooks/plan-intake-env-guard.js` | hook |
 | 2.4 | `.plans/intake/` 폴더 자동 생성 로직 (setup.js 확장 또는 에이전트 내) | `scripts/setup.js` 수정 | script |
 | 2.5 | Codex hook skip 규칙 추가 | `scripts/codex-hook-compat.js` 수정 | script |
 | 2.6 | Bug fast-path 통합 테스트 | 테스트 시나리오 문서 | test |
@@ -70,8 +70,8 @@
 
 | # | 작업 | 산출물 | 유형 |
 |---|------|--------|------|
-| 3.1 | `plan-change-clusterer` 에이전트 작성 | `src/plan/agents/plan-change-clusterer.md` | agent |
-| 3.2 | `/plan-intake-cluster-review` 커맨드 작성 | `src/plan/commands/plan-intake-cluster-review.md` | command |
+| 3.1 | `plan-change-clusterer` 에이전트 작성 | `src/claude/plan/agents/plan-change-clusterer.md` | agent |
+| 3.2 | `/plan-intake-cluster-review` 커맨드 작성 | `src/claude/plan/commands/plan-intake-cluster-review.md` | command |
 | 3.3 | 클러스터 fingerprint 로직 구현 (에이전트 내) | plan-change-clusterer 내부 | agent |
 | 3.4 | 클러스터 리뷰 → IDEA 생성 파이프라인 | plan-intake-reader + plan-idea-collector 연동 | integration |
 | 3.5 | 클러스터 경로 통합 테스트 | 테스트 시나리오 문서 | test |
@@ -92,9 +92,9 @@
 
 | # | 작업 | 산출물 | 유형 |
 |---|------|--------|------|
-| 4.1 | `plan-screening-publisher` 에이전트 작성 | `src/plan/agents/plan-screening-publisher.md` | agent |
-| 4.2 | `/plan-screen-sync` 커맨드 작성 | `src/plan/commands/plan-screen-sync.md` | command |
-| 4.3 | `plan-screening-dedupe-guard` hook 작성 | `src/plan/hooks/plan-screening-dedupe-guard.js` | hook |
+| 4.1 | `plan-screening-publisher` 에이전트 작성 | `src/claude/plan/agents/plan-screening-publisher.md` | agent |
+| 4.2 | `/plan-screen-sync` 커맨드 작성 | `src/claude/plan/commands/plan-screen-sync.md` | command |
+| 4.3 | `plan-screening-dedupe-guard` hook 작성 | `src/claude/plan/hooks/plan-screening-dedupe-guard.js` | hook |
 | 4.4 | Dedupe fingerprint 알고리즘 확정 | config.json 확장 | config |
 | 4.5 | Publish 통합 테스트 | 테스트 시나리오 문서 | test |
 

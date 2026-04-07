@@ -24,7 +24,7 @@
 
 ### 1.2 에이전트 파일 표준 구조
 
-모든 에이전트는 아래 구조를 따른다. 참조 구현: `src/dev/agents/dev-architect.md`
+모든 에이전트는 아래 구조를 따른다. 참조 구현: `src/claude/dev/agents/dev-architect.md`
 
 ```markdown
 ---
@@ -54,12 +54,12 @@ color: {UI 색상}
 
 | # | 갭 | 영향 | 근거 |
 |---|---|------|------|
-| G1 | core 도메인에 에이전트 0개 | 도메인 간 조율 불가 | `src/core/agents/` 디렉토리 미존재 |
+| G1 | core 도메인에 에이전트 0개 | 도메인 간 조율 불가 | `src/claude/core/agents/` 디렉토리 미존재 |
 | G2 | 오케스트레이션 에이전트 부재 | Option B 운영 모델 실행 불가 | `docs/team-orchestration/06-recommended-operating-model.md` |
 | G3 | 테스트 전략 에이전트 부재 | TDD(Golden Principle #3)가 guard만으로 집행 | `dev-tdd-guard.js`만 존재 |
-| G4 | 리팩토링 전담 에이전트 부재 | `/dev-refactor` 명령은 있으나 전문 분석 없음 | `src/dev/commands/dev-refactor.md` |
+| G4 | 리팩토링 전담 에이전트 부재 | `/dev-refactor` 명령은 있으나 전문 분석 없음 | `src/claude/dev/commands/dev-refactor.md` |
 | G5 | 성능 리뷰 에이전트 부재 | 성능 관련 분석을 dev-architect가 부수적으로 처리 | 전담 없음 |
-| G6 | 세션 관찰 에이전트 부재 | continuous-learning v2가 haiku 모델 관찰자를 요구 | `src/core/skills/continuous-learning/SKILL.md` |
+| G6 | 세션 관찰 에이전트 부재 | continuous-learning v2가 haiku 모델 관찰자를 요구 | `src/claude/core/skills/continuous-learning/SKILL.md` |
 | G7 | Ops/배포 리뷰 에이전트 부재 | CI/CD, 인프라 변경 리뷰 불가 | 전담 없음 |
 | G8 | 로드맵 종합 에이전트 부재 | 다수 PRD/Feature 간 우선순위 조율 불가 | plan 도메인에 종합 분석 없음 |
 
@@ -108,7 +108,7 @@ Option B 운영 모델 실행의 전제 조건.
 
 | 항목 | 내용 |
 |------|------|
-| **위치** | `src/core/agents/core-orchestrator.md` |
+| **위치** | `src/claude/core/agents/core-orchestrator.md` |
 | **도메인** | core (항상 설치) |
 | **모델** | opus |
 | **도구** | Read, Grep, Glob, Task, Bash |
@@ -137,7 +137,7 @@ Option B 운영 모델 실행의 전제 조건.
 
 | 항목 | 내용 |
 |------|------|
-| **위치** | `src/dev/agents/dev-test-strategist.md` |
+| **위치** | `src/claude/dev/agents/dev-test-strategist.md` |
 | **도메인** | dev |
 | **모델** | sonnet |
 | **도구** | Read, Grep, Glob, Bash |
@@ -168,7 +168,7 @@ Option B 운영을 안정적으로 만드는 보조 에이전트.
 
 | 항목 | 내용 |
 |------|------|
-| **위치** | `src/dev/agents/dev-refactor-analyst.md` |
+| **위치** | `src/claude/dev/agents/dev-refactor-analyst.md` |
 | **도메인** | dev |
 | **모델** | sonnet |
 | **도구** | Read, Grep, Glob |
@@ -189,7 +189,7 @@ Option B 운영을 안정적으로 만드는 보조 에이전트.
 
 | 항목 | 내용 |
 |------|------|
-| **위치** | `src/dev/agents/dev-perf-reviewer.md` |
+| **위치** | `src/claude/dev/agents/dev-perf-reviewer.md` |
 | **도메인** | dev |
 | **모델** | sonnet |
 | **도구** | Read, Grep, Glob, Bash |
@@ -206,7 +206,7 @@ Option B 운영을 안정적으로 만드는 보조 에이전트.
 
 | 항목 | 내용 |
 |------|------|
-| **위치** | `src/core/agents/core-session-observer.md` |
+| **위치** | `src/claude/core/agents/core-session-observer.md` |
 | **도메인** | core (항상 설치) |
 | **모델** | **haiku** |
 | **도구** | Read, Grep, Glob |
@@ -234,7 +234,7 @@ Option B 운영을 안정적으로 만드는 보조 에이전트.
 
 | 항목 | 내용 |
 |------|------|
-| **위치** | `src/dev/agents/dev-ops-reviewer.md` |
+| **위치** | `src/claude/dev/agents/dev-ops-reviewer.md` |
 | **도메인** | dev |
 | **모델** | sonnet |
 | **도구** | Read, Grep, Glob |
@@ -251,7 +251,7 @@ Option B 운영을 안정적으로 만드는 보조 에이전트.
 
 | 항목 | 내용 |
 |------|------|
-| **위치** | `src/plan/agents/plan-roadmap-synthesizer.md` |
+| **위치** | `src/claude/plan/agents/plan-roadmap-synthesizer.md` |
 | **도메인** | plan |
 | **모델** | opus |
 | **도구** | Read, Grep, Glob |
@@ -268,7 +268,7 @@ Option B 운영을 안정적으로 만드는 보조 에이전트.
 
 | 항목 | 내용 |
 |------|------|
-| **위치** | `src/dev/agents/dev-observability-agent.md` |
+| **위치** | `src/claude/dev/agents/dev-observability-agent.md` |
 | **도메인** | dev |
 | **모델** | sonnet |
 | **도구** | Read, Grep, Glob |
@@ -356,12 +356,12 @@ core hooks (PostToolUse)
 
 | 순서 | 작업 | 산출물 |
 |------|------|--------|
-| 1 | `src/core/agents/` 디렉토리 생성 | 디렉토리 |
+| 1 | `src/claude/core/agents/` 디렉토리 생성 | 디렉토리 |
 | 2 | `core-orchestrator.md` 작성 | 에이전트 파일 |
 | 3 | `dev-test-strategist.md` 작성 | 에이전트 파일 |
 | 4 | `scripts/setup.js` core agents 처리 확인 | 설치 검증 |
 
-**참고**: `setup.js`의 `emitClaude` 함수는 이미 `COMPONENT_DIRS`에 `agents` 카테고리를 포함하고 있어, `src/core/agents/` 디렉토리만 추가하면 자동으로 처리된다.
+**참고**: `setup.js`의 `emitClaude` 함수는 이미 `COMPONENT_DIRS`에 `agents` 카테고리를 포함하고 있어, `src/claude/core/agents/` 디렉토리만 추가하면 자동으로 처리된다.
 
 ### Wave 2 (P1 - 안정화)
 
@@ -386,9 +386,9 @@ core hooks (PostToolUse)
 
 | 파일 | 변경 유형 | 설명 |
 |------|----------|------|
-| `src/core/agents/` | 신규 디렉토리 | core-orchestrator.md, core-session-observer.md |
-| `src/dev/agents/` | 신규 파일 추가 | dev-test-strategist.md, dev-refactor-analyst.md, dev-perf-reviewer.md, dev-ops-reviewer.md, dev-observability-agent.md |
-| `src/plan/agents/` | 신규 파일 추가 | plan-roadmap-synthesizer.md |
+| `src/claude/core/agents/` | 신규 디렉토리 | core-orchestrator.md, core-session-observer.md |
+| `src/claude/dev/agents/` | 신규 파일 추가 | dev-test-strategist.md, dev-refactor-analyst.md, dev-perf-reviewer.md, dev-ops-reviewer.md, dev-observability-agent.md |
+| `src/claude/plan/agents/` | 신규 파일 추가 | plan-roadmap-synthesizer.md |
 | `docs/guide/09-architecture.md` | 수정 | 에이전트 카탈로그 테이블 업데이트 (12 → 20) |
 | `docs/guide/00-overview.md` | 수정 | 컴포넌트 수 업데이트 |
 
@@ -396,9 +396,9 @@ core hooks (PostToolUse)
 
 | 참조 파일 | 재사용 대상 |
 |----------|------------|
-| `src/dev/agents/dev-architect.md` | Agent_Prompt XML 구조, Investigation Protocol, Output Format |
-| `src/dev/agents/dev-verify-agent.md` | 구조화된 출력 (PASS/FAIL), 자동수정 패턴, Execution Policy |
-| `src/plan/agents/plan-prd-writer.md` | Specialist 에이전트의 Write/Edit 사용 패턴 |
+| `src/claude/dev/agents/dev-architect.md` | Agent_Prompt XML 구조, Investigation Protocol, Output Format |
+| `src/claude/dev/agents/dev-verify-agent.md` | 구조화된 출력 (PASS/FAIL), 자동수정 패턴, Execution Policy |
+| `src/claude/plan/agents/plan-prd-writer.md` | Specialist 에이전트의 Write/Edit 사용 패턴 |
 | `scripts/setup.js` | emitClaude 함수 (COMPONENT_DIRS에 'agents' 포함) |
 
 ---

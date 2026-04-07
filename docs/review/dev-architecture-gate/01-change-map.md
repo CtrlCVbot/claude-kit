@@ -6,9 +6,9 @@
 
 | 자산 | 경로 | 목적 | 구현 상태 |
 |------|------|------|:--------:|
-| 명령 | `src/dev/commands/dev-architecture.md` | 구조 결정 또는 기존 구조 감지 | 구현 완료 (119줄) |
-| 스킬 | `src/dev/skills/dev-architecture-decision/SKILL.md` | 구조 선택 매트릭스와 결정 규칙 | 구현 완료 (125줄) |
-| 훅 | `src/dev/hooks/dev-feature-scope-guard.js` | 구조 SSOT/바인딩 없이 코드 수정 차단 | 구현 완료 (183줄) |
+| 명령 | `src/claude/dev/commands/dev-architecture.md` | 구조 결정 또는 기존 구조 감지 | 구현 완료 (119줄) |
+| 스킬 | `src/claude/dev/skills/dev-architecture-decision/SKILL.md` | 구조 선택 매트릭스와 결정 규칙 | 구현 완료 (125줄) |
+| 훅 | `src/claude/dev/hooks/dev-feature-scope-guard.js` | 구조 SSOT/바인딩 없이 코드 수정 차단 | 구현 완료 (183줄) |
 
 훅 등록 상태:
 
@@ -29,14 +29,14 @@
 
 | 기존 자산 | 현재 문제 | 변경 방향 |
 |-----------|----------|----------|
-| `src/plan/commands/plan-bridge.md` | 구조 미정 상태에서도 바로 `/dev-feature`를 안내 | 구조 SSOT 없으면 `/dev-architecture`로 우회 |
-| `src/dev/commands/dev-feature.md` | 구조 전제를 고정 경로로 가정 | 구조 SSOT와 feature binding 선확인 |
-| `src/dev/commands/dev-verify.md` | 구현 검증이 구조 바인딩을 보지 않음 | binding 기준으로 scope/path 검증 |
-| `src/dev/skills/dev-feature-plan/SKILL.md` | `guide/dev-feature-guide/*`에 의존 | 자체 규칙 + `.plans/...` SSOT로 정리 |
-| `src/dev/skills/dev-layered-architecture/SKILL.md` | route/feature 설명이 고정 가정 | 구조 모드별 매핑 규칙 추가 |
-| `src/dev/skills/dev-feature-module/SKILL.md` | feature-scoped만 정답처럼 설명 | 4모드 지원, v1 기본 추천만 route-scoped로 고정 |
-| `src/dev/skills/dev-workflow/SKILL.md` | `.plan/init/v4/*`와 고정 파일 경로에 의존 | architecture profile + binding을 먼저 읽도록 변경 |
-| `src/dev/skills/dev-frontend-patterns/SKILL.md` | 존재하지 않는 `.plan/init/v4/*` 참조 | `profile.json`과 architecture profile 기준으로 정리 |
+| `src/claude/plan/commands/plan-bridge.md` | 구조 미정 상태에서도 바로 `/dev-feature`를 안내 | 구조 SSOT 없으면 `/dev-architecture`로 우회 |
+| `src/claude/dev/commands/dev-feature.md` | 구조 전제를 고정 경로로 가정 | 구조 SSOT와 feature binding 선확인 |
+| `src/claude/dev/commands/dev-verify.md` | 구현 검증이 구조 바인딩을 보지 않음 | binding 기준으로 scope/path 검증 |
+| `src/claude/dev/skills/dev-feature-plan/SKILL.md` | `guide/dev-feature-guide/*`에 의존 | 자체 규칙 + `.plans/...` SSOT로 정리 |
+| `src/claude/dev/skills/dev-layered-architecture/SKILL.md` | route/feature 설명이 고정 가정 | 구조 모드별 매핑 규칙 추가 |
+| `src/claude/dev/skills/dev-feature-module/SKILL.md` | feature-scoped만 정답처럼 설명 | 4모드 지원, v1 기본 추천만 route-scoped로 고정 |
+| `src/claude/dev/skills/dev-workflow/SKILL.md` | `.plan/init/v4/*`와 고정 파일 경로에 의존 | architecture profile + binding을 먼저 읽도록 변경 |
+| `src/claude/dev/skills/dev-frontend-patterns/SKILL.md` | 존재하지 않는 `.plan/init/v4/*` 참조 | `profile.json`과 architecture profile 기준으로 정리 |
 
 ## 끊어진 참조 정리 방침
 
