@@ -1,6 +1,6 @@
 # 용어집 + 커맨드 레퍼런스
 
-> claude-kit v2.0 전체 용어, 커맨드, 검증 코드를 한 곳에서 확인하는 빠른 참조 문서.
+> claude-kit v2.1 전체 용어, 커맨드, 검증 코드를 한 곳에서 확인하는 빠른 참조 문서.
 
 ---
 
@@ -41,8 +41,10 @@
 | Quality Gate | Phase D TASK별 통과 기준 5개. 3회 연속 실패 시 blocked |
 | 플래트닝 | `src/{domain}/{category}/`에서 타겟별 출력 경로로 빌드하는 과정. Claude: `.claude/{category}/`, Codex: `plugins/claude-kit/{category}/` |
 | targets | 설치 출력 타겟. `claude`(기본) = `.claude/` 구조, `codex`(선택) = `plugins/claude-kit/` 플러그인 |
-| Codex Plugin | repo-local 플러그인. `plugins/claude-kit/` 아래에 skills/commands/agents/hooks.json 배치 |
+| Codex Plugin | repo-local 플러그인. `plugins/claude-kit/` 아래에 `agents/`, `commands/`, `skills/`, `hooks/`, `hooks.json`, `.codex-plugin/plugin.json` 배치 |
+| Full (path copy) | Codex v1 자산 복사 방식. 출력 경로만 바꾸고 자산 본문 문자열은 수정하지 않음 |
 | AGENTS.md | Codex 프로젝트 컨텍스트 문서. Claude의 `CLAUDE.md`에 대응 |
+| skippedForCodex | Codex에서 이식하지 못한 자산 목록. `.claude-kit-meta.json`에 제외 사유와 함께 기록 |
 | IDEA-{YYYYMMDD}-{NNN} | 아이디어 ID 형식. 날짜 + 일별 순번 채번 |
 
 ---

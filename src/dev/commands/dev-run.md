@@ -1,53 +1,45 @@
-# 개발 실행
+# /dev-run
 
-Feature Package의 TASK를 TDD 방식으로 순차 구현합니다.
+Feature Package의 TASK를 TDD 기반으로 구현한다. 구현 범위와 파일 경로는 기능 구조 바인딩 안에서만 허용된다.
 
 > 참조: `.claude/skills/dev-workflow/SKILL.md`
 
-## 입력
-- Feature Package 경로 (필수): 인자 또는 대화에서 지정
-- 예: `/dev .plans/features/active/payment-subscription-flow`
+## Usage
 
-## 워크플로우 (3 Phase)
+```bash
+/dev-run .plans/features/active/{slug}
+```
 
-### Phase D1: Task Resolution (자동)
-1. Feature Package 로드 (`02-package/08-dev-tasks.md`)
-2. TASK 의존성 그래프 생성
-3. 다음 실행 가능 TASK 선택 (의존성 순서, pending 상태)
-4. Context Bundle 수집 (REQ + DEC + TC + Spec 문서)
+## Preconditions
 
-### Phase D2: Code Generation (자동, TDD)
-5. 테스트 파일 생성 (Red: TC 기반 실패 테스트)
-6. 구현 파일 생성 (Green: REQ + DEC 기반 최소 구현)
-7. 리팩토링 (Refactor: 테스트 통과 유지하며 개선)
+- `02-package/08-dev-tasks.md`가 준비되어 있다.
+- `.plans/project/00-dev-architecture.md`가 존재한다.
+- `.plans/features/active/{slug}/00-context/06-architecture-binding.md`가 존재한다.
 
-### Phase D3: Quality Gate (자동)
-8. 5개 게이트 통과 확인 (vitest, tdd-guard, typecheck, lint, REQ↔TC 매핑)
-9. TASK 상태 갱신 (pending → done)
-10. 다음 TASK로 반복 (D1으로 돌아감)
+## Workflow
 
-## 옵션
-- **전체 자동**: 모든 TASK를 순차 실행 (기본)
-- **단일 TASK**: 다음 1개 TASK만 실행 후 중단
+### Phase D1: Task Resolution
 
-## 완료 시
-- `08-dev-tasks.md` 상태 갱신
-- `dev-output-summary.md` 생성 (`guide/dev-feature-guide/dev-output-summary-template.md` 참조)
-- `/dev-verify` 실행 안내
+1. Feature Package, 구조 SSOT, 기능 바인딩을 함께 읽는다.
+2. 다음 실행 가능한 TASK를 고른다.
+3. REQ, DEC, TC, target path를 묶은 Task Context Bundle을 만든다.
 
-## 규칙
-- TDD 순서 절대 준수: 테스트 → 구현 → 리팩토링
-- Quality Gate 3회 연속 실패 시 TASK blocked 처리 + `03-dev-notes/` 기록
-- Feature Package 범위 밖 코드 변경 금지
-- 세션 경계: `08-dev-tasks.md` 상태로 진행도 추적, `/continue`로 재개 가능
+### Phase D2: TDD Implementation
 
-## Stack Alternatives
+4. 테스트를 먼저 작성해 Red를 확인한다.
+5. 바인딩된 경로 안에서 최소 구현으로 Green을 만든다.
+6. 구조 계약을 지키는 선에서 리팩터링한다.
 
-> 위 워크플로우는 TypeScript 기본 스택 기준. `profile.json`의 `stack.*` 필드에 따라 D3 게이트 명령어가 달라진다.
+### Phase D3: Quality Gate
 
-| Gate | typescript (기본) | java | python |
-|------|-------------------|------|--------|
-| 테스트 | vitest | `./gradlew test` | pytest |
-| TDD Guard | dev-tdd-guard.js | dev-tdd-guard.js (polyglot) | dev-tdd-guard.js (polyglot) |
-| 타입 체크 | turbo typecheck | `./gradlew compileJava` | mypy |
-| 린트 | turbo lint | checkstyle + spotbugs | ruff check |
+7. Scope Guard 통과 여부를 확인한다.
+8. TDD Guard, typecheck, lint, traceability를 확인한다.
+9. TASK 상태와 생성 파일 목록을 갱신한다.
+10. 모든 TASK가 끝나면 `03-dev-notes/dev-output-summary.md`를 만들고 `/dev-verify`로 넘긴다.
+
+## Rules
+
+- 테스트 없이 구현 파일만 먼저 만들지 않는다.
+- 기능 바인딩에 없는 경로는 수정하지 않는다.
+- 공유 코드가 필요하면 먼저 구조 SSOT와 기능 바인딩에 맞는 위치인지 확인한다.
+- 구조 충돌이 생기면 구현보다 문서 결정 정리가 우선이다.

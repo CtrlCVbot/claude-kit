@@ -1,29 +1,43 @@
 # /plan-bridge
 
-기획 → 개발 핸드오프. PRD를 `.plans/prd/10-approved/`에 배치하고 개발 워크플로우(Phase A~E)로 연결합니다.
+기획 산출물을 개발 파이프라인으로 넘기기 전에 브리지 컨텍스트와 개발 구조 게이트 상태를 확인한다.
 
 ## Usage
 
+```bash
+/plan-bridge {slug}
 ```
-/plan-bridge {slug}                 # 기획 → 개발 핸드오프 실행
-```
+
+## Required Inputs
+
+- 승인된 PRD: `.plans/prd/10-approved/{slug}-prd.md`
+- 선택 입력: `.plans/wireframes/{slug}/`, `.plans/stitch/{slug}/`
 
 ## Workflow
 
-1. **산출물 수집**:
-   - PRD: `.plans/prd/10-approved/{slug}-prd.md`
-   - Wireframe: `.plans/wireframes/{slug}/`
-   - Stitch: `.plans/stitch/{slug}/`
-2. **Bridge 컨텍스트 생성**:
-   - `03-bridge-wireframe.md` — 와이어프레임 요약
-   - `04-bridge-stitch.md` — Stitch 디자인 요약
-   - `05-bridge-context.md` — 개발 참조 컨텍스트
-3. **PRD 배치 확인**: `.plans/prd/10-approved/`에 PRD가 존재하는지 검증
-4. **개발 워크플로우 연결**: `/dev-feature` 입력 경로와 일치 확인
-5. **전체 PCC 검증**: PCC-01 ~ PCC-05 최종 일관성 확인
+1. 승인된 PRD가 존재하는지 확인한다.
+2. 와이어프레임, 스티치, 참고 메모가 있으면 브리지 컨텍스트로 정리한다.
+3. 아래 브리지 문서를 생성하거나 갱신한다.
+   - `.plans/features/active/{slug}/00-context/03-bridge-wireframe.md`
+   - `.plans/features/active/{slug}/00-context/04-bridge-stitch.md`
+   - `.plans/features/active/{slug}/00-context/05-bridge-context.md`
+4. 프로젝트 구조 SSOT를 확인한다.
+   - 필수: `.plans/project/00-dev-architecture.md`
+   - 이 문서가 없거나 승인 상태가 아니면 여기서 중단하고 `/dev-architecture {slug}`를 먼저 실행한다.
+5. 기능 구조 바인딩을 확인한다.
+   - 필수: `.plans/features/active/{slug}/00-context/06-architecture-binding.md`
+   - 바인딩이 없으면 `/dev-architecture {slug}`에서 감지 또는 결정을 먼저 수행한다.
+6. 구조 게이트가 충족되면 `/dev-feature {slug}`로 넘긴다.
 
 ## Output
 
-- Bridge 컨텍스트 파일들이 개발 워크플로우에서 참조 가능한 위치에 배치
-- PRD가 `/dev-feature`의 입력 경로(`.plans/prd/10-approved/`)에 존재 확인
-- 다음 단계 안내: `/dev-feature {slug}` — Phase A~E 개발 시작
+- 기획 산출물을 개발 문서가 참조할 수 있는 브리지 컨텍스트로 정리
+- 프로젝트 구조 SSOT와 기능 구조 바인딩 존재 여부 확인
+- 다음 단계 안내: `/dev-feature {slug}`
+
+## Rules
+
+- 이 단계에서는 코드를 만들지 않는다.
+- 구조가 이미 있는 저장소라도 문서화되지 않았다면 구조 게이트를 통과한 것으로 간주하지 않는다.
+- 개발 구조 판단의 단일 기준은 `.plans/project/00-dev-architecture.md`다.
+- 기능별 경로 판단의 단일 기준은 `.plans/features/active/{slug}/00-context/06-architecture-binding.md`다.

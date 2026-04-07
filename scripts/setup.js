@@ -472,6 +472,7 @@ function buildHooksConfig(activeDomains) {
 
   if (activeDomains.includes('dev')) {
     hooks.PreToolUse.push(
+      { matcher: 'Edit|Write', hooks: ['node .claude/hooks/dev-feature-scope-guard.js'] },
       { matcher: 'Edit|Write', hooks: ['node .claude/hooks/dev-tdd-guard.js'] },
       { matcher: 'Bash', hooks: ['node .claude/hooks/dev-db-guard.js'] }
     );
@@ -505,6 +506,7 @@ function emitCodex(projectRoot, activeDomains, mode) {
   const byDomain = {};
   for (const domain of activeDomains) {
     byDomain[domain] = {};
+    byDomain[domain].hooks = 0;
     const srcDomainDir = path.join(SRC_DIR, domain);
 
     if (!fs.existsSync(srcDomainDir)) {
@@ -541,6 +543,19 @@ function emitCodex(projectRoot, activeDomains, mode) {
         break;
       }
     }
+  }
+
+  const compatibleSet = new Set(compatible);
+  for (const domain of activeDomains) {
+    const hooksDir = path.join(SRC_DIR, domain, 'hooks');
+    if (!fs.existsSync(hooksDir)) {
+      byDomain[domain].hooks = 0;
+      continue;
+    }
+
+    byDomain[domain].hooks = fs.readdirSync(hooksDir)
+      .filter(f => f.endsWith('.js') && compatibleSet.has(f))
+      .length;
   }
 
   const hooksJson = buildCodexHooksJson(compatible, activeDomains);
@@ -609,7 +624,7 @@ function buildCodexHooksJson(compatibleHooks, activeDomains) {
 
   for (const hookFile of compatibleHooks) {
     // PreToolUse 훅 (blocking guards)
-    if (['dev-tdd-guard.js', 'dev-db-guard.js', 'plan-doc-guard.js'].includes(hookFile)) {
+    if (['dev-feature-scope-guard.js', 'dev-tdd-guard.js', 'dev-db-guard.js', 'plan-doc-guard.js'].includes(hookFile)) {
       if (hookFile === 'dev-db-guard.js') {
         preToolUse.push({ matcher: 'Bash', hookFile });
       } else {

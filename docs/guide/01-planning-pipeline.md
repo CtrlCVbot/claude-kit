@@ -170,5 +170,6 @@ PCC(Planning Consistency Check)는 파이프라인의 **단계 간 일관성**�
 | [04-feature-planning.md](./04-feature-planning.md) | P3: `/plan-draft` 1차 기능 기획 상세 |
 | [05-design.md](./05-design.md) | P4~P6: PRD + 와이어프레임 + Stitch 디자인 상세 |
 | [06-dev-handoff.md](./06-dev-handoff.md) | P7: `/plan-bridge` 기획->개발 핸드오프 상세 |
+| [09-architecture.md](./09-architecture.md) | 설치 타겟 구조 + Claude/Codex 출력 계약 |
 | [11-archive-improve.md](./11-archive-improve.md) | P8: `/plan-archive` 아카이브 + `/plan-improve` 개선요청 상세 |
 | [12-blueprint-fast-track.md](./12-blueprint-fast-track.md) | 블루프린트 Fast-Track: 기존 설계 자산의 P3 정규화 진입 |

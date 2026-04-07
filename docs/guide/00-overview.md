@@ -56,7 +56,7 @@ Blueprint Fast-Track (기존 설계 자산 정규화):
 
 ## 도메인 구조
 
-claude-kit은 3개 도메인으로 분리된다. 소스는 도메인별로 나뉘고, 설치 결과는 `.claude/` 아래 flat 구조로 배치된다.
+claude-kit은 3개 도메인으로 분리된다. 소스는 도메인별로 나뉘고, 설치 결과는 타겟별 네이티브 구조로 배치된다. Claude는 `.claude/` 아래 flat 구조를 쓰고, Codex는 `plugins/claude-kit/` repo-local 플러그인 구조를 쓴다.
 
 - **core** -- 공유 규칙, 공통 hooks/skills/templates. 접두사 없음 (항상 설치)
 - **dev** -- 개발 전용 에이전트, 커맨드, 스킬, 훅. `dev-` 접두사
@@ -73,14 +73,17 @@ src/
 └── plan/   ← 기획: plan-idea, plan-screen, plan-prd-writer ...
 ```
 
-**컴포넌트 유형 4가지**:
+**컴포넌트 유형 5가지**:
 
 | 유형 | 위치 | 역할 |
 |------|------|------|
-| Agent | `.claude/agents/` | 전문 역할 수행 (opus 모델, Task tool 스폰) |
-| Command | `.claude/commands/` | 사용자 진입점 (`/plan-idea`, `/dev-feature`) |
-| Skill | `.claude/skills/` | 컨텍스트 매칭으로 자동 활성화되는 워크플로우 |
-| Hook | `.claude/hooks/` | 자동 실행 가드레일 (blocking/logging) |
+| Agent | Claude `.claude/agents/` / Codex `plugins/claude-kit/agents/` | 전문 역할 수행 (opus 모델, Task tool 스폰) |
+| Command | Claude `.claude/commands/` / Codex `plugins/claude-kit/commands/` | 사용자 진입점 (`/plan-idea`, `/dev-feature`) |
+| Skill | Claude `.claude/skills/` / Codex `plugins/claude-kit/skills/` | 컨텍스트 매칭으로 자동 활성화되는 워크플로우 |
+| Hook | Claude `.claude/hooks/` / Codex `plugins/claude-kit/hooks/` + `hooks.json` | 자동 실행 가드레일 (blocking/logging) |
+| Rule | Claude `.claude/rules/` / Codex `AGENTS.md`에 핵심 요약 흡수 | 공통 정책, 품질, 상호작용 규칙 |
+
+Codex 지원의 상세 계약은 [09-architecture.md](./09-architecture.md)에 모아 둔다. 설치 예시와 업데이트 정책은 저장소 루트 [README.md](../../README.md)를 기준으로 본다.
 
 ---
 
@@ -182,7 +185,7 @@ Phase A~E: A─[PDC]─[AIR]──B──C─[DPC]──D──[DVC]
 | 6 | [06-dev-handoff](./06-dev-handoff.md) | P7: 기획->개발 핸드오프 |
 | 7 | [07-review-pcc](./07-review-pcc.md) | 리뷰 루프 + PCC 검증 |
 | 8 | [08-dev-workflow](./08-dev-workflow.md) | 개발 워크플로우 Phase A~E |
-| 9 | [09-architecture](./09-architecture.md) | 아키텍처 + 컴포넌트 카탈로그 |
+| 9 | [09-architecture](./09-architecture.md) | 아키텍처 + 컴포넌트 카탈로그 + Claude/Codex 출력 계약 |
 | 10 | [10-glossary](./10-glossary.md) | 용어집 + 커맨드 레퍼런스 |
 | 11 | [11-archive-improve](./11-archive-improve.md) | P8: 아카이브 + 개선요청 |
 | 12 | [12-blueprint-fast-track](./12-blueprint-fast-track.md) | 블루프린트 Fast-Track |

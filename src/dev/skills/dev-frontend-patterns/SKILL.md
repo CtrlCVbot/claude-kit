@@ -1,109 +1,53 @@
 ---
 name: dev-frontend-patterns
-description: 프론트엔드 UI 패턴. CVA + Tailwind v4, 5-Tier 상태 관리, 컴포넌트 설계 시 참조.
+description: 프론트엔드 UI 패턴과 상태 관리 기준. 실제 배치 경로는 구조 SSOT와 기능 바인딩을 따른다.
 ---
 
 # Frontend Patterns
 
-서비스 앱 프론트엔드 UI 패턴. CVA + Tailwind v4 + 5-Tier 상태 관리.
+프론트엔드 구현은 일관된 UI 패턴과 상태 관리 규칙을 따르되, 컴포넌트와 훅의 실제 위치는 프로젝트 구조 SSOT와 기능 바인딩으로 결정한다.
 
-## Tech Stack Reference
+## Stack Defaults
 
-> 아래 패턴에서 사용하는 패키지 목록. `profile.json`의 `frontend.*` 필드로 선택.
+아래는 TypeScript 기반 기본 예시다. 실제 사용 여부는 `profile.json` 또는 구조 SSOT의 stack contract를 따른다.
 
-| 범주 | 기본 도구 | 패키지 | profile 필드 |
-|------|----------|--------|-------------|
-| UI Primitives | Radix UI | `@radix-ui/react-*` | `frontend.uiPrimitives` |
-| Component System | shadcn/ui | CVA + clsx + tailwind-merge | `frontend.componentSystem` |
-| Styling | Tailwind v4 | `tailwindcss@^4.0` | `frontend.styling` |
-| Global State | Jotai | `jotai@^2.15` | `frontend.stateGlobal` |
-| Server Data | SWR | `swr@^2.3` | `frontend.stateServer` |
-| URL State | nuqs | `nuqs@^2.7` | `frontend.stateUrl` |
-| Forms | react-hook-form | `react-hook-form@^7.62` | `frontend.stateForms` |
-| Validation | Zod | `zod@^3.25` | `frontend.formValidation` |
-| Theme | next-themes | `next-themes@^0.4` | `frontend.theme` |
-| Animation | Motion | `motion@^12.12` | `frontend.animation` |
-| Icons | Lucide | `lucide-react@^0.474` | `frontend.icons` |
-| Toast | Sonner | `sonner@^2.0` | `frontend.toast` |
-| **조건부** | | | |
-| Dates | date-fns | `date-fns@^4.1` + `react-day-picker@^9.7` | `frontend.dates` |
-| Charts | Recharts | `recharts@^2.15` | `frontend.charts` |
-| Tables | TanStack Table | `@tanstack/react-table@^8.9` | `frontend.tables` |
-| Carousel | Embla | `embla-carousel-react@^8.5` | `frontend.carousel` |
-| DnD | dnd-kit | `@dnd-kit/core@^6.3` | `frontend.dnd` |
+| Category | Default |
+|---|---|
+| UI primitives | Radix UI |
+| Component variant | CVA |
+| Styling | Tailwind CSS |
+| Global state | Jotai |
+| Server state | SWR 또는 framework-native fetch |
+| URL state | nuqs |
+| Form | react-hook-form |
+| Validation | Zod |
+| Theme | next-themes |
 
-> 버전 + 대안 선택: `.plan/init/v4/profile-schema.md` (`frontend` 섹션)
-> 패키지 매핑: `.plan/init/v4/phase-0-monorepo/00-monorepo-scaffolding.md`
+## Component Rules
 
-## 컴포넌트 패턴
+- 변형이 있는 UI는 CVA나 동등한 variant 시스템으로 정의한다.
+- 공용 스타일 병합은 `cn()` 같은 단일 유틸로 통일한다.
+- 범용 컴포넌트는 shared 영역에, 기능 전용 컴포넌트는 feature local에 둔다.
+- shared와 local 판단은 기능 바인딩의 `Shared-vs-Local Rule`을 따른다.
 
-| 패턴 | 용도 | 예시 |
-|------|------|------|
-| CVA + cn() | 변형 기반 스타일링 | Button(variant, size) |
-| Props Extension | HTML 요소 props 확장 | React.ComponentProps<"button"> |
-| Slot (asChild) | 렌더링 요소 교체 | `<Button asChild><Link /></Button>` |
-| Compound Component | 관련 컴포넌트 그룹화 | Card.Header + Card.Content |
-| data-* 속성 | 컴포넌트 식별 + CSS 선택자 | data-slot, data-variant |
+## State Rules
 
-### CVA 패턴
+| Scope | Preferred Pattern |
+|---|---|
+| Global app state | atom/store |
+| Feature-local state | feature context 또는 feature-local hook |
+| URL-coupled state | router or query-state adapter |
+| Server state | server component, fetch layer, SWR |
+| Form state | form library + schema validation |
 
-```tsx
-import { cva, type VariantProps } from "class-variance-authority"
-import { cn } from "@/lib/utils"
+## Provider Rules
 
-const variants = cva("base-classes", {
-  variants: {
-    variant: { default: "...", destructive: "..." },
-    size: { default: "h-9 px-4", sm: "h-8 px-3" },
-  },
-  defaultVariants: { variant: "default", size: "default" },
-})
-```
+- 전역 provider는 앱 shell이나 루트 layout에 둔다.
+- feature 전용 provider는 해당 feature의 허용 경로 안에 둔다.
+- provider 배치도 구조 SSOT와 바인딩에 맞춰야 한다.
 
-### cn() 유틸리티
+## Styling Rules
 
-```tsx
-import { clsx, type ClassValue } from "clsx"
-import { twMerge } from "tailwind-merge"
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs))
-}
-```
-
-## 상태 관리 5-Tier
-
-| 범위 | 도구 | 위치 | 영속성 |
-|------|------|------|--------|
-| 전역 | Jotai (atomWithStorage) | hooks/ | localStorage |
-| Feature 로컬 | React Context | features/{name}/hooks/ | 메모리 |
-| URL | nuqs | page.tsx | URL |
-| 서버 데이터 | SWR / Server Component | infrastructure/ | 캐시 |
-| 폼 | react-hook-form + Zod | presentation/ | 메모리 |
-
-> Feature 상태(Context)는 해당 Feature 외부에서 접근 금지.
-
-## 스타일링
-
-- Tailwind CSS v4 + CSS 변수 (OKLCH 색상 공간)
-- CSS Module 금지 — Tailwind 유틸리티로 통일
-- 테마: `:root` / `.dark` CSS 변수 전환
-- 커스텀 variant: `@custom-variant dark (&:is(.dark *))`
-
-## Provider 아키텍처
-
-```
-루트 layout.tsx
-  └── ThemeProvider (next-themes)
-      └── NuqsAdapter (URL 상태)
-          └── TooltipProvider
-              └── (main) layout.tsx
-                  └── SidebarProvider
-                      └── {children}
-```
-
-## 참조
-
-- Feature Module: `.claude/skills/dev-feature-module/SKILL.md`
-- 레이어 규칙: `.claude/skills/layered-architecture/SKILL.md`
-- 상세 분석: `.plan/init/v4/unified-frontend-architecture.md`
+- 토큰과 테마 값은 shared styling contract를 따른다.
+- 기능 전용 스타일은 기능 허용 경로 안에서만 추가한다.
+- 새 디자인 토큰이 필요하면 shared policy에 맞게 승격 여부를 결정한다.

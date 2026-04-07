@@ -1,12 +1,12 @@
 # 아키텍처 + 컴포넌트 카탈로그
 
-> claude-kit v2.0 아키텍처 레퍼런스. 도메인 분리, 네이밍, 컴포넌트 카탈로그, 산출물 구조를 한 문서로 정리.
+> claude-kit v2.1 아키텍처 레퍼런스. 도메인 분리, 멀티타겟 출력, 네이밍, 컴포넌트 카탈로그, 산출물 구조를 한 문서로 정리.
 
 ---
 
 ## 도메인 분리
 
-소스는 도메인별 디렉토리(`src/{domain}/`)로 분리되어 있지만, 설치 결과는 **플랫 구조**(`.claude/{category}/`)이다. 접두사가 도메인 소속을 보장한다.
+소스는 도메인별 디렉토리(`src/{domain}/`)로 분리되어 있지만, 설치 결과는 타겟별 네이티브 구조로 출력된다. Claude는 **플랫 구조**(`.claude/{category}/`)를 쓰고, Codex는 **repo-local plugin 구조**(`plugins/claude-kit/{category}/`)를 쓴다. 접두사가 도메인 소속을 보장하는 점은 두 타겟 모두 동일하다.
 
 ### 3개 도메인
 
@@ -52,10 +52,11 @@ src/plan/agents/plan-prd-writer.md  -> .claude/agents/plan-prd-writer.md
 ```
 src/dev/agents/dev-architect.md     -> plugins/claude-kit/agents/dev-architect.md
 src/dev/commands/dev-commit.md      -> plugins/claude-kit/commands/dev-commit.md
-src/core/hooks/edit-tracker.js      -> plugins/claude-kit/hooks.json 엔트리
+src/core/hooks/edit-tracker.js      -> plugins/claude-kit/hooks/edit-tracker.js
+                                    -> plugins/claude-kit/hooks.json 엔트리
 ```
 
-> Codex에서는 hooks가 개별 JS 파일이 아니라 `hooks.json` 선언으로 변환된다. 호환되지 않는 훅은 skip 처리되어 `.claude-kit-meta.json`의 `skippedForCodex`에 기록된다.
+> Codex에서는 호환 가능한 hook JS가 `plugins/claude-kit/hooks/`에 복사되고, `hooks.json`이 그 파일들을 참조한다. 호환되지 않는 훅은 skip 처리되어 `.claude-kit-meta.json`의 `skippedForCodex`에 기록된다.
 
 ### 도메인 + 타겟 선택 (`profile.json`)
 
@@ -81,13 +82,180 @@ src/core/hooks/edit-tracker.js      -> plugins/claude-kit/hooks.json 엔트리
 
 ### 파일명 패턴
 
-| 유형 | 패턴 | 예시 |
-|------|------|------|
-| Agent | `.claude/agents/{prefix}{name}.md` | `plan-prd-writer.md` |
-| Command | `.claude/commands/{prefix}{name}.md` | `dev-commit.md` |
-| Skill | `.claude/skills/{prefix}{name}/SKILL.md` | `plan-pipeline/SKILL.md` |
-| Hook | `.claude/hooks/{prefix}{name}.js` | `dev-tdd-guard.js` |
-| Rule | `.claude/rules/{name}.md` | `verification.md` |
+| 유형 | Claude 출력 | Codex 출력 | 예시 |
+|------|-------------|------------|------|
+| Agent | `.claude/agents/{prefix}{name}.md` | `plugins/claude-kit/agents/{prefix}{name}.md` | `plan-prd-writer.md` |
+| Command | `.claude/commands/{prefix}{name}.md` | `plugins/claude-kit/commands/{prefix}{name}.md` | `dev-commit.md` |
+| Skill | `.claude/skills/{prefix}{name}/SKILL.md` | `plugins/claude-kit/skills/{prefix}{name}/SKILL.md` | `plan-pipeline/SKILL.md` |
+| Hook | `.claude/hooks/{prefix}{name}.js` | `plugins/claude-kit/hooks/{prefix}{name}.js` + `hooks.json` | `dev-tdd-guard.js` |
+| Rule | `.claude/rules/{name}.md` | `AGENTS.md`에 핵심 규칙 요약 | `verification.md` |
+
+---
+
+## Codex 지원 상세
+
+Codex 관련 설명의 SSOT는 이 문서다. 저장소 루트 `README`는 설치 진입과 업데이트 정책을 설명하고, 여기서는 타겟별 출력 계약과 자산 매핑 규칙을 고정한다.
+Codex 호환 기능 설명과 도입 계획은 [../codex-compatibility/00-overview.md](../codex-compatibility/00-overview.md)를 시작점으로 하는 별도 운영 문서 세트에서 관리한다.
+
+### 설치 단위와 생성 산출물
+
+| 항목 | Claude | Codex |
+|------|--------|-------|
+| 설치 단위 | `.claude/` 폴더 | `plugins/claude-kit/` repo-local plugin |
+| 컨텍스트 문서 | `CLAUDE.md` | `AGENTS.md` |
+| 설정 파일 | `.claude/settings.json` | `plugins/claude-kit/.codex-plugin/plugin.json` |
+| Hook 형식 | `.claude/hooks/*.js` | `plugins/claude-kit/hooks/` + `hooks.json` |
+| 플러그인 등록 | -- | `.agents/plugins/marketplace.json` |
+
+Codex 타겟 설치 시 생성되는 대표 산출물:
+
+```text
+{project}/
+├── AGENTS.md
+├── .agents/
+│   └── plugins/
+│       └── marketplace.json
+└── plugins/
+    └── claude-kit/
+        ├── .codex-plugin/
+        │   └── plugin.json
+        ├── agents/
+        ├── commands/
+        ├── skills/
+        ├── hooks/
+        └── hooks.json
+```
+
+Dual-target 설치에서는 `.claude/`와 `plugins/claude-kit/`이 서로 독립적으로 생성된다. 기존 Claude 사용자는 `targets`를 생략해도 계속 `["claude"]` 기본값으로 동작한다.
+
+### 자산 매핑 규칙
+
+| 자산 유형 | Claude 출력 | Codex 출력 | 지원 수준 | 처리 방식 |
+|---------|------------|-----------|:--------:|----------|
+| `skills` | `.claude/skills/` | `plugins/claude-kit/skills/` | Full (path copy) | 출력 경로만 전환 |
+| `commands` | `.claude/commands/` | `plugins/claude-kit/commands/` | Full (path copy) | 출력 경로만 전환 |
+| `agents` | `.claude/agents/` | `plugins/claude-kit/agents/` | Full (path copy) | 출력 경로만 전환 |
+| `hooks` | `.claude/hooks/*.js` | `plugins/claude-kit/hooks/` + `hooks.json` | Partial | 호환 가능한 JS만 복사 + JSON 선언 생성 |
+| `rules` | `.claude/rules/*.md` | `AGENTS.md` 참조 | Partial | 핵심 규칙을 템플릿에 흡수 |
+| `templates` | `CLAUDE.md`, `.claude/settings.json` | `AGENTS.md`, `plugin.json`, `marketplace.json` | Target-specific | 타겟별 결과물 생성 |
+| `mcp` | `.claude/settings.json` 내 참조 | -- | Excluded | v1 제외 |
+
+`Full (path copy)`의 의미는 “파일을 plugin 내부에 그대로 복사한다”는 뜻이다. 자산 본문의 `.claude/`, `CLAUDE.md`, `~/.claude/` 문자열은 v1에서 자동 치환하지 않는다.
+
+### 내부 참조 처리
+
+v1에서 자동 변환하지 않는 내부 참조는 아래와 같다.
+
+| 내부 참조 | v1 처리 | 이유 |
+|----------|--------|------|
+| `.claude/...` | 미변환 | 문서 설명, 실행 경로, 런타임 저장 위치의 의미가 섞여 있어 단순 치환 위험이 큼 |
+| `CLAUDE.md` | 미변환 | 복사된 자산 본문은 그대로 유지되고, Codex용 `AGENTS.md`는 템플릿 산출물에만 적용 |
+| `~/.claude/...` | 미변환 + 필요 시 skip | 홈 디렉토리 런타임은 repo-local Codex 모델과 직접 대응되지 않음 |
+
+즉, v1에서 자동 변환되는 것은 설치 산출물 경로와 템플릿 결과물뿐이다. copied asset 내부 문자열 정규화는 의도적으로 v2 범위로 남겨 둔다.
+
+### Hook 변환 규칙
+
+Claude의 개별 JS hook 중 Codex 호환 항목은 `plugins/claude-kit/hooks/`에 복사되고, `hooks.json`이 그 파일을 참조한다.
+
+```text
+Claude:                              Codex:
+.claude/hooks/                       plugins/claude-kit/hooks/
+  ├── edit-tracker.js                  ├── edit-tracker.js
+  ├── code-quality-reminder.js         ├── code-quality-reminder.js
+  └── security-auto-trigger.js         └── security-auto-trigger.js
+
+                                     plugins/claude-kit/hooks.json
+                                     {
+                                       "hooks": {
+                                         "PostToolUse": [...],
+                                         "PreToolUse": [...]
+                                       }
+                                     }
+```
+
+지원/제외 기준:
+
+| 기준 | 결과 | 이유 |
+|------|:----:|------|
+| Codex `hooks.json` 형식으로 변환 가능 | 지원 | 구조 대응이 명확 |
+| Claude 전용 환경변수 의존 (`CLAUDE_SESSION_ID`, `CLAUDE_REMOTE_SESSION`) | 제외 | Codex에서 동일 env 보장 안 됨 |
+| `~/.claude` 런타임 저장 의존 | 제외 | repo-local 모델과 충돌 |
+| Claude Stop/remote session 전용 이벤트 | 제외 | 동일한 실행 맥락이 없음 |
+
+현재 v1 기준 hook 호환성:
+
+| Hook | Codex v1 | 이유 |
+|------|:--------:|------|
+| `edit-tracker.js` | 지원 | 파일 편집 이력 기록, 범용적 |
+| `code-quality-reminder.js` | 지원 | 품질 체크 리마인더, 범용적 |
+| `security-auto-trigger.js` | 지원 | 보안 민감 파일 감지, 범용적 |
+| `dev-tdd-guard.js` | 지원 | Codex `PreToolUse` 매처로 연결 가능 |
+| `dev-db-guard.js` | 지원 | Codex `Bash` 매처로 연결 가능 |
+| `plan-doc-guard.js` | 지원 | 기획 중 소스 수정 차단 규칙을 유지 가능 |
+| `output-secret-filter.js` | 제외 | `CLAUDE_REMOTE_SESSION` + `~/.claude` 의존 |
+| `session-wrap-suggest.js` | 제외 | Claude Stop 이벤트 전용 |
+
+### 메타데이터와 skip 기록
+
+Codex 타겟을 설치하면 `.claude-kit-meta.json`에 Codex 출력과 skip 정보가 함께 기록된다.
+
+```json
+{
+  "targets": ["claude", "codex"],
+  "outputs": {
+    "codex": {
+      "root": "plugins/claude-kit",
+      "generated": [
+        "AGENTS.md",
+        "plugins/claude-kit/.codex-plugin/plugin.json",
+        ".agents/plugins/marketplace.json",
+        "plugins/claude-kit/hooks.json"
+      ]
+    }
+  },
+  "skippedForCodex": [
+    {
+      "component": "output-secret-filter.js",
+      "reason": "depends on CLAUDE_REMOTE_SESSION and ~/.claude runtime"
+    }
+  ]
+}
+```
+
+원칙은 단순하다.
+
+- v1에서 이식하지 못한 자산은 숨기지 않고 `skippedForCodex`에 기록한다.
+- `component`와 `reason`을 함께 남겨 후속 parity 작업과 회귀 분석에 활용한다.
+- `outputs.codex`는 생성 결과를 추적하는 기준으로 쓴다.
+
+### 설치기 흐름
+
+설치기는 3-stage 구조로 동작한다.
+
+```text
+source assets (src/{domain}/{category})
+  -> normalization (도메인 계산 + 타겟 계산 + skip 판정)
+  -> target emitter (Claude emitter | Codex emitter)
+```
+
+| Stage | 역할 |
+|-------|------|
+| Source | `src/core/`, `src/dev/`, `src/plan/`와 `templates/` 수집 |
+| Normalization | 활성 domains/targets 계산, 자산별 처리 방식 판정, skip 사유 기록 |
+| Claude emitter | `.claude/` 폴더 구조 출력과 `settings.json` 병합 |
+| Codex emitter | `plugins/claude-kit/` plugin 구조, `AGENTS.md`, `plugin.json`, `marketplace.json`, `hooks.json` 생성 |
+
+### v1 제한사항
+
+| 제한 | 이유 |
+|------|------|
+| Hook 부분 지원 | Claude 전용 env, 홈 디렉토리 런타임, Stop 이벤트 의존 훅은 제외 |
+| Rules 간접 참조 | Codex에서 별도 rules 디렉토리 대신 `AGENTS.md`에 핵심 요약을 넣는다 |
+| 자산 내부 Claude 참조 미변환 | 복사된 자산의 `.claude/` 경로 참조는 v1에서 자동 치환하지 않는다 |
+| MCP 미지원 | 인증, transport, app/plugin 연결 구조가 함께 설계되어야 함 |
+| 전역 설치 미지원 | `~/.codex`가 아닌 repo-local plugin 모델만 지원 |
+| 런타임 100% parity 미제공 | 설치 가능성과 유지보수 안전성을 먼저 확보한 v1 범위 |
 
 ---
 

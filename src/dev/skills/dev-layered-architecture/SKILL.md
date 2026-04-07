@@ -1,95 +1,89 @@
 ---
 name: dev-layered-architecture
-description: Hexagonal Architecture 레이어 규칙. 의존성 방향, Feature 격리, 에러 처리 구조 참조.
+description: 프로젝트 구조 SSOT를 코드 경계 규칙으로 해석한다. hexagonal, clean, service-module, minimal-layered를 지원한다.
 ---
 
-# Layered Architecture
+# Dev Layered Architecture
 
-Hexagonal + Clean Architecture. 레이어별 책임을 엄격히 분리한다.
+이 스킬은 특정 패턴을 강제로 주입하지 않는다. 먼저 저장소의 현재 구조와 `.plans/project/00-dev-architecture.md`를 읽고, 거기에 적힌 레이어 계약을 코드 경계 규칙으로 변환한다.
 
-## 레이어 구조
+## Required Inputs
 
-| 레이어 | 위치 | 책임 | 의존 가능 |
-|--------|------|------|-----------|
-| Domain | `packages/core/**/domain/` | 비즈니스 로직, Entity, VO | 없음 (순수 TS) |
-| Application | `packages/core/**/application/` | 오케스트레이션, CQRS | Domain, Ports |
-| Ports | `packages/core/**/ports/` | 인터페이스만 (구현 없음) | Domain |
-| Infrastructure | `packages/db/`, `apps/**/infrastructure/` | Port 구현체, ORM | Domain, Application(DTO) |
-| Presentation | `apps/**/presentation/` | Server Action, Components | Application(Commands/Queries) |
+- `.plans/project/00-dev-architecture.md`
+- `.plans/features/active/{slug}/00-context/06-architecture-binding.md`
 
-## 의존성 방향 (역전 금지)
+## Decision Model
 
+구조 판단은 아래 네 축으로 나눈다.
+
+| Axis | Options |
+|---|---|
+| Workspace Topology | monorepo, single-app, multi-service |
+| Structure Mode | route-scoped, feature-scoped, hybrid, type-based |
+| Layer Style | hexagonal, clean, service-module, minimal-layered |
+| Stack Contract | language, framework, runtime, test, lint, db |
+
+## Core Rule
+
+기존 저장소 구조가 이미 일관되게 존재하면 그 구조를 채택한다. 새 구조 추천은 구조가 비어 있거나 충돌이 심할 때만 한다.
+
+## Default Recommendation
+
+구조가 비어 있고 TypeScript 중심 프로젝트라면 다음 조합을 기본 추천으로 둔다.
+
+- Workspace: monorepo
+- Structure Mode: route-scoped
+- Layer Style: hexagonal
+- Stack Contract: Next.js + TypeScript + Vitest
+
+## Layer Mapping
+
+레이어 이름과 위치는 구조 SSOT가 정한다. 아래는 기본 예시일 뿐 고정 경로가 아니다.
+
+| Layer | Default Responsibility |
+|---|---|
+| Presentation | route entry, controller, UI assembly |
+| Application | use case, orchestration, transaction boundary |
+| Domain | entity, policy, invariant, domain service |
+| Ports | external dependency contract |
+| Infrastructure | repository, gateway, adapter, framework wiring |
+
+## Dependency Direction
+
+기본 방향은 아래와 같다.
+
+```text
+Presentation -> Application -> Domain
+Infrastructure -> Ports -> Application/Domain
 ```
-Presentation -> Application -> Domain <- Ports <- Infrastructure
-```
 
-Domain은 어떤 외부 라이브러리에도 의존하지 않는다 (zod 제외).
-Application은 순수 TypeScript (zod, drizzle, next.js 금지).
+다만 구조 SSOT에 다른 규칙이 명시되어 있으면 그 규칙을 우선한다.
 
-## 에러 처리
+## Structure Mode Guidance
 
-- Domain 에러: `packages/core/**/domain/errors/`에 정의
-- Application: Domain 에러를 catch하여 적절한 Result 반환
-- Presentation: Result를 HTTP 응답으로 변환
+### route-scoped
 
-## 앱 내부 구조
+- 기능 진입점은 라우트 근처에 둔다.
+- 공유 가능한 코드는 packages 또는 shared 영역으로 올린다.
+- 기능별 허용 경로는 바인딩 문서에 구체 경로로 적는다.
 
-```
-app/ (Route Groups)
- └── page.tsx → features/ → packages/      (단방향)
-                          → components/     (단방향)
-                          → hooks/          (단방향)
-                          → lib/            (단방향)
-features/ → features/                       (금지!)
-```
+### feature-scoped
 
-### Route Groups
+- 기능 단위 디렉터리에 presentation, application, domain, infrastructure를 묶는다.
+- 라우트는 feature entry를 호출하는 얇은 셸로 유지한다.
 
-```
-app/
-├── (main)/     ← 메인 앱 (인증 필요, Sidebar+Header)
-├── (auth)/     ← 인증 (별도 레이아웃)
-└── layout.tsx  ← 루트 Provider (ThemeProvider, NuqsAdapter)
-```
+### hybrid
 
-### 상태 관리 범위
+- 라우트 진입점과 기능 모듈을 함께 사용한다.
+- 화면 진입은 route에, 핵심 로직과 재사용 코드는 feature module이나 shared package에 둔다.
 
-| 범위 | 도구 | 위치 |
-|------|------|------|
-| 전역 | Jotai | hooks/ |
-| Feature 로컬 | Context | features/{name}/hooks/ |
-| URL | nuqs | page.tsx |
-| 서버 데이터 | SWR / Server Component | features/{name}/infrastructure/ |
-| 폼 | react-hook-form + Zod | features/{name}/presentation/ |
+### type-based
 
-## 참조
+- `components`, `hooks`, `lib`, `services` 같은 타입별 폴더를 유지한다.
+- 대신 기능별 네임스페이스와 바인딩 경계가 반드시 있어야 한다.
 
-- 도메인 모델: `.claude/skills/domain-modeling/SKILL.md`
-- 프론트엔드 패턴: `.claude/skills/frontend-patterns/SKILL.md`
-- 테넌트 격리: `.claude/skills/tenant-isolation/SKILL.md` (Tier 3)
+## Rules
 
----
-
-## Stack Alternatives
-
-> 위 레이어 구조는 TypeScript/Next.js 기본 스택 기준. `stack.language`에 따라 디렉토리 경로가 달라진다.
-
-### 레이어별 디렉토리 대응표
-
-| 레이어 | typescript (기본) | java | python |
-|--------|-------------------|------|--------|
-| Domain | `packages/core/**/domain/` | `core/src/main/java/{pkg}/domain/` | `core/src/{proj}_core/{domain}/domain/` |
-| Application | `packages/core/**/application/` | `core/src/main/java/{pkg}/application/` | `core/src/{proj}_core/{domain}/application/` |
-| Ports | `packages/core/**/ports/` | `core/src/main/java/{pkg}/ports/` | `core/src/{proj}_core/{domain}/ports/` |
-| Infrastructure | `packages/db/`, `apps/**/infrastructure/` | `infra/src/main/java/{pkg}/` | `infra/src/{proj}_infra/` |
-| Presentation | `apps/**/presentation/` | `api/src/main/java/{pkg}/` | `api/src/{proj}_api/` |
-
-### 의존성 방향
-
-동일: `Presentation → Application → Domain ← Ports ← Infrastructure`
-
-| stack.language | Domain 순수성 규칙 |
-|----------------|-------------------|
-| typescript | 순수 TS (zod 제외) |
-| java | 순수 Java (jakarta.validation 제외) |
-| python | 순수 Python (pydantic 제외) |
+- 하드코딩된 디렉터리 예시보다 기능 바인딩의 실제 경로가 우선이다.
+- 한 기능의 내부 구현이 다른 기능의 내부 구현을 직접 가져오지 않도록 한다.
+- 레이어 규칙을 어기는 우회 의존성이 필요하면 먼저 구조 SSOT에 근거를 남긴다.
