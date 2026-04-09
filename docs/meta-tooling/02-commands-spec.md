@@ -1,6 +1,6 @@
 # Commands 명세
 
-> 4개 kit-* 커맨드의 상세 명세
+> 7개 kit-* 커맨드의 상세 명세
 
 ## 1. /kit-create -- 통합 스캐폴딩 커맨드
 
@@ -394,11 +394,11 @@ argument-hint: '[--domain <domain>] [--type <type>] [--verbose]'
 
 | 인자 | 설명 | 기본값 |
 |------|------|--------|
-| `--category` | 감사 카테고리 필터 | 전체 (6개) |
+| `--category` | 감사 카테고리 필터 (C1~C9) | 전체 (9개) |
 | `--fix` | 자동 수정 가능 항목 처리 | 꺼짐 |
 | `--verbose` | 상세 출력 | 꺼짐 |
 
-### 감사 카테고리 (4개 필수 + 2개 선택)
+### 감사 카테고리 (6개 필수 + 3개 선택)
 
 #### C1: 구조 규약 (필수)
 - 디렉토리 구조가 `src/{domain}/{category}/` 패턴 준수
@@ -435,6 +435,16 @@ argument-hint: '[--domain <domain>] [--type <type>] [--verbose]'
 - README.md의 컴포넌트 카운트가 실제와 일치하는지
 - `docs/guide/09-architecture.md`의 컴포넌트 목록이 최신인지
 - 변경 이력이 CHANGELOG에 반영되었는지
+
+#### C8: 교차 참조 일관성 (필수, Phase 4)
+- pairing-registry.json의 claude/codex 경로가 실제 파일시스템과 일치하는지
+- exception-registry.json의 예외 항목이 실제 존재하는지
+- 레지스트리 간 중복 또는 충돌 항목 탐지
+
+#### C9: 설계-구현 갭 (선택, Phase 4)
+- 전환 완료로 표시된 자산의 실제 Codex sibling 존재 여부
+- paired 상태인데 Codex 파일 내용이 빈 TODO만 있는 항목
+- auto 판정 자산 중 실제 변환 결과물이 없는 항목
 
 ### 출력 포맷
 
@@ -482,3 +492,33 @@ description: claude-kit 전체 컴포넌트의 일관성을 전수 감사합니�
 argument-hint: '[--category <cat>] [--fix] [--verbose]'
 ---
 ```
+
+---
+
+## 5. /kit-analyze -- 전환 준비 분석 커맨드
+
+**파일**: `.claude/commands/kit-analyze.md`
+
+`src/claude/` 자산의 Codex 전환 준비 상태(auto/review/skip)를 분석한다.
+
+상세 명세: `10-conversion-tooling.md §3` 참조.
+
+---
+
+## 6. /kit-convert -- 배치 변환 커맨드
+
+**파일**: `.claude/commands/kit-convert.md`
+
+Claude 자산을 Codex 형식으로 변환하여 `src/codex/`에 생성한다.
+
+상세 명세: `10-conversion-tooling.md §4` 참조.
+
+---
+
+## 7. /kit-sync -- Codex 동기화 커맨드
+
+**파일**: `.claude/commands/kit-sync.md`
+
+kit-sync-agent를 호출하여 미전환 자산 분석→전환→검증을 자율 실행한다.
+
+상세 명세: `11-consistency-tooling.md §2` 참조.

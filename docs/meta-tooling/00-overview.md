@@ -39,11 +39,12 @@ src/
     plan/
   templates/           ← 공유 인프라
   pairing-registry.json ← 자산 페어링 상태 추적 (Phase 4)
+  exception-registry.json ← 전환 예외 사유 레지스트리 (Phase 4)
 ```
 
 > `docs/codex-compatibility/` 문서에 따라, Codex installer는 `src/codex/`만 읽고 `src/claude/`를 변환하지 않는다. agent/command는 "required codex sibling"으로, 양쪽에 모두 존재하거나 `codex-skip` 사유가 명시되어야 한다.
 
-## 구축 대상 (8개 메타 툴)
+## 구축 대상 (13개 메타 툴)
 
 ```
 .claude/
@@ -52,6 +53,9 @@ src/
     kit-validate.md         # 컴포넌트 검증 커맨드
     kit-list.md             # 컴포넌트 목록 조회
     kit-audit.md            # 전수 감사 커맨드
+    kit-analyze.md          # 전환 준비 분석 커맨드 (Phase 4)
+    kit-convert.md          # 배치 변환 커맨드 (Phase 4)
+    kit-sync.md             # Codex 동기화 커맨드 (Phase 4)
   skills/
     kit-scaffolding/        # 스캐폴딩 엔진 + 12개 템플릿
       SKILL.md
@@ -80,8 +84,11 @@ src/
         schema-codex-command.md       # Phase 4
         schema-codex-hook.md          # Phase 4
         schema-codex-skill.md         # Phase 4
+    kit-converter/          # 변환 엔진 (Phase 4)
+      SKILL.md
   agents/
     kit-maintainer.md       # 벌크 유지보수 에이전트
+    kit-sync-agent.md       # 자율 동기화 에이전트 (Phase 4)
   hooks/
     kit-naming-guard.js     # 네이밍 규칙 강제 훅
     package.json
