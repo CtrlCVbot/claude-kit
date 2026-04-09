@@ -1,6 +1,6 @@
 # 메타 툴링 전체 구현 계획 (Phase 4b/4c)
 
-> 15개 미구현 항목을 4개 Wave로 구현하는 상세 계획
+> 15개 미구현 항목을 4개 Wave, 6커밋으로 구현하는 상세 계획
 
 ## 1. Context
 
@@ -42,13 +42,15 @@ feat(meta-tooling): Phase 4b 변환 엔진 — kit-converter + /kit-analyze + /k
 ```
 
 **검증**:
-- [ ] kit-converter/SKILL.md 존재 + frontmatter 유효
+- [ ] kit-converter/SKILL.md 존재 + frontmatter(`name`, `description`) 유효
 - [ ] kit-converter/references/ 3파일 존재
 - [ ] kit-analyze.md frontmatter: `allowed-tools: Read, Grep, Glob` (읽기 전용)
 - [ ] kit-convert.md frontmatter: `allowed-tools: Read, Write, Glob, Grep, Bash(git:*)`
-- [ ] conversion-rules.md: 5타입 변환 규칙 포함
-- [ ] agent-section-mapping.md: 10개 XML 섹션 매핑
-- [ ] skip-registry.md: 8개 엔트리
+- [ ] conversion-rules.md: **5타입** 변환 규칙 포함 (skill, agent, command, hook, rule 각 1섹션)
+- [ ] agent-section-mapping.md: **10행** XML→헤딩 매핑 (Role, Why_This_Matters, ..., Final_Checklist)
+- [ ] skip-registry.md: **8개** 엔트리 (session-wrap-suggest, output-secret-filter + 6 rules)
+- [ ] kit-analyze.md: Phase 4개 (Inventory, Analysis, Heuristic, Report)
+- [ ] kit-convert.md: Phase 5개 (Scope, Preview, Execution, Registry, Report)
 
 ---
 
@@ -73,47 +75,67 @@ feat(meta-tooling): 예외 레지스트리 + 검증 스키마 — exception-regi
 
 **검증**:
 - [ ] exception-registry.json: 유효 JSON, `$schema: "exception-registry-v1"`
-- [ ] 8개 엔트리 (EX-001~EX-008), 각각 9개 필수 필드
-- [ ] schema-exception-registry.md: FAIL/WARN 검증 테이블
+- [ ] 8개 엔트리 (EX-001~EX-008), 각각 9개 필수 필드 (id, component, category, rule, detail, reason, approvedBy, approvedDate, status)
+- [ ] 엔트리가 11-consistency-tooling.md §5 마이그레이션 테이블과 일치 (2 hook-skip + 6 rule-skip)
+- [ ] schema-exception-registry.md: FAIL/WARN 검증 테이블, 필수 필드 검증 규칙 포함
 
 ---
 
-### Wave 3: 일관성 도구 (Phase 4c) — 2 NEW + 3 MODIFY
+### Wave 3: 일관성 도구 (Phase 4c) — 2 NEW + 3 MODIFY, 3커밋
 
-C8/C9 감사 + kit-sync 에이전트 + 예외 통합. Wave 1 + Wave 2에 의존.
+Wave 1 + Wave 2에 의존. **3개 커밋으로 분리** (변경 범위별).
 
-| # | 파일 | 유형 | 내용 | 명세 |
-|---|------|------|------|------|
-| 9 | `.claude/agents/kit-sync-agent.md` | NEW | 자율 판단 동기화 에이전트 (분석→판단→실행→검증) | 11-consistency §2 |
-| 10 | `.claude/commands/kit-sync.md` | NEW | 에이전트 진입점 (--dry-run, --domain, --type, --name) | 11-consistency §2 |
-| 11 | `.claude/commands/kit-audit.md` | MODIFY | C8 교차 참조 + C9 갭 탐지 + --exceptions + --no-exceptions | 11-consistency §3-4 |
-| 12 | `.claude/agents/kit-maintainer.md` | MODIFY | exception-registry 인식 + C8/C9 Investigation_Protocol | 11-consistency §6 |
-| 13 | `.claude/skills/kit-validation/SKILL.md` | MODIFY | 스키마 #10 추가 (9→10개) | 11-consistency §6 |
+#### Wave 3a: C8/C9 감사 카테고리 추가
 
-**kit-audit.md 수정 상세**:
-- `--category` 범위: `C1~C7` → `C1~C9`
-- C8 (교차 참조 무결성, 필수): 3가지 참조 패턴 + 경로 해석 + --fix
-- C9 (설계-구현 갭, 선택): G1~G5 규칙
-- `--exceptions`, `--no-exceptions` 파라미터
-- 출력에 `[EXEMPT]` 상태 추가
+| # | 파일 | 유형 | 내용 |
+|---|------|------|------|
+| 11 | `.claude/commands/kit-audit.md` | MODIFY | C8 + C9 + --exceptions 추가 |
+| 13 | `.claude/skills/kit-validation/SKILL.md` | MODIFY | 스키마 #10 추가 (9→10개) |
 
-**kit-sync-agent.md 핵심 구조**:
-- YAML: name, description, tools(6개), model(sonnet), memory(project), color(green)
-- Agent_Prompt XML 10섹션
-- 판단 휴리스틱: 0개→skip, 1개→--name, 2-10개→--domain, 10+→사용자 승인
-- 실패 처리: 멱등성 보장, 부분 실패 시 성공분 등록 + 실패분 리포트
+C8/C9 검증 항목, 경로 해석 알고리즘, --fix 규칙의 상세 정의는 **11-consistency-tooling.md §3-4**를 참조. 이 문서에서 반복하지 않는다.
+
+**실행 순서**: #13(스키마 수) → #11(C8/C9 카테고리). 스키마가 먼저 존재해야 kit-audit이 참조 가능.
 
 **커밋**:
 ```
-feat(meta-tooling): Phase 4c 일관성 도구 — C8/C9 + kit-sync 에이전트 + 예외 통합
+feat(meta-tooling): kit-audit C8 교차 참조 + C9 갭 탐지 감사 추가
 ```
 
-**검증**:
-- [ ] kit-sync-agent.md: 6 YAML 필드 + Agent_Prompt XML 10섹션
-- [ ] kit-sync.md: frontmatter + Workflow
-- [ ] kit-audit.md: C8, C9, --exceptions 언급 각 2+회
-- [ ] kit-maintainer.md: "exception-registry" 언급
+#### Wave 3b: kit-sync 에이전트 + 커맨드
+
+| # | 파일 | 유형 | 내용 |
+|---|------|------|------|
+| 9 | `.claude/agents/kit-sync-agent.md` | NEW | 자율 판단 동기화 에이전트 |
+| 10 | `.claude/commands/kit-sync.md` | NEW | 에이전트 진입점 |
+
+에이전트/커맨드 상세는 **11-consistency-tooling.md §2**를 참조.
+
+**실행 순서**: #9(에이전트) → #10(커맨드). 커맨드가 에이전트를 spawn하므로 에이전트가 먼저 존재해야 함.
+
+**커밋**:
+```
+feat(meta-tooling): kit-sync 에이전트 + 커맨드 — Codex 동기화 진입점
+```
+
+#### Wave 3c: exception-registry 통합
+
+| # | 파일 | 유형 | 내용 |
+|---|------|------|------|
+| 12 | `.claude/agents/kit-maintainer.md` | MODIFY | exception-registry 인식 + C8/C9 |
+
+kit-maintainer 수정 상세는 **11-consistency-tooling.md §6**를 참조.
+
+**커밋**:
+```
+feat(meta-tooling): kit-maintainer exception-registry 통합
+```
+
+**Wave 3 전체 검증**:
+- [ ] kit-audit.md: `C1~C9` 범위, C8/C9 섹션, `--exceptions` 파라미터 각 2+회
 - [ ] kit-validation SKILL.md: "10개 스키마" 표기
+- [ ] kit-sync-agent.md: 6 YAML 필드 + Agent_Prompt XML 10섹션
+- [ ] kit-sync.md: frontmatter + Workflow + 판단 휴리스틱 참조
+- [ ] kit-maintainer.md: "exception-registry" 언급 + Investigation_Protocol에 C8/C9 포함
 
 ---
 
@@ -132,10 +154,11 @@ docs(meta-tooling): 변환/일관성 도구 문서 반영 — 개요 + 커맨드
 ```
 
 **검증**:
-- [ ] 00-overview.md: 도구 수가 실제 .claude/ 파일 수와 일치
-- [ ] 02-commands-spec.md: /kit-analyze, /kit-convert, /kit-sync 섹션 존재
-- [ ] 02-commands-spec.md: kit-audit C8/C9 + --exceptions 반영
-- [ ] 깨진 경로 스캔 0건
+- [ ] 00-overview.md: `.claude/` 내 커맨드 수(7), 에이전트 수(2), 스킬 수(3) 정확
+- [ ] 00-overview.md: 구조 트리에 kit-converter, kit-analyze, kit-convert, kit-sync-agent, kit-sync 포함
+- [ ] 02-commands-spec.md: /kit-analyze, /kit-convert, /kit-sync 각각 별도 섹션 (Usage + Parameters + Workflow)
+- [ ] 02-commands-spec.md: kit-audit 섹션에 `C1~C9` 범위 + `--exceptions` 반영
+- [ ] `grep -rn 'src/(core|dev|plan)/' docs/meta-tooling/ --include='*.md'` 에서 활성 문서 0건 (경로 일관성)
 
 ---
 
@@ -187,4 +210,4 @@ Wave 1 (변환)              Wave 2 (예외)
 | 14 | W4 | `docs/meta-tooling/00-overview.md` | MODIFY |
 | 15 | W4 | `docs/meta-tooling/02-commands-spec.md` | MODIFY |
 
-**총**: 신규 10파일 + 수정 5파일 = 15작업, 4커밋
+**총**: 신규 10파일 + 수정 5파일 = 15작업, 6커밋 (W1×1 + W2×1 + W3×3 + W4×1)
