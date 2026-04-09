@@ -1,0 +1,102 @@
+{
+  "$schema": "exception-registry-v1",
+  "description": "전환 불가/감사 면제 항목. kit-audit, kit-sync, kit-analyze가 참조. FAIL/WARN → [EXEMPT] 변환.",
+  "entries": [
+    {
+      "id": "EX-001",
+      "component": "session-wrap-suggest",
+      "category": "codex-conversion",
+      "rule": "hook-skip",
+      "detail": "Claude Stop 이벤트 + tmpdir 마커 의존",
+      "reason": "Codex runtime에서 재현 불가능한 Claude runtime 기능 의존",
+      "approvedBy": "maintainer",
+      "approvedDate": "2026-04-09",
+      "expiresDate": null,
+      "status": "active"
+    },
+    {
+      "id": "EX-002",
+      "component": "output-secret-filter",
+      "category": "codex-conversion",
+      "rule": "hook-skip",
+      "detail": "CLAUDE_REMOTE_SESSION 환경변수 의존",
+      "reason": "Codex runtime에 해당 환경변수 없음",
+      "approvedBy": "maintainer",
+      "approvedDate": "2026-04-09",
+      "expiresDate": null,
+      "status": "active"
+    },
+    {
+      "id": "EX-003",
+      "component": "coding-style",
+      "category": "codex-conversion",
+      "rule": "rule-skip",
+      "detail": "claude-origin shared guidance",
+      "reason": "Codex에서 AGENTS.md guidance로 소비. 개별 변환 파일 불필요",
+      "approvedBy": "maintainer",
+      "approvedDate": "2026-04-09",
+      "expiresDate": null,
+      "status": "active"
+    },
+    {
+      "id": "EX-004",
+      "component": "date-calculation",
+      "category": "codex-conversion",
+      "rule": "rule-skip",
+      "detail": "claude-origin shared guidance",
+      "reason": "Codex에서 AGENTS.md guidance로 소비",
+      "approvedBy": "maintainer",
+      "approvedDate": "2026-04-09",
+      "expiresDate": null,
+      "status": "active"
+    },
+    {
+      "id": "EX-005",
+      "component": "golden-principles",
+      "category": "codex-conversion",
+      "rule": "rule-skip",
+      "detail": "claude-origin shared guidance",
+      "reason": "Codex에서 AGENTS.md guidance로 소비",
+      "approvedBy": "maintainer",
+      "approvedDate": "2026-04-09",
+      "expiresDate": null,
+      "status": "active"
+    },
+    {
+      "id": "EX-006",
+      "component": "interaction",
+      "category": "codex-conversion",
+      "rule": "rule-skip",
+      "detail": "claude-origin shared guidance",
+      "reason": "Codex에서 AGENTS.md guidance로 소비",
+      "approvedBy": "maintainer",
+      "approvedDate": "2026-04-09",
+      "expiresDate": null,
+      "status": "active"
+    },
+    {
+      "id": "EX-007",
+      "component": "security",
+      "category": "codex-conversion",
+      "rule": "rule-skip",
+      "detail": "claude-origin shared guidance",
+      "reason": "Codex에서 AGENTS.md guidance로 소비",
+      "approvedBy": "maintainer",
+      "approvedDate": "2026-04-09",
+      "expiresDate": null,
+      "status": "active"
+    },
+    {
+      "id": "EX-008",
+      "component": "verification",
+      "category": "codex-conversion",
+      "rule": "rule-skip",
+      "detail": "claude-origin shared guidance",
+      "reason": "Codex에서 AGENTS.md guidance로 소비",
+      "approvedBy": "maintainer",
+      "approvedDate": "2026-04-09",
+      "expiresDate": null,
+      "status": "active"
+    }
+  ]
+}
