@@ -483,3 +483,363 @@ pairing-registry.json → 83개 엔트리 (75 paired + 8 codex-skip)
         agent-section-mapping.md      # XML→헤딩 매핑
         skip-registry.md              # codex-skip 대상
 ```
+
+---
+
+## 10. Quick Start
+
+### 3단계로 시작하기
+
+```bash
+# 1. 전환 준비 상태 확인
+/kit-analyze
+
+# 2. 파일럿 1개 변환 (미리보기)
+/kit-convert --name dev-architect --dry-run
+
+# 3. 실제 변환 + 검증
+/kit-convert --name dev-architect
+/kit-validate dev-architect --target codex
+```
+
+### 단일 변환 예시: `/kit-convert --name dev-architect`
+
+**입력** (Claude 소스):
+
+```
+src/claude/dev/agents/dev-architect.md
+```
+
+```markdown
+---
+name: dev-architect
+description: 시스템 설계, 확장성, 기술적 의사결정을 위한 아키텍처 전문가.
+tools: ["Read", "Grep", "Glob"]
+model: opus
+memory: project
+color: blue
+---
+
+<Agent_Prompt>
+  <Role>
+    당신은 아키텍트(Oracle)입니다. 코드를 분석하고...
+    요구사항 수집(analyst)...은 담당하지 않습니다.
+  </Role>
+
+  <Constraints>
+    - Write 또는 Edit 도구를 절대 사용하지 않음. 읽기 전용 분석 에이전트.
+    ...
+  </Constraints>
+
+  <Output_Format>
+    ## 요약
+    [2-3문장]
+    ## 분석
+    ...
+  </Output_Format>
+
+  <Failure_Modes_To_Avoid>
+    - 탁상 분석: 코드를 먼저 읽지 않고 조언 제공.
+    ...
+  </Failure_Modes_To_Avoid>
+</Agent_Prompt>
+
+## 아키텍처 원칙
+...
+```
+
+**변환 과정**:
+
+```
+1. YAML frontmatter 읽기 → tools에 Write/Edit 없음 → difficulty: auto
+2. <Agent_Prompt> XML 파싱:
+   <Role>              → ## Role
+   <Constraints>       → ## Constraints
+   <Output_Format>     → ## Output Format
+   <Failure_Modes>     → ## Failure Modes
+3. YAML frontmatter 제거 (name, tools, model, memory, color)
+4. description → 제목 아래 배치
+5. </Agent_Prompt> 뒤 "아키텍처 원칙" → 추가 섹션으로 보존
+6. "Codex 참고 사항" 섹션 추가
+7. pairing-registry.json 에 엔트리 추가
+```
+
+**출력** (Codex 결과):
+
+```
+src/codex/dev/agents/dev-architect.md
+```
+
+```markdown
+<!-- kit-convert generated: 2026-04-09T... -->
+# dev-architect
+
+시스템 설계, 확장성, 기술적 의사결정을 위한 아키텍처 전문가.
+
+## Role
+
+당신은 아키텍트(Oracle)입니다. 코드를 분석하고...
+요구사항 수집(analyst)...은 담당하지 않습니다.
+
+## Capabilities
+
+- 코드 분석, 구현 검증, 디버깅 근본 원인 파악, 아키텍처 권고
+
+## Constraints
+
+- Write 또는 Edit 도구를 절대 사용하지 않음. 읽기 전용 분석 에이전트.
+...
+
+## Output Format
+
+## 요약
+[2-3문장]
+## 분석
+...
+
+## Failure Modes
+
+- 탁상 분석: 코드를 먼저 읽지 않고 조언 제공.
+...
+
+## 아키텍처 원칙
+...
+
+## Codex 참고 사항
+
+- 이 파일은 **authoring source**이다. runtime file이 아니다.
+- 설치/emit 단계에서 `.codex/agents/*.toml`로 연결된다.
+- Claude sibling: `src/claude/dev/agents/dev-architect.md`
+```
+
+**pairing-registry.json 갱신**:
+
+```json
+{
+  "identity": "dev-architect",
+  "type": "agent",
+  "domain": "dev",
+  "status": "paired",
+  "reason": null,
+  "claude": "src/claude/dev/agents/dev-architect.md",
+  "codex": "src/codex/dev/agents/dev-architect.md",
+  "createdAt": "2026-04-09T..."
+}
+```
+
+**콘솔 출력**:
+
+```
+[kit-convert] 변환 완료
+
+  변환: 1개 | 건너뛰기: 0개
+
+  | Identity      | Type  | Status | Target                                | Review? |
+  |---------------|-------|--------|---------------------------------------|---------|
+  | dev-architect | agent | paired | src/codex/dev/agents/dev-architect.md | No      |
+
+  다음 단계:
+  1. /kit-validate dev-architect --target codex
+```
+
+### 배치 변환 예시: `/kit-convert --domain dev`
+
+```
+[kit-convert] dev 도메인 변환
+
+  대상: 45개 (15 skills + 6 agents + 21 commands + 3 hooks)
+  건너뛰기: 0개
+
+  === Skills (15개, auto) ===
+  [OK] dev-architecture-decision  → src/codex/dev/skills/dev-architecture-decision/SKILL.md
+  [OK] dev-domain-modeling        → src/codex/dev/skills/dev-domain-modeling/SKILL.md
+  [OK] dev-tdd-workflow           → src/codex/dev/skills/dev-tdd-workflow/SKILL.md
+  ... (12개 더)
+
+  === Agents (6개, 3 auto + 3 review) ===
+  [OK] dev-architect              → src/codex/dev/agents/dev-architect.md
+  [OK] dev-code-reviewer          → src/codex/dev/agents/dev-code-reviewer.md
+  [OK] dev-database-reviewer      → src/codex/dev/agents/dev-database-reviewer.md
+  [OK] dev-security-reviewer      → src/codex/dev/agents/dev-security-reviewer.md
+  [OK] dev-doc-updater            → src/codex/dev/agents/dev-doc-updater.md          ← REVIEW NEEDED
+  [OK] dev-verify-agent           → src/codex/dev/agents/dev-verify-agent.md
+
+  === Commands (21개, ~10 auto + ~11 review) ===
+  [OK] dev-architecture           → src/codex/dev/commands/dev-architecture.md
+  [OK] dev-build-fix              → src/codex/dev/commands/dev-build-fix.md
+  [OK] dev-feature                → src/codex/dev/commands/dev-feature.md             ← REVIEW NEEDED
+  ... (18개 더)
+
+  === Hooks (3개, auto) ===
+  [OK] dev-db-guard               → src/codex/dev/hooks/dev-db-guard.js
+  [OK] dev-feature-scope-guard    → src/codex/dev/hooks/dev-feature-scope-guard.js
+  [OK] dev-tdd-guard              → src/codex/dev/hooks/dev-tdd-guard.js
+
+  === 요약 ===
+  변환: 45개 | 건너뛰기: 0개 | REVIEW NEEDED: ~12개
+
+  pairing-registry.json: 45개 엔트리 추가 (all paired)
+
+  다음 단계:
+  1. REVIEW NEEDED 파일 12개를 수동 검토하세요
+  2. /kit-validate --target codex --domain dev
+  3. /kit-audit --category C7
+```
+
+---
+
+## 11. 변환 전 확인 사항 (Pre-conversion Checklist)
+
+### 공통 전제 조건
+
+| # | 확인 항목 | 확인 방법 | 실패 시 |
+|---|----------|----------|---------|
+| 1 | Phase 0 완료 (src/claude/ 구조 존재) | `ls src/claude/` | Phase 0 먼저 실행 |
+| 2 | src/codex/{core,dev,plan}/ 존재 | `ls src/codex/` | `mkdir -p src/codex/{core,dev,plan}` |
+| 3 | pairing-registry.json 존재 | `cat src/pairing-registry.json` | Phase 4 T1 실행 |
+| 4 | Codex 템플릿 4종 존재 | `ls .claude/skills/kit-scaffolding/references/template-codex-*` | Phase 4 Layer 1 실행 |
+| 5 | Codex 스키마 4종 존재 | `ls .claude/skills/kit-validation/references/schema-codex-*` | Phase 4 Layer 2 실행 |
+| 6 | kit-converter 스킬 존재 | `ls .claude/skills/kit-converter/SKILL.md` | Layer 0 구현 |
+
+### 타입별 변환 전 점검
+
+#### Agent 변환 전
+
+| 점검 | 방법 | 영향 |
+|------|------|------|
+| tools 배열 확인 | YAML frontmatter `tools:` 읽기 | Write/Edit 포함 → `review` 난이도, REVIEW NEEDED 마커 |
+| Agent_Prompt XML 존재 확인 | `<Agent_Prompt>` 태그 검색 | 없으면 변환 실패 (비표준 포맷) |
+| 10개 XML 섹션 확인 | Role, Constraints, Output_Format 최소 존재 | 누락 섹션 → 빈 헤딩 생성 |
+
+#### Command 변환 전
+
+| 점검 | 방법 | 영향 |
+|------|------|------|
+| frontmatter 유무 | `---` 블록 존재 확인 | 있으면 complex → `review`, 없으면 simple → `auto` |
+| Phase/Step 수 | `## Phase` 또는 `단계` 패턴 카운트 | 3개 이상 → `review` |
+| 슬래시 커맨드 제목 | `# /` 패턴 확인 | 있으면 Entry Flow 제목으로 변환 |
+
+#### Hook 변환 전
+
+| 점검 | 방법 | 영향 |
+|------|------|------|
+| skip-registry 확인 | identity가 skip-registry.md에 있는지 | 등록됨 → 변환 건너뛰기 |
+| Event 타입 확인 | JSDoc `* Event:` 읽기 | Stop → Codex hooks 현황 경고 추가 |
+| package.json | 훅 디렉토리에 존재 여부 | 없으면 자동 생성 |
+
+#### Skill 변환 전
+
+| 점검 | 방법 | 영향 |
+|------|------|------|
+| SKILL.md 존재 | 디렉토리 내 파일 확인 | 없으면 변환 불가 |
+| references/ 유무 | 서브디렉토리 확인 | 있으면 함께 복사 |
+
+---
+
+## 12. 개선 로드맵
+
+현재 명세의 약점과 향후 보완 항목을 정리한다.
+
+### 12.1 변환 실패 시 롤백
+
+**현재**: 변환 도중 실패하면 일부 파일만 생성된 불완전 상태가 남는다.
+
+**개선안**:
+- `--dry-run`을 항상 먼저 실행하여 충돌/오류를 사전 감지
+- 변환 시작 전 `src/codex/` 스냅샷 기록 (변환 대상 파일 목록)
+- 실패 시 생성된 파일을 자동 삭제하는 `--rollback` 옵션
+- 또는 git worktree에서 변환 실행 후 결과 확인 → merge
+
+**우선순위**: Medium (파일럿 단계에서는 수동 롤백으로 충분)
+
+### 12.2 부분 변환 상태 추적
+
+**현재**: 89개 중 일부만 변환한 상태에서 "어디까지 했는지" 추적이 어렵다.
+
+**개선안**:
+- `/kit-analyze`에 `--status` 플래그: pairing-registry 기반으로 변환 진행률 표시
+- 출력 예시:
+  ```
+  변환 진행률: 45/83 (54%)
+  - core: 5/13 (38%)  ← 8 skip
+  - dev:  45/45 (100%)
+  - plan: 0/25 (0%)   ← 미시작
+  ```
+
+**우선순위**: High (배치 변환 시 필수)
+
+### 12.3 변환 품질 메트릭
+
+**현재**: 변환 성공/실패만 보고한다. 변환 품질(내용 보존율, 섹션 매핑 정확도)은 측정하지 않는다.
+
+**개선안**:
+- 에이전트 변환 후 자동 검증:
+  - Claude 원본의 XML 섹션 수 vs Codex 결과의 헤딩 수 비교
+  - 누락된 섹션 자동 감지 + 경고
+- 커맨드 변환 후 자동 검증:
+  - Claude 원본의 Phase 수 vs Codex 결과의 Workflow 단계 수 비교
+  - 파라미터 테이블 보존 여부
+- 리포트에 "보존율" 컬럼 추가:
+  ```
+  | Identity      | Sections (Claude) | Sections (Codex) | 보존율 |
+  |---------------|-------------------|------------------|--------|
+  | dev-architect | 10 XML            | 6 headings       | 100%   |
+  | plan-prd-writer | 10 XML          | 5 headings       | 85%    |
+  ```
+
+**우선순위**: Medium (파일럿 후 도입)
+
+### 12.4 리포트 정확성 개선
+
+**현재**: `/kit-analyze`의 난이도 분류가 단순 휴리스틱(tools 배열, Phase 수)에 의존한다.
+
+**개선안**:
+- 에이전트: `<Investigation_Protocol>` 복잡도 (단계 수, 도구 참조 수)를 추가 가중치로 사용
+- 커맨드: 본문 길이(줄 수), 교차 참조 커맨드 수, 출력 포맷 복잡도를 고려
+- 훅: 실제 JS 코드 복잡도(조건 분기 수, 외부 모듈 의존)를 확인
+- 리포트에 "분류 근거" 컬럼 추가:
+  ```
+  | Identity   | Difficulty | 근거                                    |
+  |------------|------------|----------------------------------------|
+  | dev-feature| review     | frontmatter + 5 phases + 200+ lines    |
+  | dev-commit | auto       | no frontmatter + 2 phases + 46 lines   |
+  ```
+
+**우선순위**: Low (현재 휴리스틱으로 파일럿 충분)
+
+### 12.5 변환 규칙 버전 관리
+
+**현재**: 변환 규칙이 `kit-converter/references/`에 문서로만 존재한다. 규칙이 변경되면 이미 변환된 파일과 불일치가 생길 수 있다.
+
+**개선안**:
+- 변환 파일의 `<!-- kit-convert generated -->` 주석에 규칙 버전 포함:
+  ```html
+  <!-- kit-convert generated: 2026-04-09T... / rules-v1 -->
+  ```
+- 규칙 변경 시 `/kit-convert --force --all`로 전체 재변환 가능
+- `/kit-audit`에 "변환 규칙 버전 일치" 검증 항목 추가 (C8 후보)
+
+**우선순위**: Low (규칙이 안정화된 후)
+
+### 12.6 변환 전 의존성 검증
+
+**현재**: 단일 자산 단위로 변환하므로, 커맨드가 참조하는 스킬이 먼저 변환되었는지 확인하지 않는다.
+
+**개선안**:
+- `/kit-convert`에 `--check-deps` 옵션:
+  - 커맨드가 `참조: .claude/skills/{name}` 형태로 스킬을 참조하면, 해당 스킬의 Codex sibling 존재 여부 확인
+  - 없으면 WARN: "참조 스킬 {name}의 Codex sibling이 없습니다"
+- 배치 변환 시 자동으로 의존성 순서 결정: skills → agents → commands → hooks
+
+**우선순위**: Medium (배치 변환 시 유용)
+
+### 개선 우선순위 요약
+
+| # | 개선 | 우선순위 | 시점 |
+|---|------|---------|------|
+| 12.2 | 부분 변환 상태 추적 | High | 배치 변환 전 |
+| 12.6 | 변환 전 의존성 검증 | Medium | 배치 변환 전 |
+| 12.1 | 변환 실패 롤백 | Medium | 배치 변환 전 |
+| 12.3 | 변환 품질 메트릭 | Medium | 파일럿 후 |
+| 12.4 | 리포트 정확성 | Low | 파일럿 후 |
+| 12.5 | 규칙 버전 관리 | Low | 규칙 안정화 후 |
