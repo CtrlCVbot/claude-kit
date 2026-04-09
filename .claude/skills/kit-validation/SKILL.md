@@ -1,7 +1,7 @@
 ---
 name: kit-validation
 description: |
-  claude-kit 컴포넌트 검증 엔진. 9개 스키마(Claude 5 + Codex 4)로 skill, agent, command,
+  claude-kit 컴포넌트 검증 엔진. 10개 스키마(Claude 5 + Codex 4 + Registry 1)로 skill, agent, command,
   hook, rule의 표준 준수 여부를 검증한다. /kit-validate와 /kit-audit가 이 스킬을 참조한다.
 ---
 
@@ -9,7 +9,7 @@ description: |
 
 컴포넌트가 표준 패턴을 준수하는지 스키마 기반으로 검증한다.
 
-## 스키마 목록 (9종: Claude 5 + Codex 4)
+## 스키마 목록 (10종: Claude 5 + Codex 4 + Registry 1)
 
 ### Claude 스키마
 
@@ -29,6 +29,12 @@ description: |
 | 7 | schema-codex-agent.md | `src/codex/{domain}/agents/` | 헤딩 기반 섹션, Agent_Prompt XML 없음 |
 | 8 | schema-codex-command.md | `src/codex/{domain}/commands/` | Entry Flow, 슬래시 커맨드 없음 |
 | 9 | schema-codex-hook.md | `src/codex/{domain}/hooks/` | Codex hooks 제약, 등록 주석 |
+
+### Registry 스키마
+
+| # | 스키마 | 대상 | 핵심 검증 |
+|---|--------|------|-----------|
+| 10 | schema-exception-registry.md | `src/exception-registry.json` | $schema, entries, 필수 필드, id 형식, status enum |
 
 ## 검증 수준
 

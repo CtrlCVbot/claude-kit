@@ -14,7 +14,7 @@ argument-hint: '[--category <cat>] [--fix] [--verbose]'
 
 ```bash
 /kit-audit                    # 전체 감사
-/kit-audit --category <cat>   # 카테고리별 (C1~C6)
+/kit-audit --category <cat>   # 카테고리별 (C1~C9)
 /kit-audit --fix              # 자동 수정 가능 항목 처리
 /kit-audit --verbose          # 상세 출력
 ```
@@ -23,9 +23,11 @@ argument-hint: '[--category <cat>] [--fix] [--verbose]'
 
 | 인자 | 설명 | 기본값 |
 |------|------|--------|
-| `--category` | 감사 카테고리 필터 (`C1`~`C7`) | 전체 |
+| `--category` | 감사 카테고리 필터 (`C1`~`C9`) | 전체 |
 | `--fix` | 자동 수정 가능 항목 처리 | 꺼짐 |
 | `--verbose` | 상세 출력 | 꺼짐 |
+| `--exceptions` | 활성 예외 목록 출력 | 꺼짐 |
+| `--no-exceptions` | 예외 무시, 모든 위반 보고 | 꺼짐 |
 
 ## 감사 카테고리
 
@@ -72,6 +74,24 @@ argument-hint: '[--category <cat>] [--fix] [--verbose]'
 - `codex-skip` 상태인데 reason이 비어있는 항목 (FAIL)
 - `paired` 상태인데 한쪽 파일만 존재하는 항목 (FAIL)
 
+### C8: 교차 참조 무결성 (필수)
+
+3가지 참조 패턴을 파싱하여 대상 존재 여부를 검증한다. 상세: 11-consistency-tooling.md §3.
+
+- `> 참조:` 블록 인용 경로가 실제 존재하는지 (FAIL: 죽은 참조)
+- 도메인 접두사 누락 감지 (WARN: --fix로 자동 수정 가능)
+- Codex sibling 참조 유효성 (WARN)
+- 고아 컴포넌트 탐지 (INFO)
+
+### C9: 설계-구현 갭 (선택)
+
+설계 문서 vs 실제 구현을 비교하여 미반영 항목을 탐지한다. 상세: 11-consistency-tooling.md §4.
+
+- G1: pairing-registry에서 미등록 agent/command (WARN)
+- G2: src/claude/ 자산 중 src/codex/ 대응 없는 required sibling (WARN)
+- G3: docs/meta-tooling/ 명세에 정의됐지만 .claude/에 없는 도구 (WARN)
+- G5: 컴포넌트 카운트 불일치 (INFO)
+
 ## Workflow
 
 ### Phase 1: 인벤토리 구축
@@ -81,8 +101,8 @@ argument-hint: '[--category <cat>] [--fix] [--verbose]'
 
 ### Phase 2: 카테고리별 감사
 
-3. 선택된 카테고리(기본: C1~C4 필수)에 대해 순서대로 검증한다.
-4. 각 검증 항목을 PASS / WARN / FAIL로 분류한다.
+3. 선택된 카테고리(기본: C1~C4, C7, C8 필수)에 대해 순서대로 검증한다.
+4. src/exception-registry.json을 로드하여, 매칭되는 active 예외는 `[EXEMPT]`로 표시한다. 나머지를 PASS / WARN / FAIL로 분류한다.
 
 ### Phase 3: 자동 수정 (--fix)
 
@@ -121,7 +141,7 @@ argument-hint: '[--category <cat>] [--fix] [--verbose]'
 
 ## Rules
 
-- C1~C4는 필수 감사 카테고리이다. 항상 실행된다.
-- C5~C6는 `--category C5` 또는 `--category C6`으로 명시적 요청 시에만 실행된다.
+- C1~C4, C7, C8는 필수 감사 카테고리이다. 항상 실행된다.
+- C5~C6, C9는 `--category C5` 또는 해당 카테고리 코드로 명시적 요청 시에만 실행된다.
 - `--fix`는 안전한 항목만 수정한다. 판단이 필요한 항목은 보고만 한다.
 - `_archive/` 디렉토리는 감사 대상에서 제외한다.
