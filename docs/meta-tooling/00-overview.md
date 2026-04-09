@@ -144,4 +144,5 @@ kit-maintainer 에이전트
 | [07-phase0-migration-plan.md](07-phase0-migration-plan.md) | Phase 0 마이그레이션 상세 구현 계획 |
 | [08-phase4-codex-implementation.md](08-phase4-codex-implementation.md) | Phase 4 Codex 통합 상세 구현 명세 (자기 완결형) |
 | [10-conversion-tooling.md](10-conversion-tooling.md) | src/claude → src/codex 변환 메타 툴링 (/kit-analyze, /kit-convert) |
+| [11-consistency-tooling.md](11-consistency-tooling.md) | 일관성 유지 (/kit-sync, C8 교차 참조, C9 갭 탐지, exception-registry) |
 | [feedback-review.md](feedback-review.md) | 피드백 리뷰 + Codex 통합 반영 현황 |
