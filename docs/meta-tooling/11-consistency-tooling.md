@@ -7,150 +7,147 @@
 ### 핵심 흐름
 
 ```
-/kit-analyze → Codex에 빠진 에이전트 기능 파악 (읽기 전용)
-     ↓
-/kit-sync → 미전환 Claude 자산을 Codex로 일괄 전환 + 참조 정합성 유지
-     ↓
-/kit-audit C8 → 전환된 결과물의 참조가 유효한지 양방향 확인
-     ↓
-/kit-audit C9 → 설계 문서에 정의됐지만 구현에 빠진 항목 탐지
-     ↓
-exception-registry → 전환 불가 항목을 등록하여 반복 감지 방지
+kit-sync-agent (자율 판단 에이전트)
+  │
+  ├─ Phase 1: 분석
+  │   └─ /kit-analyze 로직으로 현재 상태 파악
+  │
+  ├─ Phase 2: 판단 + 실행
+  │   ├─ "Codex 전환이 필요하다" → /kit-convert 호출
+  │   ├─ "참조가 깨졌다"         → /kit-audit C8 --fix 실행
+  │   ├─ "설계-구현 갭이 있다"    → 리포트 생성 + 제안
+  │   └─ "전환 불가 항목이다"     → exception-registry 등록
+  │
+  └─ Phase 3: 검증 + 리포트
+      └─ /kit-validate + /kit-audit C7/C8 로 결과 확인
 ```
 
-### 기존 도구와의 관계
+### 아키텍처: 에이전트 + 커맨드 조합
 
-| 도구 | 역할 | 관계 |
-|------|------|------|
-| `/kit-analyze` | 미전환 자산 파악 (읽기 전용) | kit-sync의 입력 |
-| `/kit-sync` | 미전환 자산 일괄 전환 실행 | **신규** — analyze + convert + verify 통합 |
-| `/kit-convert` | 단일/배치 변환 엔진 | kit-sync가 내부적으로 사용 (단독 실행도 가능) |
-| `/kit-audit C8` | 교차 참조 무결성 검증 | **확장** — kit-sync 후 자동 실행 |
-| `/kit-audit C9` | 설계-구현 갭 탐지 | **확장** — 미구현 항목 파악 |
-| `exception-registry.json` | 전환 불가 항목 추적 | **신규** — 모든 도구가 참조 |
+| 구성 요소 | 유형 | 역할 |
+|----------|------|------|
+| **kit-sync-agent** | 에이전트 (신규) | 상위 판단자 — 무엇이 필요한지 분석하고 적절한 커맨드 조합 실행 |
+| `/kit-sync` | 커맨드 (신규) | 에이전트의 진입점 — 사용자가 직접 호출할 수도 있음 |
+| `/kit-analyze` | 커맨드 (기존 설계) | 미전환 자산 파악 (읽기 전용) |
+| `/kit-convert` | 커맨드 (기존 설계) | 단일/배치 변환 엔진 |
+| `/kit-audit C8` | 감사 카테고리 (확장) | 교차 참조 무결성 검증 + --fix |
+| `/kit-audit C9` | 감사 카테고리 (확장) | 설계-구현 갭 탐지 |
+| `exception-registry.json` | 데이터 파일 (신규) | 전환 불가/면제 항목 추적 |
+
+**핵심 차별점**: kit-sync-agent는 커맨드를 직접 실행하는 게 아니라, 상황을 분석한 후 **어떤 커맨드가 필요한지 판단**하고 순서대로 조합한다. 사용자는 에이전트에게 "동기화해줘"라고만 하면 된다.
 
 ---
 
-## 2. /kit-sync 커맨드 명세
+## 2. kit-sync-agent 에이전트 + /kit-sync 커맨드
+
+### 2.1 kit-sync-agent (자율 판단 에이전트)
+
+**파일**: `.claude/agents/kit-sync-agent.md`
+
+```yaml
+---
+name: kit-sync-agent
+description: Claude↔Codex 동기화 에이전트. 미전환 자산 분석 → 전환/수정 필요 여부 판단 → 적절한 커맨드 조합 실행.
+tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash"]
+model: sonnet
+memory: project
+color: green
+---
+```
+
+#### 역할
+
+| 담당 | 비담당 |
+|------|--------|
+| 현재 상태 분석 (미전환, 깨진 참조, 갭) | 새 컴포넌트 설계 |
+| 어떤 도구가 필요한지 **자율 판단** | 아키텍처 결정 |
+| 기존 커맨드 조합 실행 | Codex runtime 설정 |
+| exception-registry 자동 등록 | 수동 검토(REVIEW NEEDED) 대행 |
+
+#### 판단 로직
+
+```
+1. /kit-analyze 로직 실행 → 현재 상태 파악
+
+2. 결과에 따라 분기:
+
+   IF 미전환 자산이 있다:
+     → /kit-convert --domain {domain} 또는 --name {name} 실행
+     → 전환 후 /kit-validate --target codex 실행
+
+   IF 깨진 참조가 있다:
+     → /kit-audit --category C8 --fix 실행
+     → 수정 불가 항목은 exception-registry에 등록
+
+   IF 설계-구현 갭이 있다:
+     → /kit-audit --category C9 실행
+     → 갭 리포트 생성 + 해결 제안
+
+   IF 전환 불가 항목을 발견:
+     → exception-registry.json에 자동 등록
+     → 사유 기록 (Claude runtime 의존, 대응 포맷 없음 등)
+
+3. 모든 작업 완료 후:
+   → /kit-audit --category C7 (페어링 일관성) 실행
+   → /kit-list --target both --pairing 실행
+   → 최종 리포트 출력
+```
+
+#### 출력 포맷
+
+```
+[kit-sync-agent] 동기화 완료
+
+  === 실행한 작업 ===
+  1. Codex 전환: 45개 (/kit-convert --domain dev)
+  2. 참조 수정: 6건 (/kit-audit C8 --fix)
+  3. 예외 등록: 2건 (exception-registry)
+
+  === 결과 ===
+  pairing-registry: 75 paired + 8 codex-skip
+  교차 참조 (C8): 6건 수정, 1건 수동 검토 필요
+  설계-구현 갭 (C9): 3건 미구현 도구
+
+  === 수동 검토 필요 ===
+  - dev-observability → tenant-isolation 참조: 대상 스킬이 존재하지 않음
+  - REVIEW NEEDED 파일 12개 (쓰기 에이전트, 복합 커맨드)
+
+  === 미구현 (정보) ===
+  - /kit-analyze, /kit-convert, kit-converter: 10-conversion-tooling.md에 설계됨
+```
+
+### 2.2 /kit-sync 커맨드 (진입점)
 
 **파일**: `.claude/commands/kit-sync.md`
-
-### Frontmatter
 
 ```yaml
 ---
 allowed-tools: Read, Write, Glob, Grep, Bash(git:*)
-description: 미전환 Claude 자산을 Codex로 일괄 전환하고 참조 정합성을 검증합니다.
-argument-hint: '[--dry-run] [--apply] [--domain <domain>] [--type <type>] [--name <name>]'
+description: kit-sync-agent를 호출하여 Claude↔Codex 동기화를 실행합니다.
+argument-hint: '[--dry-run] [--domain <domain>] [--type <type>] [--name <name>]'
 ---
 ```
 
-### 파라미터
+#### 동작
 
-| 플래그 | 설명 | 기본값 |
-|--------|------|--------|
-| `--dry-run` | 전환 계획만 출력 | 기본값 |
-| `--apply` | 실제 전환 실행 | Off |
-| `--domain` | 도메인 필터 (`core`, `dev`, `plan`) | 전체 |
-| `--type` | 타입 필터 (`skill`, `agent`, `command`, `hook`) | 전체 |
-| `--name` | 단일 컴포넌트 | - |
-
-### Workflow
-
-#### Phase 1: 분석 (kit-analyze 로직 재사용)
-
-1. `src/claude/` 전체를 스캔하여 컴포넌트 인벤토리를 구축한다.
-2. `src/codex/` 스캔하여 이미 전환된 자산을 확인한다.
-3. `src/pairing-registry.json` 로드하여 현재 페어링 상태를 확인한다.
-4. `src/exception-registry.json` 로드하여 전환 제외 항목을 필터링한다.
-5. 미전환 자산 목록을 생성한다:
-   - `src/claude/`에 존재하지만 `src/codex/`에 대응 파일이 없는 자산
-   - `pairing-registry`에 `paired`도 `codex-skip`도 아닌 자산
-   - `exception-registry`에 등록되지 않은 자산
-
-#### Phase 2: 분류
-
-6. 각 미전환 자산의 변환 난이도를 분류한다:
-   - **auto**: 스킬, 읽기 전용 에이전트, 호환 훅, 단순 커맨드
-   - **review**: 쓰기 에이전트, 복합 커맨드
-   - **skip**: 룰 (claude-origin shared), 비호환 훅
-
-#### Phase 3: 계획 출력 (--dry-run)
-
-7. `--dry-run`이면 전환 계획을 출력한다:
+`/kit-sync`는 kit-sync-agent를 spawn하는 **얇은 진입점**이다.
 
 ```
-[kit-sync] Codex 전환 계획 (dry-run)
-
-  미전환: 75개 (전체 89 - 8 skip - 6 exempt)
-
-  전환 대상:
-  | Identity            | Type    | Domain | Difficulty | Target Path                              |
-  |---------------------|---------|--------|------------|------------------------------------------|
-  | dev-architect       | agent   | dev    | auto       | src/codex/dev/agents/dev-architect.md    |
-  | plan-prd-writer     | agent   | plan   | review     | src/codex/plan/agents/plan-prd-writer.md |
-  | dev-feature         | command | dev    | review     | src/codex/dev/commands/dev-feature.md    |
-  | dev-tdd-workflow    | skill   | dev    | auto       | src/codex/dev/skills/dev-tdd-workflow/   |
-  ... (71개 더)
-
-  건너뛰기:
-  | Identity               | 사유                          |
-  |------------------------|-------------------------------|
-  | golden-principles      | claude-origin shared (rule)   |
-  | session-wrap-suggest   | EX-001: Claude runtime 의존   |
-  ... (12개 더)
-
-  /kit-sync --apply 로 전환을 실행하세요.
+/kit-sync                    → 에이전트가 전체 분석 + 자율 실행
+/kit-sync --dry-run          → 에이전트가 분석만 (실행 안 함)
+/kit-sync --domain dev       → dev 도메인만 대상
+/kit-sync --name dev-architect → 단일 컴포넌트만 대상
 ```
 
-#### Phase 4: 전환 실행 (--apply)
+사용자는 `/kit-sync`를 호출하기만 하면, 에이전트가 나머지를 판단하고 처리한다.
 
-8. `--apply`이면 kit-converter 스킬의 변환 규칙을 적용한다 (10-conversion-tooling.md 섹션 4 참조):
-   - **Skill**: 내용 복사 + "Codex 참고 사항" 섹션 추가
-   - **Agent**: XML Agent_Prompt → 헤딩 기반 변환 (Role, Capabilities, Constraints, Output Format)
-   - **Command**: 슬래시 커맨드 → Entry Flow 변환
-   - **Hook**: JS 복사 + Codex 등록 주석 추가
-   - **Rule**: skip 처리
+#### 에이전트 vs 커맨드 역할 분리
 
-#### Phase 5: 전환 후 검증
-
-9. 전환된 각 파일에 대해 `/kit-validate --target codex` 로직을 실행한다.
-10. 교차 참조 검증 (C8)을 자동 실행한다:
-    - 생성된 Codex 파일의 "Claude sibling" 참조가 유효한지
-    - Claude 원본의 참조 경로가 Codex에서도 유효한지
-
-#### Phase 6: 레지스트리 갱신 + 리포트
-
-11. 전환 성공 자산을 `pairing-registry.json`에 `paired`로 등록한다.
-12. skip 자산을 `pairing-registry.json`에 `codex-skip`으로 등록한다.
-13. 결과 리포트를 출력한다:
-
-```
-[kit-sync] 전환 완료
-
-  전환: 45개 (auto: 33, review: 12)
-  건너뛰기: 8개 (codex-skip)
-  면제: 2개 (exception-registry)
-  검증 PASS: 43개
-  검증 WARN: 2개 (REVIEW NEEDED)
-
-  교차 참조 (C8):
-  [PASS] 전환된 파일의 Claude sibling 참조 유효
-  [WARN] dev-observability → tenant-isolation 참조 대상 없음
-
-  다음 단계:
-  1. REVIEW NEEDED 파일 12개를 수동 검토하세요
-  2. /kit-audit --category C8 으로 전체 교차 참조 확인
-  3. /kit-audit --category C9 로 설계-구현 갭 확인
-```
-
-### Rules
-
-- `--apply` 없으면 파일을 생성/수정하지 않는다.
-- exception-registry에 등록된 항목은 변환하지 않고 `[EXEMPT]`로 표시한다.
-- 이미 `src/codex/`에 존재하는 파일은 `--force` 없이 덮어쓰지 않는다.
-- 전환 파일 상단에 `<!-- kit-sync generated: {날짜} -->` 추적 주석을 추가한다.
-- review 난이도 파일에 `<!-- REVIEW NEEDED: {사유} -->` 마커를 추가한다.
+| /kit-sync (커맨드) | kit-sync-agent (에이전트) |
+|-------------------|------------------------|
+| 사용자 진입점 | 실제 실행 주체 |
+| 인자 파싱 + 에이전트 spawn | 상태 분석 → 판단 → 커맨드 조합 |
+| 단순, 변경 없음 | 자율적, 상황에 따라 다른 커맨드 호출 |
 
 ---
 
@@ -361,11 +358,24 @@ exception-registry가 skip-registry의 **상위 호환**. 변환 skip 뿐 아니
 | 2 | schema-exception-registry.md | `.claude/skills/kit-validation/references/` | NEW |
 | 3 | C8 교차 참조 무결성 | `.claude/commands/kit-audit.md` | MODIFY |
 | 4 | C9 설계-구현 갭 | `.claude/commands/kit-audit.md` | MODIFY |
-| 5 | /kit-sync 커맨드 | `.claude/commands/kit-sync.md` | NEW |
-| 6 | kit-audit exception 통합 | kit-audit + maintainer + validation SKILL | MODIFY |
-| 7 | 문서 갱신 | 00-overview, 02-commands-spec | MODIFY |
+| 5 | kit-sync-agent 에이전트 | `.claude/agents/kit-sync-agent.md` | NEW |
+| 6 | /kit-sync 커맨드 (진입점) | `.claude/commands/kit-sync.md` | NEW |
+| 7 | kit-audit exception 통합 | kit-audit + maintainer + validation SKILL | MODIFY |
+| 8 | 문서 갱신 | 00-overview, 02-commands-spec | MODIFY |
 
-**총**: 신규 4파일 + 수정 5파일
+**총**: 신규 5파일 + 수정 5파일
+
+```
+.claude/
+  agents/
+    kit-sync-agent.md                  # 자율 판단 동기화 에이전트 (NEW)
+  commands/
+    kit-sync.md                        # 에이전트 진입점 커맨드 (NEW)
+src/
+  exception-registry.json              # 전환 불가/면제 항목 (NEW)
+.claude/skills/kit-validation/references/
+  schema-exception-registry.md         # 예외 레지스트리 스키마 (NEW)
+```
 
 ---
 
