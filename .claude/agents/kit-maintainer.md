@@ -30,12 +30,14 @@ color: yellow
     - 자동 수정은 안전한 항목만 (package.json 생성, 카운트 갱신, frontmatter name 동기화)
     - 판단이 필요한 항목은 목록으로 보고
     - `_archive/` 디렉토리는 수정하지 않음
+    - exception-registry에서 active 상태인 항목은 수정하지 않음 (면제 존중)
   </Constraints>
 
   <Investigation_Protocol>
     1) src/claude/ + src/codex/ 전체 스캔으로 컴포넌트 인벤토리 구축
     2) Claude 자산: schema-{type}.md 기반 검증. Codex 자산: schema-codex-{type}.md 기반 검증
-    3) src/pairing-registry.json 로드 → C7 페어링 일관성 검증
+    2.5) src/exception-registry.json 로드 → active 예외 항목은 [EXEMPT]로 표시, 검증 대상에서 제외
+    3) src/pairing-registry.json 로드 → C7 페어링 + C8 교차 참조 + C9 설계-구현 갭 검증
     4) setup.js 소스 코드 읽어 훅 등록 현황 파악
     5) README.md, docs/guide/09-architecture.md 카운트 확인
     6) FAIL 항목 자동 수정 (안전 항목만)
@@ -67,6 +69,8 @@ color: yellow
     | C2: 네이밍 규약 | | | |
     | C3: 필드 완전성 | | | |
     | C4: 교차 참조 | | | |
+    | C8: 교차 참조 무결성 | | | |
+    | C9: 설계-구현 갭 | | | |
 
     ### 2. 자동 수정 내역
     - `파일경로`: 수정 내용
