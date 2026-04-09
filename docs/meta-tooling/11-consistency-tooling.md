@@ -1,6 +1,20 @@
 # claude-kit 일관성 유지 메타 툴링
 
 > Codex 전환 실행(/kit-sync), 교차 참조 검증(C8), 설계-구현 갭 탐지(C9), 예외 레지스트리
+>
+> **Phase**: 4c (Phase 4a 듀얼 타깃 + Phase 4b 변환 도구 이후)
+
+### 전제 조건
+
+이 문서의 도구들은 다음이 구현된 후에 동작한다:
+
+| 전제 | 문서 | 상태 |
+|------|------|------|
+| Codex 템플릿/스키마 (Phase 4a) | 08-phase4-codex-implementation.md | 구현 완료 |
+| /kit-analyze, /kit-convert, kit-converter (Phase 4b) | 10-conversion-tooling.md | **미구현** |
+| pairing-registry.json 워크플로우 | 08-phase4-codex-implementation.md | 구조만 존재 (entries 비어 있음) |
+
+Phase 4b가 완료되어야 kit-sync-agent가 /kit-convert를 호출할 수 있다.
 
 ## 1. 개요
 
@@ -87,6 +101,16 @@ color: green
      → exception-registry.json에 자동 등록
      → 사유 기록 (Claude runtime 의존, 대응 포맷 없음 등)
 
+2.5 전환 규모 판단 휴리스틱:
+
+   | 미전환 수 | 판단 | 실행 |
+   |----------|------|------|
+   | 0개 | 전환 불필요 | C8/C9 검증만 실행 |
+   | 1개 | 단일 전환 | /kit-convert --name {name} |
+   | 2-10개 (동일 도메인) | 도메인 배치 | /kit-convert --domain {domain} |
+   | 2-10개 (혼합 도메인) | 타입별 배치 | /kit-convert --type {type} 반복 |
+   | 10개+ | 사용자 승인 요청 | AskUserQuestion으로 범위 확인 후 실행 |
+
 3. 모든 작업 완료 후:
    → /kit-audit --category C7 (페어링 일관성) 실행
    → /kit-list --target both --pairing 실행
@@ -141,6 +165,17 @@ argument-hint: '[--dry-run] [--domain <domain>] [--type <type>] [--name <name>]'
 
 사용자는 `/kit-sync`를 호출하기만 하면, 에이전트가 나머지를 판단하고 처리한다.
 
+#### 실패 및 부분 전환 처리
+
+| 상황 | 처리 |
+|------|------|
+| /kit-convert 단일 자산 실패 | 실패 로그 기록, 다음 자산으로 진행 (중단하지 않음) |
+| 배치 전환 중 N개 실패 | 성공분은 pairing-registry에 등록, 실패분은 리포트에 표시 |
+| pairing-registry 불일치 발생 | /kit-audit C7으로 재검증, 불일치 항목 리포트 |
+| 이전 /kit-sync가 부분 완료된 상태 | pairing-registry에서 이미 paired/codex-skip인 항목 건너뛰고 나머지만 처리 |
+
+에이전트는 **멱등성**을 보장한다: 같은 명령을 여러 번 실행해도 이미 완료된 작업은 건너뛴다.
+
 #### 에이전트 vs 커맨드 역할 분리
 
 | /kit-sync (커맨드) | kit-sync-agent (에이전트) |
@@ -148,6 +183,19 @@ argument-hint: '[--dry-run] [--domain <domain>] [--type <type>] [--name <name>]'
 | 사용자 진입점 | 실제 실행 주체 |
 | 인자 파싱 + 에이전트 spawn | 상태 분석 → 판단 → 커맨드 조합 |
 | 단순, 변경 없음 | 자율적, 상황에 따라 다른 커맨드 호출 |
+
+#### kit-sync-agent vs kit-maintainer 역할 경계
+
+| 영역 | kit-sync-agent | kit-maintainer |
+|------|---------------|----------------|
+| **핵심 역할** | Codex 전환 + 동기화 | Claude 자산 품질 유지 |
+| **C8 교차 참조** | --fix 실행 (수정 권한) | 탐지 + 리포트만 |
+| **C9 갭 탐지** | 미전환 항목 직접 전환 | 갭 리포트만 |
+| **exception 등록** | 전환 불가 항목 자동 등록 | 등록하지 않음 (보고만) |
+| **C1-C4 수정** | 담당 아님 | --fix로 안전 항목 수정 |
+| **트리거** | `/kit-sync` | `/kit-audit --fix` 또는 직접 호출 |
+
+**원칙**: kit-sync-agent는 **Codex 동기화 전문가**, kit-maintainer는 **Claude 품질 관리자**. 역할이 겹치지 않는다.
 
 ---
 
@@ -175,12 +223,14 @@ argument-hint: '[--dry-run] [--domain <domain>] [--type <type>] [--name <name>]'
 
 | 검증 | 수준 | 기준 |
 |------|------|------|
-| 참조 대상 존재 | FAIL | 경로가 어떤 소스 파일로도 해석 불가 |
-| 도메인 접두사 누락 | FAIL | `skills/tdd-workflow` → 실제 `skills/dev-tdd-workflow` |
+| 참조 대상 존재하지 않음 (0 match) | FAIL | 경로가 어떤 소스 파일로도 해석 불가 |
+| 도메인 접두사 누락 (1 match 가능) | WARN → `--fix`로 AUTO | `skills/tdd-workflow` → `skills/dev-tdd-workflow` (자동 수정 가능) |
+| 모호한 참조 (2+ match) | WARN | 여러 도메인에 동일 이름 존재, 수동 확인 필요 |
 | Codex sibling 참조 유효 | WARN | "Claude sibling: ..." 경로가 실제 존재 |
-| 단방향 참조 | WARN | A→B 참조 있지만 B→A 없음 |
-| 고아 컴포넌트 | WARN | 어디서도 참조되지 않는 자산 |
-| 런타임 경로 스타일 | INFO | `.claude/` 대신 `src/claude/` 사용 권장 |
+| 단방향 참조 | INFO | A→B 참조 있지만 B→A 없음 |
+| 고아 컴포넌트 | INFO | 어디서도 참조되지 않는 자산 |
+
+> **FAIL vs WARN 구분**: 자동 수정 가능한 항목은 WARN (--fix 시 자동 해결). 수정 불가능한 항목만 FAIL.
 
 ### 경로 해석 알고리즘
 
@@ -303,22 +353,30 @@ argument-hint: '[--dry-run] [--domain <domain>] [--type <type>] [--name <name>]'
 
 ### Lifecycle
 
-| 이벤트 | 동작 |
-|--------|------|
-| 등록 | `/kit-sync`가 skip 항목 발견 시 자동 등록, 또는 수동 편집 |
-| 매칭 | kit-audit 실행 시 FAIL/WARN → component+category+rule 일치하면 `[EXEMPT]` |
-| 만료 | `expiresDate` 경과 시 자동으로 `status: expired`, 다시 감지됨 |
-| 조회 | `/kit-audit --exceptions` |
-| 해제 | 수동으로 `status: revoked` 변경 |
+| 이벤트 | 동작 | 주체 |
+|--------|------|------|
+| 등록 | 전환 불가 항목 추가 | kit-sync-agent (자동) 또는 수동 편집 |
+| 매칭 | FAIL/WARN → `[EXEMPT]` 변환 | kit-audit (자동) |
+| 만료 | `expiresDate` 경과 시 `status: expired`, 다시 감지됨 | kit-audit (자동) |
+| 조회 | 전체 예외 목록 + 상태 출력 | `/kit-audit --exceptions` |
+| 해제 | `status: revoked` (삭제 아님, 감사 추적 보존) | 수동 편집 |
 
-### skip-registry와의 관계
+### skip-registry → exception-registry 마이그레이션
 
-| 파일 | 용도 | 범위 |
-|------|------|------|
-| `kit-converter/references/skip-registry.md` | 변환 규칙 참조 (문서) | codex-conversion만 |
-| `src/exception-registry.json` | 런타임 감사 면제 (데이터) | C1-C9 전체 |
+| 파일 | 용도 | 범위 | Phase 4c 이후 |
+|------|------|------|--------------|
+| `kit-converter/references/skip-registry.md` | 변환 규칙 참조 (문서) | codex-conversion만 | 참조 문서로 유지 |
+| `src/exception-registry.json` | 런타임 감사 면제 (데이터) | C1-C9 전체 | **면제 판단의 유일한 소스** |
 
-exception-registry가 skip-registry의 **상위 호환**. 변환 skip 뿐 아니라 모든 감사 카테고리의 면제를 관리한다.
+exception-registry가 skip-registry의 **상위 호환**. Phase 4c 구현 시 skip-registry 항목을 exception-registry로 전환한다:
+
+| skip-registry 항목 | exception-registry |
+|-------|---------|
+| `session-wrap-suggest` | `EX-001, codex-conversion, hook-skip` |
+| `output-secret-filter` | `EX-002, codex-conversion, hook-skip` |
+| 6개 rules (shared guidance) | `EX-003~008, codex-conversion, rule-skip` |
+
+마이그레이션 후 **런타임 면제 판단은 exception-registry.json만 사용**. skip-registry.md는 변환 규칙 참조 문서로만 유지.
 
 ---
 
@@ -361,7 +419,15 @@ exception-registry가 skip-registry의 **상위 호환**. 변환 skip 뿐 아니
 | 5 | kit-sync-agent 에이전트 | `.claude/agents/kit-sync-agent.md` | NEW |
 | 6 | /kit-sync 커맨드 (진입점) | `.claude/commands/kit-sync.md` | NEW |
 | 7 | kit-audit exception 통합 | kit-audit + maintainer + validation SKILL | MODIFY |
-| 8 | 문서 갱신 | 00-overview, 02-commands-spec | MODIFY |
+| 8 | 문서 갱신 | 아래 목록 참조 | MODIFY |
+
+### Step 8 문서 갱신 상세
+
+| 문서 | 수정 내용 |
+|------|----------|
+| `00-overview.md` | 도구 수 갱신 (8→10+), kit-sync-agent/kit-sync 추가, exception-registry 구조 추가 |
+| `02-commands-spec.md` | /kit-sync 명세 섹션 추가, kit-audit C8/C9 + --exceptions 파라미터 반영 |
+| `02-commands-spec.md` | kit-audit --category 범위 C1~C7 → C1~C9 |
 
 **총**: 신규 5파일 + 수정 5파일
 
