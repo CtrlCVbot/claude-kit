@@ -1,6 +1,6 @@
 # Validation Schemas 명세
 
-> kit-validation 스킬이 사용하는 9개 스키마의 상세 명세 (Claude 5 + Codex 4)
+> kit-validation 스킬이 사용하는 10개 스키마의 상세 명세 (Claude 5 + Codex 4 + Registry 1)
 
 ## 개요
 

@@ -72,7 +72,7 @@ src/
         template-codex-command.md     # Phase 4
         template-codex-hook.md        # Phase 4
         template-codex-skill.md       # Phase 4
-    kit-validation/         # 검증 엔진 + 9개 스키마
+    kit-validation/         # 검증 엔진 + 10개 스키마
       SKILL.md
       references/
         schema-skill.md
@@ -84,6 +84,7 @@ src/
         schema-codex-command.md       # Phase 4
         schema-codex-hook.md          # Phase 4
         schema-codex-skill.md         # Phase 4
+        schema-exception-registry.md  # Phase 4c
     kit-converter/          # 변환 엔진 (Phase 4)
       SKILL.md
   agents/
@@ -145,7 +146,7 @@ kit-maintainer 에이전트
 |------|------|
 | [01-scaffolding-templates.md](01-scaffolding-templates.md) | 12개 템플릿 상세 명세 (Claude 8 + Codex 4) |
 | [02-commands-spec.md](02-commands-spec.md) | 4개 커맨드 명세 (듀얼 타깃 지원) |
-| [03-validation-schemas.md](03-validation-schemas.md) | 9개 스키마 명세 (Claude 5 + Codex 4) |
+| [03-validation-schemas.md](03-validation-schemas.md) | 10개 스키마 명세 (Claude 5 + Codex 4 + Registry 1) |
 | [04-agent-and-hook.md](04-agent-and-hook.md) | 에이전트 + 훅 명세 (듀얼 경로) |
 | [05-implementation-roadmap.md](05-implementation-roadmap.md) | 구현 로드맵 (Phase 0-4, MVCI) |
 | [07-phase0-migration-plan.md](07-phase0-migration-plan.md) | Phase 0 마이그레이션 상세 구현 계획 |
