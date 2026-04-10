@@ -11,12 +11,27 @@
 - `apps/` -- 앱 | `packages/` -- 공유 패키지
 
 ## 핵심 규칙
-- **verification**: 증거 없는 완료 선언 금지 (Iron Law)
-- **security**: 커밋 전 보안 체크리스트 8항목
-- **golden-principles**: 불변성, TDD, 결론우선 등 핵심 원칙
-- **coding-style**: 파일 800줄/함수 50줄 제한, zod 검증
-- **interaction**: 가정 명시, 유비 설명, 결론 우선
-- **date-calculation**: 날짜/시간 수동 계산 금지
+
+### verification
+증거 없는 완료 선언 금지 (Iron Law). 테스트 통과 결과, 빌드 성공 출력, 요구사항 체크리스트를 반드시 포함.
+"should work", "probably fine" 같은 추측 표현은 완료 근거로 인정하지 않음.
+
+### security
+커밋 전 보안 체크리스트 8항목: 비밀 하드코딩 금지, 입력 검증, SQL 인젝션 방지, XSS/CSRF, 인증/권한, 레이트 리밋, 에러 메시지 필터링.
+비밀은 반드시 환경변수로. 미설정 시 즉시 throw.
+
+### golden-principles
+불변성(spread), TDD(Red-Green-Refactor), 결론 우선, 파일 800줄/함수 50줄 제한, 시스템 경계에서 검증, 증거 기반 완료.
+변경은 요청된 부분만 (surgical). "while I'm here" 식 부수 변경 금지.
+
+### coding-style
+불변 패턴 필수 (새 객체 생성, 원본 변이 금지). 파일 200-400줄 권장(800 상한). 에러 try-catch 필수. 입력 zod 검증.
+
+### interaction
+가정 명시 후 코딩 (모호하면 질문). 유추로 설명 후 기술 상세. 결론 우선 + 근거 후행. 불확실하면 추측하지 않고 인정.
+
+### date-calculation
+날짜 계산 절대 수동 금지. date 커맨드 또는 python3 datetime 사용 필수. 요일, 기간, D-day, 윤년 모두 도구로.
 
 ## Skills
 `plugins/claude-kit/skills/`에서 자동 로드. 컨텍스트에 맞는 스킬이 자동 활성화됨.
