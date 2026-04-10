@@ -19,12 +19,12 @@
       "component": "output-secret-filter",
       "category": "codex-conversion",
       "rule": "hook-skip",
-      "detail": "CLAUDE_REMOTE_SESSION 환경변수 의존",
-      "reason": "Codex runtime에 해당 환경변수 없음",
+      "detail": "CLAUDE_REMOTE_SESSION → CODEX_SANDBOX 조건 분기 + 로그 경로 변경",
+      "reason": "Codex 호환 버전 생성 완료 (src/codex/core/hooks/output-secret-filter.js)",
       "approvedBy": "maintainer",
-      "approvedDate": "2026-04-09",
+      "approvedDate": "2026-04-10",
       "expiresDate": null,
-      "status": "active"
+      "status": "resolved"
     },
     {
       "id": "EX-003",

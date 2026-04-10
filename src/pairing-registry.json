@@ -1,5 +1,16 @@
 {
   "$schema": "pairing-registry-v1",
   "description": "Claude/Codex 자산 페어링 상태 추적. /kit-create가 자동 갱신, /kit-audit C7이 검증.",
-  "entries": []
+  "entries": [
+    {
+      "identity": "output-secret-filter",
+      "type": "hook",
+      "domain": "core",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/core/hooks/output-secret-filter.js",
+      "codex": "src/codex/core/hooks/output-secret-filter.js",
+      "createdAt": "2026-04-10T00:00:00.000Z"
+    }
+  ]
 }

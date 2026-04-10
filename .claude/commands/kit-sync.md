@@ -1,7 +1,7 @@
 ---
 allowed-tools: Read, Write, Glob, Grep, Bash(git:*)
 description: kit-sync-agent를 호출하여 Claude↔Codex 동기화를 실행합니다.
-argument-hint: '[--dry-run] [--domain <domain>] [--type <type>] [--name <name>]'
+argument-hint: '[--dry-run] [--auto-approve] [--domain <domain>] [--type <type>] [--name <name>]'
 ---
 
 # /kit-sync
@@ -28,6 +28,7 @@ kit-sync-agent를 spawn하여 Claude 자산의 Codex 전환 동기화를 실행�
 | `--domain` | 처리 대상 도메인 필터 | 전체 |
 | `--type` | 처리 대상 타입 필터 | 전체 |
 | `--name` | 단일 자산 이름 지정 | 없음 |
+| `--auto-approve` | 승인 게이트 건너뛰기 (CI 환경용) | 꺼짐 |
 
 ## Workflow
 
