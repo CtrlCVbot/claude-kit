@@ -1,191 +1,84 @@
 # claude-kit 시스템 개요
 
-## 한눈에 보기
+## 이 문서의 역할
 
-claude-kit은 AI-First 기획+개발 파이프라인이다. 아이디어 발굴부터 RICE 스크리닝, 기획, PRD 작성, 개발 핸드오프까지 하나의 파이프라인으로 자동화한다. `pnpm add -D claude-kit` 한 줄로 AI 거버넌스 컴포넌트가 설치되며, Claude(`.claude/`)와 Codex(`plugins/claude-kit/`) 모두 지원한다. `/plan-idea`로 아이디어를 등록하면 `/dev-feature`로 개발이 시작될 때까지 모든 단계가 커맨드 기반으로 연결된다.
+이 문서는 `claude-kit` 문서 세트의 진입점이다. 설치 방법이나 전체 step-by-step 튜토리얼을 전부 반복하지 않고, 지금 필요한 문서를 빠르게 찾게 하는 데 집중한다.
 
----
-
-## 전체 워크플로우
-
-```
-Phase P (기획 파이프라인):
-
-  P1           P2            P3           P4          P5             P6           P7
-  /plan-idea → /plan-screen → /plan-draft → /plan-prd → /plan-wireframe → /plan-stitch → /plan-bridge
-  아이디어     RICE 스크리닝   Lite/Std     PRD 작성    와이어프레임     Stitch 디자인   개발 핸드오프
-  등록         + 승인 게이트   판정                                                     ↓
-                                                                                       ↓
-Phase A~E (개발 워크플로우):                                                             ↓
-                                                                                       ↓
-  /dev-feature → Human Review → Package Gen → /dev-run → /dev-verify → /dev-commit
-  Feature        사람 확인       코드 생성      TDD 구현    품질 검증      커밋
-  Package 생성   + 승인          Rules 적용     자동 루프    DVC 6항목
-
-Phase P8 (아카이브 & 개선):
-
-  /plan-archive {slug}                     /plan-improve {slug} "제목"
-  완료 검증 → 소스 수집 → 번들 생성        ARCHIVE 로드 → 영향도 분석 → 재진입
-  → 원본 이동 → 인덱스 갱신                → P3/P5/P7/Dev 선택적 재진입
-
-Blueprint Fast-Track (기존 설계 자산 정규화):
-
-  블루프린트(source spec)
-       ↓ Entry Assessment (진입점 판정)
-  imported IDEA(20-approved/) → /plan-draft(P3) → 이후 정규 흐름
-  * Blueprint = source spec, Approved PRD = execution SSOT
-  * 불변 계약 4가지 + 상세: 12-blueprint-fast-track.md
-```
-
-| 단계 | 커맨드 | 설명 |
-|------|--------|------|
-| P1 | `/plan-idea` | 자연어 아이디어를 `00-inbox/IDEA-{YYYYMMDD}-{NNN}.md`로 구조화 등록 |
-| P2 | `/plan-screen` | RICE 5축 평가 + Go/Hold/Kill 제안 + 사용자 승인 게이트 |
-| P3 | `/plan-draft` | 승인된 아이디어의 1차 기능 기획, Lite/Standard 판정 |
-| P4 | `/plan-prd` | Standard 아이디어에 대해 10개 섹션 PRD 상세 작성 |
-| P5 | `/plan-wireframe` | ASCII/Mermaid 기반 와이어프레임 생성 |
-| P6 | `/plan-stitch` | Google Stitch 디자인 (사용자 협업) |
-| P7 | `/plan-bridge` | PRD를 `.plans/prd/10-approved/`에 배치, 개발 핸드오프 |
-| A | `/dev-feature` | 승인된 PRD로 Feature Package 생성 |
-| D | `/dev-run` | TDD 기반 자동 구현 루프 |
-| E | `/dev-verify` | 테스트 + 빌드 + DVC 6항목 검증 |
-| P8 | `/plan-archive` | 완료된 기능 산출물 아카이빙, 단일 번들 생성 |
-| - | `/plan-improve` | 아카이브 기능 개선요청 등록/분석/파이프라인 재진입 |
+- 설치와 설정은 저장소 루트 [README.md](../../README.md)
+- 설치 직후 시작 방법은 [13-quick-start.md](./13-quick-start.md)
+- 출력 구조와 타겟 차이는 [09-architecture.md](./09-architecture.md)
 
 ---
 
-## 도메인 구조
+## 어디서 시작할지
 
-claude-kit은 3개 도메인으로 분리된다. 소스는 도메인별로 나뉘고, 설치 결과는 타겟별 네이티브 구조로 배치된다. Claude는 `.claude/` 아래 flat 구조를 쓰고, Codex는 `plugins/claude-kit/` repo-local 플러그인 구조를 쓴다.
-
-- **core** -- 공유 규칙, 공통 hooks/skills/templates. 접두사 없음 (항상 설치)
-- **dev** -- 개발 전용 에이전트, 커맨드, 스킬, 훅. `dev-` 접두사
-- **plan** -- 기획 전용 에이전트, 커맨드, 스킬, 훅, 템플릿. `plan-` 접두사 (선택 설치)
-
-**설치 타겟** (`profile.json`의 `targets`):
-- `claude` (기본) -- `.claude/` 폴더 구조, `CLAUDE.md` 컨텍스트
-- `codex` (선택) -- `plugins/claude-kit/` 플러그인 구조, `AGENTS.md` 컨텍스트
-
-```
-src/
-├── core/   ← 공유: rules, hooks, skills, templates
-├── dev/    ← 개발: dev-architect, dev-feature, dev-tdd-workflow ...
-└── plan/   ← 기획: plan-idea, plan-screen, plan-prd-writer ...
-```
-
-**컴포넌트 유형 5가지**:
-
-| 유형 | 위치 | 역할 |
-|------|------|------|
-| Agent | Claude `.claude/agents/` / Codex `plugins/claude-kit/agents/` | 전문 역할 수행 (opus 모델, Task tool 스폰) |
-| Command | Claude `.claude/commands/` / Codex `plugins/claude-kit/commands/` | 사용자 진입점 (`/plan-idea`, `/dev-feature`) |
-| Skill | Claude `.claude/skills/` / Codex `plugins/claude-kit/skills/` | 컨텍스트 매칭으로 자동 활성화되는 워크플로우 |
-| Hook | Claude `.claude/hooks/` / Codex `plugins/claude-kit/hooks/` + `hooks.json` | 자동 실행 가드레일 (blocking/logging) |
-| Rule | Claude `.claude/rules/` / Codex `AGENTS.md`에 핵심 요약 흡수 | 공통 정책, 품질, 상호작용 규칙 |
-
-Codex 지원의 상세 계약은 [09-architecture.md](./09-architecture.md)에 모아 둔다. 설치 예시와 업데이트 정책은 저장소 루트 [README.md](../../README.md)를 기준으로 본다.
+| 지금 상황 | 먼저 읽을 문서 | 이유 |
+|-----------|----------------|------|
+| 아직 설치 전이거나 `domains`/`targets`를 고르는 중 | [README.md](../../README.md) | 설치, 설정, 출력 경로를 먼저 이해해야 함 |
+| 설치는 끝났고 어떤 파이프라인을 언제 써야 하는지 알고 싶음 | [13-quick-start.md](./13-quick-start.md) | 가장 짧은 온보딩 경로와 첫 액션을 안내 |
+| 아이디어에서 PRD/브리지까지 기획 흐름이 필요함 | [01-planning-pipeline.md](./01-planning-pipeline.md) | `plan` 파이프라인 전체 구조 설명 |
+| 승인된 요구사항을 바로 구현하고 싶음 | [08-dev-workflow.md](./08-dev-workflow.md) | `dev` 워크플로우 전체 구조 설명 |
+| Claude/Codex 출력 차이와 설치 결과를 확인하고 싶음 | [09-architecture.md](./09-architecture.md) | 타겟별 runtime/output 계약 설명 |
 
 ---
 
-## 퀵스타트: 첫 아이디어부터 개발까지
+## 전체 그림
 
-### Step 1. 아이디어 등록
+`claude-kit`은 아이디어 단계에서 시작해 개발, 검증, 아카이브까지 이어지는 커맨드 기반 워크플로우를 제공한다.
 
-```
-/plan-idea "검색 결과에 실시간 필터링 기능 추가"
-```
+```text
+Plan pipeline (opt-in)
+/plan-idea -> /plan-screen -> /plan-draft -> /plan-prd -> /plan-wireframe -> /plan-stitch -> /plan-bridge
 
-`00-inbox/IDEA-20260325-001.md` 파일이 생성되고 `backlog.md` 인덱스에 등록된다.
+Dev workflow (default)
+/dev-feature -> /dev-run -> /dev-verify -> /dev-commit
 
-### Step 2. RICE 스크리닝 + 승인
-
-```
-/plan-screen IDEA-20260325-001
-```
-
-5축 RICE 평가 후 Go/Hold/Kill을 **제안**한다. 사용자가 **승인**하면 `20-approved/`로 이동, 상태가 `approved`로 전환된다.
-
-### Step 3. 1차 기획 (Lite/Standard 판정)
-
-```
-/plan-draft IDEA-20260325-001
+Archive / improvement
+/plan-archive -> /plan-improve
 ```
 
-승인된 아이디어를 기반으로 1차 기능 기획을 생성한다. 규모에 따라 Lite(간단) 또는 Standard(PRD 필요) 판정.
+핵심 원칙은 다음 세 가지다.
 
-### Step 4. PRD 작성 (Standard만)
-
-```
-/plan-prd .plans/features/drafts/realtime-filter/first-pass.md
-```
-
-Standard 판정된 아이디어에 대해 10개 섹션 PRD를 작성한다. `plan-prd-writer` 에이전트가 자동 생성 후 `/plan-review`가 트리거된다.
-
-### Step 5. 개발 핸드오프 + 개발 시작
-
-```
-/plan-bridge realtime-filter
-/dev-feature .plans/prd/10-approved/prd-2026-03-25-realtime-filter/
-```
-
-Bridge가 PRD를 `10-approved/`에 배치하면, `/dev-feature`가 Feature Package를 생성하고 TDD 기반 개발 루프가 시작된다.
-
-### Step 6. 아카이브 (개발 완료 후)
-
-```
-/plan-archive realtime-filter
-```
-
-개발 완료된 기능의 산출물을 단일 번들(`ARCHIVE-{KEY}.md`)로 아카이빙한다. 원본 파일은 `archive/{slug}/sources/`로 이동.
-
-### Step 7. 개선요청 (선택)
-
-```
-/plan-improve realtime-filter "모바일 반응형 개선"
-```
-
-아카이브된 기능에 대해 개선요청을 등록하면, 영향도 분석 후 P3/P5/P7/Dev 중 적절한 지점으로 파이프라인에 재진입한다.
+- `core`는 항상 설치되는 공통 가드레일이다.
+- `dev`는 기본 개발 흐름의 진입점이다.
+- `plan`은 아이디어를 구조화하고 PRD/브리지까지 연결할 때 활성화한다.
 
 ---
 
-## 아이디어 폴더 구조
+## 도메인과 타겟
 
-```
-.plans/ideas/
-├── 00-inbox/           ← 신규 등록 (IDEA-{YYYYMMDD}-{NNN}.md)
-├── 10-screening/       ← 스크리닝 진행 중 (SCREENING-{YYYYMMDD}-{NNN}.md 포함)
-├── 20-approved/        ← 승인 완료 → /plan-draft 대상
-├── 90-archive/         ← 보류(on-hold) 또는 반려(rejected)
-├── backlog.md          ← 전체 아이디어 인덱스 (상태 + 위치 추적)
-└── screening-matrix.md ← RICE 스코어 요약 테이블
-```
+### 도메인
 
----
+| 도메인 | 기본값 | 역할 |
+|--------|--------|------|
+| `core` | 항상 포함 | 공통 rules, hooks, skills, templates |
+| `dev` | 기본 포함 | 구현과 검증 중심의 개발 워크플로우 |
+| `plan` | opt-in | 아이디어, 스크리닝, PRD, 디자인, 브리지 |
 
-## 검증 체계
+### 타겟
 
-기획 5종(PCC) + 개발 4종(PDC/AIR/DPC/DVC) = **총 9종 일관성 검증**이 파이프라인 전체에 걸쳐 자동 실행된다. Phase E의 `/dev-verify`는 DVC 6항목을 검증한다.
+| 타겟 | 기본값 | 출력 경로 | 컨텍스트 문서 |
+|------|--------|----------|---------------|
+| `claude` | 기본 포함 | `.claude/` | `CLAUDE.md` |
+| `codex` | 선택 | `plugins/claude-kit/` | `AGENTS.md` |
 
-```
-Phase P:  P1─P2─[PCC-01]─P3─[PCC-02]─P4─[PCC-03]─P5─[PCC-04]─P6─[PCC-05]─P7
-Phase A~E: A─[PDC]─[AIR]──B──C─[DPC]──D──[DVC]
-```
+설치 직후에는 프로젝트 루트에 생성되는 `CLAUDE-KIT-QUICKSTART.md`를 먼저 열고, 이후 상세 문서는 `docs/guide/*`에서 읽는 흐름을 기본으로 한다.
 
 ---
 
-## 문서 안내
+## 문서 맵
 
-| # | 문서 | 설명 |
-|---|------|------|
-| 1 | [01-planning-pipeline](./01-planning-pipeline.md) | 기획 파이프라인 P1~P8 전체 구조 |
-| 2 | [02-idea-management](./02-idea-management.md) | P1: 아이디어 수집 + 관리 |
-| 3 | [03-screening](./03-screening.md) | P2: RICE 스크리닝 + 승인 게이트 |
-| 4 | [04-feature-planning](./04-feature-planning.md) | P3: 1차 기능 기획 (Lite/Standard) |
-| 5 | [05-design](./05-design.md) | P5~P6: 와이어프레임 + Stitch 디자인 |
-| 6 | [06-dev-handoff](./06-dev-handoff.md) | P7: 기획->개발 핸드오프 |
-| 7 | [07-review-pcc](./07-review-pcc.md) | 리뷰 루프 + PCC 검증 |
-| 8 | [08-dev-workflow](./08-dev-workflow.md) | 개발 워크플로우 Phase A~E |
-| 9 | [09-architecture](./09-architecture.md) | 아키텍처 + 컴포넌트 카탈로그 + Claude/Codex 출력 계약 |
-| 10 | [10-glossary](./10-glossary.md) | 용어집 + 커맨드 레퍼런스 |
-| 11 | [11-archive-improve](./11-archive-improve.md) | P8: 아카이브 + 개선요청 |
-| 12 | [12-blueprint-fast-track](./12-blueprint-fast-track.md) | 블루프린트 Fast-Track |
+| 문서 | 역할 | 읽는 시점 |
+|------|------|-----------|
+| [13-quick-start.md](./13-quick-start.md) | 설치 후 첫 시작 경로, 파이프라인 선택, 첫 액션 | 가장 먼저 |
+| [01-planning-pipeline.md](./01-planning-pipeline.md) | `plan` 파이프라인 전체 구조 | 기획 흐름 사용 시 |
+| [08-dev-workflow.md](./08-dev-workflow.md) | `dev` 워크플로우 상세 | 구현 흐름 사용 시 |
+| [09-architecture.md](./09-architecture.md) | 출력 구조, 타겟 차이, 컴포넌트 계약 | 유지보수/고급 사용자 |
+| [10-glossary.md](./10-glossary.md) | 용어집과 커맨드 레퍼런스 | 용어 확인 필요 시 |
+| [11-archive-improve.md](./11-archive-improve.md) | 아카이브와 개선 요청 흐름 | 완료 후 후속 작업 시 |
+
+---
+
+## Quick Start 이동
+
+이전 문서에 있던 상세 step-by-step Quick Start는 [13-quick-start.md](./13-quick-start.md)로 분리했다. 이 문서는 인덱스와 안내 허브로 유지하고, 실제 시작 절차는 Quick Start 문서를 기준으로 본다.
