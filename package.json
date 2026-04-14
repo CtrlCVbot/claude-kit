@@ -3,7 +3,9 @@
   "version": "2.1.0",
   "description": "AI 거버넌스 밀키트. TDD 강제 + Hexagonal + Clean Architecture + Rich Domain Model. Claude + Codex 멀티타겟.",
   "scripts": {
-    "postinstall": "node scripts/setup.js"
+    "postinstall": "node scripts/setup.js",
+    "generate:quickstart": "node scripts/generate-quickstart-doc.js",
+    "check:quickstart": "node scripts/generate-quickstart-doc.js --check"
   },
   "files": [
     "src/",

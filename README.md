@@ -11,7 +11,7 @@ pnpm add -D github:CtrlCVbot/claude-kit
 
 `postinstall`이 `profile.json`을 읽어 활성 `domains`와 `targets`에 맞는 컴포넌트를 설치한다. 기본값은 `domains: ["core", "dev"]`, `targets: ["claude"]`다.
 
-설치가 끝나면 프로젝트 루트에 `CLAUDE-KIT-QUICKSTART.md`가 생성된다. 이 문서는 설치 직후 사용자가 바로 열어볼 온보딩 진입 문서이며, 상세 사용 가이드는 `docs/guide/*`를 기준으로 본다.
+설치가 끝나면 프로젝트 루트에 `CLAUDE-KIT-QUICKSTART.md`가 생성된다. 이 문서는 설치 직후 사용자가 바로 열어볼 **self-contained 온보딩 문서**이며, 핵심 시작 절차는 이 문서 안에서 끝나도록 유지한다. `docs/guide/*`는 저장소 내부 상세 reference다.
 
 ## 도메인 선택
 
@@ -100,9 +100,9 @@ pnpm update claude-kit
 
 `CLAUDE.md`, `AGENTS.md`, `profile.json`은 기존 정책대로 보존된다. `settings.json`은 Claude 타겟에서 병합되며, Codex 쪽 `plugin.json`, `marketplace.json`, `hooks.json`은 최신 기준으로 다시 생성된다. `CLAUDE-KIT-QUICKSTART.md`는 설치 상태와 맞도록 업데이트 시 재생성된다.
 
-## 다음 문서
+## 저장소 문서
 
-- [docs/guide/13-quick-start.md](docs/guide/13-quick-start.md): 설치 후 바로 쓰는 Quick Start SSOT
+- [docs/guide/13-quick-start.md](docs/guide/13-quick-start.md): 설치본 Quick Start와 같은 shared source에서 생성한 저장소용 variant
 - [docs/guide/00-overview.md](docs/guide/00-overview.md): 문서 세트 진입점과 읽기 순서
 - [docs/guide/09-architecture.md](docs/guide/09-architecture.md): 출력 구조, 타겟 차이, emitter 계약
 - [docs/codex-compatibility/00-overview.md](docs/codex-compatibility/00-overview.md): Codex 호환 문서 세트 진입점

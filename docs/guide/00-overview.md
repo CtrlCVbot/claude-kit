@@ -5,7 +5,7 @@
 이 문서는 `claude-kit` 문서 세트의 진입점이다. 설치 방법이나 전체 step-by-step 튜토리얼을 전부 반복하지 않고, 지금 필요한 문서를 빠르게 찾게 하는 데 집중한다.
 
 - 설치와 설정은 저장소 루트 [README.md](../../README.md)
-- 설치 직후 시작 방법은 [13-quick-start.md](./13-quick-start.md)
+- 설치 직후 시작 방법은 프로젝트 루트 `CLAUDE-KIT-QUICKSTART.md`
 - 출력 구조와 타겟 차이는 [09-architecture.md](./09-architecture.md)
 
 ---
@@ -15,7 +15,7 @@
 | 지금 상황 | 먼저 읽을 문서 | 이유 |
 |-----------|----------------|------|
 | 아직 설치 전이거나 `domains`/`targets`를 고르는 중 | [README.md](../../README.md) | 설치, 설정, 출력 경로를 먼저 이해해야 함 |
-| 설치는 끝났고 어떤 파이프라인을 언제 써야 하는지 알고 싶음 | [13-quick-start.md](./13-quick-start.md) | 가장 짧은 온보딩 경로와 첫 액션을 안내 |
+| 설치는 끝났고 어떤 파이프라인을 언제 써야 하는지 알고 싶음 | 프로젝트 루트 `CLAUDE-KIT-QUICKSTART.md` | 설치본에서 바로 읽는 self-contained 온보딩 문서 |
 | 아이디어에서 PRD/브리지까지 기획 흐름이 필요함 | [01-planning-pipeline.md](./01-planning-pipeline.md) | `plan` 파이프라인 전체 구조 설명 |
 | 승인된 요구사항을 바로 구현하고 싶음 | [08-dev-workflow.md](./08-dev-workflow.md) | `dev` 워크플로우 전체 구조 설명 |
 | Claude/Codex 출력 차이와 설치 결과를 확인하고 싶음 | [09-architecture.md](./09-architecture.md) | 타겟별 runtime/output 계약 설명 |
@@ -70,7 +70,7 @@ Archive / improvement
 
 | 문서 | 역할 | 읽는 시점 |
 |------|------|-----------|
-| [13-quick-start.md](./13-quick-start.md) | 설치 후 첫 시작 경로, 파이프라인 선택, 첫 액션 | 가장 먼저 |
+| [13-quick-start.md](./13-quick-start.md) | 설치본 Quick Start와 같은 shared source에서 생성한 저장소용 variant | 저장소에서 설명 구조를 볼 때 |
 | [01-planning-pipeline.md](./01-planning-pipeline.md) | `plan` 파이프라인 전체 구조 | 기획 흐름 사용 시 |
 | [08-dev-workflow.md](./08-dev-workflow.md) | `dev` 워크플로우 상세 | 구현 흐름 사용 시 |
 | [09-architecture.md](./09-architecture.md) | 출력 구조, 타겟 차이, 컴포넌트 계약 | 유지보수/고급 사용자 |
@@ -81,4 +81,4 @@ Archive / improvement
 
 ## Quick Start 이동
 
-이전 문서에 있던 상세 step-by-step Quick Start는 [13-quick-start.md](./13-quick-start.md)로 분리했다. 이 문서는 인덱스와 안내 허브로 유지하고, 실제 시작 절차는 Quick Start 문서를 기준으로 본다.
+실제 시작 절차의 기준은 설치본 `CLAUDE-KIT-QUICKSTART.md`다. [13-quick-start.md](./13-quick-start.md)는 같은 shared quickstart source에서 생성한 저장소용 variant이고, 이 문서는 인덱스와 안내 허브로 유지한다.

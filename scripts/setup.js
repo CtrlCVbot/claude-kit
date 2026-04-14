@@ -27,6 +27,7 @@ const fs = require('fs');
 const path = require('path');
 const { mergeSettings } = require('./merge-settings');
 const { filterCodexHooks } = require('./codex-hook-compat');
+const { renderQuickStart } = require('./quickstart-renderer');
 
 const SRC_BASE   = path.resolve(__dirname, '..', 'src');
 const SRC_CLAUDE = path.join(SRC_BASE, 'claude');
@@ -493,77 +494,14 @@ function buildHooksConfig(activeDomains) {
 }
 
 function processQuickStartTemplate(projectRoot, activeDomains, activeTargets) {
-  const template = readTemplate(TEMPLATES, 'CLAUDE-KIT-QUICKSTART.md.template');
-  if (!template) return;
-
   const quickStartPath = path.join(projectRoot, 'CLAUDE-KIT-QUICKSTART.md');
-  const vars = buildQuickStartTemplateVars(activeDomains, activeTargets);
-  fs.writeFileSync(quickStartPath, substituteVars(template, vars));
-}
-
-function buildQuickStartTemplateVars(activeDomains, activeTargets) {
-  return {
-    VERSION: resolveVersion(),
-    ACTIVE_DOMAINS: activeDomains.join(', '),
-    ACTIVE_TARGETS: activeTargets.join(', '),
-    OUTPUT_ROWS: buildQuickStartOutputRows(activeTargets),
-    PIPELINE_GUIDE: buildQuickStartPipelineGuide(activeDomains),
-    FIRST_ACTIONS: buildQuickStartFirstActions(activeDomains)
-  };
-}
-
-function buildQuickStartOutputRows(activeTargets) {
-  const rows = [
-    '| Quick Start | `CLAUDE-KIT-QUICKSTART.md` | 설치 직후 확인하는 루트 온보딩 문서 |'
-  ];
-
-  if (activeTargets.includes('claude')) {
-    rows.push('| Claude runtime | `.claude/` | Claude용 agents, commands, skills, hooks, rules 출력 |');
-    rows.push('| Claude context | `CLAUDE.md` | Claude 런타임 컨텍스트 문서 |');
-  }
-
-  if (activeTargets.includes('codex')) {
-    rows.push('| Codex runtime | `plugins/claude-kit/` | Codex repo-local plugin 출력 |');
-    rows.push('| Codex context | `AGENTS.md` | Codex 런타임 컨텍스트 문서 |');
-    rows.push('| Codex registry | `.agents/plugins/marketplace.json` | Codex plugin 등록 정보 |');
-  }
-
-  return rows.join('\n');
-}
-
-function buildQuickStartPipelineGuide(activeDomains) {
-  const lines = [
-    '- `core`는 항상 활성화되는 공통 가드레일이다.',
-    '- `dev`는 요구사항이나 PRD가 이미 있을 때 바로 구현을 시작하는 기본 흐름이다.'
-  ];
-
-  if (activeDomains.includes('plan')) {
-    lines.push('- `plan`이 활성화되어 있으므로 아이디어 단계에서 `/plan-idea`부터 시작할 수 있다.');
-  } else {
-    lines.push('- 현재 `plan`은 비활성화되어 있다. 아이디어부터 시작하려면 `profile.json`에 `"plan"`을 추가한 뒤 다시 설치한다.');
-  }
-
-  lines.push('- 상세 기준 문서는 [docs/guide/13-quick-start.md](./docs/guide/13-quick-start.md)다.');
-
-  return lines.join('\n');
-}
-
-function buildQuickStartFirstActions(activeDomains) {
-  if (activeDomains.includes('plan')) {
-    return [
-      '1. 아이디어 등록: `/plan-idea "새 기능 아이디어"`',
-      '2. 스크리닝: `/plan-screen IDEA-YYYYMMDD-001`',
-      '3. 기획/PRD: `/plan-draft ...` -> `/plan-prd ...`',
-      '4. 개발 핸드오프: `/plan-bridge <slug>`'
-    ].join('\n');
-  }
-
-  return [
-    '1. 승인된 PRD 경로를 준비한다.',
-    '2. Feature Package 생성: `/dev-feature <prd-path>`',
-    '3. 구현 루프 시작: `/dev-run <package-path>`',
-    '4. 검증: `/dev-verify <package-path>`'
-  ].join('\n');
+  const content = renderQuickStart({
+    variant: 'install',
+    activeDomains,
+    activeTargets,
+    version: resolveVersion()
+  });
+  fs.writeFileSync(quickStartPath, content);
 }
 
 // ═══════════════════════════════════════════
