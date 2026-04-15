@@ -5,59 +5,85 @@
 
 ---
 
-## 원샷 실행 (전체 한 번에)
+## 원샷 실행 — 에이전트 자동 전환
 
 새 세션에 다음 한 줄만 입력:
 
 ```
-docs/codex-sync/11-kit-sync-execution-guide.md 의 "원샷 실행" 섹션대로 75개 전체 동기화 진행해줘
+/kit-analyze 실행 후 결과 확인하고 /kit-sync 로 75개 전체 동기화 진행해줘
 ```
 
-### 실행 지침
+### 흐름
 
-1. **사전 검증** 실행 후, 문제 없으면 중단 없이 전체 진행한다.
-2. **타입별로 `/kit-sync`를 순서대로 호출**한다: skill → agent → command → hook
-3. 각 타입 전환 후 `/kit-validate --type {타입} --target codex`로 검증한다. FAIL 시 해당 파일만 보정하고 계속 진행.
-4. **review 필요 항목** (`<!-- REVIEW NEEDED -->` 마커)은 전환 후 한꺼번에 검토한다 (중간에 멈추지 않음).
-5. **전체 완료 후** audit + sync-report를 한 번에 실행한다.
-6. **커밋은 2개만**: (1) 전체 전환 commit + (2) review 보정 + report commit.
+```
+/kit-analyze → 4-tier 리포트 생성 → 사용자 확인 → /kit-sync → kit-sync-agent가 자율 전환
+```
 
-### 원샷 실행 순서
+| 단계 | 명령 | 누가 | 결과 |
+|------|------|------|------|
+| 1. 분석 | `/kit-analyze` | 사용자 | 전체 83개 컴포넌트 4-tier 분석 리포트 |
+| 2. 확인 | 리포트 검토 | 사용자 | "승인" 또는 "수정했음" 또는 "중단" |
+| 3. 동기화 | `/kit-sync` | **kit-sync-agent (자율)** | 75개 전환 + pairing-registry 갱신 |
+| 4. 검증 | agent가 자동 실행 | **kit-sync-agent** | /kit-validate + /kit-audit C7 |
+| 5. 커밋 | agent 결과 확인 후 | 사용자 | 전체 commit |
+
+### 실제 세션 예시
+
+```
+사용자: /kit-analyze
+Claude: [분석 리포트 출력 — 60 auto / 15 review / 8 resolved]
+사용자: 승인. 전체 진행해줘
+Claude: /kit-sync 실행합니다.
+        → kit-sync-agent가 skill 25 → agent 12 → command 31 → hook 7 순서로 전환
+        → review 항목에 <!-- REVIEW NEEDED --> 마커 삽입
+        → pairing-registry 75 entries 추가
+        → /kit-audit C7 자동 실행
+Claude: 전환 완료. 75개 중 60 auto 완료, 15 review 대기. 커밋할까요?
+사용자: 커밋해줘
+```
+
+### 옵션 플래그
 
 ```bash
-# ━━━ 1. 사전 검증 ━━━
-node scripts/audit-pairing.js && node scripts/audit-drift.js
+# 전체 동기화 (기본 — 에이전트 자율)
+/kit-sync
 
-# ━━━ 2. 전체 전환 (순서: skill → agent → command → hook) ━━━
+# 분석만, 파일 수정 없음
+/kit-sync --dry-run
+
+# 승인 없이 자동 진행 (위험 — 리포트 확인 건너뜀)
+/kit-sync --auto-approve
+
+# 특정 도메인/타입만
+/kit-sync --domain dev
 /kit-sync --type skill
-/kit-sync --type agent      # RO 3개 auto + Write 9개 review
-/kit-sync --type command    # 단순 25개 auto + 복합 6개 review
-/kit-sync --type hook       # 호환 7개 (exception 2개 자동 스킵)
+/kit-sync --name dev-architect
+```
 
-# ━━━ 3. 일괄 검증 ━━━
-/kit-validate --type skill --target codex
-/kit-validate --type agent --target codex
-/kit-validate --type command --target codex
-/kit-validate --type hook --target codex
+### 사전 검증 (선택)
 
-# ━━━ 4. 전체 전환 커밋 ━━━
-git add src/codex/ src/pairing-registry.json
-git commit -m "feat(kit-sync): 75개 Claude 컴포넌트 Codex sibling 일괄 전환"
+에이전트가 자동 처리하지만, 직접 확인하고 싶으면:
 
-# ━━━ 5. Review 항목 검토 ━━━
-# <!-- REVIEW NEEDED --> 마커가 있는 파일 찾기
+```bash
+node scripts/audit-pairing.js && node scripts/audit-drift.js
+```
+
+### 전환 후 수동 작업
+
+에이전트가 전환을 마치면 **review 항목만 수동 검토**:
+
+```bash
+# review 마커가 있는 파일 찾기
 grep -rl "REVIEW NEEDED" src/codex/
 
-# 각 파일 검토 후 마커 제거 → 보정 사항 반영
+# 각 파일 열어서 검토 → 마커 제거
+# 그 후 commit
+```
 
-# ━━━ 6. 최종 audit + report ━━━
-node scripts/audit-pairing.js
-node scripts/audit-drift.js
+### 최종 리포트 자동 생성
+
+```bash
 node scripts/generate-sync-report.js > docs/codex-sync/sync-report-post-conversion.md
-
-# ━━━ 7. 최종 커밋 ━━━
-git add src/codex/ src/pairing-registry.json docs/codex-sync/sync-report-post-conversion.md
-git commit -m "docs(kit-sync): review 보정 + 전환 완료 sync-report"
 ```
 
 ### 기대 결과
