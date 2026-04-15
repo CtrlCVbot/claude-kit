@@ -61,12 +61,14 @@ Claude 자산을 Codex 형식으로 변환하여 `src/codex/`에 생성하고 pa
 
 ### Phase 3: 변환 실행
 
-6. 타입별 변환 규칙을 적용한다 (`kit-converter/references/conversion-rules.md` 참조):
-   - **Skill**: 내용 복사 + "Codex 참고 사항" 섹션 추가 + references/ 복사
-   - **Agent**: XML Agent_Prompt → 헤딩 기반 변환 (agent-section-mapping.md 참조)
-   - **Command**: 슬래시 커맨드 → Entry Flow 변환
-   - **Hook**: JS 복사 + Codex 등록 주석 추가
-   - **Rule**: paired-fallback (`AGENTS.md.template` merge artifact 활용, 별도 변환 파일 생성 안 함)
+6. 타입별 변환 규칙을 적용한다 (`kit-converter/references/conversion-rules.md` 참조). codex-sync Phase 4 4-tier strategy를 `src/claude/_meta/codex-portability.json`에서 조회:
+   - **Skill** (paired-direct): 내용 복사 + "Codex 참고 사항" 섹션 추가 + references/ 복사
+   - **Agent** (paired-direct): XML Agent_Prompt → 헤딩 기반 변환 (agent-section-mapping.md 참조)
+   - **Command** (paired-direct): 슬래시 커맨드 → Entry Flow 변환
+   - **Hook** (paired-direct / paired-fallback): codex-portability.json strategy 분기:
+     - paired-direct: setup.js T18으로 src/codex/ 우선, 없으면 src/claude/ JS 복사 + Codex 등록 주석
+     - paired-fallback: fallbackTarget=skill이면 skill artifact 사용 (예: EX-001 session-wrap-suggest), 별도 hook 변환 안 함
+   - **Rule** (paired-fallback): `AGENTS.md.template` inline merge artifact 활용, 별도 변환 파일 생성 안 함 (EX-003~008)
 
 ### Phase 4: 페어링 레지스트리 갱신
 

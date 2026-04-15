@@ -9,6 +9,8 @@ argument-hint: '[--dry-run] [--auto-approve] [--domain <domain>] [--type <type>]
 kit-sync-agent를 spawn하여 Claude 자산의 Codex 전환 동기화를 실행한다.
 
 > 참조: `.claude/agents/kit-sync-agent.md`
+>
+> codex-sync Phase 4: 동기화 보고서는 4-tier strategy(`paired-direct` / `paired-fallback` / `paired-review` / `blocked`)와 evidence 정보를 함께 표시한다. 전략 SSOT는 `src/claude/_meta/codex-portability.json`이며, 예외/승인은 `src/exception-registry.json`이 담당한다.
 
 ## Usage
 

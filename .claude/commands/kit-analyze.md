@@ -42,18 +42,20 @@ argument-hint: '[--domain <domain>] [--type <type>] [--verbose]'
    - `type`: skill / agent / command / hook / rule
    - `domain`: core / dev / plan
    - `codexMapping`: 대응 Codex 타입
-   - `difficulty`: auto / review / skip
+   - `strategy`: paired-direct / paired-fallback / paired-review / blocked (codex-sync Phase 4 4-tier)
+   - `evidenceLevel`: 공식 지원 / 우회 가능 / 추정 / 검증 필요 (`src/claude/_meta/codex-portability.json` 참조)
+   - `difficulty`: auto / review / skip (legacy 호환, 4-tier에 매핑)
 
-### Phase 3: 난이도 휴리스틱
+### Phase 3: 난이도 휴리스틱 (4-tier 매핑 포함)
 
 5. 타입별 분류 규칙:
-   - **agent**: YAML frontmatter `tools`에 `Write`/`Edit` 포함 → `review`, 아니면 `auto`
-   - **command**: frontmatter 존재 + 3개 이상 Phase/Step → `review`, 아니면 `auto`
-   - **skill**: 항상 `auto`
-   - **hook**: `kit-converter/references/skip-registry.md`에 등록 → `skip`, 아니면 `auto`
-   - **rule**: 항상 `paired-fallback` (artifact는 `src/templates/AGENTS.md.template`에 inline merge, 별도 변환 파일 없음)
+   - **agent**: YAML frontmatter `tools`에 `Write`/`Edit` 포함 → `paired-direct (review)`, 아니면 `paired-direct (auto)`
+   - **command**: frontmatter 존재 + 3개 이상 Phase/Step → `paired-direct (review)`, 아니면 `paired-direct (auto)`
+   - **skill**: 항상 `paired-direct (auto)`
+   - **hook**: `src/claude/_meta/codex-portability.json` 또는 `scripts/codex-hook-compat.js HOOK_PORTABILITY` 조회. 등록되지 않은 경우 default `paired-direct (auto)`
+   - **rule**: 항상 `paired-fallback` (artifact: `src/templates/AGENTS.md.template` inline merge, EX-003~008)
 
-### Phase 4: 리포트 출력
+### Phase 4: 리포트 출력 (4-tier)
 
 6. 요약 + 상세 리포트를 출력한다:
 
@@ -62,31 +64,40 @@ argument-hint: '[--domain <domain>] [--type <type>] [--verbose]'
 
   === 요약 ===
   전체: N 컴포넌트
-  auto-convert:        X (N%)
-  convert-with-review: Y (N%)
-  skip:                Z (N%)
+  paired-direct:    X (N%) — auto + review
+  paired-fallback:  Y (N%) — artifact 생성 후 resolved
+  paired-review:    Z (N%) — 사람 검토 필요
+  blocked:          W (N%) — artifact 생성 불가 (현재 0건)
 
-  === 타입별 ===
-  | 타입    | 전체 | Auto | Review | Skip |
-  |---------|------|------|--------|------|
-  | skill   | 25   | 25   | 0      | 0    |
-  | agent   | 12   | 6    | 6      | 0    |
-  | command | 31   | ~15  | ~16    | 0    |
-  | hook    | 9    | 7    | 0      | 2    |
-  | rule    | 6    | 0    | 0      | 6    |  ← Note 1
-  
-  Note 1: rule 6개는 codex-sync Phase 2 이후 실제로는 paired-fallback (AGENTS.md 
-  inline merge) 상태다. 현재 4-tier(direct/fallback/review/blocked) 컬럼이 도입되기 
-  전까지 Skip 컬럼은 non-direct 항목을 포괄한다. Phase 4에서 Fallback 컬럼이 
-  분리될 예정.
+  === 타입별 (4-tier) ===
+  | 타입    | 전체 | paired-direct | paired-fallback | paired-review | blocked |
+  |---------|------|---------------|-----------------|---------------|---------|
+  | skill   | 25   | 25            | 0               | 0             | 0       |
+  | agent   | 12   | 12 (6 review) | 0               | 0             | 0       |
+  | command | 31   | 31 (~16 review) | 0             | 0             | 0       |
+  | hook    | 9    | 8             | 1 (skill artifact) | 0          | 0       |
+  | rule    | 6    | 0             | 6 (AGENTS.md merge) | 0         | 0       |
 
-  === 상세 (--verbose) ===
-  | Identity            | Type    | Domain | Difficulty | Codex 존재 | 비고     |
-  |---------------------|---------|--------|------------|-----------|---------|
-  | dev-architect       | agent   | dev    | auto       | No        | RO      |
-  | plan-prd-writer     | agent   | plan   | review     | No        | WR      |
+  === Evidence 분포 ===
+  | evidenceLevel | 개수 |
+  |---------------|------|
+  | 공식 지원      | X   |
+  | 우회 가능      | Y   |
+  | 추정          | Z   |
+  | 검증 필요      | W   |
+
+  === 상세 (--verbose, 4-tier) ===
+  | Identity         | Type   | Domain | Strategy        | Evidence    | OfficialSurface | Fallback Target | 비고 |
+  |------------------|--------|--------|-----------------|-------------|-----------------|-----------------|------|
+  | dev-architect    | agent  | dev    | paired-direct   | 공식 지원    | subagents       | —               | RO   |
+  | plan-prd-writer  | agent  | plan   | paired-direct   | 공식 지원    | subagents       | —               | WR (review) |
+  | output-secret-filter | hook | core | paired-direct   | 검증 필요    | hooks           | —               | EX-002 |
+  | session-wrap-suggest | hook | core | paired-fallback | 검증 필요    | hooks.stop      | skill           | EX-001, artifact 생성됨 |
+  | coding-style     | rule   | core   | paired-fallback | 우회 가능    | agents_md       | agents-guidance | EX-003, AGENTS.md merge |
   ...
 ```
+
+> Note (codex-sync Phase 4): 4-tier 컬럼이 정식 출력 형식이다. legacy `auto/review/skip` 컬럼은 `paired-direct (auto)`, `paired-direct (review)`, `paired-fallback`/`blocked`로 매핑하여 호환성 유지.
 
 ## Rules
 

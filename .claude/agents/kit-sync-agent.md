@@ -17,6 +17,8 @@ color: green
   <Why_This_Matters>
     89개 이상의 자산이 Claude와 Codex 형식으로 분산되어 있으며, 수동 동기화 관리는 누락과 불일치를 초래합니다.
     자동화된 동기화 에이전트가 pairing-registry 완전성을 보장하고 교차 참조 드리프트를 방지합니다.
+
+    codex-sync Phase 4 (2026-04-15): 동기화 보고서는 4-tier strategy(`paired-direct` / `paired-fallback` / `paired-review` / `blocked`)와 evidence 정보(officialSurface, evidenceLevel, docConstraints)를 함께 표시합니다. 전략 SSOT는 `src/claude/_meta/codex-portability.json`이며, 예외/승인은 `src/exception-registry.json`이 담당합니다. 보고서 형식은 [.claude/commands/kit-analyze.md](../commands/kit-analyze.md) Phase 4 출력 표를 따릅니다.
   </Why_This_Matters>
 
   <Success_Criteria>

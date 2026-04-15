@@ -66,13 +66,30 @@ argument-hint: '[--category <cat>] [--fix] [--verbose]'
 - README.md의 컴포넌트 카운트가 실제와 일치하는지
 - `docs/guide/09-architecture.md`의 컴포넌트 목록이 최신인지
 
-### C7: 페어링 일관성 (필수)
+### C7: 페어링 일관성 (필수, codex-sync Phase 4 cross-check 포함)
 
 - `src/pairing-registry.json` 존재 여부
 - 레지스트리에 있는 자산이 파일시스템에 실제 존재하는지 (FAIL)
 - 파일시스템의 agent/command가 레지스트리에 등록되어 있는지 (WARN)
 - `codex-skip` 상태인데 reason이 비어있는 항목 (FAIL)
 - `paired` 상태인데 한쪽 파일만 존재하는 항목 (FAIL)
+- **exception-registry ↔ pairing-registry cross-check** (codex-sync Phase 4, [03-sync-pipeline-design.md §7.1](../../docs/codex-sync/03-sync-pipeline-design.md#71-vocabulary-mapping-exception-registry--pairing-registry) vocabulary mapping):
+  - exception `strategy=paired-direct` + `status=resolved` → pairing entry 존재 + `status=paired` (FAIL: 모순)
+  - exception `strategy=paired-direct` + pairing `status=codex-skip` (FAIL: strategy/status 모순)
+  - exception `strategy=blocked` + pairing `status=paired` (FAIL: blocked인데 sibling 존재)
+  - exception `strategy=paired-fallback` + `fallbackTarget=skill` → fallback artifact (`src/claude/{domain}/skills/{component}/SKILL.md`) 존재 (WARN: artifact 무결성)
+  - exception `strategy=paired-fallback` + `fallbackTarget=agents-guidance` → `src/templates/AGENTS.md.template` `### {component}` h3 존재 (WARN: artifact 무결성)
+
+### C10: codex-sync artifact drift detection (선택, codex-sync Phase 4)
+
+> codex-sync Phase 2 피드백 N2 + Phase 3 후속 의무. 원본 source와 fallback artifact 간 drift를 INFO로 보고.
+
+- **rule fallback drift**: `src/claude/core/rules/{name}.md` 변경 시 `src/templates/AGENTS.md.template ### {name}` 섹션 갱신 누락 감지 (INFO)
+  - 검사: 두 파일의 git log 비교 → 원본 변경 후 template 미갱신 commit 식별
+- **hook fallback drift**: `src/claude/{domain}/hooks/{name}.js` 변경 시 fallback skill (`src/claude/{domain}/skills/{name}/SKILL.md`) 의도 정합성 (INFO)
+  - 예: EX-001 session-wrap-suggest hook의 threshold 변경 시 skill의 trigger 조건 재확인 권장
+- **paired-direct sibling drift**: `claudeSource`와 `codexSource`가 모두 존재하는 항목의 의미적 차이 (INFO)
+  - 예: EX-002 output-secret-filter의 Claude/Codex 버전 분기 일관성
 
 ### C8: 교차 참조 무결성 (필수)
 
