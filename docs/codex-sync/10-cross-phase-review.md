@@ -87,19 +87,28 @@ C6는 README/architecture 카운트 일관성 검증인데 "선택"으로 분류
 
 `sync-report-2026-04-15-final.md` §7은 12 commits를 list하지만 본 commit (cross-phase 피드백) 자체는 13번째. 사소한 self-reference, 영향 없음.
 
-## 3. Recommended Adjustments (즉시 vs 이연)
+## 3. Recommended Adjustments (처리 상태)
 
-### 즉시 적용 (이 commit과 함께)
+### ✓ 모두 처리 완료 (2026-04-15)
 
-1. **CC1**: `12-implementation-plan.md` lines 74~76 갱신 (3 line surgical patch)
+1. **CC1** ✓ commit `e5fdd63` + `bfbd8c6`: `12-implementation-plan.md` lines 74~76 + line 89 보정
+2. **CC2** ✓ commit `c86d92a`: setup.js `--dry-run` 추가 (T18 preview, DRY_RUN constant + printDryRunSummary 함수)
+3. **CC3** ✓ commit `c86d92a`: kit-audit C7에 즉시 실행 가능 검증 명령 추가 (S3 감지 node 명령 + S2는 C6로 이동 + S4는 schema-pairing-registry 참조)
+4. **CC4** ✓ commit `c86d92a`: kit-audit C6 "선택" → "필수" mandatory 승격 + AGENTS.md.template h3 6개 FAIL 검증 추가
+5. **CC5** ✓ commit `c86d92a`: schema-pairing-registry.md 신규 (11번째 schema, S4 silent failure 감지 node 명령 포함)
+6. **CC6**: sync-report 자동 생성 task에서 자연 해소 예정 (low priority)
 
-### Phase 5+ 별도 task로 분리
+### 부수 적용
 
-2. **CC2 옵션 A**: setup.js `--dry-run` 추가 (코드 변경, 별도 task)
-3. **CC3 강화**: kit-audit C7 spec에 즉시 실행 가능 검증 명령 명시 (별도 task)
-4. **CC4**: kit-audit C6 mandatory 승격 (정책 결정 필요)
-5. **CC5**: schema-pairing-registry.md 신규 (별도 schema task)
-6. **CC6**: sync-report 자동 생성 task에서 자연 해소
+- `.claude/skills/kit-validation/SKILL.md`: 스키마 카운트 10 → 12 (Claude 5 + Codex 4 + Registry 3) 갱신
+- 12번째 schema는 schema-pairing-registry.md (CC5 결과)
+- 11번째 schema는 schema-codex-portability.md (Phase 5 결과)
+
+### 검증 결과 (commit c86d92a)
+
+- CC2: `node --check scripts/setup.js` PASS + `node scripts/setup.js --dry-run` 실행 정상
+- CC3 S3 감지: EX-001 skill artifact `src/claude/core/skills/session-wrap-suggest/SKILL.md` 존재 PASS
+- CC5 S4 감지: pairing-registry valid, 0 violations PASS
 
 ## 4. Cross-Phase Health Checks (모두 ✓)
 
