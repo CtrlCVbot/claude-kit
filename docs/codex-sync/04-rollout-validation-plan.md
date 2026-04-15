@@ -21,7 +21,7 @@ skipless conversion 전략을 실제 구현으로 옮길 때, 공식 문서 기�
 | Phase 1 | ✓ 완료 (commit `c794351`, `957fb8d`, 2026-04-15) | 레지스트리 정합성 회복 | stale skip 기준 제거, registry 역할 분리 | false skip 제거 |
 | Phase 2 | ✓ 완료 (commit `9cdbbbc`, `3d64eb9`, 2026-04-15) | `rule` fallback 도입 | `AGENTS.md` merge snippet, review stub 생성 | guidance-style rule이 무산출물 skip으로 남지 않음 |
 | Phase 3 | ✓ 완료 (commit `ce8b6f1`, 2026-04-15) | `hook` fallback 도입 | `session-wrap-suggest` 재평가, hook scope 반영 | runtime-bound hook 손실 축소 |
-| Phase 4 | 대기 | sync pipeline 확장 | `/kit-analyze`, `/kit-convert`, `/kit-sync` 상태 모델과 evidence 기록 추가 | `fallback` / `review-needed` 집계 가능 |
+| Phase 4 | ✓ 완료 (commit `3c36d2d`, `a4525b4`, 2026-04-15) | sync pipeline 확장 | `/kit-analyze`, `/kit-convert`, `/kit-sync` 상태 모델과 evidence 기록 추가 + 통합 후속 의무 4건 (T18, C7 cross-check, C10 drift, HOOK_PORTABILITY 7 hooks) | `fallback` / `review-needed` 집계 가능 |
 | Phase 5 | 대기 | runtime 검증과 audit | dry-run, sample conversion, 문서/코드 정합성 점검 | rollout 가능 여부 결정 |
 
 > Phase 1 회고 및 후속 의무는 [05-phase1-feedback-review.md](./05-phase1-feedback-review.md) 참조.
@@ -150,25 +150,45 @@ skipless conversion 전략을 실제 구현으로 옮길 때, 공식 문서 기�
 - session-wrap-suggest skill의 Codex 자동 호출 메커니즘 — Phase 4 별도 가이드
 - EX-007 exec-policy split — Phase 4+ (evidence 더 모일 때)
 
-### 4.5 Phase 4: Pipeline 확장
+### 4.5 Phase 4: Pipeline 확장 — ✓ 완료 (2026-04-15)
 
-대상 파일:
+> 반영 commit: `3c36d2d` (data/script — codex-portability + T18), `a4525b4` (4-tier 출력 + audit 확장).
+> 회고와 후속 의무는 [08-phase4-feedback-review.md](./08-phase4-feedback-review.md) 참조.
 
-- `.claude/commands/kit-analyze.md`
-- `.claude/commands/kit-convert.md`
-- `.claude/commands/kit-sync.md`
-- `.claude/agents/kit-sync-agent.md`
-- 필요 시 `src/claude/_meta/codex-portability.json`
+대상 파일 (실제 변경됨, 통합 작업 8 파일):
 
-주요 작업:
+- `src/claude/_meta/codex-portability.json` (NEW, 295줄, 15 entries) — full portability manifest SSOT ✓
+- `scripts/setup.js` — T18: emitCodex가 paired-direct hook에 한해 SRC_CODEX 우선 ✓
+- `scripts/codex-hook-compat.js` — output-secret-filter compatible:false → true (Phase 1 D1 해소) ✓
+- `.claude/commands/kit-analyze.md` — 4-tier 컬럼 + Evidence 분포 + 상세 표 5컬럼 ✓
+- `.claude/commands/kit-convert.md` — strategy 분기 처리 ✓
+- `.claude/commands/kit-sync.md` — 4-tier 보고 명시 ✓
+- `.claude/agents/kit-sync-agent.md` — SSOT 위계 명시 ✓
+- `.claude/commands/kit-audit.md` — C7 cross-check + C10 drift detection ✓
 
-- 상태 모델 확장
-- `evidenceLevel`, `officialSurface`, `docConstraints` 기록
-- 보고서 형식 업데이트
+주요 작업 (완료):
 
-완료 기준:
+- 상태 모델 확장 (4-tier: paired-direct/paired-fallback/paired-review/blocked) ✓
+- `evidenceLevel`, `officialSurface`, `docConstraints` 기록 (codex-portability.json) ✓
+- 보고서 형식 업데이트 (kit-analyze 4-tier 출력 표) ✓
 
-- dry-run에서 `direct`, `fallback`, `review-needed`, `blocked`와 evidence 정보가 함께 표시된다
+통합된 후속 의무 (Phase 1~3 누적 → Phase 4에서 동시 해소):
+
+- T18 setup.js SRC_CODEX 우선 — Phase 1 D1 후속 ✓
+- C7 audit cross-check (exception ↔ pairing) — Phase 1 feedback I3 ✓
+- AGENTS.md drift detection (C10) — Phase 2 feedback N2 ✓
+- HOOK_PORTABILITY 7 informational hooks 정식 등록 (codex-portability.json) — Phase 3 deviation D1 후속 ✓
+
+완료 기준 (충족):
+
+- dry-run에서 `direct`, `fallback`, `review-needed`, `blocked`와 evidence 정보가 함께 표시된다 ✓ (kit-analyze 4-tier + Evidence 분포 표)
+
+후속 의무 (Phase 5+ 이연):
+
+- T18 runtime 검증 (실제 setup.js 실행으로 plugin 생성 확인) — Phase 5
+- schema-codex-portability.md 신규 (codex-portability.json 자체 검증) — Phase 5+
+- C10 drift detection 실제 구현 (git log 비교 + semantic comparison) — Phase 5+
+- 7개 informational hook의 evidenceLevel 재평가 (추정 → 공식 지원/검증 필요) — Phase 5 runtime 검증
 
 ## 5. 검증 계획
 
