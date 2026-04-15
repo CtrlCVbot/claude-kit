@@ -28,6 +28,8 @@ const path = require('path');
 const { mergeSettings } = require('./merge-settings');
 const { filterCodexHooks } = require('./codex-hook-compat');
 const { renderQuickStart } = require('./quickstart-renderer');
+const { renderClaudeManagedSection } = require('./claude-md-renderer');
+const { mergeClaudeMd } = require('./claude-md-merger');
 
 const SRC_BASE   = path.resolve(__dirname, '..', 'src');
 const SRC_CLAUDE = path.join(SRC_BASE, 'claude');
@@ -52,7 +54,7 @@ function main() {
     if (activeTargets.includes('claude')) {
       createClaudeDirectories(projectRoot);
       const { counts, byDomain } = emitClaude(projectRoot, activeDomains);
-      processClaudeTemplates(projectRoot, mode, activeDomains);
+      processClaudeTemplates(projectRoot, mode, activeDomains, activeTargets);
       allCounts.claude = counts;
       allByDomain.claude = byDomain;
     }
@@ -318,18 +320,27 @@ function emitClaude(projectRoot, activeDomains) {
   return { counts, byDomain };
 }
 
-function processClaudeTemplates(projectRoot, mode, activeDomains) {
+function processClaudeTemplates(projectRoot, mode, activeDomains, activeTargets) {
   const templateDir = TEMPLATES;
   if (!fs.existsSync(templateDir)) return;
 
   const vars = resolveVariables(projectRoot);
 
-  // CLAUDE.md — 신규 설치 시에만 생성
+  // CLAUDE.md — managed 섹션은 fresh/update 모두 재생성, 사용자 편집 영역은 보존
   const claudeMdPath = path.join(projectRoot, 'CLAUDE.md');
-  if (mode === 'fresh' && !fs.existsSync(claudeMdPath)) {
+  const managedBody = renderClaudeManagedSection({ activeDomains, activeTargets, vars });
+
+  if (!fs.existsSync(claudeMdPath)) {
     const template = readTemplate(templateDir, 'CLAUDE.md.template');
     if (template) {
-      fs.writeFileSync(claudeMdPath, substituteVars(template, vars));
+      const rendered = substituteVars(template, { ...vars, KIT_MANAGED_SECTION: managedBody });
+      fs.writeFileSync(claudeMdPath, rendered);
+    }
+  } else {
+    const existing = fs.readFileSync(claudeMdPath, 'utf8');
+    const next = mergeClaudeMd(existing, managedBody);
+    if (next !== existing) {
+      fs.writeFileSync(claudeMdPath, next);
     }
   }
 

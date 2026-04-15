@@ -13,5 +13,6 @@
 ## Skills
 `.claude/skills/`에서 자동 로드. 컨텍스트에 맞는 스킬이 자동 활성화됨.
 
-# currentDate
-Today's date is {{DATE}}.
+<!-- kit:managed:start -->
+{{KIT_MANAGED_SECTION}}
+<!-- kit:managed:end -->
