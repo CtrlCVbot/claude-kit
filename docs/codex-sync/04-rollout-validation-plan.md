@@ -22,7 +22,7 @@ skipless conversion 전략을 실제 구현으로 옮길 때, 공식 문서 기�
 | Phase 2 | ✓ 완료 (commit `9cdbbbc`, `3d64eb9`, 2026-04-15) | `rule` fallback 도입 | `AGENTS.md` merge snippet, review stub 생성 | guidance-style rule이 무산출물 skip으로 남지 않음 |
 | Phase 3 | ✓ 완료 (commit `ce8b6f1`, 2026-04-15) | `hook` fallback 도입 | `session-wrap-suggest` 재평가, hook scope 반영 | runtime-bound hook 손실 축소 |
 | Phase 4 | ✓ 완료 (commit `3c36d2d`, `a4525b4`, 2026-04-15) | sync pipeline 확장 | `/kit-analyze`, `/kit-convert`, `/kit-sync` 상태 모델과 evidence 기록 추가 + 통합 후속 의무 4건 (T18, C7 cross-check, C10 drift, HOOK_PORTABILITY 7 hooks) | `fallback` / `review-needed` 집계 가능 |
-| Phase 5 | 대기 | runtime 검증과 audit | dry-run, sample conversion, 문서/코드 정합성 점검 | rollout 가능 여부 결정 |
+| Phase 5 | ✓ 완료 (2026-04-15) | runtime 검증과 audit | dry-run, sample conversion, 문서/코드 정합성 점검 | **rollout-ready** ✅ ([sync-report-2026-04-15-final.md](./sync-report-2026-04-15-final.md) §5) |
 
 > Phase 1 회고 및 후속 의무는 [05-phase1-feedback-review.md](./05-phase1-feedback-review.md) 참조.
 
