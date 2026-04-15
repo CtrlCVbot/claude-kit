@@ -26,7 +26,7 @@
 const fs = require('fs');
 const path = require('path');
 const { mergeSettings } = require('./merge-settings');
-const { filterCodexHooks } = require('./codex-hook-compat');
+const { filterCodexHooks, getPortability } = require('./codex-hook-compat');
 const { renderQuickStart } = require('./quickstart-renderer');
 const { renderClaudeManagedSection } = require('./claude-md-renderer');
 const { mergeClaudeMd } = require('./claude-md-merger');
@@ -39,12 +39,66 @@ const TEMPLATES  = path.join(SRC_BASE, 'templates');
 const COMPONENT_DIRS = ['agents', 'commands', 'skills', 'hooks', 'rules'];
 const CODEX_COMPONENT_DIRS = ['agents', 'commands', 'skills'];
 
+// codex-sync cross-phase review CC2: --dry-run 플래그 (T18 검증 등 dynamic verification)
+const DRY_RUN = process.argv.includes('--dry-run');
+
+function printDryRunSummary(projectRoot, activeDomains, activeTargets) {
+  console.log('[DRY-RUN] claude-kit 설치 preview (file modification 없음)\n');
+  console.log('project root:', projectRoot);
+  console.log('active domains:', activeDomains.join(', '));
+  console.log('active targets:', activeTargets.join(', '));
+
+  if (!activeTargets.includes('codex')) {
+    console.log('\nCodex target inactive — T18 preview 불가.');
+    return;
+  }
+
+  console.log('\n=== T18 (codex-sync Phase 4): Codex hook source 분기 preview ===\n');
+  const hookFiles = collectHookFiles(activeDomains);
+  const { compatible, skipped } = filterCodexHooks(hookFiles);
+
+  console.log(`compatible hooks (${compatible.length}):`);
+  for (const hookFile of compatible) {
+    const meta = getPortability(hookFile);
+    const strategy = meta ? meta.strategy : 'default paired-direct';
+    const preferCodex = meta && meta.strategy === 'paired-direct';
+    let actualSource = null;
+    const sourceRoots = preferCodex ? [SRC_CODEX, SRC_CLAUDE] : [SRC_CLAUDE];
+    for (const root of sourceRoots) {
+      for (const domain of activeDomains) {
+        const p = path.join(root, domain, 'hooks', hookFile);
+        if (fs.existsSync(p)) { actualSource = p; break; }
+      }
+      if (actualSource) break;
+    }
+    const sourceLabel = actualSource
+      ? (actualSource.includes(SRC_CODEX) ? 'SRC_CODEX ✓' : 'SRC_CLAUDE (fallback)')
+      : 'NOT FOUND';
+    console.log(`  - ${hookFile} [${strategy}] → ${sourceLabel}`);
+    if (actualSource) console.log(`      ${actualSource}`);
+  }
+
+  if (skipped.length > 0) {
+    console.log(`\nskipped hooks (${skipped.length}):`);
+    for (const s of skipped) {
+      console.log(`  - ${s.component}: ${s.reason}`);
+    }
+  }
+
+  console.log('\n[DRY-RUN] 완료. --dry-run 제거 시 실제 설치.');
+}
+
 function main() {
   try {
     const projectRoot = detectProjectRoot();
     const mode = detectMode(projectRoot);
     const activeDomains = resolveActiveDomains(projectRoot);
     const activeTargets = resolveTargets(projectRoot);
+
+    if (DRY_RUN) {
+      printDryRunSummary(projectRoot, activeDomains, activeTargets);
+      return;
+    }
 
     const allCounts = {};
     const allByDomain = {};

@@ -61,10 +61,14 @@ argument-hint: '[--category <cat>] [--fix] [--verbose]'
 - `scripts/setup.js`의 `buildHooksConfig()`에 모든 훅이 등록되어 있는지
 - 새 컴포넌트가 복사 대상에 포함되는지
 
-### C6: 문서 정확성 (선택)
+### C6: 문서 정확성 (필수, codex-sync cross-phase review 후 mandatory 승격)
 
-- README.md의 컴포넌트 카운트가 실제와 일치하는지
-- `docs/guide/09-architecture.md`의 컴포넌트 목록이 최신인지
+> codex-sync cross-phase review (10-cross-phase-review.md CC4) 결과 mandatory로 승격됨. cross-phase에서 컴포넌트 카운트 변동이 있을 때 자동 detection 필요.
+
+- README.md의 컴포넌트 카운트가 실제와 일치하는지 (FAIL: 카운트 불일치)
+- `docs/guide/09-architecture.md`의 컴포넌트 목록이 최신인지 (WARN: 누락된 컴포넌트)
+- `src/templates/AGENTS.md.template`의 `## 핵심 규칙` h3 섹션 6개 존재 (FAIL: codex-sync Phase 2 rule fallback artifact 무결성)
+  - 즉시 실행 가능 검증: `grep -c "^### " src/templates/AGENTS.md.template` → 6 미만 시 FAIL
 
 ### C7: 페어링 일관성 (필수, codex-sync Phase 4 cross-check 포함)
 
@@ -79,6 +83,29 @@ argument-hint: '[--category <cat>] [--fix] [--verbose]'
   - exception `strategy=blocked` + pairing `status=paired` (FAIL: blocked인데 sibling 존재)
   - exception `strategy=paired-fallback` + `fallbackTarget=skill` → fallback artifact (`src/claude/{domain}/skills/{component}/SKILL.md`) 존재 (WARN: artifact 무결성)
   - exception `strategy=paired-fallback` + `fallbackTarget=agents-guidance` → `src/templates/AGENTS.md.template` `### {component}` h3 존재 (WARN: artifact 무결성)
+
+#### 즉시 실행 가능 검증 명령 (codex-sync cross-phase review CC3 — silent failure 감지)
+
+C7이 cross-phase 피드백에서 식별한 silent failure 시나리오를 다음 명령으로 즉시 감지:
+
+- **S2 감지** (AGENTS.md.template 섹션 삭제): 이미 C6에 포함됨 (`grep -c "^### " src/templates/AGENTS.md.template` → 6 미만 시 FAIL)
+- **S3 감지** (skill fallback artifact 삭제, 예: EX-001):
+  ```bash
+  # paired-fallback + fallbackTarget=skill entry 추출 후 각 SKILL.md 존재 확인
+  node -e "
+    const d = JSON.parse(require('fs').readFileSync('src/exception-registry.json','utf8'));
+    const fs = require('fs');
+    let fail = 0;
+    for (const e of d.entries) {
+      if (e.strategy==='paired-fallback' && e.fallbackTarget==='skill' && e.status==='resolved') {
+        const artifactPath = 'src/claude/' + (e.domain || 'core') + '/skills/' + e.component + '/SKILL.md';
+        if (!fs.existsSync(artifactPath)) { console.log('FAIL:', e.id, 'missing artifact', artifactPath); fail++; }
+      }
+    }
+    console.log(fail===0 ? 'PASS: all skill fallback artifacts exist' : 'FAIL: ' + fail + ' missing');
+  "
+  ```
+- **S4 감지** (pairing-registry enum value 오류): `.claude/skills/kit-validation/references/schema-pairing-registry.md` 참조 (codex-sync cross-phase review CC5, Phase 5+ 신규)
 
 ### C10: codex-sync artifact drift detection (선택, codex-sync Phase 4)
 
@@ -118,7 +145,7 @@ argument-hint: '[--category <cat>] [--fix] [--verbose]'
 
 ### Phase 2: 카테고리별 감사
 
-3. 선택된 카테고리(기본: C1~C4, C7, C8 필수)에 대해 순서대로 검증한다.
+3. 선택된 카테고리(기본: C1~C4, C6, C7, C8 필수 — C6는 codex-sync cross-phase review 후 mandatory 승격)에 대해 순서대로 검증한다.
 4. src/exception-registry.json을 로드하여, 매칭되는 active 예외는 `[EXEMPT]`로 표시한다. 나머지를 PASS / WARN / FAIL로 분류한다.
 
 ### Phase 3: 자동 수정 (--fix)
@@ -158,7 +185,7 @@ argument-hint: '[--category <cat>] [--fix] [--verbose]'
 
 ## Rules
 
-- C1~C4, C7, C8는 필수 감사 카테고리이다. 항상 실행된다.
+- C1~C4, C6, C7, C8는 필수 감사 카테고리이다. 항상 실행된다 (C6는 codex-sync cross-phase review 후 mandatory 승격).
 - C5~C6, C9는 `--category C5` 또는 해당 카테고리 코드로 명시적 요청 시에만 실행된다.
 - `--fix`는 안전한 항목만 수정한다. 판단이 필요한 항목은 보고만 한다.
 - `_archive/` 디렉토리는 감사 대상에서 제외한다.
