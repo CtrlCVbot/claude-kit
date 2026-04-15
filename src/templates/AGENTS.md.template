@@ -2,6 +2,13 @@
 
 {{PROJECT_DESCRIPTION}}
 
+<!--
+NOTE: 이 파일의 ## 핵심 규칙 섹션 6개 h3는 src/claude/core/rules/{name}.md의
+medium merge artifact다 (codex-sync Phase 2). 원본 rule이 변경되면 이 파일도
+함께 갱신해야 한다. 자동 동기화는 Phase 4 작업 (codex-portability.json +
+audit drift detection) 범위.
+-->
+
 ## 핵심 원칙
 - **TDD 필수**: 테스트 먼저 -> 구현 -> 리팩토링
 - **Rich Domain Model** + Hexagonal Architecture
@@ -16,22 +23,136 @@
 증거 없는 완료 선언 금지 (Iron Law). 테스트 통과 결과, 빌드 성공 출력, 요구사항 체크리스트를 반드시 포함.
 "should work", "probably fine" 같은 추측 표현은 완료 근거로 인정하지 않음.
 
+**Iron Law**: NO COMPLETION CLAIMS WITHOUT FRESH VERIFICATION EVIDENCE — 이 메시지에서 검증 명령을 실행하지 않았다면 통과를 주장할 수 없다.
+
+**Gate Function** (성공/완료 주장 전):
+1. IDENTIFY — 어느 명령이 이 주장을 증명하는가
+2. RUN — 명령을 fresh, complete 실행
+3. READ — 전체 출력 + exit code + 실패 수
+4. VERIFY — 출력이 주장을 확인하는가
+5. CLAIM — 그제야 결과 진술
+
+**Required Evidence** (claim → evidence): Tests pass → "0 failures" output / Build succeeds → exit 0 / Bug fixed → regression test passes / Requirements met → line-by-line checklist.
+
+**Red Flags — 이런 생각이 들면 멈춰라**: "It probably works" / "I'm confident" / "Just this once" / "Linter passed, so..." / "I already ran it earlier" / "Should/probably/seems to" — 모두 검증 부재 신호.
+
+> 전체 가이드: `src/claude/core/rules/verification.md`
+
 ### security
 커밋 전 보안 체크리스트 8항목: 비밀 하드코딩 금지, 입력 검증, SQL 인젝션 방지, XSS/CSRF, 인증/권한, 레이트 리밋, 에러 메시지 필터링.
 비밀은 반드시 환경변수로. 미설정 시 즉시 throw.
+
+**Mandatory Security Checks** (모든 commit 전):
+- [ ] No hardcoded secrets (API keys, passwords, tokens)
+- [ ] All user inputs validated
+- [ ] SQL injection prevention (parameterized queries)
+- [ ] XSS prevention (sanitized HTML)
+- [ ] CSRF protection enabled
+- [ ] Authentication/authorization verified
+- [ ] Rate limiting on all endpoints
+- [ ] Error messages don't leak sensitive data
+
+**Secret Management 패턴**:
+```typescript
+// NEVER: const apiKey = "sk-proj-xxxxx"
+// ALWAYS:
+const apiKey = process.env.OPENAI_API_KEY
+if (!apiKey) throw new Error('OPENAI_API_KEY not configured')
+```
+
+**Remote Session 원칙**: 세션 URL을 공개 채널에 공유 금지. 유휴 세션 종료. 신뢰할 수 없는 네트워크에서는 VPN 사용.
+
+> 전체 가이드: `src/claude/core/rules/security.md`
 
 ### golden-principles
 불변성(spread), TDD(Red-Green-Refactor), 결론 우선, 파일 800줄/함수 50줄 제한, 시스템 경계에서 검증, 증거 기반 완료.
 변경은 요청된 부분만 (surgical). "while I'm here" 식 부수 변경 금지.
 
+**12 핵심 원칙**:
+1. **Immutability** — spread로 새 객체 생성, 원본 변이 금지
+2. **Secrets in env vars** — 하드코딩 금지, 미설정 시 즉시 throw
+3. **Test First (TDD)** — RED → GREEN → IMPROVE, 80%+ coverage
+4. **Conclusion First** — 첫 문장에 결론, "왜냐하면..."은 그 다음
+5. **Small Files/Functions** — 파일 800줄, 함수 50줄, 중첩 4단계 max
+6. **Validate at boundaries** — 외부 입력은 zod 등으로 검증
+7. **Explain with analogies** — 일상 비유 먼저, 기술 설명은 그 다음
+8. **Context 50% rule** — 컨텍스트 50% 이내 작업, 초과 시 새 세션
+9. **HARD-GATE: No coding without design** — 3+ 파일 변경은 plan 먼저
+10. **Evidence-based completion** — 테스트 결과, 빌드 출력, 체크리스트 증거
+11. **SDD review enforcement** — spec 준수 우선, "거의 맞음"은 통과 아님
+12. **Surgical changes** — 요청된 줄만 변경, "while I'm here" 정리 금지
+
+**Anti-Rationalization (이 변명은 통하지 않는다)**:
+| 변명 | 현실 |
+|------|------|
+| "Too simple to need tests" | Simple code breaks too. 테스트는 30초 |
+| "I'll add tests later" | 나중 테스트는 happy path만 커버 |
+| "Quick fix, no plan needed" | 3+ 파일 = plan first |
+| "While I'm here, let me clean up" | 요청된 줄만 변경. 정리는 별도 요청 |
+
+> 전체 가이드: `src/claude/core/rules/golden-principles.md`
+
 ### coding-style
 불변 패턴 필수 (새 객체 생성, 원본 변이 금지). 파일 200-400줄 권장(800 상한). 에러 try-catch 필수. 입력 zod 검증.
+
+**Immutability 패턴**:
+```javascript
+// WRONG: user.name = name (mutation)
+// CORRECT: return { ...user, name }
+```
+
+**File Organization**: 200-400줄 권장 (800 max). 기능/도메인별 구성. 높은 응집도, 낮은 결합도.
+
+**Error Handling**: try-catch로 포착 → 디버그 로깅 → 사용자 친화 메시지로 throw. 에러 silent 무시 금지.
+
+**Input Validation**: 시스템 경계에서 zod 등 스키마 검증. 명확한 에러 메시지로 즉시 실패.
+
+**완료 전 체크리스트**: 가독성 / 함수 50줄 / 중첩 4단계 / 에러 처리 / debug 출력문 없음 / 하드코딩 없음 / 변이 없음.
+
+> 전체 가이드: `src/claude/core/rules/coding-style.md`
 
 ### interaction
 가정 명시 후 코딩 (모호하면 질문). 유추로 설명 후 기술 상세. 결론 우선 + 근거 후행. 불확실하면 추측하지 않고 인정.
 
+**State Assumptions Before Coding**: 모호한 요구사항은 조용히 추측하지 말고 가정을 드러내고 질문. 여러 해석이 가능하면 선택지 제시. 더 단순한 접근이 있으면 반론.
+
+**Analogies First**: 일상 비유 (1~2 문장) 후 기술 상세.
+> 예: "메시지 큐는 식당 주문 전표 시스템과 같다. 웨이터(producer)가 전표 걸어두면 요리사(consumer)가 가져간다. 기술적으로는 비동기 버퍼."
+
+**Conclusion First**: 한 줄 결론 먼저, 분석은 그 다음. "Because..."로 시작 금지.
+
+**Honesty about Uncertainty**: "아마...", "그럴 수도..." 금지. 대신 "확실하지 않습니다 — 확인하겠습니다" + 검증 방법.
+
+**Web Fetching (CRITICAL)**: 내장 WebFetch 도구 사용 금지 (세션 freeze 위험). MCP 대체:
+| Priority | Tool | Use Case |
+|----------|------|----------|
+| 1st | `mcp__jina-reader__*` | Token 효율, clean markdown |
+| 2nd | `mcp__fetch__fetch` | Jina 실패 시 fallback, 무료 |
+
+> 전체 가이드: `src/claude/core/rules/interaction.md`
+
 ### date-calculation
 날짜 계산 절대 수동 금지. date 커맨드 또는 python3 datetime 사용 필수. 요일, 기간, D-day, 윤년 모두 도구로.
+
+**Absolute Rule**: 날짜/시간을 절대 머릿속으로 계산하지 않는다. LLM은 날짜 연산에서 자주 오류를 낸다.
+
+**Bash 패턴**:
+```bash
+date '+%Y-%m-%d %A %H:%M:%S %Z'        # 현재
+date -d '2026-03-15' '+%A'              # 요일 (Linux)
+date -d '+30 days' '+%Y-%m-%d %A'       # N일 후 (Linux)
+date -j -v+30d '+%Y-%m-%d %A'           # N일 후 (macOS)
+```
+
+**Python (복잡한 계산)**:
+```bash
+python3 -c "from datetime import datetime; print((datetime(2026,12,31)-datetime(2026,2,6)).days, 'days')"
+```
+
+**Forbidden**: 날짜 암산 / 요일 추측 / 수동 영업일 계산.
+**Required**: 반드시 `date` 명령 또는 `python3`.
+
+> 전체 가이드: `src/claude/core/rules/date-calculation.md`
 
 ## Skills
 `plugins/claude-kit/skills/`에서 자동 로드. 컨텍스트에 맞는 스킬이 자동 활성화됨.

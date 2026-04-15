@@ -52,7 +52,10 @@
 | `officialSurface=hooks*` 시 | WARN | `docConstraints`에 platform/scope 제약 명시 (예: Bash 범위, Windows 비활성, experimental) |
 | `officialSurface=agents_md` 시 | WARN | `fallbackTarget=agents-guidance` 권장 |
 | `status=resolved` + `strategy=paired-direct` | INFO | 정상 paired 완료 상태 |
+| `status=resolved` + `strategy=paired-fallback` | INFO | Phase 2+ artifact 생성 완료 정상 상태 |
+| `status=resolved` + `strategy=paired-fallback` + `officialSurface=agents_md` | WARN | `src/templates/AGENTS.md.template`에 해당 component의 h3 section (`### {component}`) 존재 (artifact 무결성 검증) |
 | `status=active` + `strategy=paired-fallback` | INFO | Phase 2+ artifact 생성 후 resolved 전환 예정 |
+| `docConstraints`에 `policy-review-pending` 포함 | INFO | Phase 3 exec-policy 재검토 후보로 표시됨 (kit-validate가 자동 보고) |
 
 ## 무결성 검증
 
