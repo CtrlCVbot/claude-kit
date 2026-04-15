@@ -20,7 +20,7 @@ skipless conversion 전략을 실제 구현으로 옮길 때, 공식 문서 기�
 | Phase 0 | ✓ 반영됨 (docs) | 문서 표현 정합성 보정 | `docs/codex-sync`를 공식 문서 기준으로 교정 | direct, fallback, 검증 필요의 의미가 고정됨 |
 | Phase 1 | ✓ 완료 (commit `c794351`, `957fb8d`, 2026-04-15) | 레지스트리 정합성 회복 | stale skip 기준 제거, registry 역할 분리 | false skip 제거 |
 | Phase 2 | ✓ 완료 (commit `9cdbbbc`, `3d64eb9`, 2026-04-15) | `rule` fallback 도입 | `AGENTS.md` merge snippet, review stub 생성 | guidance-style rule이 무산출물 skip으로 남지 않음 |
-| Phase 3 | 대기 | `hook` fallback 도입 | `session-wrap-suggest` 재평가, hook scope 반영 | runtime-bound hook 손실 축소 |
+| Phase 3 | ✓ 완료 (commit `ce8b6f1`, 2026-04-15) | `hook` fallback 도입 | `session-wrap-suggest` 재평가, hook scope 반영 | runtime-bound hook 손실 축소 |
 | Phase 4 | 대기 | sync pipeline 확장 | `/kit-analyze`, `/kit-convert`, `/kit-sync` 상태 모델과 evidence 기록 추가 | `fallback` / `review-needed` 집계 가능 |
 | Phase 5 | 대기 | runtime 검증과 audit | dry-run, sample conversion, 문서/코드 정합성 점검 | rollout 가능 여부 결정 |
 
@@ -116,24 +116,39 @@ skipless conversion 전략을 실제 구현으로 옮길 때, 공식 문서 기�
 - kit-analyze 출력 표 4-tier 컬럼 정식 분리 (paired-direct/fallback/review/blocked) — Phase 4
 - Anti-Rationalization 표 추가 row 보강 (선택) — Phase 4 (06-phase2-feedback-review.md I4)
 
-### 4.4 Phase 3: Hook fallback 도입
+### 4.4 Phase 3: Hook fallback 도입 — ✓ 완료 (2026-04-15)
 
-대상 파일:
+> 반영 commit: `ce8b6f1` (feat/codex-sync — Hook fallback).
+> 회고와 후속 의무는 [07-phase3-feedback-review.md](./07-phase3-feedback-review.md) 참조.
 
-- `scripts/codex-hook-compat.js`
-- `.claude/skills/kit-converter/references/conversion-rules.md`
-- fallback 대상 파일들
+대상 파일 (실제 변경됨):
 
-주요 작업:
+- `src/claude/core/skills/session-wrap-suggest/SKILL.md` (NEW) — EX-001 fallback artifact ✓
+- `src/exception-registry.json` — EX-001 status active → resolved + EX-007 docConstraints Phase 3 review note ✓
+- `.claude/skills/kit-converter/references/conversion-rules.md` — Hook 분류 표 9 hooks + Bash 범위/Stop 공식/Windows 제약/Platform 주의사항 ✓
+- `.claude/skills/kit-validation/references/schema-exception-registry.md` — skill fallbackTarget WARN row ✓
+- `.claude/skills/kit-converter/references/skip-registry.md` — session-wrap-suggest resolved + skill 경로 명시 ✓
 
-- `Stop` hook 존재 여부와 Claude 상태 파일 의존을 분리해 분류
-- `PostToolUse`의 `Bash` 전용 범위를 고려해 hook 설명과 direct 판정을 조정
-- Windows hook 제한을 고려해 platform note를 추가
-- `session-wrap-suggest`의 target을 hook candidate, skill, command, review-needed 중 하나로 명시
+주요 작업 (완료):
 
-완료 기준:
+- `Stop` hook 존재 vs Claude 상태 파일 의존 분리 분류 ✓ (conversion-rules.md JSDoc 보강)
+- `PostToolUse`의 `Bash` 전용 범위 반영 ✓
+- Windows hook 제한 platform note 추가 ✓
+- `session-wrap-suggest` target = skill로 명시 ✓ (skill artifact 생성)
 
-- runtime-bound hook이 무조건 `blocked`가 아니라 `paired-fallback` 또는 `paired-review`로 이동한다
+완료 기준 (충족):
+
+- runtime-bound hook이 무조건 `blocked`가 아니라 `paired-fallback`(skill artifact)으로 이동 ✓
+- HOOK_PORTABILITY 7 hooks 미추가 (Plan agent 권장 deviation): Phase 4 codex-portability.json이 full manifest 담당 예정
+- 모든 8 exception entries가 resolved 상태 (Phase 3 후 active 0건)
+
+후속 의무 (Phase 4+ 이연):
+
+- T18 setup.js의 SRC_CODEX 우선 사용 (Phase 1 후속 의무, 08-phase4-codex-implementation.md T18)
+- codex-portability.json manifest 도입 — Phase 4
+- 7개 informational paired-direct hook 정식 등록 — Phase 4 codex-portability.json
+- session-wrap-suggest skill의 Codex 자동 호출 메커니즘 — Phase 4 별도 가이드
+- EX-007 exec-policy split — Phase 4+ (evidence 더 모일 때)
 
 ### 4.5 Phase 4: Pipeline 확장
 

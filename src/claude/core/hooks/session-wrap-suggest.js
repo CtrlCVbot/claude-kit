@@ -3,6 +3,11 @@
  * 세션에서 30회 이상 도구 호출 시 /session-wrap을 제안한다.
  * 세션당 1회만 제안 (마커 파일로 중복 방지).
  * 차단하지 않음 (항상 exit 0).
+ *
+ * Codex fallback artifact: src/claude/core/skills/session-wrap-suggest/SKILL.md
+ *   (EX-001 paired-fallback / fallbackTarget=skill, codex-sync Phase 3)
+ *   Codex runtime은 ~/.claude/.session-stats.json + tmpdir 마커 의존을 재현 불가하므로
+ *   동일 의도(threshold-기반 1회 제안)를 runtime-independent skill로 보존한다.
  */
 'use strict';
 

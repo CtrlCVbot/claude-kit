@@ -34,7 +34,7 @@ description: |
 
 | # | 스키마 | 대상 | 핵심 검증 |
 |---|--------|------|-----------|
-| 10 | schema-exception-registry.md | `src/exception-registry.json` | $schema, entries, 필수 필드, id 형식, status enum (active/resolved/expired/revoked), Phase 1 SSOT 필드 (strategy/officialSurface/evidenceLevel/docConstraints/fallbackTarget), 조건부 무결성 (paired-direct sibling 존재, paired-fallback fallbackTarget 필수, hooks platform 제약), Phase 2 artifact 무결성 (paired-fallback resolved + agents_md → AGENTS.md.template h3 존재 검증), policy-review-pending INFO |
+| 10 | schema-exception-registry.md | `src/exception-registry.json` | $schema, entries, 필수 필드, id 형식, status enum (active/resolved/expired/revoked), Phase 1 SSOT 필드 (strategy/officialSurface/evidenceLevel/docConstraints/fallbackTarget), 조건부 무결성 (paired-direct sibling 존재, paired-fallback fallbackTarget 필수, hooks platform 제약), Phase 2 artifact 무결성 (paired-fallback resolved + agents_md → AGENTS.md.template h3 존재 검증), Phase 3 hook fallback artifact 무결성 (paired-fallback resolved + skill fallbackTarget → src/claude/{domain}/skills/{component}/SKILL.md 존재 검증), policy-review-pending INFO |
 
 ## 검증 수준
 
