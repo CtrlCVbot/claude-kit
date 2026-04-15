@@ -146,9 +146,32 @@
         "AGENTS.md is the official instruction surface",
         "policy-style sentences may become exec-policy candidates later",
         "policy-review-pending: Phase 3 exec-policy reclassification candidate",
-        "Phase 3 review (2026-04-15): exec-policy split deferred to Phase 4+. Candidates: 'No hardcoded secrets' (auto-detectable via regex pre-commit), 'Rate limiting on all endpoints' (runtime check). Non-candidates (guidance only): input validation patterns, SQL injection prevention, XSS/CSRF, auth/authz, error filtering, response protocol, remote session security."
+        "Phase 3 review (2026-04-15): exec-policy split deferred to Phase 4+. Candidates: 'No hardcoded secrets' (auto-detectable via regex pre-commit), 'Rate limiting on all endpoints' (runtime check). Non-candidates (guidance only): input validation patterns, SQL injection prevention, XSS/CSRF, auth/authz, error filtering, response protocol, remote session security.",
+        "policy-review-completed: 'No hardcoded secrets' → EX-009로 분리 (paired-direct / rules). 'Rate limiting'은 runtime check으로 guidance 유지. 나머지 6건은 guidance only 확정."
       ],
       "fallbackTarget": "agents-guidance"
+    },
+    {
+      "id": "EX-009",
+      "component": "security-no-hardcoded-secrets",
+      "category": "codex-conversion",
+      "rule": "rule-direct",
+      "detail": "EX-007 (security) exec-policy split 결과. 'No hardcoded secrets' 정책은 Codex Rules (exec/approval policy)의 forbidden 카테고리에 자연 매핑. pre-commit regex 패턴으로 자동 감지 가능.",
+      "reason": "Codex Rules는 sandbox 밖 명령 실행 정책 제어용. 비밀 하드코딩 금지는 exec-policy (forbidden) 의미에 부합. AGENTS.md의 security 섹션은 guidance로 유지하되, 이 항목은 Codex Rules direct 후보로 분리.",
+      "approvedBy": "maintainer",
+      "approvedDate": "2026-04-15",
+      "expiresDate": null,
+      "status": "active",
+      "strategy": "paired-direct",
+      "officialSurface": "rules",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "Codex Rules format: allow/prompt/forbidden policy",
+        "hardcoded secret detection via regex is well-established pattern",
+        "actual Codex Rules file format (.rules) requires official documentation verification",
+        "split from EX-007 security (Phase 3 review → cross-phase implementation)"
+      ],
+      "fallbackTarget": null
     },
     {
       "id": "EX-008",

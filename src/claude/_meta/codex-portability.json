@@ -8,10 +8,36 @@
     "hook-portability-runtime": "scripts/codex-hook-compat.js (HOOK_PORTABILITY)"
   },
   "vocabulary": {
-    "strategy": ["paired-direct", "paired-fallback", "paired-review", "blocked"],
-    "evidenceLevel": ["공식 지원", "우회 가능", "추정", "검증 필요"],
-    "officialSurface": ["hooks", "hooks.stop", "hooks.pre", "hooks.post", "rules", "agents_md", "skills", "subagents", "cli"],
-    "fallbackTarget": ["skill", "agents-guidance", "command", "wrapper", null]
+    "strategy": [
+      "paired-direct",
+      "paired-fallback",
+      "paired-review",
+      "blocked"
+    ],
+    "evidenceLevel": [
+      "공식 지원",
+      "우회 가능",
+      "추정",
+      "검증 필요"
+    ],
+    "officialSurface": [
+      "hooks",
+      "hooks.stop",
+      "hooks.pre",
+      "hooks.post",
+      "rules",
+      "agents_md",
+      "skills",
+      "subagents",
+      "cli"
+    ],
+    "fallbackTarget": [
+      "skill",
+      "agents-guidance",
+      "command",
+      "wrapper",
+      null
+    ]
   },
   "entries": [
     {
@@ -20,7 +46,9 @@
       "domain": "core",
       "strategy": "paired-direct",
       "officialSurface": "hooks",
-      "officialBasis": ["https://developers.openai.com/codex/hooks"],
+      "officialBasis": [
+        "https://developers.openai.com/codex/hooks"
+      ],
       "evidenceLevel": "검증 필요",
       "docConstraints": [
         "prompt-side validation only",
@@ -40,7 +68,9 @@
       "domain": "core",
       "strategy": "paired-fallback",
       "officialSurface": "hooks.stop",
-      "officialBasis": ["https://developers.openai.com/codex/hooks"],
+      "officialBasis": [
+        "https://developers.openai.com/codex/hooks"
+      ],
       "evidenceLevel": "검증 필요",
       "docConstraints": [
         "Stop event is officially documented in Codex Hooks",
@@ -60,14 +90,14 @@
       "domain": "core",
       "strategy": "paired-direct",
       "officialSurface": "hooks.post",
-      "evidenceLevel": "추정",
+      "evidenceLevel": "검증 필요",
       "docConstraints": [
-        "PostToolUse Edit|Write matcher: Codex runtime에서 동작하지만 공식 보장은 Bash 우선"
+        "PostToolUse Edit|Write matcher: 현재 Codex runtime은 Bash만 emit하므로 Edit|Write matcher는 미동작 (공식 문서 확인 2026-04-15). 향후 emit 범위 확대 시 자동 동작 가능"
       ],
       "fallbackTarget": null,
       "claudeSource": "src/claude/core/hooks/code-quality-reminder.js",
       "codexSource": null,
-      "confidence": "추정 (Phase 4 informational)"
+      "confidence": "검증 필요 (공식 문서 확인 2026-04-15: Edit|Write matcher 미동작 on Codex)"
     },
     {
       "identity": "security-auto-trigger",
@@ -75,12 +105,14 @@
       "domain": "core",
       "strategy": "paired-direct",
       "officialSurface": "hooks.post",
-      "evidenceLevel": "추정",
-      "docConstraints": ["PostToolUse Edit|Write matcher: 공식 보장은 Bash 우선"],
+      "evidenceLevel": "검증 필요",
+      "docConstraints": [
+        "PostToolUse Edit|Write matcher: 현재 Codex runtime은 Bash만 emit하므로 Edit|Write matcher는 미동작 (공식 문서 확인 2026-04-15)"
+      ],
       "fallbackTarget": null,
       "claudeSource": "src/claude/core/hooks/security-auto-trigger.js",
       "codexSource": null,
-      "confidence": "추정 (Phase 4 informational)"
+      "confidence": "검증 필요 (공식 문서 확인 2026-04-15: Edit|Write matcher 미동작 on Codex)"
     },
     {
       "identity": "edit-tracker",
@@ -88,12 +120,14 @@
       "domain": "core",
       "strategy": "paired-direct",
       "officialSurface": "hooks.post",
-      "evidenceLevel": "추정",
-      "docConstraints": ["PostToolUse Edit|Write matcher: 공식 보장은 Bash 우선"],
+      "evidenceLevel": "검증 필요",
+      "docConstraints": [
+        "PostToolUse Edit|Write matcher: 현재 Codex runtime은 Bash만 emit하므로 Edit|Write matcher는 미동작 (공식 문서 확인 2026-04-15)"
+      ],
       "fallbackTarget": null,
       "claudeSource": "src/claude/core/hooks/edit-tracker.js",
       "codexSource": null,
-      "confidence": "추정 (Phase 4 informational)"
+      "confidence": "검증 필요 (공식 문서 확인 2026-04-15: Edit|Write matcher 미동작 on Codex)"
     },
     {
       "identity": "dev-db-guard",
@@ -102,7 +136,9 @@
       "strategy": "paired-direct",
       "officialSurface": "hooks.pre",
       "evidenceLevel": "공식 지원",
-      "docConstraints": ["PreToolUse Bash matcher: 공식 보장 범위"],
+      "docConstraints": [
+        "PreToolUse Bash matcher: 공식 보장 범위"
+      ],
       "fallbackTarget": null,
       "claudeSource": "src/claude/dev/hooks/dev-db-guard.js",
       "codexSource": null,
@@ -114,12 +150,14 @@
       "domain": "dev",
       "strategy": "paired-direct",
       "officialSurface": "hooks.pre",
-      "evidenceLevel": "추정",
-      "docConstraints": ["PreToolUse Edit|Write matcher: 공식 보장은 Bash 우선"],
+      "evidenceLevel": "검증 필요",
+      "docConstraints": [
+        "PreToolUse Edit|Write matcher: 현재 Codex runtime은 Bash만 emit하므로 Edit|Write matcher는 미동작 (공식 문서 확인 2026-04-15)"
+      ],
       "fallbackTarget": null,
       "claudeSource": "src/claude/dev/hooks/dev-tdd-guard.js",
       "codexSource": null,
-      "confidence": "추정 (Phase 4 informational)"
+      "confidence": "검증 필요 (공식 문서 확인 2026-04-15: Edit|Write matcher 미동작 on Codex)"
     },
     {
       "identity": "dev-feature-scope-guard",
@@ -127,12 +165,14 @@
       "domain": "dev",
       "strategy": "paired-direct",
       "officialSurface": "hooks.pre",
-      "evidenceLevel": "추정",
-      "docConstraints": ["PreToolUse Edit|Write matcher: 공식 보장은 Bash 우선"],
+      "evidenceLevel": "검증 필요",
+      "docConstraints": [
+        "PreToolUse Edit|Write matcher: 현재 Codex runtime은 Bash만 emit하므로 Edit|Write matcher는 미동작 (공식 문서 확인 2026-04-15)"
+      ],
       "fallbackTarget": null,
       "claudeSource": "src/claude/dev/hooks/dev-feature-scope-guard.js",
       "codexSource": null,
-      "confidence": "추정 (Phase 4 informational)"
+      "confidence": "검증 필요 (공식 문서 확인 2026-04-15: Edit|Write matcher 미동작 on Codex)"
     },
     {
       "identity": "plan-doc-guard",
@@ -140,12 +180,35 @@
       "domain": "plan",
       "strategy": "paired-direct",
       "officialSurface": "hooks.pre",
-      "evidenceLevel": "추정",
-      "docConstraints": ["PreToolUse Edit|Write matcher: 공식 보장은 Bash 우선"],
+      "evidenceLevel": "검증 필요",
+      "docConstraints": [
+        "PreToolUse Edit|Write matcher: 현재 Codex runtime은 Bash만 emit하므로 Edit|Write matcher는 미동작 (공식 문서 확인 2026-04-15)"
+      ],
       "fallbackTarget": null,
       "claudeSource": "src/claude/plan/hooks/plan-doc-guard.js",
       "codexSource": null,
-      "confidence": "추정 (Phase 4 informational)"
+      "confidence": "검증 필요 (공식 문서 확인 2026-04-15: Edit|Write matcher 미동작 on Codex)"
+    },
+    {
+      "identity": "security-no-hardcoded-secrets",
+      "type": "rule",
+      "domain": "core",
+      "strategy": "paired-direct",
+      "officialSurface": "rules",
+      "officialBasis": [
+        "https://developers.openai.com/codex/rules"
+      ],
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "Codex Rules format: allow/prompt/forbidden policy",
+        "hardcoded secret detection via regex is well-established pattern",
+        "actual Codex Rules file format requires official documentation verification"
+      ],
+      "fallbackTarget": null,
+      "exceptionId": "EX-009",
+      "claudeSource": "src/claude/core/rules/security.md (partial: 'No hardcoded secrets' section)",
+      "codexSource": null,
+      "confidence": "추정 (cross-phase implementation — EX-007 split)"
     },
     {
       "identity": "coding-style",
@@ -175,7 +238,9 @@
       "domain": "core",
       "strategy": "paired-fallback",
       "officialSurface": "agents_md",
-      "officialBasis": ["https://developers.openai.com/codex/guides/agents-md"],
+      "officialBasis": [
+        "https://developers.openai.com/codex/guides/agents-md"
+      ],
       "evidenceLevel": "우회 가능",
       "docConstraints": [
         "Codex Rules is exec/approval policy, not guidance",
@@ -194,7 +259,9 @@
       "domain": "core",
       "strategy": "paired-fallback",
       "officialSurface": "agents_md",
-      "officialBasis": ["https://developers.openai.com/codex/guides/agents-md"],
+      "officialBasis": [
+        "https://developers.openai.com/codex/guides/agents-md"
+      ],
       "evidenceLevel": "우회 가능",
       "docConstraints": [
         "Codex Rules is exec/approval policy, not guidance",
@@ -213,7 +280,9 @@
       "domain": "core",
       "strategy": "paired-fallback",
       "officialSurface": "agents_md",
-      "officialBasis": ["https://developers.openai.com/codex/guides/agents-md"],
+      "officialBasis": [
+        "https://developers.openai.com/codex/guides/agents-md"
+      ],
       "evidenceLevel": "우회 가능",
       "docConstraints": [
         "Codex Rules is exec/approval policy, not guidance",
@@ -256,7 +325,9 @@
       "domain": "core",
       "strategy": "paired-fallback",
       "officialSurface": "agents_md",
-      "officialBasis": ["https://developers.openai.com/codex/guides/agents-md"],
+      "officialBasis": [
+        "https://developers.openai.com/codex/guides/agents-md"
+      ],
       "evidenceLevel": "우회 가능",
       "docConstraints": [
         "Codex Rules is exec/approval policy, not guidance",
