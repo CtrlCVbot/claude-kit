@@ -1,11 +1,81 @@
 # kit-sync 실행 가이드
 
 > 75개 Claude 컴포넌트를 Codex sibling으로 전환하는 실행 가이드.
-> 이 문서를 새 세션에 붙여넣고 **"이 가이드대로 진행해줘"** 하면 됩니다.
+> 새 세션에서 이 파일 경로만 알려주면 바로 실행 가능.
 
 ---
 
-## 빠른 시작
+## 원샷 실행 (전체 한 번에)
+
+새 세션에 다음 한 줄만 입력:
+
+```
+docs/codex-sync/11-kit-sync-execution-guide.md 의 "원샷 실행" 섹션대로 75개 전체 동기화 진행해줘
+```
+
+### 실행 지침
+
+1. **사전 검증** 실행 후, 문제 없으면 중단 없이 전체 진행한다.
+2. **타입별로 `/kit-sync`를 순서대로 호출**한다: skill → agent → command → hook
+3. 각 타입 전환 후 `/kit-validate --type {타입} --target codex`로 검증한다. FAIL 시 해당 파일만 보정하고 계속 진행.
+4. **review 필요 항목** (`<!-- REVIEW NEEDED -->` 마커)은 전환 후 한꺼번에 검토한다 (중간에 멈추지 않음).
+5. **전체 완료 후** audit + sync-report를 한 번에 실행한다.
+6. **커밋은 2개만**: (1) 전체 전환 commit + (2) review 보정 + report commit.
+
+### 원샷 실행 순서
+
+```bash
+# ━━━ 1. 사전 검증 ━━━
+node scripts/audit-pairing.js && node scripts/audit-drift.js
+
+# ━━━ 2. 전체 전환 (순서: skill → agent → command → hook) ━━━
+/kit-sync --type skill
+/kit-sync --type agent      # RO 3개 auto + Write 9개 review
+/kit-sync --type command    # 단순 25개 auto + 복합 6개 review
+/kit-sync --type hook       # 호환 7개 (exception 2개 자동 스킵)
+
+# ━━━ 3. 일괄 검증 ━━━
+/kit-validate --type skill --target codex
+/kit-validate --type agent --target codex
+/kit-validate --type command --target codex
+/kit-validate --type hook --target codex
+
+# ━━━ 4. 전체 전환 커밋 ━━━
+git add src/codex/ src/pairing-registry.json
+git commit -m "feat(kit-sync): 75개 Claude 컴포넌트 Codex sibling 일괄 전환"
+
+# ━━━ 5. Review 항목 검토 ━━━
+# <!-- REVIEW NEEDED --> 마커가 있는 파일 찾기
+grep -rl "REVIEW NEEDED" src/codex/
+
+# 각 파일 검토 후 마커 제거 → 보정 사항 반영
+
+# ━━━ 6. 최종 audit + report ━━━
+node scripts/audit-pairing.js
+node scripts/audit-drift.js
+node scripts/generate-sync-report.js > docs/codex-sync/sync-report-post-conversion.md
+
+# ━━━ 7. 최종 커밋 ━━━
+git add src/codex/ src/pairing-registry.json docs/codex-sync/sync-report-post-conversion.md
+git commit -m "docs(kit-sync): review 보정 + 전환 완료 sync-report"
+```
+
+### 기대 결과
+
+```
+pairing-registry entries: 76 (1 기존 + 75 신규)
+src/codex/ 파일: ~78개
+audit-pairing: 0 FAIL, 0 WARN
+audit-drift: 0 FAIL
+```
+
+---
+
+## 단계별 실행 (안전하게 하나씩)
+
+> 위 원샷이 불안하면 이 섹션을 따라 step별로 진행.
+
+### 빠른 시작 (단계별)
 
 ```bash
 # 1. 현재 상태 확인 (30초)
