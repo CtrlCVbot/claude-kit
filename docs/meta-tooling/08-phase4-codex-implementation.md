@@ -29,6 +29,7 @@ Phase 0-3에서는 Codex install이 임시로 Claude source(`SRC_CLAUDE`)에 의
 | T15 | `partial` | kit-maintainer.md가 이미 듀얼 스캔 언급하지만 Codex 스키마/C7 미반영 |
 | T16 | `new` | kit-scaffolding SKILL.md 아직 8종만 기술 |
 | T17 | `new` | kit-validation SKILL.md 아직 5종만 기술 |
+| T18 | `new` | scripts/setup.js의 emitCodex가 SRC_CODEX 미사용 (현재 paired-direct hook도 SRC_CLAUDE에서만 읽음). codex-sync Phase 1 후속 의무. |
 
 ---
 
@@ -65,7 +66,7 @@ Layer 1: T2-T5 (4 Codex 템플릿)
 Layer 2: T6-T9 (4 Codex 스키마)
 Layer 3: T10 (kit-create.md) + T16 (kit-scaffolding SKILL.md)
 Layer 4: T11 (kit-validate.md) + T17 (kit-validation SKILL.md)
-Layer 5: T12 (kit-list.md) + T13 (kit-audit.md) + T15 (kit-maintainer.md)
+Layer 5: T12 (kit-list.md) + T13 (kit-audit.md) + T15 (kit-maintainer.md) + T18 (setup.js emitCodex)
 ```
 
 동일 Layer 내 작업은 병렬 실행 가능. Layer 간에는 반드시 순차 실행.
@@ -509,7 +510,7 @@ main();
 
 ---
 
-## 4. 수정 파일 (8개) — Before/After Diff
+## 4. 수정 파일 (9개) — Before/After Diff
 
 각 수정 파일에 대해 Edit 도구에 전달할 정확한 `old_string`과 `new_string` 파라미터를 제공한다.
 
@@ -966,9 +967,78 @@ grep "claude|codex" .claude/hooks/kit-naming-guard.js
 
 ---
 
+### T18: scripts/setup.js 수정 (emitCodex가 SRC_CODEX 우선 사용)
+
+**배경**: codex-sync Phase 1 후속 의무 (`docs/codex-sync/05-phase1-feedback-review.md` §4.1, §5 C1 참조).
+
+현재 `emitCodex` (line ~549~563)는 모든 hook을 `SRC_CLAUDE`에서만 읽는다. `output-secret-filter`처럼 `paired-direct` 상태이고 Codex sibling이 `src/codex/core/hooks/`에 별도로 존재하는 경우, Claude-only 소스를 Codex plugin으로 복사하는 회귀가 발생한다.
+
+Phase 1은 이를 우회하기 위해 `HOOK_PORTABILITY['output-secret-filter.js'].compatible`을 `false`로 두어 setup.js가 해당 hook을 건너뛰게 했다. T18는 이 우회를 해소한다.
+
+**Before** (현재 setup.js line 549~563):
+
+```javascript
+// 호환 hook JS 파일을 plugins/claude-kit/hooks/에 복사
+fs.mkdirSync(path.join(pluginRoot, 'hooks'), { recursive: true });
+for (const hookFile of compatible) {
+  for (const domain of activeDomains) {
+    const srcHook = path.join(SRC_CLAUDE, domain, 'hooks', hookFile);
+    if (fs.existsSync(srcHook)) {
+      fs.copyFileSync(srcHook, path.join(pluginRoot, 'hooks', hookFile));
+      break;
+    }
+  }
+}
+```
+
+**After**:
+
+```javascript
+const { getPortability } = require('./codex-hook-compat');
+
+// 호환 hook JS 파일을 plugins/claude-kit/hooks/에 복사
+// paired-direct hook은 src/codex/ 우선, 없으면 src/claude/ fallback
+fs.mkdirSync(path.join(pluginRoot, 'hooks'), { recursive: true });
+for (const hookFile of compatible) {
+  const meta = getPortability(hookFile);
+  const preferCodex = meta && meta.strategy === 'paired-direct';
+  const sources = preferCodex ? [SRC_CODEX, SRC_CLAUDE] : [SRC_CLAUDE];
+
+  let copied = false;
+  for (const sourceRoot of sources) {
+    if (copied) break;
+    for (const domain of activeDomains) {
+      const srcHook = path.join(sourceRoot, domain, 'hooks', hookFile);
+      if (fs.existsSync(srcHook)) {
+        fs.copyFileSync(srcHook, path.join(pluginRoot, 'hooks', hookFile));
+        copied = true;
+        break;
+      }
+    }
+  }
+}
+```
+
+**동시 변경** (`scripts/codex-hook-compat.js`):
+
+`HOOK_PORTABILITY['output-secret-filter.js'].compatible`을 `false` → `true`로 전환하고, `reason`을 `null`로 변경한다. 이 시점부터 `output-secret-filter.js`는 setup.js가 `src/codex/core/hooks/output-secret-filter.js`(dual-aware 버전)에서 읽어 plugin에 정상 복사한다.
+
+**검증**:
+
+```bash
+# 1. T18 적용 후 setup.js 실행
+node scripts/setup.js --target codex --domain core
+
+# 2. plugin에 복사된 output-secret-filter.js가 Codex 버전인지 확인 (CODEX_SANDBOX 분기 존재)
+node -e "console.log(require('fs').readFileSync('plugins/claude-kit/hooks/output-secret-filter.js','utf8').includes('CODEX_SANDBOX'))"
+# 기대: true
+```
+
+---
+
 ## 5. 검증 계획
 
-17개 작업 완료 후 아래 명령으로 검증한다. 플랫폼 중립(Bash/PowerShell 모두 작동) 기준.
+18개 작업 완료 후 아래 명령으로 검증한다. 플랫폼 중립(Bash/PowerShell 모두 작동) 기준.
 
 ### 파일 존재 검증
 
@@ -1001,6 +1071,8 @@ node -e "JSON.parse(require('fs').readFileSync('src/pairing-registry.json','utf8
 | 9 | kit-naming-guard.js | `claude|codex` 정규식 | Grep |
 | 10 | kit-scaffolding SKILL.md | `template-codex` 4+회 | Grep |
 | 11 | kit-validation SKILL.md | `schema-codex` 4+회 | Grep |
+| 12 | scripts/setup.js | `getPortability` 호출 + `SRC_CODEX` 사용 | Grep |
+| 13 | scripts/codex-hook-compat.js | `output-secret-filter.js`의 `compatible: true` | Grep |
 
 ### pairing-registry 예시 검증
 
@@ -1058,7 +1130,7 @@ feat(meta-tooling): Phase 4 Codex 통합 — 듀얼 타깃 + 페어링 레지스
 - Codex 스키마 4종 (agent, command, hook, skill)
 - src/pairing-registry.json (페어링 상태 추적)
 
-수정 8파일:
+수정 9파일:
 - kit-create: --target, --skip-codex, 페어링 레지스트리 워크플로우
 - kit-validate: --target 플래그, Codex 스키마 라우팅
 - kit-list: --target, --pairing 플래그
@@ -1067,4 +1139,5 @@ feat(meta-tooling): Phase 4 Codex 통합 — 듀얼 타깃 + 페어링 레지스
 - kit-maintainer: Investigation_Protocol 듀얼 스캔 + C7
 - kit-scaffolding SKILL.md: 12개 템플릿 목록
 - kit-validation SKILL.md: 9개 스키마 목록
+- scripts/setup.js + codex-hook-compat.js: emitCodex의 SRC_CODEX 우선 사용 (codex-sync Phase 1 후속 의무, T18)
 ```

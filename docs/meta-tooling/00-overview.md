@@ -155,4 +155,4 @@ kit-maintainer 에이전트
 | [11-consistency-tooling.md](11-consistency-tooling.md) | 일관성 유지 (/kit-sync, C8 교차 참조, C9 갭 탐지, exception-registry) |
 | [12-implementation-plan.md](12-implementation-plan.md) | Phase 4b/4c 전체 구현 계획 (4 Wave, 15작업) |
 | [13-sync-approval-and-full-port.md](13-sync-approval-and-full-port.md) | kit-sync 승인 게이트 + codex-skip 완전 이식 대안 |
-| [feedback-review.md](feedback-review.md) | 피드백 리뷰 + Codex 통합 반영 현황 |
+| [09-phase4-feedback-review.md](09-phase4-feedback-review.md) | 피드백 리뷰 + Codex 통합 반영 현황 |
