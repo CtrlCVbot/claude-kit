@@ -17,7 +17,7 @@ description: |
 | command | Entry Flow .md | `src/codex/{domain}/commands/{identity}.md` | required sibling |
 | skill | portable .md | `src/codex/{domain}/skills/{identity}/SKILL.md` | optional sibling |
 | hook | .js + 등록 주석 | `src/codex/{domain}/hooks/{identity}.js` | optional sibling |
-| rule | N/A | None | codex-skip (AGENTS.md guidance) |
+| rule | N/A | None | paired-fallback (AGENTS.md.template inline merge — discrete sibling 없음, exception-registry status=resolved로 추적) |
 
 ## 템플릿 매핑
 

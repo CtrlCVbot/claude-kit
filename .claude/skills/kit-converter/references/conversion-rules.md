@@ -75,12 +75,16 @@
 7. pairing-registry에 paired 등록
 ```
 
-## Rule 처리 (skip)
+## Rule 처리 (paired-fallback / AGENTS.md merge)
+
+> Codex `Rules`는 exec/approval policy다. Claude의 guidance-style rule은 Codex 공식 instruction surface인 `AGENTS.md`로 흡수한다 (codex-sync Phase 2).
 
 ```
-1. 변환 파일 생성하지 않음
-2. 로그: [skip] {identity}: claude-origin shared (AGENTS.md guidance)
-3. pairing-registry에 codex-skip + reason: "claude-origin shared guidance" 등록
+1. discrete 변환 파일을 생성하지 않는다 — rule artifact는 src/templates/AGENTS.md.template의 ## 핵심 규칙 섹션 inline merge로 표현
+2. 로그: [fallback] {identity}: paired-fallback / AGENTS.md merge (artifact: src/templates/AGENTS.md.template ### {identity})
+3. pairing-registry에 entry 추가하지 않음 — rule은 discrete sibling 파일이 아니라 inline merge snippet이므로 pairing-registry 설계 모델과 맞지 않음. 추적은 src/exception-registry.json strategy=paired-fallback + status=resolved로 충분
+4. status 전환: artifact가 AGENTS.md.template에 존재하면 exception-registry.status를 active → resolved로 전환
+5. drift 감지: 향후 Phase 4 audit이 src/claude/core/rules/{name}.md와 AGENTS.md.template의 해당 h3 section 간 drift를 INFO로 보고
 ```
 
 ## 공통 규칙

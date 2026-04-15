@@ -66,7 +66,7 @@ Claude 자산을 Codex 형식으로 변환하여 `src/codex/`에 생성하고 pa
    - **Agent**: XML Agent_Prompt → 헤딩 기반 변환 (agent-section-mapping.md 참조)
    - **Command**: 슬래시 커맨드 → Entry Flow 변환
    - **Hook**: JS 복사 + Codex 등록 주석 추가
-   - **Rule**: skip 처리 (로그만)
+   - **Rule**: paired-fallback (`AGENTS.md.template` merge artifact 활용, 별도 변환 파일 생성 안 함)
 
 ### Phase 4: 페어링 레지스트리 갱신
 

@@ -18,16 +18,16 @@
 
 ## Rule fallback (6개)
 
-> Codex `Rules`는 exec/approval policy다. Claude의 guidance-style rule과 의미가 다르므로 1:1 매핑하지 않고 `AGENTS.md` (공식 instruction surface)로 흡수한다. Phase 2 fallback artifact 생성 후 status를 resolved로 전환 예정.
+> Codex `Rules`는 exec/approval policy다. Claude의 guidance-style rule과 의미가 다르므로 1:1 매핑하지 않고 `AGENTS.md` (공식 instruction surface)로 흡수한다. **Phase 2에서 6개 rule 모두 status=resolved 전환 완료** — `src/templates/AGENTS.md.template` ## 핵심 규칙 섹션에 6개 h3로 Medium merge 됨.
 
-| Identity | 도메인 | strategy | officialSurface | fallbackTarget | 사유 |
-|----------|--------|----------|-----------------|----------------|------|
-| coding-style | core | paired-fallback | agents_md | agents-guidance | claude-origin shared guidance. AGENTS.md 머지 대상 |
-| date-calculation | core | paired-fallback | agents_md | agents-guidance | claude-origin shared guidance. command/skill 호출 안내 동반 |
-| golden-principles | core | paired-fallback | agents_md | agents-guidance | claude-origin shared guidance. principles 섹션 머지 |
-| interaction | core | paired-fallback | agents_md | agents-guidance | claude-origin shared guidance. interaction 섹션 머지 |
-| security | core | paired-fallback | agents_md | agents-guidance | claude-origin shared guidance. 정책성 문구는 Phase 2에서 review-needed 검토 |
-| verification | core | paired-fallback | agents_md | agents-guidance | claude-origin shared guidance. verification command/skill 연결 권장 |
+| Identity | 도메인 | strategy | status | officialSurface | fallbackTarget | 사유 |
+|----------|--------|----------|--------|-----------------|----------------|------|
+| coding-style | core | paired-fallback | resolved | agents_md | agents-guidance | AGENTS.md.template ### coding-style merged (Phase 2). EX-003 |
+| date-calculation | core | paired-fallback | resolved | agents_md | agents-guidance | AGENTS.md.template ### date-calculation merged. command/skill 호출 안내 동반. EX-004 |
+| golden-principles | core | paired-fallback | resolved | agents_md | agents-guidance | AGENTS.md.template ### golden-principles merged. 12 원칙 + Anti-Rationalization 표 일부. EX-005 |
+| interaction | core | paired-fallback | resolved | agents_md | agents-guidance | AGENTS.md.template ### interaction merged. State Assumptions + Analogies + Web Fetching 표. EX-006 |
+| security | core | paired-fallback | resolved | agents_md | agents-guidance | AGENTS.md.template ### security merged. 정책성 문구는 Phase 3 exec-policy 후보 (policy-review-pending). EX-007 |
+| verification | core | paired-fallback | resolved | agents_md | agents-guidance | AGENTS.md.template ### verification merged. Iron Law + Gate Function + Required Evidence + Red Flags. EX-008 |
 
 ## 총계
 

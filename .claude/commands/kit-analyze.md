@@ -51,7 +51,7 @@ argument-hint: '[--domain <domain>] [--type <type>] [--verbose]'
    - **command**: frontmatter 존재 + 3개 이상 Phase/Step → `review`, 아니면 `auto`
    - **skill**: 항상 `auto`
    - **hook**: `kit-converter/references/skip-registry.md`에 등록 → `skip`, 아니면 `auto`
-   - **rule**: 항상 `skip` (claude-origin shared)
+   - **rule**: 항상 `paired-fallback` (artifact는 `src/templates/AGENTS.md.template`에 inline merge, 별도 변환 파일 없음)
 
 ### Phase 4: 리포트 출력
 
@@ -73,7 +73,12 @@ argument-hint: '[--domain <domain>] [--type <type>] [--verbose]'
   | agent   | 12   | 6    | 6      | 0    |
   | command | 31   | ~15  | ~16    | 0    |
   | hook    | 9    | 7    | 0      | 2    |
-  | rule    | 6    | 0    | 0      | 6    |
+  | rule    | 6    | 0    | 0      | 6    |  ← Note 1
+  
+  Note 1: rule 6개는 codex-sync Phase 2 이후 실제로는 paired-fallback (AGENTS.md 
+  inline merge) 상태다. 현재 4-tier(direct/fallback/review/blocked) 컬럼이 도입되기 
+  전까지 Skip 컬럼은 non-direct 항목을 포괄한다. Phase 4에서 Fallback 컬럼이 
+  분리될 예정.
 
   === 상세 (--verbose) ===
   | Identity            | Type    | Domain | Difficulty | Codex 존재 | 비고     |
