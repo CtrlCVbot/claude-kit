@@ -11,10 +11,10 @@
 
 ## Hook 비-direct (2개)
 
-| Identity | 도메인 | strategy | officialSurface | fallbackTarget | 사유 |
-|----------|--------|----------|-----------------|----------------|------|
-| output-secret-filter | core | paired-direct | hooks | — | Codex sibling 생성 완료. prompt-side validation + Bash-scoped post-processing 범위 명시. EX-002 resolved. |
-| session-wrap-suggest | core | paired-fallback | hooks.stop | skill | `Stop` event 자체는 Codex 공식 지원이나 Claude `~/.claude/.session-stats.json` 상태 파일 + tmpdir 마커 의존을 Codex runtime에서 1:1 재현 불가. EX-001 active. |
+| Identity | 도메인 | strategy | status | officialSurface | fallbackTarget | 사유 |
+|----------|--------|----------|--------|-----------------|----------------|------|
+| output-secret-filter | core | paired-direct | resolved | hooks | — | Codex sibling 생성 완료 (`src/codex/core/hooks/output-secret-filter.js`). prompt-side validation + Bash-scoped post-processing 범위 명시. EX-002 resolved (Phase 1). |
+| session-wrap-suggest | core | paired-fallback | resolved | hooks.stop | skill | `Stop` event 자체는 Codex 공식 지원이나 Claude `~/.claude/.session-stats.json` 상태 파일 + tmpdir 마커 의존을 Codex runtime에서 1:1 재현 불가. EX-001 resolved (Phase 3): skill artifact `src/claude/core/skills/session-wrap-suggest/SKILL.md` 생성. |
 
 ## Rule fallback (6개)
 

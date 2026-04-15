@@ -7,19 +7,20 @@
       "component": "session-wrap-suggest",
       "category": "codex-conversion",
       "rule": "hook-fallback",
-      "detail": "Stop hook은 Codex 공식 지원이지만 ~/.claude/.session-stats.json 상태 의존이 재현 불가",
-      "reason": "Stop event 자체는 paired-direct 후보이나, Claude 세션 통계 파일과 tmpdir 마커 의존성을 Codex runtime에서 1:1 재현할 수 없어 skill fallback으로 의도 보존",
+      "detail": "Stop hook은 Codex 공식 지원이지만 ~/.claude/.session-stats.json 상태 의존이 재현 불가. Phase 3 (commit hash TBD)에서 src/claude/core/skills/session-wrap-suggest/SKILL.md skill artifact 생성으로 의도 보존 — runtime-independent invocation pattern.",
+      "reason": "Stop event 자체는 paired-direct 후보이나, Claude 세션 통계 파일과 tmpdir 마커 의존성을 Codex runtime에서 1:1 재현할 수 없어 skill fallback으로 의도 보존. Phase 3 skill artifact 생성 완료.",
       "approvedBy": "maintainer",
       "approvedDate": "2026-04-09",
       "expiresDate": null,
-      "status": "active",
+      "status": "resolved",
       "strategy": "paired-fallback",
       "officialSurface": "hooks.stop",
       "evidenceLevel": "검증 필요",
       "docConstraints": [
         "Stop event is officially documented in Codex Hooks",
         "Claude session-stats.json path not reproducible on Codex",
-        "tmpdir marker semantics not documented"
+        "tmpdir marker semantics not documented",
+        "skill artifact at src/claude/core/skills/session-wrap-suggest/SKILL.md (Phase 3)"
       ],
       "fallbackTarget": "skill"
     },
@@ -144,7 +145,8 @@
         "Codex Rules is exec/approval policy, not guidance",
         "AGENTS.md is the official instruction surface",
         "policy-style sentences may become exec-policy candidates later",
-        "policy-review-pending: Phase 3 exec-policy reclassification candidate"
+        "policy-review-pending: Phase 3 exec-policy reclassification candidate",
+        "Phase 3 review (2026-04-15): exec-policy split deferred to Phase 4+. Candidates: 'No hardcoded secrets' (auto-detectable via regex pre-commit), 'Rate limiting on all endpoints' (runtime check). Non-candidates (guidance only): input validation patterns, SQL injection prevention, XSS/CSRF, auth/authz, error filtering, response protocol, remote session security."
       ],
       "fallbackTarget": "agents-guidance"
     },
