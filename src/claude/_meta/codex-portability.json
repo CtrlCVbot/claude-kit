@@ -1,0 +1,273 @@
+{
+  "$schema": "codex-portability-v1",
+  "description": "Codex 전환 portability SSOT manifest (codex-sync Phase 4). exception-registry는 예외/승인 흐름, codex-portability는 component별 전략/공식 근거. /kit-analyze 4-tier 출력의 SSOT.",
+  "generated": "2026-04-15",
+  "sources": {
+    "exception-registry": "src/exception-registry.json",
+    "pairing-registry": "src/pairing-registry.json",
+    "hook-portability-runtime": "scripts/codex-hook-compat.js (HOOK_PORTABILITY)"
+  },
+  "vocabulary": {
+    "strategy": ["paired-direct", "paired-fallback", "paired-review", "blocked"],
+    "evidenceLevel": ["공식 지원", "우회 가능", "추정", "검증 필요"],
+    "officialSurface": ["hooks", "hooks.stop", "hooks.pre", "hooks.post", "rules", "agents_md", "skills", "subagents", "cli"],
+    "fallbackTarget": ["skill", "agents-guidance", "command", "wrapper", null]
+  },
+  "entries": [
+    {
+      "identity": "output-secret-filter",
+      "type": "hook",
+      "domain": "core",
+      "strategy": "paired-direct",
+      "officialSurface": "hooks",
+      "officialBasis": ["https://developers.openai.com/codex/hooks"],
+      "evidenceLevel": "검증 필요",
+      "docConstraints": [
+        "prompt-side validation only",
+        "Bash-scoped post-processing only",
+        "experimental on Codex",
+        "Windows hooks currently disabled"
+      ],
+      "fallbackTarget": null,
+      "exceptionId": "EX-002",
+      "claudeSource": "src/claude/core/hooks/output-secret-filter.js",
+      "codexSource": "src/codex/core/hooks/output-secret-filter.js",
+      "confidence": "확정 (Phase 1 + T18)"
+    },
+    {
+      "identity": "session-wrap-suggest",
+      "type": "hook",
+      "domain": "core",
+      "strategy": "paired-fallback",
+      "officialSurface": "hooks.stop",
+      "officialBasis": ["https://developers.openai.com/codex/hooks"],
+      "evidenceLevel": "검증 필요",
+      "docConstraints": [
+        "Stop event is officially documented in Codex Hooks",
+        "Claude session-stats.json path not reproducible on Codex",
+        "tmpdir marker semantics not documented"
+      ],
+      "fallbackTarget": "skill",
+      "fallbackArtifact": "src/claude/core/skills/session-wrap-suggest/SKILL.md",
+      "exceptionId": "EX-001",
+      "claudeSource": "src/claude/core/hooks/session-wrap-suggest.js",
+      "codexSource": null,
+      "confidence": "확정 (Phase 3)"
+    },
+    {
+      "identity": "code-quality-reminder",
+      "type": "hook",
+      "domain": "core",
+      "strategy": "paired-direct",
+      "officialSurface": "hooks.post",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "PostToolUse Edit|Write matcher: Codex runtime에서 동작하지만 공식 보장은 Bash 우선"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/core/hooks/code-quality-reminder.js",
+      "codexSource": null,
+      "confidence": "추정 (Phase 4 informational)"
+    },
+    {
+      "identity": "security-auto-trigger",
+      "type": "hook",
+      "domain": "core",
+      "strategy": "paired-direct",
+      "officialSurface": "hooks.post",
+      "evidenceLevel": "추정",
+      "docConstraints": ["PostToolUse Edit|Write matcher: 공식 보장은 Bash 우선"],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/core/hooks/security-auto-trigger.js",
+      "codexSource": null,
+      "confidence": "추정 (Phase 4 informational)"
+    },
+    {
+      "identity": "edit-tracker",
+      "type": "hook",
+      "domain": "core",
+      "strategy": "paired-direct",
+      "officialSurface": "hooks.post",
+      "evidenceLevel": "추정",
+      "docConstraints": ["PostToolUse Edit|Write matcher: 공식 보장은 Bash 우선"],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/core/hooks/edit-tracker.js",
+      "codexSource": null,
+      "confidence": "추정 (Phase 4 informational)"
+    },
+    {
+      "identity": "dev-db-guard",
+      "type": "hook",
+      "domain": "dev",
+      "strategy": "paired-direct",
+      "officialSurface": "hooks.pre",
+      "evidenceLevel": "공식 지원",
+      "docConstraints": ["PreToolUse Bash matcher: 공식 보장 범위"],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/dev/hooks/dev-db-guard.js",
+      "codexSource": null,
+      "confidence": "확정 (Phase 4 — Bash 매처가 공식 범위)"
+    },
+    {
+      "identity": "dev-tdd-guard",
+      "type": "hook",
+      "domain": "dev",
+      "strategy": "paired-direct",
+      "officialSurface": "hooks.pre",
+      "evidenceLevel": "추정",
+      "docConstraints": ["PreToolUse Edit|Write matcher: 공식 보장은 Bash 우선"],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/dev/hooks/dev-tdd-guard.js",
+      "codexSource": null,
+      "confidence": "추정 (Phase 4 informational)"
+    },
+    {
+      "identity": "dev-feature-scope-guard",
+      "type": "hook",
+      "domain": "dev",
+      "strategy": "paired-direct",
+      "officialSurface": "hooks.pre",
+      "evidenceLevel": "추정",
+      "docConstraints": ["PreToolUse Edit|Write matcher: 공식 보장은 Bash 우선"],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/dev/hooks/dev-feature-scope-guard.js",
+      "codexSource": null,
+      "confidence": "추정 (Phase 4 informational)"
+    },
+    {
+      "identity": "plan-doc-guard",
+      "type": "hook",
+      "domain": "plan",
+      "strategy": "paired-direct",
+      "officialSurface": "hooks.pre",
+      "evidenceLevel": "추정",
+      "docConstraints": ["PreToolUse Edit|Write matcher: 공식 보장은 Bash 우선"],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/plan/hooks/plan-doc-guard.js",
+      "codexSource": null,
+      "confidence": "추정 (Phase 4 informational)"
+    },
+    {
+      "identity": "coding-style",
+      "type": "rule",
+      "domain": "core",
+      "strategy": "paired-fallback",
+      "officialSurface": "agents_md",
+      "officialBasis": [
+        "https://developers.openai.com/codex/guides/agents-md",
+        "https://developers.openai.com/codex/rules"
+      ],
+      "evidenceLevel": "우회 가능",
+      "docConstraints": [
+        "Codex Rules is exec/approval policy, not guidance",
+        "AGENTS.md is the official instruction surface"
+      ],
+      "fallbackTarget": "agents-guidance",
+      "fallbackArtifact": "src/templates/AGENTS.md.template ### coding-style",
+      "exceptionId": "EX-003",
+      "claudeSource": "src/claude/core/rules/coding-style.md",
+      "codexSource": null,
+      "confidence": "확정 (Phase 2)"
+    },
+    {
+      "identity": "date-calculation",
+      "type": "rule",
+      "domain": "core",
+      "strategy": "paired-fallback",
+      "officialSurface": "agents_md",
+      "officialBasis": ["https://developers.openai.com/codex/guides/agents-md"],
+      "evidenceLevel": "우회 가능",
+      "docConstraints": [
+        "Codex Rules is exec/approval policy, not guidance",
+        "AGENTS.md is the official instruction surface"
+      ],
+      "fallbackTarget": "agents-guidance",
+      "fallbackArtifact": "src/templates/AGENTS.md.template ### date-calculation",
+      "exceptionId": "EX-004",
+      "claudeSource": "src/claude/core/rules/date-calculation.md",
+      "codexSource": null,
+      "confidence": "확정 (Phase 2)"
+    },
+    {
+      "identity": "golden-principles",
+      "type": "rule",
+      "domain": "core",
+      "strategy": "paired-fallback",
+      "officialSurface": "agents_md",
+      "officialBasis": ["https://developers.openai.com/codex/guides/agents-md"],
+      "evidenceLevel": "우회 가능",
+      "docConstraints": [
+        "Codex Rules is exec/approval policy, not guidance",
+        "AGENTS.md is the official instruction surface"
+      ],
+      "fallbackTarget": "agents-guidance",
+      "fallbackArtifact": "src/templates/AGENTS.md.template ### golden-principles",
+      "exceptionId": "EX-005",
+      "claudeSource": "src/claude/core/rules/golden-principles.md",
+      "codexSource": null,
+      "confidence": "확정 (Phase 2)"
+    },
+    {
+      "identity": "interaction",
+      "type": "rule",
+      "domain": "core",
+      "strategy": "paired-fallback",
+      "officialSurface": "agents_md",
+      "officialBasis": ["https://developers.openai.com/codex/guides/agents-md"],
+      "evidenceLevel": "우회 가능",
+      "docConstraints": [
+        "Codex Rules is exec/approval policy, not guidance",
+        "AGENTS.md is the official instruction surface"
+      ],
+      "fallbackTarget": "agents-guidance",
+      "fallbackArtifact": "src/templates/AGENTS.md.template ### interaction",
+      "exceptionId": "EX-006",
+      "claudeSource": "src/claude/core/rules/interaction.md",
+      "codexSource": null,
+      "confidence": "확정 (Phase 2)"
+    },
+    {
+      "identity": "security",
+      "type": "rule",
+      "domain": "core",
+      "strategy": "paired-fallback",
+      "officialSurface": "agents_md",
+      "officialBasis": [
+        "https://developers.openai.com/codex/guides/agents-md",
+        "https://developers.openai.com/codex/rules"
+      ],
+      "evidenceLevel": "우회 가능",
+      "docConstraints": [
+        "Codex Rules is exec/approval policy, not guidance",
+        "AGENTS.md is the official instruction surface",
+        "policy-style sentences may become exec-policy candidates later",
+        "policy-review-pending: Phase 3 review identified hardcoded-secrets and rate-limit as exec-policy candidates; split deferred to Phase 4+"
+      ],
+      "fallbackTarget": "agents-guidance",
+      "fallbackArtifact": "src/templates/AGENTS.md.template ### security",
+      "exceptionId": "EX-007",
+      "claudeSource": "src/claude/core/rules/security.md",
+      "codexSource": null,
+      "confidence": "확정 (Phase 2 + Phase 3 review)"
+    },
+    {
+      "identity": "verification",
+      "type": "rule",
+      "domain": "core",
+      "strategy": "paired-fallback",
+      "officialSurface": "agents_md",
+      "officialBasis": ["https://developers.openai.com/codex/guides/agents-md"],
+      "evidenceLevel": "우회 가능",
+      "docConstraints": [
+        "Codex Rules is exec/approval policy, not guidance",
+        "AGENTS.md is the official instruction surface"
+      ],
+      "fallbackTarget": "agents-guidance",
+      "fallbackArtifact": "src/templates/AGENTS.md.template ### verification",
+      "exceptionId": "EX-008",
+      "claudeSource": "src/claude/core/rules/verification.md",
+      "codexSource": null,
+      "confidence": "확정 (Phase 2)"
+    }
+  ]
+}

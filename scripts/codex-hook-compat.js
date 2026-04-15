@@ -40,11 +40,11 @@ const HOOK_PORTABILITY = {
       'Windows hooks currently disabled',
     ],
     fallbackTarget: null,
-    // setup.js 영향 보존: src/claude/ 버전은 Claude-only(CLAUDE_REMOTE_SESSION 게이트)이고,
-    // Codex 전용 sibling이 src/codex/core/hooks/output-secret-filter.js 에 존재한다.
-    // setup.js 가 src/codex/ 에서 직접 읽도록 확장되는 Phase 4 까지 false 로 둔다.
-    compatible: false,
-    reason: 'paired-direct: Codex sibling lives at src/codex/core/hooks/ (do not copy Claude-only source)',
+    // T18 (Phase 4) 적용 후: setup.js의 emitCodex가 paired-direct hook에 한해
+    // src/codex/ 우선 소스로 읽으므로 compatible:true로 전환 가능.
+    // src/codex/core/hooks/output-secret-filter.js는 dual-aware (CODEX_SANDBOX || CLAUDE_REMOTE_SESSION).
+    compatible: true,
+    reason: null,
   },
   'session-wrap-suggest.js': {
     strategy: 'paired-fallback',

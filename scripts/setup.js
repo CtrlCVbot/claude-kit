@@ -558,17 +558,29 @@ function emitCodex(projectRoot, activeDomains, mode) {
   }
 
   // 3. hooks.json 생성 + 호환 hook JS 파일 복사
+  // T18 (codex-sync Phase 4): paired-direct hook은 src/codex/ 우선 소스로 사용
+  // 그 외에는 src/claude/ fallback. 자세한 내용: docs/meta-tooling/08-phase4-codex-implementation.md T18
+  const { getPortability } = require('./codex-hook-compat');
   const allHookFiles = collectHookFiles(activeDomains);
   const { compatible, skipped } = filterCodexHooks(allHookFiles);
 
   // 호환 hook JS 파일을 plugins/claude-kit/hooks/에 복사
   fs.mkdirSync(path.join(pluginRoot, 'hooks'), { recursive: true });
   for (const hookFile of compatible) {
-    for (const domain of activeDomains) {
-      const srcHook = path.join(SRC_CLAUDE, domain, 'hooks', hookFile);
-      if (fs.existsSync(srcHook)) {
-        fs.copyFileSync(srcHook, path.join(pluginRoot, 'hooks', hookFile));
-        break;
+    const meta = getPortability(hookFile);
+    const preferCodex = meta && meta.strategy === 'paired-direct';
+    const sourceRoots = preferCodex ? [SRC_CODEX, SRC_CLAUDE] : [SRC_CLAUDE];
+
+    let copied = false;
+    for (const sourceRoot of sourceRoots) {
+      if (copied) break;
+      for (const domain of activeDomains) {
+        const srcHook = path.join(sourceRoot, domain, 'hooks', hookFile);
+        if (fs.existsSync(srcHook)) {
+          fs.copyFileSync(srcHook, path.join(pluginRoot, 'hooks', hookFile));
+          copied = true;
+          break;
+        }
       }
     }
   }
