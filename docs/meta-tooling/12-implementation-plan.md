@@ -70,10 +70,13 @@ feat(meta-tooling): Phase 4b 변환 엔진 — kit-converter + /kit-analyze + /k
 | 7 | `src/exception-registry.json` | 초기 8개 엔트리 (skip-registry에서 마이그레이션) | 11-consistency §5 |
 | 8 | `.claude/skills/kit-validation/references/schema-exception-registry.md` | 레지스트리 검증 스키마 | 11-consistency §5 |
 
-**exception-registry.json 초기 엔트리**:
-- EX-001: session-wrap-suggest (hook-skip, Claude runtime 의존)
-- EX-002: output-secret-filter (hook-skip, CLAUDE_REMOTE_SESSION 의존)
-- EX-003~008: 6개 rules (rule-skip, claude-origin shared guidance)
+**exception-registry.json 초기 엔트리** (작성 당시 Phase 0~3 시점 기준):
+
+> 편집 메모 (codex-sync Phase 1~5, 2026-04-15): 아래 분류는 이 문서 작성 시점이며 현재는 모두 status=resolved로 전환됨. 최신 상태는 [`docs/codex-sync/sync-report-2026-04-15-final.md`](../codex-sync/sync-report-2026-04-15-final.md) §4 참조.
+
+- EX-001: session-wrap-suggest — Phase 3 commit `ce8b6f1`에서 paired-fallback / status=resolved 전환 (skill artifact: `src/claude/core/skills/session-wrap-suggest/SKILL.md`)
+- EX-002: output-secret-filter — Phase 1 commit `c794351`에서 paired-direct / status=resolved 전환. Phase 4 commit `3c36d2d` T18으로 setup.js가 src/codex/ 우선 사용
+- EX-003~008: 6개 rules — Phase 2 commit `9cdbbbc`에서 paired-fallback / status=resolved 전환 (artifact: `src/templates/AGENTS.md.template` ## 핵심 규칙 섹션 inline merge)
 
 **커밋**:
 ```
