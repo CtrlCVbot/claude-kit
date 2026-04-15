@@ -19,7 +19,7 @@ skipless conversion 전략을 실제 구현으로 옮길 때, 공식 문서 기�
 |---|---|---|---|---|
 | Phase 0 | ✓ 반영됨 (docs) | 문서 표현 정합성 보정 | `docs/codex-sync`를 공식 문서 기준으로 교정 | direct, fallback, 검증 필요의 의미가 고정됨 |
 | Phase 1 | ✓ 완료 (commit `c794351`, `957fb8d`, 2026-04-15) | 레지스트리 정합성 회복 | stale skip 기준 제거, registry 역할 분리 | false skip 제거 |
-| Phase 2 | 대기 | `rule` fallback 도입 | `AGENTS.md` merge snippet, review stub 생성 | guidance-style rule이 무산출물 skip으로 남지 않음 |
+| Phase 2 | ✓ 완료 (commit `9cdbbbc`, `3d64eb9`, 2026-04-15) | `rule` fallback 도입 | `AGENTS.md` merge snippet, review stub 생성 | guidance-style rule이 무산출물 skip으로 남지 않음 |
 | Phase 3 | 대기 | `hook` fallback 도입 | `session-wrap-suggest` 재평가, hook scope 반영 | runtime-bound hook 손실 축소 |
 | Phase 4 | 대기 | sync pipeline 확장 | `/kit-analyze`, `/kit-convert`, `/kit-sync` 상태 모델과 evidence 기록 추가 | `fallback` / `review-needed` 집계 가능 |
 | Phase 5 | 대기 | runtime 검증과 audit | dry-run, sample conversion, 문서/코드 정합성 점검 | rollout 가능 여부 결정 |
@@ -79,30 +79,42 @@ skipless conversion 전략을 실제 구현으로 옮길 때, 공식 문서 기�
 - `setup.js`의 `emitCodex`가 `paired-direct` hook에 한해 `SRC_CODEX`를 우선 source로 사용하도록 확장 (08-phase4-codex-implementation.md T18 참조)
 - `output-secret-filter.js`의 `HOOK_PORTABILITY.compatible`을 `true`로 전환 (T18과 동시)
 
-### 4.3 Phase 2: Rule fallback 도입
+### 4.3 Phase 2: Rule fallback 도입 — ✓ 완료 (2026-04-15)
 
-대상 파일 (Phase 1 피드백 §5 C3 반영하여 4개 stale 표현 모두 포함):
+> 반영 commit: `9cdbbbc` (feat/codex-sync Medium merge), `3d64eb9` (docs/codex-sync stale 표현 교체).
+> 회고와 후속 의무는 [06-phase2-feedback-review.md](./06-phase2-feedback-review.md) 참조.
 
-- `.claude/skills/kit-converter/references/conversion-rules.md` — `## Rule 처리 (skip)` 섹션 (line 78)
-- `.claude/commands/kit-convert.md` — `Rule: skip 처리 (로그만)` (line 69)
-- `.claude/commands/kit-analyze.md` — `rule: 항상 skip (claude-origin shared)` (line 54)
-- `.claude/skills/kit-converter/SKILL.md` — `rule | codex-skip (AGENTS.md guidance)` (line 20)
-- `src/templates/AGENTS.md.template` — guidance merge 마커 추가
-- `src/exception-registry.json` — EX-003~008 status를 artifact 생성 후 `resolved`로 전환
+대상 파일 (실제 변경됨, Phase 1 피드백 §5 C3 반영):
 
-주요 작업:
+- `.claude/skills/kit-converter/references/conversion-rules.md` — `## Rule 처리 (skip)` → `## Rule 처리 (paired-fallback / AGENTS.md merge)` 섹션 재작성 ✓
+- `.claude/commands/kit-convert.md` line 69 — `Rule: skip` → `paired-fallback` ✓
+- `.claude/commands/kit-analyze.md` line 54 — `rule: 항상 skip` → `항상 paired-fallback` + 출력 표 Note 1 각주 ✓
+- `.claude/skills/kit-converter/SKILL.md` line 20 — `rule | codex-skip` → `paired-fallback (inline merge)` ✓
+- `.claude/skills/kit-converter/references/skip-registry.md` — Rule fallback 표 status 컬럼 모두 resolved ✓
+- `src/templates/AGENTS.md.template` — 6 h3 Medium merge (~9줄 → 161줄) + maintenance 주석 ✓
+- `src/exception-registry.json` — EX-003~008 status `active` → `resolved`. EX-007에 `policy-review-pending` 추가 ✓
+- `.claude/skills/kit-validation/references/schema-exception-registry.md` — Phase 2 신규 row 3개 (paired-fallback INFO/WARN, policy-review-pending INFO) ✓
 
-- `rule = skip` 규칙 제거 (위 4개 파일에서)
-- exec-policy rule과 guidance-style rule을 분리
-- `rule -> AGENTS.md` merge 규칙 추가
-- 필요 시 `review-needed` 문서 생성 규칙 추가
-- EX-003~008 (6 rules) artifact 생성 + status 전환
+주요 작업 (완료):
 
-완료 기준:
+- `rule = skip` 규칙 제거 (4개 파일) ✓
+- exec-policy rule과 guidance-style rule을 분리 (conversion-rules.md 재작성) ✓
+- `rule -> AGENTS.md` merge 규칙 추가 (AGENTS.md.template Medium merge) ✓
+- EX-003~008 (6 rules) artifact 생성 + status 전환 ✓
+- pairing-registry는 의도적으로 미변경 (rule은 discrete sibling이 아닌 inline merge snippet) ✓
 
-- `coding-style`, `verification`, `security` 등 6개 rule이 전부 artifact를 남긴다
-- 위 4개 파일에서 `rule = skip` 표현이 모두 fallback 표현으로 대체된다
-- EX-003~008의 status가 모두 `resolved`로 전환되고 [03-sync-pipeline-design.md §7.1](./03-sync-pipeline-design.md#71-vocabulary-mapping-exception-registry--pairing-registry) vocabulary mapping과 모순 없음
+완료 기준 (충족):
+
+- `coding-style`, `verification`, `security` 등 6개 rule이 전부 artifact를 남긴다 ✓
+- 위 4개 파일에서 `rule = skip` 표현이 모두 fallback 표현으로 대체된다 ✓ (grep 0 매치)
+- EX-003~008의 status가 모두 `resolved`로 전환되고 [03-sync-pipeline-design.md §7.1](./03-sync-pipeline-design.md#71-vocabulary-mapping-exception-registry--pairing-registry) vocabulary mapping과 모순 없음 ✓
+
+후속 의무 (Phase 3+ 이연):
+
+- EX-007 (security) `policy-review-pending` 항목 — Phase 3에서 exec-policy 후보로 재검토
+- AGENTS.md.template과 `src/claude/core/rules/` drift detection — Phase 4 audit (06-phase2-feedback-review.md N2)
+- kit-analyze 출력 표 4-tier 컬럼 정식 분리 (paired-direct/fallback/review/blocked) — Phase 4
+- Anti-Rationalization 표 추가 row 보강 (선택) — Phase 4 (06-phase2-feedback-review.md I4)
 
 ### 4.4 Phase 3: Hook fallback 도입
 

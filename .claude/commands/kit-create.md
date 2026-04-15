@@ -49,7 +49,7 @@ argument-hint: <type> <domain> <name> [--target claude|codex|both] [--skip-codex
 | command | `both` | required codex sibling |
 | skill | `claude` | optional codex sibling |
 | hook | `claude` | optional codex sibling |
-| rule | `claude` | claude-origin shared |
+| rule | `claude` | claude-origin (AGENTS.md.template inline merge로 Codex와 sharing, paired-fallback) |
 
 ### target 정책 매트릭스
 
@@ -59,7 +59,7 @@ argument-hint: <type> <domain> <name> [--target claude|codex|both] [--skip-codex
 | command | WARN (required sibling) | 허용 | 기본값 | 허용 (reason 필수) |
 | skill | 기본값 | 허용 | 허용 | 불필요 (optional) |
 | hook | 기본값 | 허용 | 허용 | 불필요 (optional) |
-| rule | 기본값 | **거부** (claude-origin shared) | **거부** | 불필요 |
+| rule | 기본값 | **거부** (discrete Codex sibling 없음 — `AGENTS.md.template` inline merge로 sharing) | **거부** | 불필요 |
 
 ## Workflow
 
@@ -180,5 +180,5 @@ argument-hint: <type> <domain> <name> [--target claude|codex|both] [--skip-codex
 - 템플릿의 TODO 마커는 사용자가 직접 채울 부분이므로 치환하지 않는다.
 - 생성 후 git add는 하지 않는다 (사용자가 직접 커밋).
 - agent/command를 `--target claude`로만 생성하면 "required codex sibling" 경고를 표시한다.
-- rule 타입은 `--target codex`를 거부한다 (claude-origin shared).
+- rule 타입은 `--target codex`를 거부한다 (discrete Codex sibling 없음 — `AGENTS.md.template` inline merge로 sharing).
 - hook `--stop`과 `--target codex` 조합 시 Codex Stop 지원 상태를 경고한다 (experimental).

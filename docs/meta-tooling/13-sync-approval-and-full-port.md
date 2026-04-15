@@ -1,6 +1,18 @@
 # kit-sync 승인 게이트 + Codex 완전 이식 계획
 
 > kit-sync 에이전트 워크플로우에 승인 단계를 추가하고, codex-skip 8개 항목의 대안을 설계한다.
+>
+> **STATUS (2026-04-15)**:
+>
+> - **Part 1 (kit-sync 승인 게이트)**: active. sync-report-2026-04-15.md 워크플로우의 SSOT.
+> - **Part 2 (codex-skip 완전 이식 — codex-native-replacement / status 유지)**: **superseded**.
+>   `docs/codex-sync/` 문서 세트(2026-04-15)와 Phase 1~2 구현(commit `c794351`, `957fb8d`,
+>   `9cdbbbc`, `3d64eb9`)은 다른 경로(AGENTS.md.template inline merge + EX-003~008 status를
+>   `resolved`로 전환)를 선택했다. 본 문서의 EX-003~008 처리 제안(Part 2 §215+ "codex-native-replacement",
+>   §250 "status 유지(active)")은 더 이상 active 설계가 아니다.
+>
+> 현재 EX-003~008 처리 SSOT: `src/exception-registry.json` + `docs/codex-sync/04-rollout-validation-plan.md`
+> §4.3 + `docs/codex-sync/05-phase1-feedback-review.md` + `docs/codex-sync/06-phase2-feedback-review.md`.
 
 ---
 

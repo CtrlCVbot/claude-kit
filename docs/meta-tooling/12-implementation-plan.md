@@ -1,6 +1,13 @@
 # 메타 툴링 전체 구현 계획 (Phase 4b/4c)
 
 > 15개 미구현 항목을 4개 Wave, 6커밋으로 구현하는 상세 계획
+>
+> **편집 메모 (2026-04-15)**: 본 문서의 "rule-skip" / "6 rule-skip" / "claude-origin shared" 표현은
+> 작성 당시(Phase 0~3 시점) 기준이다. 2026-04-15 codex-sync Phase 2 (commit `9cdbbbc`, `3d64eb9`)
+> 이후 6개 rule (EX-003~008)은 모두 `paired-fallback` / `status=resolved` 상태이며,
+> `src/templates/AGENTS.md.template`의 `## 핵심 규칙` 섹션에 inline merge로 fallback artifact가
+> 생성되었다. 자세한 내용은 `docs/codex-sync/04-rollout-validation-plan.md` §4.3과
+> `docs/codex-sync/06-phase2-feedback-review.md` 참조.
 
 ## 1. Context
 

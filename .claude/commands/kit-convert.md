@@ -100,7 +100,7 @@ Claude 자산을 Codex 형식으로 변환하여 `src/codex/`에 생성하고 pa
 
 - `--force` 없이 기존 파일 덮어쓰지 않는다.
 - `--dry-run` 시 파일 생성 안 함.
-- `--type rule`은 거부 (claude-origin shared, 변환 파일 없음).
+- `--type rule`은 거부 (discrete 변환 파일 없음 — `AGENTS.md.template` inline merge가 fallback artifact, paired-fallback).
 - 변환 파일 상단에 `<!-- kit-convert generated: {날짜} -->` 추적 주석.
 - review 난이도 파일에 `<!-- REVIEW NEEDED: {사유} -->` 마커.
 - 변환 후 git add 하지 않는다 (사용자 커밋).

@@ -6,15 +6,17 @@
 
 이 문서는 구현 변경안 문서다. 아래 내용은 아직 live behavior를 설명하지 않으며, 문서 승인 후 반영 여부를 결정할 대상이다.
 
-## 2. 현재 파이프라인의 한계
+## 2. 파이프라인의 한계 (Phase 0 시점 진단)
 
-| 한계 | 설명 |
-|---|---|
-| `rule = skip` 고정 | `conversion-rules.md`에서 `rule`이 구조적으로 no-op로 처리된다. |
-| `hook` direct 판정이 과도하게 단순 | 공식 hook 존재 여부와 runtime parity 문제를 분리하지 못한다. |
-| evidence 기록 부재 | 왜 direct인지, 왜 fallback인지 공식 근거를 남기지 않는다. |
-| stale registry | resolved 예외가 skip 기준에 남아 false skip을 만든다. |
-| fallback artifact 부재 | 사람이 이어받을 최소 초안이 남지 않는다. |
+> 본 표는 본 문서 작성(Phase 0) 시점의 진단이다. ✓로 표시한 항목은 후속 Phase에서 이미 해결됨.
+
+| 한계 | 설명 | 해결 상태 |
+|---|---|---|
+| `rule = skip` 고정 | `conversion-rules.md`에서 `rule`이 구조적으로 no-op로 처리된다. | ✓ Phase 2 해결 (commit `9cdbbbc`, `3d64eb9`): `paired-fallback` / `status=resolved` 전환 + AGENTS.md.template inline merge |
+| `hook` direct 판정이 과도하게 단순 | 공식 hook 존재 여부와 runtime parity 문제를 분리하지 못한다. | ✓ Phase 1 부분 해결 (commit `957fb8d`): `HOOK_PORTABILITY` 4-tier strategy 도입. 추가 분류 보강은 Phase 3 |
+| evidence 기록 부재 | 왜 direct인지, 왜 fallback인지 공식 근거를 남기지 않는다. | ✓ Phase 1 해결 (commit `c794351`): exception-registry에 `evidenceLevel` / `officialSurface` / `docConstraints` 필드 도입 |
+| stale registry | resolved 예외가 skip 기준에 남아 false skip을 만든다. | ✓ Phase 1 해결: skip-registry.md 서술형 view 강등, exception-registry SSOT 확정 |
+| fallback artifact 부재 | 사람이 이어받을 최소 초안이 남지 않는다. | ✓ Phase 2 해결 (rule artifact). hook fallback artifact는 Phase 3 |
 
 ## 2.1 문서 기준 개선 포인트
 

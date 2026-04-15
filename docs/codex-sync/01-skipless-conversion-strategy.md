@@ -114,13 +114,15 @@ Claude와 Codex의 runtime model이 달라도, 공식 범위 안에서 direct로
 
 이 surface들은 공식 기능이다. 다만 Claude `rule`이나 runtime-bound `hook`을 이쪽으로 옮기는 판단은 공식 1:1 매핑이 아니라 repo 차원의 migration 결정이다.
 
-## 6. 현재 이슈별 목표 방향
+## 6. 이슈별 목표 방향
 
-| 이슈 | 현재 상태 | 목표 상태 |
-|---|---|---|
-| `rule` 6개 | 구조적으로 skip | guidance-style fallback으로 `paired-fallback` 이상 |
-| `session-wrap-suggest` | Stop/runtime 의존으로 skip | `Stop` hook candidate 검토 후 `paired-fallback` 또는 `paired-review` |
-| `output-secret-filter` | Codex port 존재, 일부 기준은 stale skip | hook scope 제약을 명시한 `paired-direct` 후보 |
+> "현재 상태" 컬럼은 본 문서 작성(Phase 0) 시점 기준이다. ✓로 표시한 항목은 후속 Phase에서 목표 상태에 도달함.
+
+| 이슈 | Phase 0 시점 상태 | 목표 상태 | 진행 상태 |
+|---|---|---|---|
+| `rule` 6개 | 구조적으로 skip | guidance-style fallback으로 `paired-fallback` 이상 | ✓ Phase 2 완료 (commit `9cdbbbc`, `3d64eb9`): 모두 `paired-fallback` / `status=resolved` 전환 |
+| `session-wrap-suggest` | Stop/runtime 의존으로 skip | `Stop` hook candidate 검토 후 `paired-fallback` 또는 `paired-review` | Phase 1 부분 완료 (`paired-fallback` 분류 + skill fallback target 명시), 실제 skill artifact 생성은 Phase 3 |
+| `output-secret-filter` | Codex port 존재, 일부 기준은 stale skip | hook scope 제약을 명시한 `paired-direct` 후보 | ✓ Phase 1 완료 (commit `c794351`): `paired-direct` / `status=resolved` 확정 |
 
 ## 7. 성공 기준
 
