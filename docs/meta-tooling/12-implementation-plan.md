@@ -86,7 +86,7 @@ feat(meta-tooling): 예외 레지스트리 + 검증 스키마 — exception-regi
 **검증**:
 - [ ] exception-registry.json: 유효 JSON, `$schema: "exception-registry-v1"`
 - [ ] 8개 엔트리 (EX-001~EX-008), 각각 9개 필수 필드 (id, component, category, rule, detail, reason, approvedBy, approvedDate, status)
-- [ ] 엔트리가 11-consistency-tooling.md §5 마이그레이션 테이블과 일치 (2 hook-skip + 6 rule-skip)
+- [ ] 엔트리가 11-consistency-tooling.md §5 마이그레이션 테이블과 일치 (작성 당시: 2 hook-skip + 6 rule-skip → codex-sync Phase 1~3 후 1 paired-direct + 7 paired-fallback / 모두 resolved)
 - [ ] schema-exception-registry.md: FAIL/WARN 검증 테이블, 필수 필드 검증 규칙 포함
 
 ---
