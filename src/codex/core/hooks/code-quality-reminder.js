@@ -1,0 +1,59 @@
+/**
+ * code-quality-reminder.js — PostToolUse 훅 (Edit|Write)
+ * 코드 파일 편집 시 품질 리마인더를 stderr로 출력한다.
+ * 차단하지 않음 (항상 exit 0).
+ *
+ * Codex 등록 포맷:
+ *   .codex/hooks.json: { type: "command", command: "./hooks/code-quality-reminder.js" }
+ *
+ * Codex hooks 공식 제약 (2026-04 기준):
+ *   - hooks는 experimental 기능
+ *   - PreToolUse/PostToolUse matcher: 공식 문서상 Bash 범위가 핵심.
+ *     Edit|Write 매처는 Codex runtime에서 동작하지만 공식 보장은 Bash가 우선.
+ *   - Stop event: 공식 지원. 단, runtime 상태 파일 의존이 있는 hook은
+ *     direct 재현 불가 → skill/command fallback 필요
+ *   - Windows: 현재 비활성화. 크로스플랫폼 가정 금지.
+ *
+ * kit-convert generated: 2026-04-16
+ */
+'use strict';
+
+const CODE_EXTENSIONS = new Set([
+  '.ts', '.tsx', '.js', '.jsx', '.py', '.go', '.rs',
+  '.java', '.rb', '.php', '.swift', '.kt', '.sh'
+]);
+
+function main() {
+  let input = '';
+  process.stdin.setEncoding('utf8');
+  process.stdin.on('data', chunk => { input += chunk; });
+  process.stdin.on('end', () => {
+    try {
+      const data = JSON.parse(input);
+      const toolName = data.tool_name || '';
+
+      if (toolName !== 'Edit' && toolName !== 'Write') {
+        process.exit(0);
+      }
+
+      const filePath = (data.tool_input && data.tool_input.file_path) || '';
+      if (!filePath) {
+        process.exit(0);
+      }
+
+      const ext = filePath.substring(filePath.lastIndexOf('.'));
+      if (!CODE_EXTENSIONS.has(ext)) {
+        process.exit(0);
+      }
+
+      process.stderr.write(
+        '[code-quality] 수정된 파일의 에러 핸들링, 불변성 패턴, 입력 검증을 확인하세요.\n'
+      );
+    } catch {
+      // ignore parse errors
+    }
+    process.exit(0);
+  });
+}
+
+main();
