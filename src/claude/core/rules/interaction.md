@@ -53,6 +53,12 @@ Present the **key conclusion first**, then add supporting details.
 "Wrap it with useMemo. The expensive calculation repeats on every render."
 ```
 
+## Scenario Determination Gate (copy 도메인 활성 시)
+
+copy 도메인이 활성화된 상태에서 새 Feature를 시작할 때, 시나리오(A/B/C)와 Feature 유형(copy/dev)이 아직 확정되지 않았다면:
+- 가정을 명시하고 사용자에게 확인을 받는다 ("이 Feature는 시나리오 C로 보입니다 — 맞나요?")
+- `/plan-draft`에서 공식 판정되므로, 판정 전에 copy 워크플로우를 자의적으로 진행하지 않는다.
+
 ## Be Honest About Uncertainty
 
 If unsure, **say so** instead of guessing.

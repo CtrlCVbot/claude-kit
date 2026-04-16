@@ -107,6 +107,13 @@ WRONG:   Trust agent report without independent verification
 - Moving to the next task
 - Delegating to sub-agents
 
+## Copy Domain Verification (copy 도메인 활성 시)
+
+copy 도메인이 활성화된 경우, 시나리오별로 evidence 요구사항이 다르다:
+- **시나리오 A/B**: 구현 후 QA 시점에서 `/copy-verify` 실행. evidence manifest 존재 필수.
+- **시나리오 C**: 갭 분석 데이터가 상세 PRD에 반영되었는지 PCC-06으로 추가 검증.
+- 상세 기준은 `copy-evidence.md` 룰 참조.
+
 ## The Bottom Line
 
 There are no shortcuts to verification.
