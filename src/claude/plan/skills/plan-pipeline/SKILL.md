@@ -129,10 +129,21 @@ P1 → P2 → P3 → [P4] → P5 → [P6] → P7 → Dev → [P8 Archive]
       "P2": { "status": "done", "completedAt": "2026-03-25" },
       "P3": { "status": "done", "completedAt": "2026-03-25" },
       "P4": { "status": "in-progress" }
+    },
+    "copyStages": {
+      "referenceRefresh": { "status": "pending" },
+      "visualReview": { "status": "pending" },
+      "interactionReview": { "status": "pending" },
+      "gapBoard": { "status": "pending" },
+      "planUnit": { "status": "pending" },
+      "verify": { "status": "pending" },
+      "closeout": { "status": "pending" }
     }
   }
 }
 ```
+
+`copyStages` 블록은 copy 도메인이 활성화되고 Feature 유형이 `copy`인 경우에만 생성됩니다. dev Feature에서는 이 블록이 없습니다. 각 copy 커맨드가 실행 시 해당 stage를 `"done"` + `completedAt`으로 갱신합니다.
 
 Archived 기능은 `currentStage: "archived"`로 표시되며, `archivePath` 필드가 추가됩니다:
 
