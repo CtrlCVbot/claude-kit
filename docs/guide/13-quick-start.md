@@ -113,6 +113,8 @@ Quality Gate 요약:
 
 - 공통점: 같은 `core/dev/plan` 흐름을 공유한다.
 - 차이점: 설치 결과 경로, 컨텍스트 문서, hooks/rules 반영 방식이 다르다.
+- Codex hooks는 부분 지원이다. 공식 지원/검증 필요/skip 분류는 `src/claude/_meta/codex-portability.json`과 `scripts/codex-hook-compat.js`를 기준으로 보며, `Edit|Write` matcher 기반 hook은 현재 Codex에서 제한될 수 있다.
+- `session-wrap-suggest.js`는 Claude session state 의존성 때문에 Codex plugin hook에서 의도적으로 제외되며, skill fallback으로 다룬다.
 
 ## 지금 바로 해볼 첫 액션
 
@@ -164,6 +166,10 @@ pnpm install
 ```
 
 다른 패키지 매니저를 쓰는 프로젝트라면 현재 사용 중인 설치 명령을 다시 실행하면 된다.
+
+패키지 기준 공식 갱신 경로는 `pnpm update claude-kit` 이후 `postinstall`로 실행되는 `scripts/setup.js`다. `kit-sync`는 이 저장소의 공식 로컬 npm script가 아니므로, 별도 wrapper나 글로벌 alias를 쓰더라도 최종 설치 상태는 `CLAUDE-KIT-QUICKSTART.md`와 `.claude-kit-meta.json`으로 확인한다.
+
+업데이트 시 기존 `AGENTS.md`는 보존된다. Codex 타겟이 활성화되어 있는데 `AGENTS.md`가 없으면 템플릿으로 복구한다.
 
 ## 최소 용어집 / 주의사항
 

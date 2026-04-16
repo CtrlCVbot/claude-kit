@@ -78,7 +78,7 @@ Codex v1 지원 범위는 다음과 같다.
 - `rules`: Partial. 별도 디렉토리 복사 대신 `AGENTS.md`에 핵심 규칙 흡수
 - `mcp`: Excluded. 인증 및 transport 설계가 필요해 v1 범위에서 제외
 
-자산 매핑 규칙과 skip 정책은 [docs/guide/09-architecture.md](docs/guide/09-architecture.md)를 기준으로 본다.
+자산 매핑 규칙과 skip 정책은 [docs/guide/09-architecture.md](docs/guide/09-architecture.md)를 기준으로 본다. Codex hook의 공식 지원/검증 필요/skip 분류는 `src/claude/_meta/codex-portability.json`과 `scripts/codex-hook-compat.js`가 기준이다. 현재 Codex에서는 `Edit|Write` matcher 기반 hook이 제한될 수 있으며, `session-wrap-suggest.js`는 Claude session state 의존성 때문에 의도적으로 plugin hook에서 제외하고 skill fallback으로 다룬다.
 
 ## postinstall 동작
 
@@ -98,7 +98,9 @@ Codex v1 지원 범위는 다음과 같다.
 pnpm update claude-kit
 ```
 
-`CLAUDE.md`, `AGENTS.md`, `profile.json`은 기존 정책대로 보존된다. `settings.json`은 Claude 타겟에서 병합되며, Codex 쪽 `plugin.json`, `marketplace.json`, `hooks.json`은 최신 기준으로 다시 생성된다. `CLAUDE-KIT-QUICKSTART.md`는 설치 상태와 맞도록 업데이트 시 재생성된다.
+`CLAUDE.md`, 기존 `AGENTS.md`, `profile.json`은 기존 정책대로 보존된다. Codex 타겟이 활성화되어 있는데 `AGENTS.md`가 없으면 업데이트 모드에서도 템플릿으로 복구한다. `settings.json`은 Claude 타겟에서 병합되며, Codex 쪽 `plugin.json`, `marketplace.json`, `hooks.json`은 최신 기준으로 다시 생성된다. `CLAUDE-KIT-QUICKSTART.md`는 설치 상태와 맞도록 업데이트 시 재생성된다.
+
+이 패키지 기준 공식 갱신 경로는 `pnpm update claude-kit` 이후 `postinstall`로 실행되는 `scripts/setup.js`다. `kit-sync`는 이 저장소의 공식 로컬 npm script가 아니므로, 별도 wrapper나 글로벌 alias를 쓰는 경우에도 최종 기준은 `setup.js` 출력과 `.claude-kit-meta.json`으로 확인한다.
 
 ## 저장소 문서
 

@@ -18,6 +18,9 @@
 - 출력은 `src/codex/{core,dev,plan}`의 conversion-generated authoring source다.
 - `src/codex`는 runtime artifact가 아니라 수동 보정 가능한 authoring source다.
 - `kit-create` 재설계, installer cutover, meta-tooling 상세 스펙은 이번 세트의 직접 범위가 아니다.
+- Hook portability의 현재 SSOT는 `src/claude/_meta/codex-portability.json`과 `scripts/codex-hook-compat.js`다.
+- `Edit|Write` matcher 기반 hook은 현재 Codex에서 제한될 수 있으므로 `검증 필요`로 취급한다.
+- `session-wrap-suggest.js`는 Claude session state 의존성 때문에 Codex plugin hook에서 의도적으로 제외하며, fallback은 skill 기반으로 둔다.
 
 ## 핵심 용어
 

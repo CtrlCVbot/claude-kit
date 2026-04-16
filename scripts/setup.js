@@ -94,6 +94,7 @@ function main() {
     const mode = detectMode(projectRoot);
     const activeDomains = resolveActiveDomains(projectRoot);
     const activeTargets = resolveTargets(projectRoot);
+    const initialFiles = captureManagedFileState(projectRoot);
 
     if (DRY_RUN) {
       printDryRunSummary(projectRoot, activeDomains, activeTargets);
@@ -103,6 +104,7 @@ function main() {
     const allCounts = {};
     const allByDomain = {};
     const codexSkipped = [];
+    const outputStatuses = {};
 
     // --- Claude emitter ---
     if (activeTargets.includes('claude')) {
@@ -115,15 +117,16 @@ function main() {
 
     // --- Codex emitter ---
     if (activeTargets.includes('codex')) {
-      const { counts, byDomain, skipped } = emitCodex(projectRoot, activeDomains, mode);
+      const { counts, byDomain, skipped, agentsMdStatus } = emitCodex(projectRoot, activeDomains);
       allCounts.codex = counts;
       allByDomain.codex = byDomain;
       codexSkipped.push(...skipped);
+      outputStatuses.codex = { agentsMdStatus };
     }
 
     processQuickStartTemplate(projectRoot, activeDomains, activeTargets);
-    writeMetadata(projectRoot, mode, allCounts, allByDomain, activeDomains, activeTargets, codexSkipped);
-    printResult(mode, allCounts, activeDomains, activeTargets);
+    writeMetadata(projectRoot, mode, allCounts, allByDomain, activeDomains, activeTargets, codexSkipped, initialFiles, outputStatuses);
+    printResult(mode, allCounts, activeDomains, activeTargets, outputStatuses);
   } catch (error) {
     console.error(`claude-kit 설치 실패: ${error.message}`);
     process.exit(0);
@@ -153,6 +156,14 @@ function detectProjectRoot() {
 function detectMode(projectRoot) {
   const metaPath = path.join(projectRoot, '.claude-kit-meta.json');
   return fs.existsSync(metaPath) ? 'update' : 'fresh';
+}
+
+function captureManagedFileState(projectRoot) {
+  return {
+    profileJson: fs.existsSync(path.join(projectRoot, 'profile.json')),
+    claudeMd: fs.existsSync(path.join(projectRoot, 'CLAUDE.md')),
+    agentsMd: fs.existsSync(path.join(projectRoot, 'AGENTS.md'))
+  };
 }
 
 function resolveActiveDomains(projectRoot) {
@@ -573,7 +584,7 @@ function processQuickStartTemplate(projectRoot, activeDomains, activeTargets) {
 // Codex Emitter
 // ═══════════════════════════════════════════
 
-function emitCodex(projectRoot, activeDomains, mode) {
+function emitCodex(projectRoot, activeDomains) {
   const pluginRoot = path.join(projectRoot, 'plugins', 'claude-kit');
   const templateDir = TEMPLATES;
   const vars = resolveVariables(projectRoot);
@@ -673,12 +684,16 @@ function emitCodex(projectRoot, activeDomains, mode) {
     mergeMarketplace(projectRoot, substituteVars(marketplaceTemplate, vars));
   }
 
-  // 6. AGENTS.md — 신규 설치 시에만 생성
+  // 6. AGENTS.md — 기존 파일은 보존하고, 누락 시 fresh/update 모두 템플릿으로 복구
   const agentsMdPath = path.join(projectRoot, 'AGENTS.md');
-  if (mode === 'fresh' && !fs.existsSync(agentsMdPath)) {
+  let agentsMdStatus = 'preserved';
+  if (!fs.existsSync(agentsMdPath)) {
     const template = readTemplate(templateDir, 'AGENTS.md.template');
     if (template) {
       fs.writeFileSync(agentsMdPath, substituteVars(template, vars));
+      agentsMdStatus = 'created';
+    } else {
+      agentsMdStatus = 'missing template';
     }
   }
 
@@ -692,7 +707,7 @@ function emitCodex(projectRoot, activeDomains, mode) {
   }
   counts.hooks = compatible.length;
 
-  return { counts, byDomain, skipped };
+  return { counts, byDomain, skipped, agentsMdStatus };
 }
 
 function collectHookFiles(activeDomains) {
@@ -785,7 +800,7 @@ function mergeMarketplace(projectRoot, entryJson) {
 // 메타데이터 + 결과 출력
 // ═══════════════════════════════════════════
 
-function writeMetadata(projectRoot, mode, allCounts, allByDomain, activeDomains, activeTargets, codexSkipped) {
+function writeMetadata(projectRoot, mode, allCounts, allByDomain, activeDomains, activeTargets, codexSkipped, initialFiles, outputStatuses) {
   const metaPath = path.join(projectRoot, '.claude-kit-meta.json');
 
   let meta = {};
@@ -819,9 +834,7 @@ function writeMetadata(projectRoot, mode, allCounts, allByDomain, activeDomains,
     }
   }
 
-  const preservedFiles = ['profile.json'];
-  if (activeTargets.includes('claude')) preservedFiles.push('CLAUDE.md');
-  if (activeTargets.includes('codex')) preservedFiles.push('AGENTS.md');
+  const preservedFiles = resolvePreservedFiles(projectRoot, activeTargets, initialFiles, outputStatuses);
 
   const updated = {
     version,
@@ -875,7 +888,35 @@ function writeMetadata(projectRoot, mode, allCounts, allByDomain, activeDomains,
   fs.writeFileSync(metaPath, JSON.stringify(updated, null, 2) + '\n');
 }
 
-function printResult(mode, allCounts, activeDomains, activeTargets) {
+function resolvePreservedFiles(projectRoot, activeTargets, initialFiles, outputStatuses) {
+  const preservedFiles = [];
+
+  if (initialFiles.profileJson && fs.existsSync(path.join(projectRoot, 'profile.json'))) {
+    preservedFiles.push('profile.json');
+  }
+
+  if (
+    activeTargets.includes('claude') &&
+    initialFiles.claudeMd &&
+    fs.existsSync(path.join(projectRoot, 'CLAUDE.md'))
+  ) {
+    preservedFiles.push('CLAUDE.md');
+  }
+
+  if (
+    activeTargets.includes('codex') &&
+    initialFiles.agentsMd &&
+    outputStatuses.codex &&
+    outputStatuses.codex.agentsMdStatus === 'preserved' &&
+    fs.existsSync(path.join(projectRoot, 'AGENTS.md'))
+  ) {
+    preservedFiles.push('AGENTS.md');
+  }
+
+  return preservedFiles;
+}
+
+function printResult(mode, allCounts, activeDomains, activeTargets, outputStatuses = {}) {
   const version = resolveVersion();
   const verb = mode === 'fresh' ? '설치 완료' : '업데이트 완료';
 
@@ -887,6 +928,10 @@ function printResult(mode, allCounts, activeDomains, activeTargets) {
     console.log(`\nclaude-kit v${version} ${verb} [${targetLabel}]`);
     console.log(`  ${counts.agents || 0} agents, ${counts.commands || 0} commands, ${counts.skills || 0} skills, ${counts.hooks || 0} hooks, ${counts.rules || 0} rules`);
     console.log(`  총 ${total}개 컴포넌트 (domains: ${activeDomains.join(',')})`);
+
+    if (target === 'codex' && outputStatuses.codex) {
+      console.log(`  AGENTS.md: ${outputStatuses.codex.agentsMdStatus}`);
+    }
   }
 
   console.log('  Quick Start: CLAUDE-KIT-QUICKSTART.md');
