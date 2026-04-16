@@ -1,6 +1,6 @@
 # /plan-draft
 
-스크리닝 통과한 아이디어 기반 Feature Overview 1차 생성. Lite/Standard 판정에 따라 파이프라인 경로가 결정됩니다.
+스크리닝 통과한 아이디어 기반 Feature Overview 1차 생성. Lite/Standard 판정 + 시나리오(A/B/C) + Feature 유형(copy/dev)을 동시 판정하여 파이프라인 경로가 결정됩니다.
 
 ## Usage
 
@@ -14,12 +14,20 @@
 2. **1차 기획 작성**:
    - 유저 스토리, 러프 요구사항, 실현 가능성 평가 작성
    - 기존 아키텍처, 기술 스택과의 정합성 분석
-3. **Lite/Standard 판정** (6개 트리거 기준):
-   - Lite: 단일 파일로 기획 완료 가능한 소규모 기능
-   - Standard: PRD, 와이어프레임 등 상세 기획이 필요한 기능
+3. **3중 판정** (Lite/Standard + 시나리오 + Feature 유형):
+   - **Lite/Standard** (6개 트리거 기준): Lite=소규모, Standard=상세 기획 필요
+   - **시나리오** (copy 도메인 활성 시):
+     - A(백지): 원본은 있지만 구현이 없음 → PRD 먼저
+     - B(부분): 기존 프로젝트에 원본 일부를 가져옴 → PRD 먼저
+     - C(충실도 교정): 이미 카피 시도, 원본과 차이 수정 → 갭 분석 먼저
+   - **Feature 유형**: copy(원본 대응 시각/인터랙션 차이 닫기) / dev(원본 대응 없음 또는 비시각적)
+   - 판정 결과를 `07-routing-metadata.md`에 기록
 4. **경로 분기**:
    - Lite → `.plans/features/active/{slug}.md` (파이프라인 종료 가능)
    - Standard → `.plans/features/drafts/{slug}/first-pass.md` (P4 PRD로 진행)
+   - copy Feature + 시나리오 C → 범위 PRD 후 `/copy-reference-refresh` → 갭 분석
+   - copy Feature + 시나리오 A/B → PRD 후 `/copy-reference-refresh` (원본 캡처만)
+   - dev Feature → 기존 dev 경로 직행
 5. **PCC-02 검증**: 승인된 아이디어에 기획이 존재하는지 확인
 6. **Human Checkpoint**: Scope 확인
 
@@ -40,4 +48,8 @@
 
 - Lite: `.plans/features/active/{slug}.md`
 - Standard: `.plans/features/drafts/{slug}/first-pass.md`
-- 다음 단계 안내: Lite는 `/dev-feature`, Standard는 `/plan-prd`
+- Routing Metadata: `.plans/features/active/{slug}/00-context/07-routing-metadata.md` (시나리오, Feature 유형, 규모)
+- 다음 단계 안내:
+  - dev Feature: Lite → `/dev-feature`, Standard → `/plan-prd`
+  - copy Feature + 시나리오 A/B: Standard → `/plan-prd` → 구현 후 QA에서 copy 검증
+  - copy Feature + 시나리오 C: Standard → `/plan-prd`(범위 PRD) → `/copy-reference-refresh` → 갭 분석

@@ -46,12 +46,13 @@ color: red
        - 일관성: 단계 간 정보 일치 여부 (PCC 활용)
        - 실현가능성: 기술적/일정적 현실성
        - 사용자 중심성: 사용자 스토리의 명확성, UX 고려
-    4) PCC 5종 검증 (해당 시):
+    4) PCC 검증 (해당 시):
        - PCC-01: Idea ↔ Screen
        - PCC-02: Screen ↔ Feature
        - PCC-03: Feature ↔ PRD
        - PCC-04: PRD ↔ Wireframe
        - PCC-05: Wireframe ↔ Stitch
+       - PCC-06: Gap Board ↔ Detail PRD (copy 도메인 활성 + 시나리오 C에서만 — 갭 데이터가 상세 PRD에 정확히 반영되었는지 확인)
     5) severity 분류 및 리포트 생성
   </Investigation_Protocol>
 

@@ -35,4 +35,6 @@ IDEA-{YYYYMMDD}-{NNN} 스크리닝 실행. RICE 프레임워크 기반으로 아
 - `screening-matrix.md` 인덱스에 요약 행 반영
 - 승인된 아이디어는 `20-approved/`로 이동
 - Lite/Standard 카테고리 판정 포함
+- WBS 계층 예비 분류: Epic(10+ 파일, 5+ 뷰포트) / Feature(3~10 파일) / Story(1~3 파일) / Task(단일 파일)
+- 충실도 해석: RICE Impact에 시각적 충실도 영향도를 반영 (copy 도메인 활성 시)
 - 다음 단계 안내: `/plan-draft IDEA-{YYYYMMDD}-{NNN}` (approved 상태에서만)

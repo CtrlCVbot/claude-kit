@@ -24,6 +24,7 @@
    - PCC-03: Feature ↔ PRD
    - PCC-04: PRD ↔ Wireframe
    - PCC-05: Wireframe ↔ Stitch
+   - PCC-06: Gap Board ↔ Detail PRD (copy 도메인 활성 + 시나리오 C에서만 적용)
 4. **판정**: PASS / WARN / FAIL
 5. **리뷰 리포트 출력**: 요약, 발견 사항, 권고, Approve/Revise/Reject 판정
 
