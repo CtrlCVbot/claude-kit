@@ -339,6 +339,411 @@
       "claudeSource": "src/claude/core/rules/verification.md",
       "codexSource": null,
       "confidence": "확정 (Phase 2)"
+    },
+    {
+      "identity": "copy-evidence-reminder",
+      "type": "hook",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "hooks.post",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "PostToolUse Edit|Write reminder",
+        "evidence path convention depends on .plans/ structure",
+        "copy 도메인 신규 훅 — Codex 런타임 검증 전"
+      ],
+      "fallbackTarget": null,
+      "exceptionId": "EX-010",
+      "claudeSource": "src/claude/copy/hooks/copy-evidence-reminder.js",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-doc-drift-check",
+      "type": "hook",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "hooks.post",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "PostToolUse Edit|Write reminder",
+        "document-implementation drift detection",
+        "copy 도메인 신규 훅 — Codex 런타임 검증 전"
+      ],
+      "fallbackTarget": null,
+      "exceptionId": "EX-011",
+      "claudeSource": "src/claude/copy/hooks/copy-doc-drift-check.js",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-scope-guard",
+      "type": "hook",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "hooks.pre",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "PreToolUse Edit|Write reminder (initially)",
+        "execution unit scope tracking depends on .plans/ metadata",
+        "copy 도메인 신규 훅 — Codex 런타임 검증 전"
+      ],
+      "fallbackTarget": null,
+      "exceptionId": "EX-012",
+      "claudeSource": "src/claude/copy/hooks/copy-scope-guard.js",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-variant-env-guard",
+      "type": "hook",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "hooks.post",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "PostToolUse Edit|Write reminder",
+        "variant/host map env detection",
+        "copy 도메인 신규 훅 — Codex 런타임 검증 전"
+      ],
+      "fallbackTarget": null,
+      "exceptionId": "EX-013",
+      "claudeSource": "src/claude/copy/hooks/copy-variant-env-guard.js",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-gate-stop",
+      "type": "hook",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "hooks.stop",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "Stop event blocking candidate (disabled by default)",
+        "Phase/R closeout gate logic",
+        "copy 도메인 신규 훅 — Codex 런타임 검증 전"
+      ],
+      "fallbackTarget": null,
+      "exceptionId": "EX-014",
+      "claudeSource": "src/claude/copy/hooks/copy-gate-stop.js",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-fidelity",
+      "type": "agent",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "subagents",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "copy 도메인 신규 에이전트 — Codex 전환 전"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/copy/agents/copy-fidelity.md",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-interaction-fidelity",
+      "type": "agent",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "subagents",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "copy 도메인 신규 에이전트 — Codex 전환 전"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/copy/agents/copy-interaction-fidelity.md",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-reference-baseline",
+      "type": "agent",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "subagents",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "copy 도메인 신규 에이전트 — Codex 전환 전"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/copy/agents/copy-reference-baseline.md",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-qa-reviewer",
+      "type": "agent",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "subagents",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "copy 도메인 신규 에이전트 — Codex 전환 전"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/copy/agents/copy-qa-reviewer.md",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-reference-refresh",
+      "type": "command",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "cli",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "copy 도메인 신규 커맨드 — Codex 전환 전"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/copy/commands/copy-reference-refresh.md",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-visual-review",
+      "type": "command",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "cli",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "copy 도메인 신규 커맨드 — Codex 전환 전"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/copy/commands/copy-visual-review.md",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-interaction-review",
+      "type": "command",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "cli",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "copy 도메인 신규 커맨드 — Codex 전환 전"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/copy/commands/copy-interaction-review.md",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-gap-board",
+      "type": "command",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "cli",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "copy 도메인 신규 커맨드 — Codex 전환 전"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/copy/commands/copy-gap-board.md",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-plan-unit",
+      "type": "command",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "cli",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "copy 도메인 신규 커맨드 — Codex 전환 전"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/copy/commands/copy-plan-unit.md",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-verify",
+      "type": "command",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "cli",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "copy 도메인 신규 커맨드 — Codex 전환 전"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/copy/commands/copy-verify.md",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-closeout",
+      "type": "command",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "cli",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "copy 도메인 신규 커맨드 — Codex 전환 전"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/copy/commands/copy-closeout.md",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-fidelity-rule",
+      "type": "rule",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "agents_md",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "copy 도메인 신규 룰 — Codex 전환 전"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/copy/rules/copy-fidelity.md",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-evidence-rule",
+      "type": "rule",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "agents_md",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "copy 도메인 신규 룰 — Codex 전환 전"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/copy/rules/copy-evidence.md",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-gates-rule",
+      "type": "rule",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "agents_md",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "copy 도메인 신규 룰 — Codex 전환 전"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/copy/rules/copy-gates.md",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-commands-rule",
+      "type": "rule",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "agents_md",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "copy 도메인 신규 룰 — Codex 전환 전"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/copy/rules/copy-commands.md",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-variant-rule",
+      "type": "rule",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "agents_md",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "copy 도메인 신규 룰 — Codex 전환 전"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/copy/rules/copy-variant.md",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-pipeline",
+      "type": "skill",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "skills",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "copy 도메인 신규 스킬 — Codex 전환 전"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/copy/skills/copy-pipeline/SKILL.md",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-evidence-management",
+      "type": "skill",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "skills",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "copy 도메인 신규 스킬 — Codex 전환 전"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/copy/skills/copy-evidence-management/SKILL.md",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-gap-analysis",
+      "type": "skill",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "skills",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "copy 도메인 신규 스킬 — Codex 전환 전"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/copy/skills/copy-gap-analysis/SKILL.md",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-qa-workflow",
+      "type": "skill",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "skills",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "copy 도메인 신규 스킬 — Codex 전환 전"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/copy/skills/copy-qa-workflow/SKILL.md",
+      "codexSource": null,
+      "confidence": "low"
+    },
+    {
+      "identity": "copy-closeout-workflow",
+      "type": "skill",
+      "domain": "copy",
+      "strategy": "paired-review",
+      "officialSurface": "skills",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "copy 도메인 신규 스킬 — Codex 전환 전"
+      ],
+      "fallbackTarget": null,
+      "claudeSource": "src/claude/copy/skills/copy-closeout-workflow/SKILL.md",
+      "codexSource": null,
+      "confidence": "low"
     }
   ]
 }

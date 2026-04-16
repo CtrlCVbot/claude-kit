@@ -192,6 +192,106 @@
         "AGENTS.md is the official instruction surface"
       ],
       "fallbackTarget": "agents-guidance"
+    },
+    {
+      "id": "EX-010",
+      "component": "copy-evidence-reminder",
+      "category": "codex-conversion",
+      "rule": "hook-review",
+      "detail": "PostToolUse Edit|Write reminder hook. Evidence path convention depends on .plans/ structure.",
+      "reason": "copy 도메인 신규 훅. Codex 런타임 검증 전까지 paired-review로 보류.",
+      "approvedBy": "maintainer",
+      "approvedDate": "2026-04-16",
+      "expiresDate": null,
+      "status": "active",
+      "strategy": "paired-review",
+      "officialSurface": "hooks",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "PostToolUse Edit|Write reminder",
+        "evidence path convention depends on .plans/ structure"
+      ],
+      "fallbackTarget": null
+    },
+    {
+      "id": "EX-011",
+      "component": "copy-doc-drift-check",
+      "category": "codex-conversion",
+      "rule": "hook-review",
+      "detail": "PostToolUse Edit|Write reminder hook. Document-implementation drift detection.",
+      "reason": "copy 도메인 신규 훅. Codex 런타임 검증 전까지 paired-review로 보류.",
+      "approvedBy": "maintainer",
+      "approvedDate": "2026-04-16",
+      "expiresDate": null,
+      "status": "active",
+      "strategy": "paired-review",
+      "officialSurface": "hooks",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "PostToolUse Edit|Write reminder",
+        "document-implementation drift detection"
+      ],
+      "fallbackTarget": null
+    },
+    {
+      "id": "EX-012",
+      "component": "copy-scope-guard",
+      "category": "codex-conversion",
+      "rule": "hook-review",
+      "detail": "PreToolUse Edit|Write scope guard (initially reminder). Execution unit scope tracking depends on .plans/ metadata.",
+      "reason": "copy 도메인 신규 훅. Codex 런타임 검증 전까지 paired-review로 보류.",
+      "approvedBy": "maintainer",
+      "approvedDate": "2026-04-16",
+      "expiresDate": null,
+      "status": "active",
+      "strategy": "paired-review",
+      "officialSurface": "hooks",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "PreToolUse Edit|Write reminder (initially)",
+        "execution unit scope tracking depends on .plans/ metadata"
+      ],
+      "fallbackTarget": null
+    },
+    {
+      "id": "EX-013",
+      "component": "copy-variant-env-guard",
+      "category": "codex-conversion",
+      "rule": "hook-review",
+      "detail": "PostToolUse Edit|Write reminder hook. Variant/host map environment detection.",
+      "reason": "copy 도메인 신규 훅. Codex 런타임 검증 전까지 paired-review로 보류.",
+      "approvedBy": "maintainer",
+      "approvedDate": "2026-04-16",
+      "expiresDate": null,
+      "status": "active",
+      "strategy": "paired-review",
+      "officialSurface": "hooks",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "PostToolUse Edit|Write reminder",
+        "variant/host map env detection"
+      ],
+      "fallbackTarget": null
+    },
+    {
+      "id": "EX-014",
+      "component": "copy-gate-stop",
+      "category": "codex-conversion",
+      "rule": "hook-review",
+      "detail": "Stop event blocking candidate (disabled by default). Phase/R closeout gate logic.",
+      "reason": "copy 도메인 신규 훅. Codex 런타임 검증 전까지 paired-review로 보류.",
+      "approvedBy": "maintainer",
+      "approvedDate": "2026-04-16",
+      "expiresDate": null,
+      "status": "active",
+      "strategy": "paired-review",
+      "officialSurface": "hooks.stop",
+      "evidenceLevel": "추정",
+      "docConstraints": [
+        "Stop event blocking candidate (disabled by default)",
+        "Phase/R closeout gate logic"
+      ],
+      "fallbackTarget": null
     }
   ]
 }

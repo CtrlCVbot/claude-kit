@@ -761,6 +761,266 @@
       "claude": "src/claude/plan/hooks/plan-doc-guard.js",
       "codex": "src/codex/plan/hooks/plan-doc-guard.js",
       "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "copy-fidelity",
+      "type": "agent",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/agents/copy-fidelity.md",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-interaction-fidelity",
+      "type": "agent",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/agents/copy-interaction-fidelity.md",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-reference-baseline",
+      "type": "agent",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/agents/copy-reference-baseline.md",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-qa-reviewer",
+      "type": "agent",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/agents/copy-qa-reviewer.md",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-reference-refresh",
+      "type": "command",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/commands/copy-reference-refresh.md",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-visual-review",
+      "type": "command",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/commands/copy-visual-review.md",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-interaction-review",
+      "type": "command",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/commands/copy-interaction-review.md",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-gap-board",
+      "type": "command",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/commands/copy-gap-board.md",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-plan-unit",
+      "type": "command",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/commands/copy-plan-unit.md",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-verify",
+      "type": "command",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/commands/copy-verify.md",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-closeout",
+      "type": "command",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/commands/copy-closeout.md",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-evidence-reminder",
+      "type": "hook",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/hooks/copy-evidence-reminder.js",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-doc-drift-check",
+      "type": "hook",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/hooks/copy-doc-drift-check.js",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-scope-guard",
+      "type": "hook",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/hooks/copy-scope-guard.js",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-variant-env-guard",
+      "type": "hook",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/hooks/copy-variant-env-guard.js",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-gate-stop",
+      "type": "hook",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/hooks/copy-gate-stop.js",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-fidelity-rule",
+      "type": "rule",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/rules/copy-fidelity.md",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-evidence-rule",
+      "type": "rule",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/rules/copy-evidence.md",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-gates-rule",
+      "type": "rule",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/rules/copy-gates.md",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-commands-rule",
+      "type": "rule",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/rules/copy-commands.md",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-variant-rule",
+      "type": "rule",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/rules/copy-variant.md",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-pipeline",
+      "type": "skill",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/skills/copy-pipeline/SKILL.md",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-evidence-management",
+      "type": "skill",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/skills/copy-evidence-management/SKILL.md",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-gap-analysis",
+      "type": "skill",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/skills/copy-gap-analysis/SKILL.md",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-qa-workflow",
+      "type": "skill",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/skills/copy-qa-workflow/SKILL.md",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
+    },
+    {
+      "identity": "copy-closeout-workflow",
+      "type": "skill",
+      "domain": "copy",
+      "status": "unpaired",
+      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "claude": "src/claude/copy/skills/copy-closeout-workflow/SKILL.md",
+      "codex": null,
+      "createdAt": "2026-04-16T12:00:00.000Z"
     }
   ]
 }
