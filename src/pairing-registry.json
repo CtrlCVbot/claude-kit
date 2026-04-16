@@ -11,6 +11,756 @@
       "claude": "src/claude/core/hooks/output-secret-filter.js",
       "codex": "src/codex/core/hooks/output-secret-filter.js",
       "createdAt": "2026-04-10T00:00:00.000Z"
+    },
+    {
+      "identity": "continuous-learning",
+      "type": "skill",
+      "domain": "core",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/core/skills/continuous-learning/SKILL.md",
+      "codex": "src/codex/core/skills/continuous-learning/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "session-wrap",
+      "type": "skill",
+      "domain": "core",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/core/skills/session-wrap/SKILL.md",
+      "codex": "src/codex/core/skills/session-wrap/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-domain-modeling",
+      "type": "skill",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/skills/dev-domain-modeling/SKILL.md",
+      "codex": "src/codex/dev/skills/dev-domain-modeling/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-observability",
+      "type": "skill",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/skills/dev-observability/SKILL.md",
+      "codex": "src/codex/dev/skills/dev-observability/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-refactoring",
+      "type": "skill",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/skills/dev-refactoring/SKILL.md",
+      "codex": "src/codex/dev/skills/dev-refactoring/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-security-pipeline",
+      "type": "skill",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/skills/dev-security-pipeline/SKILL.md",
+      "codex": "src/codex/dev/skills/dev-security-pipeline/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-tdd-workflow",
+      "type": "skill",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/skills/dev-tdd-workflow/SKILL.md",
+      "codex": "src/codex/dev/skills/dev-tdd-workflow/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-testing-backend",
+      "type": "skill",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/skills/dev-testing-backend/SKILL.md",
+      "codex": "src/codex/dev/skills/dev-testing-backend/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-testing-e2e",
+      "type": "skill",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/skills/dev-testing-e2e/SKILL.md",
+      "codex": "src/codex/dev/skills/dev-testing-e2e/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-testing-frontend",
+      "type": "skill",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/skills/dev-testing-frontend/SKILL.md",
+      "codex": "src/codex/dev/skills/dev-testing-frontend/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-verification-engine",
+      "type": "skill",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/skills/dev-verification-engine/SKILL.md",
+      "codex": "src/codex/dev/skills/dev-verification-engine/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-architecture-decision",
+      "type": "skill",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/skills/dev-architecture-decision/SKILL.md",
+      "codex": "src/codex/dev/skills/dev-architecture-decision/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-feature-module",
+      "type": "skill",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/skills/dev-feature-module/SKILL.md",
+      "codex": "src/codex/dev/skills/dev-feature-module/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-feature-plan",
+      "type": "skill",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/skills/dev-feature-plan/SKILL.md",
+      "codex": "src/codex/dev/skills/dev-feature-plan/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-layered-architecture",
+      "type": "skill",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/skills/dev-layered-architecture/SKILL.md",
+      "codex": "src/codex/dev/skills/dev-layered-architecture/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-workflow",
+      "type": "skill",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/skills/dev-workflow/SKILL.md",
+      "codex": "src/codex/dev/skills/dev-workflow/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-frontend-patterns",
+      "type": "skill",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/skills/dev-frontend-patterns/SKILL.md",
+      "codex": "src/codex/dev/skills/dev-frontend-patterns/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-prd-authoring",
+      "type": "skill",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/skills/plan-prd-authoring/SKILL.md",
+      "codex": "src/codex/plan/skills/plan-prd-authoring/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-wireframe-design",
+      "type": "skill",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/skills/plan-wireframe-design/SKILL.md",
+      "codex": "src/codex/plan/skills/plan-wireframe-design/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-stitch-workflow",
+      "type": "skill",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/skills/plan-stitch-workflow/SKILL.md",
+      "codex": "src/codex/plan/skills/plan-stitch-workflow/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-review-criteria",
+      "type": "skill",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/skills/plan-review-criteria/SKILL.md",
+      "codex": "src/codex/plan/skills/plan-review-criteria/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-archive-workflow",
+      "type": "skill",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/skills/plan-archive-workflow/SKILL.md",
+      "codex": "src/codex/plan/skills/plan-archive-workflow/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-idea-management",
+      "type": "skill",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/skills/plan-idea-management/SKILL.md",
+      "codex": "src/codex/plan/skills/plan-idea-management/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-screening-workflow",
+      "type": "skill",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/skills/plan-screening-workflow/SKILL.md",
+      "codex": "src/codex/plan/skills/plan-screening-workflow/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-pipeline",
+      "type": "skill",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/skills/plan-pipeline/SKILL.md",
+      "codex": "src/codex/plan/skills/plan-pipeline/SKILL.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-architect",
+      "type": "agent",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/agents/dev-architect.md",
+      "codex": "src/codex/dev/agents/dev-architect.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-code-reviewer",
+      "type": "agent",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/agents/dev-code-reviewer.md",
+      "codex": "src/codex/dev/agents/dev-code-reviewer.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-database-reviewer",
+      "type": "agent",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/agents/dev-database-reviewer.md",
+      "codex": "src/codex/dev/agents/dev-database-reviewer.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-doc-updater",
+      "type": "agent",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/agents/dev-doc-updater.md",
+      "codex": "src/codex/dev/agents/dev-doc-updater.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-security-reviewer",
+      "type": "agent",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/agents/dev-security-reviewer.md",
+      "codex": "src/codex/dev/agents/dev-security-reviewer.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-verify-agent",
+      "type": "agent",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/agents/dev-verify-agent.md",
+      "codex": "src/codex/dev/agents/dev-verify-agent.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-prd-writer",
+      "type": "agent",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/agents/plan-prd-writer.md",
+      "codex": "src/codex/plan/agents/plan-prd-writer.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-wireframe-designer",
+      "type": "agent",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/agents/plan-wireframe-designer.md",
+      "codex": "src/codex/plan/agents/plan-wireframe-designer.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-stitch-integrator",
+      "type": "agent",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/agents/plan-stitch-integrator.md",
+      "codex": "src/codex/plan/agents/plan-stitch-integrator.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-reviewer",
+      "type": "agent",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/agents/plan-reviewer.md",
+      "codex": "src/codex/plan/agents/plan-reviewer.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-idea-collector",
+      "type": "agent",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/agents/plan-idea-collector.md",
+      "codex": "src/codex/plan/agents/plan-idea-collector.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-idea-screener",
+      "type": "agent",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/agents/plan-idea-screener.md",
+      "codex": "src/codex/plan/agents/plan-idea-screener.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-build-fix",
+      "type": "command",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/commands/dev-build-fix.md",
+      "codex": "src/codex/dev/commands/dev-build-fix.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-checkpoint",
+      "type": "command",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/commands/dev-checkpoint.md",
+      "codex": "src/codex/dev/commands/dev-checkpoint.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-commit-push-pr",
+      "type": "command",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/commands/dev-commit-push-pr.md",
+      "codex": "src/codex/dev/commands/dev-commit-push-pr.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-commit",
+      "type": "command",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/commands/dev-commit.md",
+      "codex": "src/codex/dev/commands/dev-commit.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-continue",
+      "type": "command",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/commands/dev-continue.md",
+      "codex": "src/codex/dev/commands/dev-continue.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-explore",
+      "type": "command",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/commands/dev-explore.md",
+      "codex": "src/codex/dev/commands/dev-explore.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-handoff-verify",
+      "type": "command",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/commands/dev-handoff-verify.md",
+      "codex": "src/codex/dev/commands/dev-handoff-verify.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-learn",
+      "type": "command",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/commands/dev-learn.md",
+      "codex": "src/codex/dev/commands/dev-learn.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-plan",
+      "type": "command",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/commands/dev-plan.md",
+      "codex": "src/codex/dev/commands/dev-plan.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-refactor",
+      "type": "command",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/commands/dev-refactor.md",
+      "codex": "src/codex/dev/commands/dev-refactor.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-review",
+      "type": "command",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/commands/dev-review.md",
+      "codex": "src/codex/dev/commands/dev-review.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-security-review",
+      "type": "command",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/commands/dev-security-review.md",
+      "codex": "src/codex/dev/commands/dev-security-review.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-sync-docs",
+      "type": "command",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/commands/dev-sync-docs.md",
+      "codex": "src/codex/dev/commands/dev-sync-docs.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-sync",
+      "type": "command",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/commands/dev-sync.md",
+      "codex": "src/codex/dev/commands/dev-sync.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-test-verify",
+      "type": "command",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/commands/dev-test-verify.md",
+      "codex": "src/codex/dev/commands/dev-test-verify.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-verify-all",
+      "type": "command",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/commands/dev-verify-all.md",
+      "codex": "src/codex/dev/commands/dev-verify-all.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-verify-fe",
+      "type": "command",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/commands/dev-verify-fe.md",
+      "codex": "src/codex/dev/commands/dev-verify-fe.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-architecture",
+      "type": "command",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/commands/dev-architecture.md",
+      "codex": "src/codex/dev/commands/dev-architecture.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-feature",
+      "type": "command",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/commands/dev-feature.md",
+      "codex": "src/codex/dev/commands/dev-feature.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-run",
+      "type": "command",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/commands/dev-run.md",
+      "codex": "src/codex/dev/commands/dev-run.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-verify",
+      "type": "command",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/commands/dev-verify.md",
+      "codex": "src/codex/dev/commands/dev-verify.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-prd",
+      "type": "command",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/commands/plan-prd.md",
+      "codex": "src/codex/plan/commands/plan-prd.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-wireframe",
+      "type": "command",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/commands/plan-wireframe.md",
+      "codex": "src/codex/plan/commands/plan-wireframe.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-stitch",
+      "type": "command",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/commands/plan-stitch.md",
+      "codex": "src/codex/plan/commands/plan-stitch.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-idea",
+      "type": "command",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/commands/plan-idea.md",
+      "codex": "src/codex/plan/commands/plan-idea.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-screen",
+      "type": "command",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/commands/plan-screen.md",
+      "codex": "src/codex/plan/commands/plan-screen.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-archive",
+      "type": "command",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/commands/plan-archive.md",
+      "codex": "src/codex/plan/commands/plan-archive.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-improve",
+      "type": "command",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/commands/plan-improve.md",
+      "codex": "src/codex/plan/commands/plan-improve.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-draft",
+      "type": "command",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/commands/plan-draft.md",
+      "codex": "src/codex/plan/commands/plan-draft.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-review",
+      "type": "command",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/commands/plan-review.md",
+      "codex": "src/codex/plan/commands/plan-review.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-bridge",
+      "type": "command",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/commands/plan-bridge.md",
+      "codex": "src/codex/plan/commands/plan-bridge.md",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "edit-tracker",
+      "type": "hook",
+      "domain": "core",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/core/hooks/edit-tracker.js",
+      "codex": "src/codex/core/hooks/edit-tracker.js",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "code-quality-reminder",
+      "type": "hook",
+      "domain": "core",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/core/hooks/code-quality-reminder.js",
+      "codex": "src/codex/core/hooks/code-quality-reminder.js",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "security-auto-trigger",
+      "type": "hook",
+      "domain": "core",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/core/hooks/security-auto-trigger.js",
+      "codex": "src/codex/core/hooks/security-auto-trigger.js",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-db-guard",
+      "type": "hook",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/hooks/dev-db-guard.js",
+      "codex": "src/codex/dev/hooks/dev-db-guard.js",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-tdd-guard",
+      "type": "hook",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/hooks/dev-tdd-guard.js",
+      "codex": "src/codex/dev/hooks/dev-tdd-guard.js",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "dev-feature-scope-guard",
+      "type": "hook",
+      "domain": "dev",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/dev/hooks/dev-feature-scope-guard.js",
+      "codex": "src/codex/dev/hooks/dev-feature-scope-guard.js",
+      "createdAt": "2026-04-16T00:22:26.273Z"
+    },
+    {
+      "identity": "plan-doc-guard",
+      "type": "hook",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/hooks/plan-doc-guard.js",
+      "codex": "src/codex/plan/hooks/plan-doc-guard.js",
+      "createdAt": "2026-04-16T00:22:26.273Z"
     }
   ]
 }
