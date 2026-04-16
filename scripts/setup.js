@@ -566,6 +566,20 @@ function buildHooksConfig(activeDomains) {
     );
   }
 
+  if (activeDomains.includes('copy')) {
+    hooks.PreToolUse.push(
+      { matcher: 'Edit|Write', hooks: ['node .claude/hooks/copy-scope-guard.js'] }
+    );
+    hooks.PostToolUse.push(
+      { matcher: 'Edit|Write', hooks: ['node .claude/hooks/copy-evidence-reminder.js'] },
+      { matcher: 'Edit|Write', hooks: ['node .claude/hooks/copy-doc-drift-check.js'] },
+      { matcher: 'Edit|Write', hooks: ['node .claude/hooks/copy-variant-env-guard.js'] }
+    );
+    hooks.Stop.push(
+      { hooks: ['node .claude/hooks/copy-gate-stop.js'] }
+    );
+  }
+
   return hooks;
 }
 
@@ -733,7 +747,7 @@ function buildCodexHooksJson(compatibleHooks, activeDomains) {
 
   for (const hookFile of compatibleHooks) {
     // PreToolUse 훅 (blocking guards)
-    if (['dev-feature-scope-guard.js', 'dev-tdd-guard.js', 'dev-db-guard.js', 'plan-doc-guard.js'].includes(hookFile)) {
+    if (['dev-feature-scope-guard.js', 'dev-tdd-guard.js', 'dev-db-guard.js', 'plan-doc-guard.js', 'copy-scope-guard.js'].includes(hookFile)) {
       if (hookFile === 'dev-db-guard.js') {
         preToolUse.push({ matcher: 'Bash', hookFile });
       } else {
@@ -741,7 +755,7 @@ function buildCodexHooksJson(compatibleHooks, activeDomains) {
       }
     } else {
       // PostToolUse 훅
-      if (['edit-tracker.js', 'code-quality-reminder.js', 'security-auto-trigger.js'].includes(hookFile)) {
+      if (['edit-tracker.js', 'code-quality-reminder.js', 'security-auto-trigger.js', 'copy-evidence-reminder.js', 'copy-doc-drift-check.js', 'copy-variant-env-guard.js'].includes(hookFile)) {
         postToolUse.push({ matcher: 'Edit|Write', hookFile });
       }
     }

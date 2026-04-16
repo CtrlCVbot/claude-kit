@@ -59,6 +59,66 @@ const HOOK_PORTABILITY = {
     compatible: false,
     reason: 'paired-fallback: state-parity not reproducible (Claude session-stats.json + tmpdir marker)',
   },
+  'copy-evidence-reminder.js': {
+    strategy: 'paired-review',
+    officialSurface: 'hooks',
+    evidenceLevel: '추정',
+    docConstraints: [
+      'PostToolUse Edit|Write reminder',
+      'evidence path convention depends on .plans/ structure',
+    ],
+    fallbackTarget: null,
+    compatible: false,
+    reason: 'paired-review: copy domain hook, Codex validation pending',
+  },
+  'copy-doc-drift-check.js': {
+    strategy: 'paired-review',
+    officialSurface: 'hooks',
+    evidenceLevel: '추정',
+    docConstraints: [
+      'PostToolUse Edit|Write reminder',
+      'document-implementation drift detection',
+    ],
+    fallbackTarget: null,
+    compatible: false,
+    reason: 'paired-review: copy domain hook, Codex validation pending',
+  },
+  'copy-scope-guard.js': {
+    strategy: 'paired-review',
+    officialSurface: 'hooks',
+    evidenceLevel: '추정',
+    docConstraints: [
+      'PreToolUse Edit|Write reminder (initially)',
+      'execution unit scope tracking depends on .plans/ metadata',
+    ],
+    fallbackTarget: null,
+    compatible: false,
+    reason: 'paired-review: copy domain hook, Codex validation pending',
+  },
+  'copy-variant-env-guard.js': {
+    strategy: 'paired-review',
+    officialSurface: 'hooks',
+    evidenceLevel: '추정',
+    docConstraints: [
+      'PostToolUse Edit|Write reminder',
+      'variant/host map env detection',
+    ],
+    fallbackTarget: null,
+    compatible: false,
+    reason: 'paired-review: copy domain hook, Codex validation pending',
+  },
+  'copy-gate-stop.js': {
+    strategy: 'paired-review',
+    officialSurface: 'hooks.stop',
+    evidenceLevel: '추정',
+    docConstraints: [
+      'Stop event blocking candidate (disabled by default)',
+      'Phase/R closeout gate logic',
+    ],
+    fallbackTarget: null,
+    compatible: false,
+    reason: 'paired-review: copy domain hook, Codex validation pending',
+  },
 };
 
 /**

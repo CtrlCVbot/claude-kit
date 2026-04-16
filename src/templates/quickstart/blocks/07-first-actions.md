@@ -11,3 +11,9 @@
 {{DEV_ACTIONS_NOTE}}
 
 {{DEV_ACTIONS}}
+
+### C. 원본 대비 충실도를 검증할 때 (`copy`)
+
+{{COPY_ACTIONS_NOTE}}
+
+{{COPY_ACTIONS}}

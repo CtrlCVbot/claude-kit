@@ -13,6 +13,7 @@ const CORE_BLOCKS = [
   '03-pipeline-chooser.md',
   '04-plan-flow.md',
   '05-dev-flow.md',
+  '05b-copy-flow.md',
   '06-target-diff.md',
   '07-first-actions.md',
   '08-reconfig.md',
@@ -64,6 +65,10 @@ function buildContext({ variant, activeDomains, activeTargets, version }) {
     PLAN_ACTIONS: buildPlanActions(),
     DEV_ACTIONS_NOTE: buildDevActionsNote(variant),
     DEV_ACTIONS: buildDevActions(),
+    COPY_STATUS_NOTE: buildCopyStatusNote(variant, activeDomains),
+    COPY_FLOW_ROWS: buildCopyFlowRows(),
+    COPY_ACTIONS_NOTE: buildCopyActionsNote(variant, activeDomains),
+    COPY_ACTIONS: buildCopyActions(),
     RECONFIG_PROFILE_JSON: buildReconfigProfile(activeDomains, activeTargets),
     MINI_GLOSSARY_ROWS: buildMiniGlossaryRows()
   };
@@ -110,7 +115,8 @@ function buildPipelineChooserRows() {
     '| 아이디어를 먼저 수집하고 우선순위를 정해야 함 | `core + dev + plan` | `/plan-idea` | 아이디어 -> 스크리닝 -> PRD -> 브리지까지 한 흐름으로 이어진다. |',
     '| 승인 전 아이디어를 걸러야 함 | `core + dev + plan` | `/plan-screen` | RICE와 승인 게이트로 실행 여부를 먼저 결정한다. |',
     '| 이미 요구사항이나 PRD가 있고 바로 구현하면 됨 | `core + dev` | `/dev-feature` | 기획 단계를 생략하고 Feature Package 생성부터 시작한다. |',
-    '| 현재 출력 구조와 타겟 차이를 먼저 확인해야 함 | 현재 설치 구성 유지 | 이 문서의 Claude / Codex 차이 섹션 확인 | 설치된 runtime surface를 먼저 이해한다. |'
+    '| 현재 출력 구조와 타겟 차이를 먼저 확인해야 함 | 현재 설치 구성 유지 | 이 문서의 Claude / Codex 차이 섹션 확인 | 설치된 runtime surface를 먼저 이해한다. |',
+    '| 원본 화면과 현재 구현의 시각적 차이를 닫아야 함 | `core + dev + plan + copy` | `/copy-reference-refresh` | 기준 캡처 → 갭 분석 → 실행 단위 → 검증까지 한 흐름으로 이어진다. |'
   ].join('\n');
 }
 
@@ -254,8 +260,58 @@ function buildDevActions() {
   ].join('\n');
 }
 
+function buildCopyStatusNote(variant, activeDomains) {
+  if (variant === 'repo') {
+    return '- `copy`는 opt-in 도메인이며, 전체 기능을 이해하기 위해 여기서는 항상 설명한다.';
+  }
+
+  if (activeDomains.includes('copy')) {
+    return '- 현재 설치에는 `copy`가 포함되어 있어 아래 흐름을 바로 실행할 수 있다.';
+  }
+
+  return '- 현재 설치에는 `copy`가 없으므로 아래 흐름은 구조 이해용이다. 실제 실행 전에는 `copy`를 활성화해야 한다.';
+}
+
+function buildCopyFlowRows() {
+  return [
+    '| C1 | `/copy-reference-refresh` | 기준 캡처 + manifest 생성 | `.plans/features/active/{slug}/evidence/` |',
+    '| C2 | `/copy-visual-review` | visual 갭 분석 | Gap Row (VF-*) |',
+    '| C3 | `/copy-interaction-review` | interaction 갭 분석 | State Map (IF-*) |',
+    '| C4 | `/copy-gap-board` | 갭 우선순위 통합 | 실행 후보 테이블 |',
+    '| C5 | `/copy-plan-unit` | 갭→실행 단위 전환 | 실행 단위 계획 |',
+    '| C6 | `/copy-verify` | build/evidence/document 검증 | QA 결과 리포트 |',
+    '| C7 | `/copy-closeout` | 승인 + 잔여 리스크 | closeout 메모 |'
+  ].join('\n');
+}
+
+function buildCopyActionsNote(variant, activeDomains) {
+  if (variant === 'repo') {
+    return '전체 기능 예시 기준이다. `copy`는 opt-in이므로 실제 실행 전 활성화 여부를 먼저 확인한다.';
+  }
+
+  if (activeDomains.includes('copy')) {
+    return '현재 설치에서 바로 실행 가능한 흐름이다.';
+  }
+
+  return '현재 설치에는 `copy`가 없으므로, 아래 흐름은 `copy` 활성화 후 실행한다.';
+}
+
+function buildCopyActions() {
+  return [
+    '```text',
+    '/copy-reference-refresh --scope header,hero --viewport 1440,768',
+    '/copy-visual-review --section header',
+    '/copy-interaction-review --state hover,sticky',
+    '/copy-gap-board',
+    '/copy-plan-unit VF-HEADER-01',
+    '/copy-verify',
+    '/copy-closeout',
+    '```'
+  ].join('\n');
+}
+
 function buildReconfigProfile(activeDomains, activeTargets) {
-  const nextDomains = normalizeDomains([...activeDomains, 'plan']);
+  const nextDomains = normalizeDomains([...activeDomains, 'plan', 'copy']);
   const nextTargets = normalizeTargets(activeTargets);
 
   return JSON.stringify({
@@ -272,12 +328,16 @@ function buildMiniGlossaryRows() {
     '| `Feature Package` | Dev 구현에 쓰는 작업 명세 문서 묶음 |',
     '| `PCC` | Planning Consistency Check. 기획 단계 간 일관성 검증 |',
     '| `DVC` | Document-Verification Consistency. 구현이 문서와 맞는지 확인 |',
-    '| package-owned 문서 | 설치/업데이트 시 재생성되는 산출물. 수동 편집 대상으로 보지 않음 |'
+    '| package-owned 문서 | 설치/업데이트 시 재생성되는 산출물. 수동 편집 대상으로 보지 않음 |',
+    '| `Gap Board` | copy 도메인에서 visual/interaction 갭을 우선순위별로 통합한 보드 |',
+    '| `Evidence Manifest` | 기준 캡처(screenshot, state capture)의 메타데이터 목록 |',
+    '| `WBS` | Work Breakdown Structure. Epic > Feature > Story > Task 4계층 분류 |',
+    '| `시나리오 A/B/C` | A(백지), B(부분), C(충실도 교정). 카피 작업의 파이프라인 순서를 결정 |'
   ].join('\n');
 }
 
 function normalizeDomains(domains) {
-  const order = ['core', 'dev', 'plan'];
+  const order = ['core', 'dev', 'plan', 'copy'];
   const set = new Set(domains);
   set.add('core');
   return order.filter(domain => set.has(domain));
