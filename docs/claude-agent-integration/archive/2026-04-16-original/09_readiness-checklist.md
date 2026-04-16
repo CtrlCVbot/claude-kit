@@ -43,6 +43,9 @@
 | [ ] | `07_hooks-and-rules-plan.md`가 blocking/reminder 정책을 구분한다. | hook/rule 후보와 적용 순서 존재 |
 | [ ] | `08_adoption-roadmap.md`가 A0~A9 도입 순서와 gate를 정의한다. | gate와 rollback 기준 존재 |
 | [ ] | `10_plan-workflow-integration-plan.md`가 plan 기능 반영 기준을 정의한다. | `/plan-*`, `.plans/`, plan gate, CAI 반영 계획 존재 |
+| [ ] | `11_work-breakdown-structure.md`가 WBS 4계층과 시나리오 A/B/C를 정의한다. | Epic/Feature/Story/Task + 시나리오 판정 기준 존재 |
+| [ ] | `12_pipeline-integration-diagram.md`가 시나리오별 파이프라인 다이어그램을 제공한다. | Mermaid 흐름도에 A/B, C, Dev 3분기 존재 |
+| [ ] | `13_pipeline-order-analysis.md`가 시나리오별 순서와 Feature 유형 라우팅을 정의한다. | 시나리오별 권장 순서 + copy/dev 판정 기준 존재 |
 
 ## 4. Plan Domain Readiness Checklist
 
@@ -69,6 +72,17 @@
 - **롤백**: `rm -rf .plans/` (사용자 확인 후)
 | [ ] | `/plan-*`, `/copy-*`, `/dev-*` 책임 경계를 확인한다. | CAI-06과 CAI-10의 경계가 충돌하지 않음 | CAI-06/CAI-10 문서 대조 |
 
+### 4.1 시나리오/Feature 유형 판정 준비 체크리스트
+
+| 체크 | 항목 | 완료 기준 |
+| --- | --- | --- |
+| [ ] | 시나리오 A/B/C 의사결정 트리가 CAI-06 §3.1에 문서화되었다 | 판정 조건과 분기 경로 명시 |
+| [ ] | Feature 유형(copy/dev) 라우팅이 CAI-06 §3.2에 문서화되었다 | 2가지 유형 + 판정 기준 명시 |
+| [ ] | `/plan-draft` 출력에 시나리오 + Feature 유형 + Lite/Standard 판정이 포함된다 | CAI-10 §8.1 태깅 형식 참조 |
+| [ ] | 시나리오 C의 2단계 PRD 흐름이 CAI-06 §7.3 + CAI-10 §8.2에 문서화되었다 | 범위 PRD → 갭 분석 → 상세 PRD |
+| [ ] | Dev Feature skip-copy 경로가 CAI-06 §7.5에 문서화되었다 | /dev-feature → /dev-run → /dev-verify |
+| [ ] | 병렬 실행 규칙이 CAI-06 §7.7에 문서화되었다 | Feature병렬, Task순차, Phase합류 |
+
 ## 5. claude-kit 인프라 준비 체크리스트
 
 | 체크 | 항목 | 완료 기준 | 검증 명령 |
@@ -91,6 +105,8 @@
 | [ ] | reference manifest 기준이 P2/P15와 연결된다. | CAI-04와 R3 naming 기준 대조 완료 |
 | [ ] | QA evidence 기준이 P5/P15/R5와 연결된다. | CAI-05와 R3/R5 검증 항목 대조 완료 |
 | [ ] | P0/P1 priority gap은 사용자 확인 대상이다. | user-review gate 표시 |
+| [ ] | visual/interaction 에이전트에 시나리오별 활성화 규칙이 명시되었다. | C=기획시, A/B=QA시. CAI-02 §1, CAI-03 §1 참조 |
+| [ ] | reference baseline 에이전트에 시나리오별 캡처 범위가 명시되었다. | A/B=원본만, C=원본+현재. CAI-04 §1 참조 |
 
 ## 7. Implementation Scope Checklist
 
@@ -102,6 +118,7 @@
 | [ ] | hook blocking은 초기 도입하지 않는다. | reminder 우선 |
 | [ ] | orchestrator agent는 후순위로 유지한다. | A9 before gate 필요 |
 | [ ] | `.plans/` 생성은 별도 승인 후 진행한다. | plan 산출물 root가 무단 생성되지 않음 |
+| [ ] | Feature 유형(copy/dev)이 결정된 후에만 해당 파이프라인에 진입한다. | copy와 dev 경로를 동시에 타지 않음 |
 
 ## 8. Git / Commit Checklist
 
@@ -123,6 +140,8 @@
 | [ ] | CAI-10과 CAI-06/08/09가 서로 충돌하지 않는다. | plan은 pre-stage, copy는 evidence/gap, dev는 구현 |
 | [ ] | 실제 `.claude` (소스: `src/claude/copy/`) 구현 전 변경 파일 목록이 명확하다. | target file list 존재 |
 | [ ] | rollback 방법이 문서화되어 있다. | CAI-08 rollback 기준 참조 |
+| [ ] | CAI-06 §7 워크플로우 조합이 5개 경로(A/B Standard, A/B Lite, C Standard, C Lite, Dev)를 모두 커버한다. | 누락 경로 없음 |
+| [ ] | Phase 게이트에 P2 Feature 재평가 단계가 포함되었다. | 사용자가 P2 진행 여부 결정 |
 
 ## 10. User Gate Checklist
 

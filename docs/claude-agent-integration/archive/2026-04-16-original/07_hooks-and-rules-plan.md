@@ -20,6 +20,8 @@
 | 주요 산출물 | hook/rule 후보, blocking 정책, 적용 순서 |
 | 금지 | 초기부터 모든 visual 작업을 hard blocking 처리 |
 
+> **훅과 시나리오**: 훅은 파일 편집 이벤트에 반응하며 시나리오(A/B/C)와 무관하게 동작한다. 시나리오 분기는 커맨드 계층(CAI-06 §3.1)에서 처리되며, 훅은 이벤트 기반으로만 발동한다.
+
 ## 2. 현재 `.claude` 안전장치 요약
 
 | 현재 파일 | 역할 | copy 프로젝트 관점 |
@@ -41,6 +43,9 @@
 | Hook 후보 | 동작 | 기본 모드 | 적용 시점 | 목적 |
 | --- | --- | --- | --- | --- |
 | `copy-evidence-reminder.js` | visual/interaction 관련 파일 수정 후 evidence 갱신 알림 | reminder | PostToolUse Edit/Write | screenshot/state evidence 누락 방지 |
+
+> 시나리오 인식: 시나리오 A/B에서는 QA 단계(구현 후)에서만 증거 리마인더가 의미 있음. 시나리오 C에서는 기획 시 + QA 시 모두 발동.
+
 | `copy-scope-guard.js` | 현재 실행 단위 허용 경로 밖 수정 경고 | reminder -> later blocking | PreToolUse Edit/Write | 범위 밖 수정 감지 |
 | `copy-gate-stop.js` | Phase/R closeout 이후 다음 단계 자동 진행 경고 | blocking 후보 | Stop 또는 command 종료 | 사용자 gate 유지 |
 | `copy-doc-drift-check.js` | P3/P5/P6/P18/CAI와 실제 변경 drift 알림 | reminder | PostToolUse Edit/Write | 문서-구현 불일치 방지 |
@@ -51,9 +56,15 @@
 | Rule 후보 | 경로 | 목적 |
 | --- | --- | --- |
 | Copy fidelity rule | `.claude/rules/copy-fidelity.md` (소스: `src/claude/copy/rules/copy-fidelity.md`) | Turner 홈페이지 정밀 카피 판단 기준 |
+
+> 시나리오 A/B/C 정의를 포함하여 Claude가 현재 Feature의 시나리오를 인식할 수 있도록 한다 (CAI-11 §2.5 참조).
+
 | Copy evidence rule | `.claude/rules/copy-evidence.md` (소스: `src/claude/copy/rules/copy-evidence.md`) | screenshot/state evidence naming과 품질 기준 |
 | Copy gate rule | `.claude/rules/copy-gates.md` (소스: `src/claude/copy/rules/copy-gates.md`) | 실행 단위, Phase, R 단계 승인 gate |
 | Copy command rule | `.claude/rules/copy-commands.md` (소스: `src/claude/copy/rules/copy-commands.md`) | `/copy-*` command 사용 기준 |
+
+> Feature 유형 라우팅 규칙 포함: copy 커맨드는 copy Feature에만 적용. Dev Feature는 copy 커맨드를 건너뛴다 (CAI-06 §3.2 참조).
+
 | Copy variant rule | `.claude/rules/copy-variant.md` (소스: `src/claude/copy/rules/copy-variant.md`) | Turner/demo/host map 운영 기준 |
 
 ## 5. Blocking vs Reminder 정책
@@ -65,6 +76,7 @@
 | Phase/R closeout 후 다음 단계 자동 진행 | blocking | 사용자 gate가 핵심 운영 원칙 | 계속 blocking 유지 |
 | `.env.example` 또는 variant routing 변경 | reminder + QA 요구 | 운영 영향이 있으나 문서 수정도 가능 | production deploy 전 blocking 검토 |
 | P3/P5/P6와 구현 drift 의심 | reminder | drift 판정이 맥락 의존적 | readiness 단계에서 check-only command로 보강 |
+| 시나리오 오분류 감지 | 리마인더 | copy 커맨드가 dev Feature에서 호출되거나, dev 커맨드가 copy Feature에서 호출될 때 경고 |
 | `.plans/` 문서 구조 누락 | existing blocking intent | plan-doc-guard가 이미 연결됨 | 실제 정상 동작과 false positive를 CAI-09에서 검증 |
 | planning 중 code edit 시도 | existing blocking intent | plan 단계에서는 구현을 막는 것이 원칙 | hook 구현상 실제 차단 범위는 별도 확인 |
 

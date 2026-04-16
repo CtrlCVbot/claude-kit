@@ -20,6 +20,7 @@
 | 주요 산출물 | QA result report, missing evidence report, acceptance readiness note |
 | 금지 | evidence 없이 “통과로 보임” 판정 |
 | plan 연결 | 큰 보강 항목은 QA readiness 전에 `/plan-review` 결과와 plan gate 통과 여부를 확인한다. |
+| 시나리오별 QA | 시나리오 A/B: 최초 copy 비교 수행 (원본 vs 구현 결과). 시나리오 C: 기획 시 식별된 갭이 닫혔는지 재검증. Dev Feature: `/dev-verify`만 사용 (copy QA 미적용) |
 
 ## 2. 적용 범위
 
@@ -60,6 +61,7 @@
 | 3 | demo build | `cmd /c "set SITE_VARIANT=demo&& npm run build"` | variant 관련 실패 분류 |
 | 4 | host map build | `cmd /c "set SITE_VARIANT_HOST_MAP=turner.local:turner,northstar.local:demo&& npm run build"` | host routing 실패 분류 |
 | 5 | invalid variant guard | `cmd /c "set SITE_VARIANT=invalid&& npm run build"` 실패 기대 | 성공하면 guard regression |
+| | **시나리오 분기 (step 6 전)**: 시나리오 A/B → `/copy-visual-review` + `/copy-interaction-review`를 여기서 최초 실행 (기획 시 미수행). 시나리오 C → 기획 시 생성된 갭 보드의 각 항목이 RESOLVED 상태인지 확인 | | |
 | 6 | screenshot artifact 확인 | R3 baseline/current/diff/report 경로 확인 | missing evidence report |
 | 7 | interactive evidence 확인 | hover/open/sticky/chooser/commitments/menu-open 확인 | missing state report |
 | 8 | 문서 추적성 확인 | P5/P15/R5/CAI 문서 링크 확인 | drift note |
@@ -82,6 +84,8 @@ QA 결과는 아래 schema로 작성한다.
 | Evidence | 로그, screenshot, report path |
 | Risk | 남은 리스크 |
 | Action | `auto-fixed`, `queued`, `needs-verification`, `needs-user-input` |
+
+> 시나리오 컨텍스트: A/B에서 PASS = 구현이 원본과 일치. C에서 PASS = 식별된 갭이 닫힘.
 
 ## 6. Evidence 판정 기준
 
@@ -135,6 +139,7 @@ QA review agent는 plan 산출물의 품질을 대신 작성하지 않는다. �
 | `/plan-stitch` 사용 | mapping/context/validation | reference evidence와 구현 context가 분리되지 않았는지 |
 | `/plan-bridge` 이후 구현 | bridge context | dev/copy 실행 단위 입력이 승인된 plan과 일치하는지 |
 | `/plan-archive` 또는 `/plan-improve` | archive/improvement 기록 | release closeout과 후속 gap routing이 연결되는지 |
+| Feature 유형 라우팅 | Dev Feature → `/dev-verify`만 사용 (copy QA 파이프라인 건너뜀). Copy Feature → 전체 copy QA 파이프라인 사용 |
 
 PCC는 기획 산출물의 일관성 검토이고, CAI-05는 구현/증거/문서 추적성 검증이다. 두 검증은 중복이 아니라 `plan readiness -> copy QA readiness -> user gate` 순서로 연결한다.
 

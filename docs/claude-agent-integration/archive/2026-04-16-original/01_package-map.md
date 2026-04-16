@@ -46,6 +46,7 @@
 | Workflow specs | `06`~`07` | command, hook, rule 설계 |
 | Adoption docs | `08`~`09` | 도입 순서, readiness, gate |
 | Plan integration | [10_plan-workflow-integration-plan.md](./10_plan-workflow-integration-plan.md) | Claude Kit `plan` 기능 분석과 CAI 반영 기준 |
+| WBS/Pipeline 스펙 | `11_work-breakdown-structure.md`, `12_pipeline-integration-diagram.md`, `13_pipeline-order-analysis.md` | WBS 분류 체계, 파이프라인 시각화, 시나리오별 순서 분석 |
 | Package README | `README.md` | 전체 하위 패키지 입구와 상태판 |
 
 ## 4. 단일 출처 규칙
@@ -65,6 +66,8 @@
 | Claude 적용 방향 | [18_claude-agent-integration-proposal.md](../../18_claude-agent-integration-proposal.md) | 하위 문서의 상위 판단 기준 |
 | plan workflow 반영 기준 | [10_plan-workflow-integration-plan.md](./10_plan-workflow-integration-plan.md) | `/plan-*`, `.plans/`, plan gate를 CAI 문서와 연결 |
 | planning 산출물 후보 | `.plans/` | `.plans/`는 아직 미생성 상태이며, 생성 조건은 [CAI-09 `.plans/` 생성 게이트](./09_readiness-checklist.md#plans-생성-게이트-ssot)를 따른다. |
+| WBS 분류 체계 | [CAI-11](./11_work-breakdown-structure.md) | Epic/Feature/Story/Task 정의, 시나리오 A/B/C 분류, 판정 기준 |
+| 파이프라인 순서 | [CAI-13](./13_pipeline-order-analysis.md) | 시나리오별 파이프라인 순서 (A/B: PRD먼저, C: 갭먼저), Feature 유형 라우팅 |
 
 ### `.plans/` 훅 충돌 시나리오
 
@@ -91,6 +94,9 @@
 | `08_adoption-roadmap.md` | 단계별 도입 순서, gate, commit 전략 | 개별 agent prompt 전문 |
 | `09_readiness-checklist.md` | 실제 `.claude` 수정 전 완료 판정 | 장기 확장 아이디어 |
 | `10_plan-workflow-integration-plan.md` | plan 기능 분석, 기존 CAI 영향도, `.plans/` gate, `/plan-* -> /copy-* -> /dev-*` 연결 기준 | 실제 `.plans/` 생성 또는 `.claude` 구현 수정 |
+| `11_work-breakdown-structure.md` | WBS 4계층(Epic/Feature/Story/Task) + 카피 시나리오(A/B/C) + 적응형 권장안 |
+| `12_pipeline-integration-diagram.md` | Mermaid 순서도 + 진입 조건표 + 병렬 실행 Gantt + 상태 전이 |
+| `13_pipeline-order-analysis.md` | 시나리오별 파이프라인 순서 분석 + Feature 유형(copy/dev) 라우팅 + 분기 조건 |
 
 ## 6. P18 내용 분배 맵
 
@@ -125,6 +131,8 @@
 | agents (plan) | `src/claude/plan/agents/` | `.claude/agents/plan-*.md` | idea collector, screener, PRD writer, wireframe designer, stitch integrator, reviewer | CAI-10, CAI-02~05 | fidelity gap 선별과 사용자 gate 연결 |
 | hooks (plan) | `src/claude/plan/hooks/` | `.claude/hooks/plan-doc-guard.js` | planning 문서 구조 검증과 planning 중 code edit 차단 의도 | CAI-07, CAI-09, CAI-10 | 실제 차단 범위와 copy hook 충돌 검증 |
 | `.plans/` | — | `.plans/` | plan command 산출물 root 후보 | CAI-10, CAI-09 | 아직 미생성, 사용자 승인 후 생성 |
+
+> **Feature 유형 라우팅**: copy Feature는 `/copy-*` 커맨드를 거치고, dev Feature는 `/dev-*` 커맨드로 직행한다. 유형 판정은 `/plan-draft` 시점에 수행된다 (CAI-06 §3.2 참조).
 
 ### claude-kit 레지스트리 연동
 
@@ -166,6 +174,9 @@ copy 도메인 도입 시 claude-kit 레지스트리 파일과의 연동이 필�
 | `.claude` 변경 후보 | CAI-07 | hook/rule 변경은 위험도와 blocking 여부가 있어야 한다. |
 | plan 산출물 후보 | CAI-10, CAI-06, CAI-09 | `.plans/` 생성과 `/plan-*` 실행은 사용자 승인 gate 이후에만 진행한다. |
 | `/plan-*` workflow | CAI-06, CAI-08 | plan은 pre-stage, copy는 fidelity evidence/gap 분석, dev는 구현으로 구분한다. |
+| CAI-11 → CAI-06 | WBS 4계층과 커맨드 라이프사이클 매핑 (CAI-06 §8) |
+| CAI-11 → CAI-02~05 | Gap Row(VF-*/IF-*) = Story 계층에 1:1 매핑 |
+| CAI-13 → CAI-06 | 시나리오별 파이프라인 순서가 워크플로우 조합(CAI-06 §7)을 결정 |
 
 ## 10. 문서 작성 순서와 의존성
 

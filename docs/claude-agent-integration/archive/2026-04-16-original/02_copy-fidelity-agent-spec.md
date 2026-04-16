@@ -20,6 +20,7 @@
 | 주요 산출물 | visual gap board, section rhythm matrix, responsive density note |
 | 금지 | screenshot 없이 추상적인 “비슷하게 조정” 제안 |
 | plan 연결 | P0/P1 visual gap은 필요 시 `/plan-idea`와 `/plan-screen`으로 승격해 구현 전 우선순위를 잠근다. |
+| 시나리오 조건 | 시나리오 C: 기획 시 갭 분석으로 동작 (PRD 전). 시나리오 A/B: QA 시점에서만 동작 (구현 후 비교). Dev Feature: 미사용 (CAI-06 §3.1 참조) |
 
 ## 2. 적용 범위
 
@@ -77,6 +78,9 @@ visual gap은 반드시 아래 schema로 작성한다.
 | Verification | 조정 후 확인 방법 |
 | Priority | `P0`, `P1`, `P2` |
 | Gate | self-review 또는 user-review 필요 여부 |
+| WBS_ID | WBS Story 계층 매핑 ID |
+
+> 각 Gap Row(VF-*)는 WBS의 Story 계층(`S-{AREA}-{NN}`)에 1:1 매핑된다 (CAI-11 §2 참조).
 
 예시 형식은 아래와 같다.
 
@@ -88,6 +92,7 @@ visual gap은 반드시 아래 schema로 작성한다.
 
 | 단계 | 작업 | 완료 기준 |
 | --- | --- | --- |
+| 0. 시나리오 체크 | 현재 Feature의 시나리오를 확인한다. 시나리오 C → 기획 시 갭 분석 수행 (진행). 시나리오 A/B → QA 시점으로 연기 (현재 단계에서는 실행하지 않음). Dev Feature → 이 에이전트 미사용 (건너뜀) | 시나리오가 확인되고 진행 여부가 결정됨 |
 | 1. 범위 고정 | 분석할 section, viewport, evidence 목록 확정 | 입력 evidence가 명시됨 |
 | 2. 현재 상태 관찰 | current screenshot에서 layout/type/spacing 관찰 | current state가 구체적으로 기록됨 |
 | 3. 원본 상태 관찰 | live/reference screenshot에서 대응 상태 관찰 | reference state가 구체적으로 기록됨 |
@@ -128,6 +133,8 @@ visual gap은 반드시 아래 schema로 작성한다.
 
 command 상세는 `06_command-workflow-spec.md`에서 다룬다.
 
+> `/copy-visual-review` 사용 시점: 시나리오 C = 기획 시 (갭 분석), 시나리오 A/B = QA 시점 (구현 후 비교) (CAI-06 §5.1 참조)
+
 ## 10. Plan Workflow 연결
 
 visual gap은 copy agent가 자체적으로 구현 우선순위를 확정하지 않는다. 원본 체감에 큰 영향을 주거나 여러 section/viewport에 걸친 gap은 `plan` workflow로 승격해 선별과 사용자 gate를 거친다.
@@ -139,6 +146,7 @@ visual gap은 copy agent가 자체적으로 구현 우선순위를 확정하지 
 | section rhythm 전반 재조정 | `/plan-draft` 또는 `/plan-prd` 대상 | 단일 CSS 보정보다 범위가 커질 수 있음 |
 | visual 구조와 responsive 구조가 함께 바뀜 | `/plan-wireframe` 선택 검토 | 줄바꿈, 정보 밀도, 레이아웃 재배열 기준 필요 |
 | 승인된 visual 보강을 구현으로 넘김 | `/plan-bridge` 또는 `/copy-plan-unit` 입력 사용 | 계획/구현/검증 context drift 감소 |
+| Feature 유형 체크 | copy Feature만 이 에이전트를 활성화한다. Dev Feature는 건너뛴다 (CAI-06 §3.2) |
 
 `/plan-screen`의 RICE는 일반 사업 기능 기준이 아니라, CAI-10의 보정 기준에 따라 `영향 viewport/state 수`, `원본 대비 체감 차이 감소`, `evidence 신뢰도`, `구현 및 QA 비용`으로 해석한다.
 

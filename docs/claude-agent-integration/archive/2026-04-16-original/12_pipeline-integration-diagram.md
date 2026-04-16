@@ -12,109 +12,114 @@
 
 ```mermaid
 flowchart TD
-    %% ── Epic 진입 ──
-    IDEA[/"💡 아이디어 진입\n/plan-idea"/]
-    SCREEN{"🔍 /plan-screen\nRICE 스크리닝"}
-    DRAFT{"📋 /plan-draft\nLite / Standard 판정"}
+    IDEA[/"아이디어 진입\n/plan-idea"/]
+    SCREEN{"RICE 스크리닝\n/plan-screen"}
+    DRAFT{"Lite/Standard +\n시나리오 판정\n/plan-draft"}
 
     IDEA --> SCREEN
     SCREEN -->|승인| DRAFT
-    SCREEN -->|거부| REJECT[/"❌ 거부 — 백로그"/]
+    SCREEN -->|거부| REJECT[/"거부 — 백로그"/]
 
-    %% ── Lite Epic 경로 (옵션 D) ──
-    DRAFT -->|"Lite Epic\n(Feature < 3, P0 없음)"| LITE_EVIDENCE
+    %% ── 시나리오 A/B: 백지/부분 카피 ──
+    DRAFT -->|"A/B: 백지 or 부분 카피\n(구현 없음 or 해당 영역 미구현)"| AB_REF
 
-    subgraph LITE["🟢 Lite Epic 경로 (옵션 D)"]
-        LITE_EVIDENCE["/copy-reference-refresh\n증거 수집"]
-        LITE_ANALYSIS_V["/copy-visual-review"]
-        LITE_ANALYSIS_I["/copy-interaction-review"]
-        LITE_GAP["/copy-gap-board\n갭 우선순위화"]
-        LITE_PLAN["/copy-plan-unit\nStory → 실행 단위"]
-        LITE_DEV["/dev-run\nTask 실행 (TDD)"]
-        LITE_VERIFY["/copy-verify"]
-        LITE_CLOSE["/copy-closeout"]
+    subgraph AB["시나리오 A/B: PRD 먼저 → 구현 → QA 비교"]
+        AB_REF["/copy-reference-refresh\n원본 레퍼런스 캡처"]
+        AB_PRD["/plan-prd\n원본 기반 PRD 작성"]
+        AB_WIRE["/plan-wireframe\n(Standard만)"]
+        AB_BRIDGE["/plan-bridge"]
+        AB_DEV["/dev-run\n구현 (TDD)"]
+        AB_QA_CAP["/copy-reference-refresh\n구현 결과 캡처"]
+        AB_QA_VR["/copy-visual-review\n원본 vs 구현 비교"]
+        AB_QA_IR["/copy-interaction-review\n상태 비교"]
+        AB_VERIFY["/copy-verify\nQA 검증"]
+        AB_CLOSE["/copy-closeout"]
 
-        LITE_EVIDENCE --> LITE_ANALYSIS_V
-        LITE_EVIDENCE --> LITE_ANALYSIS_I
-        LITE_ANALYSIS_V --> LITE_GAP
-        LITE_ANALYSIS_I --> LITE_GAP
-        LITE_GAP --> LITE_PLAN
-        LITE_PLAN --> LITE_DEV
-        LITE_DEV --> LITE_VERIFY
-        LITE_VERIFY --> LITE_CLOSE
+        AB_REF --> AB_PRD --> AB_WIRE --> AB_BRIDGE --> AB_DEV
+        AB_DEV --> AB_QA_CAP
+        AB_QA_CAP --> AB_QA_VR
+        AB_QA_CAP --> AB_QA_IR
+        AB_QA_VR --> AB_VERIFY
+        AB_QA_IR --> AB_VERIFY
+        AB_VERIFY --> AB_CLOSE
     end
 
-    %% ── Standard Epic 경로 (옵션 C) ──
-    DRAFT -->|"Standard Epic\n(Feature ≥ 3 또는 P0)"| MASTER_PRD
+    %% ── 시나리오 C: 충실도 교정 ──
+    DRAFT -->|"C: 충실도 교정\n(구현 존재 + 원본 비교 가능)"| C_REF
 
-    subgraph STANDARD["🔵 Standard Epic 경로 (옵션 C)"]
-        MASTER_PRD["/plan-prd\n마스터 Overview PRD"]
-        MASTER_GATE{"🚪 마스터 PRD\n사용자 승인"}
+    subgraph SC["시나리오 C: 갭 분석 먼저 → PRD → 구현"]
+        C_REF["/copy-reference-refresh\n원본 + 현재 캡처"]
+        C_VR["/copy-visual-review\n갭 분석"]
+        C_IR["/copy-interaction-review\n갭 분석"]
+        C_GB["/copy-gap-board\n갭 우선순위화"]
+        C_PRD["/plan-prd\n갭 기반 상세 PRD"]
+        C_WIRE["/plan-wireframe\n(Standard만)"]
+        C_BRIDGE["/plan-bridge"]
+        C_PU["/copy-plan-unit"]
+        C_DEV["/dev-run\n구현"]
+        C_VERIFY["/copy-verify"]
+        C_CLOSE["/copy-closeout"]
 
-        MASTER_PRD --> MASTER_GATE
+        C_REF --> C_VR
+        C_REF --> C_IR
+        C_VR --> C_GB
+        C_IR --> C_GB
+        C_GB --> C_PRD --> C_WIRE --> C_BRIDGE --> C_PU --> C_DEV --> C_VERIFY --> C_CLOSE
     end
 
-    %% ── Feature 분기 ──
-    MASTER_GATE -->|승인| FEATURE_SPLIT
+    %% ── Dev Feature (copy 불필요) ──
+    DRAFT -->|"Dev Feature\n(원본 대응 없음)"| DEV_PRD
 
-    subgraph FEATURES["⚡ Feature 병렬 트랙"]
-        FEATURE_SPLIT{{"Feature 분류\nP0 / P1 / P2"}}
+    subgraph DEV["Dev 경로: copy 워크플로우 건너뜀"]
+        DEV_PRD["/plan-prd"]
+        DEV_BRIDGE["/plan-bridge"]
+        DEV_FEAT["/dev-feature"]
+        DEV_RUN["/dev-run"]
+        DEV_VERIFY["/dev-verify"]
 
-        %% P0 Feature
-        subgraph P0_TRACK["🔴 P0 Feature (서브 PRD 필수)"]
-            P0_PRD["/plan-prd (서브)"]
-            P0_WIRE["/plan-wireframe"]
-            P0_BRIDGE["/plan-bridge"]
-            P0_EVIDENCE["/copy-reference-refresh"]
-            P0_VR["/copy-visual-review"]
-            P0_IR["/copy-interaction-review"]
-            P0_GB["/copy-gap-board"]
-            P0_PU["/copy-plan-unit"]
-            P0_DEV["/dev-run"]
-            P0_CV["/copy-verify"]
-            P0_CC["/copy-closeout"]
-
-            P0_PRD --> P0_WIRE --> P0_BRIDGE
-            P0_BRIDGE --> P0_EVIDENCE
-            P0_EVIDENCE --> P0_VR
-            P0_EVIDENCE --> P0_IR
-            P0_VR --> P0_GB
-            P0_IR --> P0_GB
-            P0_GB --> P0_PU --> P0_DEV --> P0_CV --> P0_CC
-        end
-
-        %% P1 Feature
-        subgraph P1_TRACK["🟡 P1 Feature (Lite 실행)"]
-            P1_EVIDENCE["/copy-reference-refresh"]
-            P1_VR["/copy-visual-review"]
-            P1_IR["/copy-interaction-review"]
-            P1_GB["/copy-gap-board"]
-            P1_PU["/copy-plan-unit (Lite)"]
-            P1_DEV["/dev-run"]
-            P1_CV["/copy-verify"]
-            P1_CC["/copy-closeout"]
-
-            P1_EVIDENCE --> P1_VR
-            P1_EVIDENCE --> P1_IR
-            P1_VR --> P1_GB
-            P1_IR --> P1_GB
-            P1_GB --> P1_PU --> P1_DEV --> P1_CV --> P1_CC
-        end
-
-        FEATURE_SPLIT -->|P0| P0_TRACK
-        FEATURE_SPLIT -->|P1| P1_TRACK
-        FEATURE_SPLIT -->|P2| P2_BACKLOG[/"⬜ P2 백로그\n다음 Phase에서 재평가"/]
+        DEV_PRD --> DEV_BRIDGE --> DEV_FEAT --> DEV_RUN --> DEV_VERIFY
     end
 
-    %% ── Phase/R 게이트 ──
-    P0_CC --> PHASE_GATE
-    P1_CC --> PHASE_GATE
-    LITE_CLOSE --> PHASE_GATE
+    %% ── Phase 게이트 ──
+    AB_CLOSE --> PHASE_GATE
+    C_CLOSE --> PHASE_GATE
+    DEV_VERIFY --> PHASE_GATE
 
-    PHASE_GATE{"🚪 Phase/R 게이트\n사용자 승인"}
-    PHASE_GATE -->|승인| ARCHIVE["/plan-archive\n완료 번들"]
-    PHASE_GATE -->|P2 진행| P2_BACKLOG
+    PHASE_GATE{"Phase/R 게이트\n사용자 승인"}
+    PHASE_GATE -->|승인| ARCHIVE["/plan-archive"]
 ```
+
+---
+
+## 1.5 시나리오 판정 다이어그램
+
+> Feature가 어떤 시나리오에 해당하는지 판정하는 의사결정 흐름.
+
+```mermaid
+flowchart TD
+    F["Feature 진입"]
+    Q1{"해당 Feature의\n구현이 이미\n존재하는가?"}
+    Q2{"원본과 비교할\n수 있는가?"}
+    Q3{"원본에 대응하는\n요소가 있는가?"}
+
+    F --> Q3
+    Q3 -->|No| DEV["Dev Feature\ncopy 워크플로우 불필요"]
+    Q3 -->|Yes| Q1
+    Q1 -->|No| A["시나리오 A: 백지 카피\nPRD 먼저 → 구현 → QA 비교"]
+    Q1 -->|Yes| Q2
+    Q2 -->|Yes + 차이 존재| C["시나리오 C: 충실도 교정\n갭 분석 → PRD → 구현"]
+    Q2 -->|No 해당 영역 미구현| B["시나리오 B: 부분 카피\nPRD 먼저 → 구현 → QA 비교"]
+```
+
+### 시나리오별 copy 커맨드 사용 시점
+
+| 커맨드 | A: 백지 카피 | B: 부분 카피 | C: 충실도 교정 |
+|--------|------------|------------|-------------|
+| `/copy-reference-refresh` | 기획 시 (원본 캡처) | 기획 시 (원본 캡처) | 기획 시 (원본+현재) |
+| `/copy-visual-review` | **QA 시점** | **QA 시점** | **기획 시** (갭 분석) |
+| `/copy-interaction-review` | **QA 시점** | **QA 시점** | **기획 시** (갭 분석) |
+| `/copy-gap-board` | **QA 시점** | **QA 시점** | **기획 시** (우선순위화) |
+| `/copy-verify` | QA | QA | QA |
 
 ---
 
@@ -228,6 +233,7 @@ gantt
 |------|----------|-----------|----------|-------|
 | **Epic** | 아이디어 존재 + 사용자 요청 | `/plan-idea` | 아이디어 설명 | 없음 (누구나 등록 가능) |
 | **Feature** | Epic이 `/plan-screen` 통과 + Lite/Standard 판정 완료 | `/plan-draft` | 스크리닝 결과 | `/plan-screen` 승인 |
+| **시나리오** | Feature 생성 시 `/plan-draft`에서 A/B/C 판정 | `/plan-draft` | 구현 존재 여부 + 원본 대응 여부 | 사용자 확인 권장 |
 | **Story** | Feature의 갭 분석 완료 + 갭 보드 생성 | `/copy-gap-board` | visual/interaction gap board | P0 Story = 사용자 승인 |
 | **Task** | Story의 실행 단위 계획 승인 | `/dev-run` | 실행 단위 계획서 | TDD 가드 (자동) |
 
@@ -273,7 +279,15 @@ flowchart TD
     Q4 -->|Yes| NEW_STORY["새 Story 생성\n/copy-gap-board"]
     Q4 -->|No| NEW_TASK["새 Task 생성\n/dev-run"]
 
-    NEW_EPIC --> Q5{"Feature ≥ 3\n또는 P0?"}
+    NEW_EPIC --> Q_SCENARIO{"구현이 이미\n존재하는가?"}
+    Q_SCENARIO -->|No| SCENARIO_AB["시나리오 A/B\nPRD 먼저"]
+    Q_SCENARIO -->|Yes + 차이| SCENARIO_C["시나리오 C\n갭 분석 먼저"]
+    Q_SCENARIO -->|Yes + 차이 없음| DEV_ONLY["Dev 경로"]
+
+    SCENARIO_AB --> Q5
+    SCENARIO_C --> Q5
+
+    Q5{"Feature ≥ 3\n또는 P0?"}
     Q5 -->|Yes| STANDARD["Standard 경로\n마스터 PRD → 서브 PRD"]
     Q5 -->|No| LITE_PATH["Lite 경로\n증거 → 갭 보드 → 실행"]
 

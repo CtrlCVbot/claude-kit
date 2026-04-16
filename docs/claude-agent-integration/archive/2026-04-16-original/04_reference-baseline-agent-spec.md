@@ -20,6 +20,7 @@
 | 주요 산출물 | baseline manifest, missing evidence report, capture readiness note |
 | 금지 | 기준선 누락 상태에서 visual/interaction 완료 판정 |
 | plan 연결 | capture 범위 확장이나 새 state 추가는 `/plan-idea`와 `/plan-screen`으로 필요성과 우선순위를 먼저 확인한다. |
+| 시나리오별 캡처 범위 | 시나리오 A/B: 원본(live) 캡처만 수행 (현재 구현이 없거나 해당 영역 미구현). 시나리오 C: 원본(live) + 현재(current) 캡처 모두 수행 (갭 비교용). Dev Feature: 미사용 |
 
 ## 2. 적용 범위
 
@@ -80,6 +81,8 @@ manifest는 최소 아래 필드를 가져야 한다.
 | `paired_with` | 비교 대상 capture_id | `turner-current-1440-hover-our-company` |
 | `notes` | 품질/주의사항 | `live panel partially animated` |
 
+> `scenario` 필드 추가 권장: A/B/C 값으로 해당 캡처의 시나리오를 명시. A/B에서는 `paired_with`가 기획 시점에 불필요 (QA 시점에서 페어링)
+
 ## 6. State Naming 규칙
 
 | 상태 | naming | 설명 |
@@ -130,6 +133,8 @@ current-demo-390-mobile-menu-open.png
 
 Demo는 Turner 원본 fidelity 비교가 아니라 구조 안정성과 variant safety 검증을 목적으로 한다.
 
+> 시나리오 A/B: live 캡처만 기획 시 필요. current 캡처는 구현 완료 후 QA 단계에서 수집하여 페어링 검증.
+
 ## 8. Pairing Matrix 기준
 
 | Pairing | 완료 기준 |
@@ -141,6 +146,8 @@ Demo는 Turner 원본 fidelity 비교가 아니라 구조 안정성과 variant s
 | static vs interactive | fullpage와 state capture가 같은 batch 기준 |
 
 pair가 없으면 visual/interaction agent는 `missing evidence`로 표시하고 구현 제안을 확정하지 않는다.
+
+> 페어링 완전성 검증 시점: 시나리오 C = 갭 분석 전 (필수). 시나리오 A/B = QA 시점 (구현 후).
 
 ## 9. Agent Prompt 요구사항
 
@@ -175,6 +182,7 @@ reference baseline agent는 캡처 범위를 자동으로 늘리지 않는다. �
 | live 기준선 재수집 범위 확대 | `/plan-draft` | capture batch, stale 처리, QA 비용 정리 |
 | menu/scroll/animation 중간 상태 수집 | `/plan-prd` 또는 `/plan-wireframe` | state sequence와 evidence naming 기준 필요 |
 | 승인된 capture 확장을 구현/수집으로 넘김 | `/plan-bridge` 또는 `/copy-reference-refresh` | capture manifest와 실행 단위 연결 |
+| Feature 유형 체크 | copy Feature만 이 에이전트를 활성화한다. Dev Feature는 건너뛴다 |
 
 `.plans/`가 아직 없으면 plan command를 즉시 실행하지 않고, CAI-09의 plan readiness와 사용자 gate를 먼저 확인한다.
 

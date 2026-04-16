@@ -91,7 +91,10 @@ docs/
    ├─ 07_hooks-and-rules-plan.md
    ├─ 08_adoption-roadmap.md
    ├─ 09_readiness-checklist.md
-   └─ 10_plan-workflow-integration-plan.md
+   ├─ 10_plan-workflow-integration-plan.md
+   ├─ 11_work-breakdown-structure.md
+   ├─ 12_pipeline-integration-diagram.md
+   └─ 13_pipeline-order-analysis.md
 ```
 
 | 파일 | 역할 |
@@ -124,6 +127,9 @@ docs/
 | CAI-08 | `docs/claude-agent-integration/08_adoption-roadmap.md` | 도입 순서와 gate 계획 | 의사결정자 | 단계별 적용, 승인 시점, commit 단위, rollback | 실제 구현 | P18, CAI-01~07, CAI-10 | adoption roadmap | 사용자 gate가 유지됨 | gate checklist 검토 |
 | CAI-09 | `docs/claude-agent-integration/09_readiness-checklist.md` | 구현 전 준비 완료 판정 | 전체 팀 | 문서 completeness, link, drift, risk, approval checklist | agent 구현 자체 | CAI 전체 | readiness checklist | 실제 `.claude` 수정 전 판단 가능 | 체크리스트 통과 여부 |
 | CAI-10 | `docs/claude-agent-integration/10_plan-workflow-integration-plan.md` | plan 기능 반영 기준 정의 | 기획/구현/운영 | `/plan-*` command, plan agent/skill/hook, `.plans/` gate, 기존 CAI 영향도 | 실제 `.plans/` 생성과 `.claude` 수정 | Claude Kit, CAI-01/06/08/09 | plan integration plan | plan/copy/dev 책임 경계가 설명됨 | 링크/역할/충돌 self-review |
+| CAI-11 | `docs/claude-agent-integration/11_work-breakdown-structure.md` | WBS 4계층(Epic/Feature/Story/Task) 분류 체계, 카피 시나리오(A/B/C), 적응형 권장안 | 기획/구현 | WBS 4계층, 시나리오 분류 | 실제 구현 | CAI-06, CAI-10 | WBS 분류 체계 | 시나리오별 분류가 명확함 | 4계층+시나리오 기준 대조 |
+| CAI-12 | `docs/claude-agent-integration/12_pipeline-integration-diagram.md` | Mermaid 파이프라인 순서도, 시나리오별 분기, 진입 조건표, 병렬 Gantt | 기획/구현/운영 | 파이프라인 다이어그램, 분기 조건 | 실제 구현 | CAI-06, CAI-11 | 파이프라인 다이어그램 | Mermaid 다이어그램 렌더링 확인 | 시나리오별 분기 검증 |
+| CAI-13 | `docs/claude-agent-integration/13_pipeline-order-analysis.md` | 파이프라인 순서 분석, 시나리오별 PRD/갭 분석 순서, Feature 유형(copy/dev) 라우팅 | 기획/구현 | 순서 분석, 라우팅 규칙 | 실제 구현 | CAI-06, CAI-11, CAI-12 | 파이프라인 순서 분석 | 시나리오별 순서 검증 | Feature 유형별 라우팅 대조 |
 
 ## 5. 문서 간 관계
 
@@ -307,6 +313,9 @@ P18은 계속 상위 제안서로 남긴다. `docs/claude-agent-integration/READ
 | PLAN-CAI-01 | plan workflow 통합 계획 작성 | `10_plan-workflow-integration-plan.md` | plan 파일 존재, 링크, gate self-review | `docs: plan workflow 통합 반영 계획 정리` |
 | CAI-10-01 | plan workflow 통합 분석 작성 | `10_plan-workflow-integration-plan.md` | plan 도메인 컴포넌트 대조 | `docs: plan workflow 통합 분석 정리` |
 | PLAN-CAI-02~05 | 기존 CAI 문서에 plan 기준 반영 | `README.md`, `00`~`09` | 문서 간 충돌, 링크, 미정 표현 검증 | `docs: CAI plan workflow 반영` |
+| CAI-11-01 | WBS 분류 체계 작성 | `11_work-breakdown-structure.md` | 4계층+시나리오 기준 대조 | `docs: WBS 분류 체계 정리` |
+| CAI-12-01 | 파이프라인 다이어그램 작성 | `12_pipeline-integration-diagram.md` | Mermaid 다이어그램 렌더링 확인 | `docs: 파이프라인 통합 다이어그램 정리` |
+| CAI-13-01 | 파이프라인 순서 분석 작성 | `13_pipeline-order-analysis.md` | 시나리오별 순서 검증 | `docs: 파이프라인 순서 분석 정리` |
 | CAI-README-02 | README 최종화 | `README.md` | 모든 링크 존재 확인 | `docs: Claude Agent 문서 패키지 마감 정리` |
 
 - PLAN-CAI-01~05 반영 완료 확인 (CAI-10 참조)

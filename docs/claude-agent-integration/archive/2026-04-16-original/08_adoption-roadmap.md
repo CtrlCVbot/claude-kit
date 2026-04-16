@@ -22,19 +22,19 @@
 
 ## 2. 도입 전략 요약
 
-| 단계 | 도입 항목 | 이유 | 위험도 |
-| --- | --- | --- | --- |
-| A-1 | claude-kit 인프라 준비 | copy 도메인 디렉토리, package.json, profile/setup/template 반영 | 낮음 |
-| A0 | plan workflow alignment | 이미 설치된 `/plan-*` 기능과 기존 copy/dev workflow의 책임 경계 정리 | 중간 |
-| A1 | copy fidelity rules | 모든 agent가 참조할 공통 기준 | 낮음 |
-| A2 | visual fidelity agent | 사용자가 체감하는 시각 차이를 가장 직접적으로 줄임 | 중간 |
-| A3 | interaction fidelity agent | header/menu/sticky/state 체감 차이에 직접 대응 | 중상 |
-| A4 | reference baseline agent | visual/interaction agent의 입력 품질 확보 | 중간 |
-| A5 | QA review agent | evidence 없는 완료 방지 | 중간 |
-| A6 | `/copy-*` command | 반복 실행 가능한 workflow 구성 | 중상 |
-| A7 | hooks/rules reminder | evidence와 scope drift를 줄임 | 중상 |
-| A8 | implementation-unit agent | 분석된 gap을 구현 단위로 전환 | 높음 |
-| A9 | orchestrator agent | 전체 흐름 조율 | 높음, 후순위 |
+| 단계 | 도입 항목 | 이유 | 위험도 | 시나리오 관련성 |
+| --- | --- | --- | --- | --- |
+| A-1 | claude-kit 인프라 준비 | copy 도메인 디렉토리, package.json, profile/setup/template 반영 | 낮음 | 모든 시나리오 |
+| A0 | plan workflow alignment | 이미 설치된 `/plan-*` 기능과 기존 copy/dev workflow의 책임 경계 정리 | 중간 | 모든 시나리오 (**시나리오/Feature유형 분류 확인 포함**) |
+| A1 | copy fidelity rules | 모든 agent가 참조할 공통 기준 | 낮음 | 모든 시나리오 |
+| A2 | visual fidelity agent | 사용자가 체감하는 시각 차이를 가장 직접적으로 줄임 | 중간 | copy Feature 전용. C=기획시, A/B=QA시 |
+| A3 | interaction fidelity agent | header/menu/sticky/state 체감 차이에 직접 대응 | 중상 | copy Feature 전용. C=기획시, A/B=QA시 |
+| A4 | reference baseline agent | visual/interaction agent의 입력 품질 확보 | 중간 | copy Feature 전용. 캡처 범위가 시나리오별 차이 |
+| A5 | QA review agent | evidence 없는 완료 방지 | 중간 | copy Feature 전용. QA 파이프라인 시나리오별 차이 |
+| A6 | `/copy-*` command | 반복 실행 가능한 workflow 구성 | 중상 | 시나리오별 워크플로우 분기 구현 핵심 |
+| A7 | hooks/rules reminder | evidence와 scope drift를 줄임 | 중상 | 시나리오 무관 (이벤트 기반) |
+| A8 | implementation-unit agent | 분석된 gap을 구현 단위로 전환 | 높음 | 모든 시나리오 |
+| A9 | orchestrator agent | 전체 흐름 조율 | 높음, 후순위 | 모든 시나리오 |
 
 ## 3. 단계별 실행 계획
 
@@ -65,6 +65,7 @@
 | 생성 후보 | 기존 문서 갱신 중심. 즉시 `.claude` 구현 수정 없음 |
 | 선행 조건 | CAI-10 작성, 현재 `.claude/commands/plan-*`, `.claude/agents/plan-*`, `.claude/skills/plan-*`, `plan-doc-guard.js` 확인 |
 | 검증 | CAI-06/07/09가 plan 기능과 충돌하지 않는지 확인 |
+| | 시나리오(A/B/C) + Feature 유형(copy/dev) + 규모(Lite/Standard) 분류 체계가 CAI-06/11/13에 확정되었음을 확인한다 |
 | 커밋 | `docs: CAI plan workflow 반영` |
 | Gate | `.plans/` 생성 또는 첫 `/plan-*` 실행 전 사용자 승인 |
 
@@ -87,6 +88,7 @@
 | 생성 후보 | `.claude/agents/copy-fidelity.md` (소스: `src/claude/copy/agents/copy-fidelity.md`) |
 | 선행 조건 | CAI-02, A1 |
 | 검증 | P10의 기존 gap을 sample input으로 schema 출력 확인 |
+| 시나리오별 활성화 | 시나리오 C: 기획 시 갭 분석으로 동작. 시나리오 A/B: QA 시점에서만 동작. 샘플 검증 시 양쪽 경로 모두 테스트 |
 | 커밋 | `feat: visual fidelity agent 추가` |
 | Gate | P0/P1 gap output 사용자 확인 |
 
@@ -98,6 +100,7 @@
 | 생성 후보 | `.claude/agents/copy-interaction-fidelity.md` (소스: `src/claude/copy/agents/copy-interaction-fidelity.md`) |
 | 선행 조건 | CAI-03, A1 |
 | 검증 | header hover/sticky/commitments sample state map 작성 |
+| 시나리오별 활성화 | 시나리오 C: 기획 시 갭 분석으로 동작. 시나리오 A/B: QA 시점에서만 동작. 샘플 검증 시 양쪽 경로 모두 테스트 |
 | 커밋 | `feat: interaction fidelity agent 추가` |
 | Gate | header/menu/sticky 판단 사용자 확인 |
 
@@ -188,11 +191,11 @@
 | Gate | 시점 | 확인 항목 | 다음 단계 조건 | 검증 증거 |
 | --- | --- | --- | --- | --- |
 | Gate A-1 | A-1 완료 후 | copy 도메인 인프라가 정상 배포되는지 | A0 진입 승인 | `pnpm claude-kit:setup && ls .claude/rules/copy-*.md` (copy 룰 배포 확인) |
-| Gate 0 | A0 완료 후 | plan/copy/dev 책임 경계와 `.plans/` 생성 정책이 명확한지 (SSOT: [CAI-09 `.plans/` 생성 게이트](./09_readiness-checklist.md#plans-생성-게이트-ssot)) | A1 rules 도입 또는 첫 plan command 실행 승인 | `cat src/claude/copy/commands/copy-*.md \| head -5` (plan/copy/dev 경계 파일 존재) |
+| Gate 0 | A0 완료 후 | plan/copy/dev 책임 경계와 `.plans/` 생성 정책이 명확한지 (SSOT: [CAI-09 `.plans/` 생성 게이트](./09_readiness-checklist.md#plans-생성-게이트-ssot)). 시나리오/Feature유형 분류 규칙이 CAI-06/11/13에 확정됨 | A1 rules 도입 또는 첫 plan command 실행 승인 | `cat src/claude/copy/commands/copy-*.md \| head -5` (plan/copy/dev 경계 파일 존재) |
 | Gate A | CAI 문서 패키지 완료 후 | 명세와 readiness 완성도 | 실제 `.claude` (소스: `src/claude/copy/`) 수정 승인 | CAI 문서 링크 전수 검사 스크립트 |
 | Gate B | A1 rules 도입 후 | rules가 기존 규칙과 충돌하지 않는지 | agent 도입 승인 | `ls src/claude/copy/rules/` (룰 파일 존재 + 기존 룰 충돌 없음) |
-| Gate C | A2/A3 agent 도입 후 | sample output이 원본 fidelity 판단에 유용한지 | command 도입 승인 | agent dry-run sample output 검토 |
-| Gate D | A4/A5 검증 agent 도입 후 | evidence와 QA 판정이 정확한지 | workflow 도입 승인 | QA result schema 준수 여부 sample 검증 |
+| Gate C | A2/A3 agent 도입 후 | sample output이 원본 fidelity 판단에 유용한지. 시나리오별 활성화 (C=기획시, A/B=QA시) 양쪽 샘플 검증 | command 도입 승인 | agent dry-run sample output 검토 |
+| Gate D | A4/A5 검증 agent 도입 후 | evidence와 QA 판정이 정확한지. Phase 게이트에서 P2 Feature 재평가 프로세스 포함 | workflow 도입 승인 | QA result schema 준수 여부 sample 검증 |
 | Gate E | A6/A7 command/hook 도입 후 | 자동화가 gate를 우회하지 않는지 | implementation agent 검토 | `node --check src/claude/copy/hooks/copy-*.js` (syntax 검증) |
 | Gate F | A8/A9 도입 전 | 자동 구현/조율의 위험도 수용 여부 | 별도 사용자 승인 | dry-run 실행 단위 추천 결과 검토 |
 

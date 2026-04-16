@@ -20,6 +20,7 @@
 | 주요 산출물 | interaction state map, timing sheet, transition gap board |
 | 금지 | 단일 정적 screenshot만으로 interaction 완료 판정 |
 | plan 연결 | header/menu/sticky처럼 복합 상태가 많은 P0 gap은 `/plan-prd`, `/plan-wireframe`, `/plan-bridge`를 통해 구현 전 기준을 고정한다. |
+| 시나리오 조건 | 시나리오 C: 기획 시 갭 분석으로 동작 (PRD 전). 시나리오 A/B: QA 시점에서만 동작 (구현 후 비교). Dev Feature: 미사용 (CAI-06 §3.1 참조) |
 
 ## 2. 적용 범위
 
@@ -80,6 +81,9 @@ interaction state는 반드시 아래 schema로 정리한다.
 | Gap | 차이 요약 |
 | Verification | 재확인 방법 |
 | Gate | self-review 또는 user-review |
+| WBS_ID | WBS Story 계층 매핑 ID |
+
+> 각 State Map 항목(IF-*)는 WBS의 Story 계층에 1:1 매핑된다 (CAI-11 §2 참조).
 
 예시 형식은 아래와 같다.
 
@@ -91,6 +95,7 @@ interaction state는 반드시 아래 schema로 정리한다.
 
 | 단계 | 작업 | 완료 기준 |
 | --- | --- | --- |
+| 0. 시나리오 체크 | 현재 Feature의 시나리오를 확인한다. 시나리오 C → 기획 시 갭 분석 수행 (진행). 시나리오 A/B → QA 시점으로 연기 (현재 단계에서는 실행하지 않음). Dev Feature → 이 에이전트 미사용 (건너뜀) | 시나리오가 확인되고 진행 여부가 결정됨 |
 | 1. 상태 목록 확정 | 비교할 interaction state를 나열 | idle/hover/open/sticky/active가 분리됨 |
 | 2. Trigger 분석 | 어떤 입력이 상태를 여는지 기록 | hover/click/scroll/focus 기준 명시 |
 | 3. Entry/exit 관찰 | 상태가 시작/종료되는 조건 기록 | enter/exit 조건이 분리됨 |
@@ -168,6 +173,8 @@ interaction state는 반드시 아래 schema로 정리한다.
 
 command 상세는 `06_command-workflow-spec.md`에서 다룬다.
 
+> `/copy-interaction-review` 사용 시점: 시나리오 C = 기획 시, A/B = QA 시점 (CAI-06 §5.1 참조)
+
 ## 11. Plan Workflow 연결
 
 interaction gap은 상태 전환, timing, pointer path, responsive menu 구조가 얽히기 때문에 단일 실행 단위로 바로 구현하면 기준이 흔들릴 수 있다. 아래 조건에 해당하면 `plan` workflow로 넘긴다.
@@ -179,6 +186,7 @@ interaction gap은 상태 전환, timing, pointer path, responsive menu 구조�
 | Commitments state transition 보강 | `/plan-wireframe` 선택 | active nav, content, media state 관계를 시각화 |
 | mobile menu와 desktop hover가 함께 변경 | `/plan-screen`으로 scope 판정 | responsive 영향 범위가 크므로 사용자 gate 필요 |
 | 승인된 interaction 보강을 구현으로 넘김 | `/plan-bridge` | state map과 구현 context를 연결 |
+| Feature 유형 체크 | copy Feature만 이 에이전트를 활성화한다. Dev Feature는 건너뛴다 (CAI-06 §3.2) |
 
 wireframe은 reference evidence를 대체하지 않는다. `/plan-wireframe` 산출물은 상태 구조를 설명하는 보조 문서이며, 최종 판단은 live/current state evidence와 사용자 gate를 따른다.
 

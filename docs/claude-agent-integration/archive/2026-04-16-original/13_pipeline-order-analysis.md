@@ -2,7 +2,7 @@
 
 - 문서 ID: CAI-13
 - 관련 문서: [11_work-breakdown-structure.md](./11_work-breakdown-structure.md), [12_pipeline-integration-diagram.md](./12_pipeline-integration-diagram.md), [06_command-workflow-spec.md](./06_command-workflow-spec.md)
-- 목적: 두 가지 설계 질문에 대한 분석, 대안, 권장안을 정리한다.
+- 목적: 카피 시나리오별 파이프라인 순서 분석과 워크플로우 적용 범위를 정리한다.
 
 ---
 
@@ -24,10 +24,15 @@
 - plan 도메인의 기존 파이프라인(`/plan-idea` → `/plan-prd`)을 그대로 재사용
 - PRD가 "목표 상태"를 정의하고, copy 분석이 "현재 상태와의 차이"를 측정하는 역할 분리
 
-**단점 — 핵심 문제**:
-- **추측 기반 PRD**: copy 프로젝트에서 PRD의 "요구사항"은 "원본과 현재의 차이"인데, 갭 분석 없이 작성하면 추측이 된다
-- **재작성 불가피**: PRD 작성 → copy 분석 → "이 갭은 PRD에 없었다" → PRD 수정 → 재승인. 이중 작업이 발생한다
-- **wireframe도 동일**: 갭 데이터 없이 그린 wireframe은 실제 차이를 반영하지 못한다
+**핵심 발견: 시나리오에 따라 순서가 다르다**
+
+현재 순서(PRD → copy 분석)는 **시나리오 A/B에서는 올바르다**:
+- 백지 카피(A): 구현이 없으므로 갭 분석 불가. PRD로 "무엇을 만들지" 정의 → 구현 → QA에서 비교
+- 부분 카피(B): 해당 영역이 없으므로 갭 분석 불가. PRD로 "무엇을 추가할지" 정의 → 구현 → QA에서 비교
+
+그러나 **시나리오 C에서는 문제가 있다**:
+- 충실도 교정(C): 이미 구현이 존재하고 원본과의 차이를 닫는 것이 목표. 갭 데이터 없이 PRD를 쓰면 추측 기반이 된다
+- 이 경우 갭 분석이 PRD보다 먼저 수행되어야 한다
 
 ### 1.2 대안 제안
 
@@ -110,35 +115,23 @@ Phase 3 — 상세 PRD (Detail PRD):
 | CAI 철학 정합 | 중간 | 높음 | 높음 | 높음 |
 | Lite Feature 적합 | 해당 없음 | 해당 없음 | 해당 없음 | 해당 없음 |
 
-### 1.4 권장안: 대안 C (범위+상세 PRD) — Lite에는 대안 A 적용
+### 1.4 권장안: 시나리오별 순서 적용
 
-**근거**:
+| 시나리오 | 파이프라인 순서 | 근거 |
+|---------|--------------|------|
+| **A: 백지 카피** | 레퍼런스 캡처 → PRD → wireframe → 구현 → **QA에서 copy 비교** | 비교할 현재 구현이 없으므로 갭 분석 불가. PRD가 "원본의 무엇을 만들지"를 정의 |
+| **B: 부분 카피** | 레퍼런스 캡처 → PRD → wireframe → 구현 → **QA에서 copy 비교** | 해당 영역이 미구현이므로 갭 분석 불가. A와 동일한 이유 |
+| **C: 충실도 교정** | 범위 PRD → **갭 분석** → 상세 PRD → wireframe → 구현 → QA | 현재 구현이 존재하므로 갭 측정 가능. 갭 데이터가 상세 PRD의 입력 |
 
-1. **닭과 달걀 문제의 정면 해결**: "무엇을 분석할지"(범위 PRD)와 "무엇을 고칠지"(상세 PRD)는 다른 질문이다. 범위 PRD는 갭 데이터 없이도 작성 가능하다(대상 영역, 뷰포트, 우선순위 예상). 상세 PRD는 갭 데이터가 있어야 정확하다.
+**시나리오 A/B에서의 copy 워크플로우 역할**:
+- 기획 시: `/copy-reference-refresh`만 사용 (원본 캡처)
+- 구현 후 QA 시: `/copy-visual-review` + `/copy-interaction-review`로 "제대로 카피했는지" 검증
+- 즉, copy 워크플로우가 **기획 도구가 아니라 검증 도구**로 작동
 
-2. **plan 파이프라인 호환**: `/plan-prd`를 2번 사용하지만, 첫 번째는 "범위 PRD"(얇고 빠르게), 두 번째는 "상세 PRD"(갭 데이터 포함)로 용도가 다르다. 기존 커맨드를 수정할 필요 없다.
-
-3. **Lite Feature 예외**: 작은 갭(Feature 3개 미만, P0 없음)은 범위 PRD 없이 **대안 A**(바로 copy 분석 → 실행)로 진행. CAI-11의 Adaptive WBS(C+D 혼합)와 일관.
-
-**제안 흐름**:
-
-```
-Standard Feature (P0):
-  /plan-idea → /plan-screen
-    → /plan-prd [범위] ← "어디를, 어떤 뷰포트로, 어떤 우선순위로 분석할지"
-      → [승인]
-        → /copy-reference-refresh → /copy-visual-review + /copy-interaction-review
-          → /copy-gap-board
-            → /plan-prd [상세] ← "갭 X를 이 acceptance criteria로 닫는다"
-              → /plan-wireframe ← "갭 데이터 기반 상태 구조"
-                → /plan-bridge → /dev-run
-
-Lite Feature (P1/P2):
-  /plan-idea → /plan-screen
-    → /copy-reference-refresh → /copy-gap-board
-      → /copy-plan-unit → /dev-run
-  (범위 PRD/상세 PRD 모두 건너뜀)
-```
+**시나리오 C에서의 copy 워크플로우 역할**:
+- 기획 시: 갭 분석(`/copy-visual-review`, `/copy-gap-board`)이 PRD의 입력 데이터 생성
+- 구현 후 QA 시: 갭이 닫혔는지 재검증
+- 즉, copy 워크플로우가 **기획 도구 + 검증 도구** 이중 역할
 
 ### 1.5 반대 의견 (자기 검증)
 
@@ -291,10 +284,9 @@ flowchart TD
 
 | 문서 | 수정 내용 |
 |------|----------|
-| **CAI-11** §5 권장안 | Standard 경로에 "범위 PRD → copy 분석 → 상세 PRD" 순서 반영. Feature 유형(copy/dev/hybrid) 태깅 추가 |
-| **CAI-12** §1 전체 흐름도 | Feature 유형 분기 노드 추가. Dev 경로(copy 건너뜀) 추가 |
-| **CAI-12** §4 진입 조건표 | Feature 유형별 진입 조건 행 추가 |
-| **CAI-12** §5 의사결정 트리 | Feature 유형 판정 분기 추가 |
+| **CAI-11** | §2.5 카피 시나리오 분류 추가. §5 권장안을 시나리오 적응형으로 수정 |
+| **CAI-12** | §1 전체 흐름도에 시나리오 A/B/C 분기 추가. §1.5 시나리오 판정 다이어그램 추가. Dev 경로(copy 미적용) 추가 |
+| **CAI-13** | 본 문서. 시나리오별 파이프라인 순서 분석으로 재구성 |
 
 ### 수정이 불필요한 문서
 

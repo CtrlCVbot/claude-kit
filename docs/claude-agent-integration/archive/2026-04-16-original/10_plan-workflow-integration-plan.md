@@ -23,6 +23,8 @@
 | 문서 산출물 | CAI 문서와 P 문서 중심 | `.plans/` 기반 PRD, wireframe, bridge context 추가 가능 |
 | 품질 검증 | copy QA와 evidence 중심 | Planning Consistency Check(PCC)로 기획 산출물 간 충돌 점검 |
 | dev 연결 | `/copy-plan-unit` 이후 구현 보조를 별도 설계 | `/plan-bridge`를 통해 `/dev-feature` 진입 context 생성 가능 |
+| 관련 문서 | [11_work-breakdown-structure.md](./11_work-breakdown-structure.md), [12_pipeline-integration-diagram.md](./12_pipeline-integration-diagram.md), [13_pipeline-order-analysis.md](./13_pipeline-order-analysis.md) |
+| 시나리오×규모 매트릭스 | 시나리오(A/B/C)와 규모(Lite/Standard)의 조합에 따라 plan 커맨드 경로가 달라진다 (CAI-11 §5.2) |
 
 ## 2. 새로 추가된 plan 기능 분석
 
@@ -41,18 +43,18 @@
 
 ### 2.2 새로 확인된 command 목록
 
-| Command | 파일 | 역할 | Turner 카피 프로젝트 해석 |
-| --- | --- | --- | --- |
-| `/plan-idea` | [plan-idea.md](../../.claude/commands/plan-idea.md) (소스: src/claude/plan/commands/) | 아이디어 수집 | fidelity gap 또는 보강 요청을 표준 idea로 등록 |
-| `/plan-screen` | [plan-screen.md](../../.claude/commands/plan-screen.md) (소스: src/claude/plan/commands/) | RICE 스크리닝과 승인 gate | gap의 영향도, evidence, 구현 비용을 기준으로 우선순위 판정 |
-| `/plan-draft` | [plan-draft.md](../../.claude/commands/plan-draft.md) (소스: src/claude/plan/commands/) | 1차 기능 기획과 Lite/Standard 판정 | 작은 gap은 Lite, header/mega menu급 보강은 Standard로 분류 |
-| `/plan-prd` | [plan-prd.md](../../.claude/commands/plan-prd.md) (소스: src/claude/plan/commands/) | PRD 작성 | 큰 fidelity 보강을 요구사항과 acceptance로 고정 |
-| `/plan-wireframe` | [plan-wireframe.md](../../.claude/commands/plan-wireframe.md) (소스: src/claude/plan/commands/) | ASCII/Mermaid wireframe | 메뉴 open, sticky, responsive state 구조를 텍스트 구조로 명확화 |
-| `/plan-stitch` | [plan-stitch.md](../../.claude/commands/plan-stitch.md) (소스: src/claude/plan/commands/) | PRD와 디자인 산출물 통합 | reference screenshot, state evidence, wireframe을 구현 context로 정렬 |
-| `/plan-bridge` | [plan-bridge.md](../../.claude/commands/plan-bridge.md) (소스: src/claude/plan/commands/) | planning에서 dev로 handoff | 승인된 fidelity 보강을 `/dev-feature` 또는 `/copy-*` 실행 context로 전환 |
-| `/plan-review` | [plan-review.md](../../.claude/commands/plan-review.md) (소스: src/claude/plan/commands/) | 기획 문서 품질 검토 | PRD, wireframe, bridge가 원본 fidelity 목표와 충돌하지 않는지 점검 |
-| `/plan-archive` | [plan-archive.md](../../.claude/commands/plan-archive.md) (소스: src/claude/plan/commands/) | 완료 기능 archive | 완료된 보강 라운드의 근거와 산출물 묶음화 |
-| `/plan-improve` | [plan-improve.md](../../.claude/commands/plan-improve.md) (소스: src/claude/plan/commands/) | archive 기반 개선 재진입 | 완료 후 발견된 fidelity gap을 새 보강 흐름으로 되돌림 |
+| Command | 파일 | 역할 | Turner 카피 프로젝트 해석 | 시나리오 활성화 |
+| --- | --- | --- | --- | --- |
+| `/plan-idea` | [plan-idea.md](../../.claude/commands/plan-idea.md) (소스: src/claude/plan/commands/) | 아이디어 수집 | fidelity gap 또는 보강 요청을 표준 idea로 등록 | 모든 시나리오 |
+| `/plan-screen` | [plan-screen.md](../../.claude/commands/plan-screen.md) (소스: src/claude/plan/commands/) | RICE 스크리닝과 승인 gate | gap의 영향도, evidence, 구현 비용을 기준으로 우선순위 판정 | 모든 시나리오 |
+| `/plan-draft` | [plan-draft.md](../../.claude/commands/plan-draft.md) (소스: src/claude/plan/commands/) | 1차 기능 기획과 Lite/Standard 판정 | 작은 gap은 Lite, header/mega menu급 보강은 Standard로 분류 | 모든 시나리오 (시나리오+Feature유형+Lite/Standard **판정 수행**) |
+| `/plan-prd` | [plan-prd.md](../../.claude/commands/plan-prd.md) (소스: src/claude/plan/commands/) | PRD 작성 | 큰 fidelity 보강을 요구사항과 acceptance로 고정 | A/B=일반 PRD, C-Standard=범위 PRD(1차)+상세 PRD(2차) |
+| `/plan-wireframe` | [plan-wireframe.md](../../.claude/commands/plan-wireframe.md) (소스: src/claude/plan/commands/) | ASCII/Mermaid wireframe | 메뉴 open, sticky, responsive state 구조를 텍스트 구조로 명확화 | Standard만 (Lite 생략) |
+| `/plan-stitch` | [plan-stitch.md](../../.claude/commands/plan-stitch.md) (소스: src/claude/plan/commands/) | PRD와 디자인 산출물 통합 | reference screenshot, state evidence, wireframe을 구현 context로 정렬 | Standard만 (Lite 생략) |
+| `/plan-bridge` | [plan-bridge.md](../../.claude/commands/plan-bridge.md) (소스: src/claude/plan/commands/) | planning에서 dev로 handoff | 승인된 fidelity 보강을 `/dev-feature` 또는 `/copy-*` 실행 context로 전환 | A/B Standard + C Standard |
+| `/plan-review` | [plan-review.md](../../.claude/commands/plan-review.md) (소스: src/claude/plan/commands/) | 기획 문서 품질 검토 | PRD, wireframe, bridge가 원본 fidelity 목표와 충돌하지 않는지 점검 | 모든 시나리오 |
+| `/plan-archive` | [plan-archive.md](../../.claude/commands/plan-archive.md) (소스: src/claude/plan/commands/) | 완료 기능 archive | 완료된 보강 라운드의 근거와 산출물 묶음화 | 모든 시나리오 |
+| `/plan-improve` | [plan-improve.md](../../.claude/commands/plan-improve.md) (소스: src/claude/plan/commands/) | archive 기반 개선 재진입 | 완료 후 발견된 fidelity gap을 새 보강 흐름으로 되돌림 | 모든 시나리오 |
 
 ### 2.3 새로 확인된 agent 목록
 
@@ -100,18 +102,29 @@
 
 ## 3. plan 기능의 역할 요약
 
-| 역할 | 확인된 command/agent | 산출물 | Turner 카피 프로젝트 적용 방식 |
-| --- | --- | --- | --- |
-| idea 수집 | `/plan-idea`, `plan-idea-collector` | `.plans/ideas/00-inbox/IDEA-*` | “Our Company hover panel fidelity 부족” 같은 gap을 idea로 등록 |
-| screening | `/plan-screen`, `plan-idea-screener` | `.plans/ideas/10-screening/SCREENING-*` | gap을 체감 영향, evidence 신뢰도, 구현 비용으로 선별 |
-| draft 작성 | `/plan-draft` | feature first-pass | 작은 gap은 Lite 실행 단위, 큰 gap은 Standard PRD 대상으로 판정 |
-| PRD 작성 | `/plan-prd`, `plan-prd-writer` | `.plans/prd/00-draft` 또는 `10-approved` | header, mega menu, responsive overhaul처럼 큰 보강의 기준 문서 생성 |
-| wireframe | `/plan-wireframe`, `plan-wireframe-designer` | `.plans/wireframes/{slug}/` | menu open, sticky, mobile nav 구조를 ASCII/Mermaid로 정리 |
-| stitch | `/plan-stitch`, `plan-stitch-integrator` | `.plans/stitch/{slug}/` | PRD, wireframe, screenshot evidence, P3/P5 기준을 연결 |
-| bridge | `/plan-bridge` | bridge context 파일 | 승인된 plan 산출물을 `/dev-feature` 또는 `/copy-plan-unit` 입력으로 넘김 |
-| review | `/plan-review`, `plan-reviewer` | PASS/WARN/FAIL 검토 | 계획 산출물이 원본 fidelity 목표와 충돌하지 않는지 확인 |
-| archive | `/plan-archive` | `.plans/archive/{slug}/ARCHIVE-*` | 완료된 보강 라운드의 기준선, gap, 구현, 검증 묶음화 |
-| improve | `/plan-improve` | improvement 문서 | release 이후 발견된 gap을 재진입 흐름으로 연결 |
+| 역할 | 확인된 command/agent | 산출물 | Turner 카피 프로젝트 적용 방식 | 시나리오 관련성 |
+| --- | --- | --- | --- | --- |
+| idea 수집 | `/plan-idea`, `plan-idea-collector` | `.plans/ideas/00-inbox/IDEA-*` | “Our Company hover panel fidelity 부족” 같은 gap을 idea로 등록 | 모든 시나리오 |
+| screening | `/plan-screen`, `plan-idea-screener` | `.plans/ideas/10-screening/SCREENING-*` | gap을 체감 영향, evidence 신뢰도, 구현 비용으로 선별 | 모든 시나리오 |
+| draft 작성 | `/plan-draft` | feature first-pass | 작은 gap은 Lite 실행 단위, 큰 gap은 Standard PRD 대상으로 판정 | 모든 시나리오 (**판정 시점**: 시나리오+Feature유형+Lite/Standard 결정) |
+| PRD 작성 | `/plan-prd`, `plan-prd-writer` | `.plans/prd/00-draft` 또는 `10-approved` | header, mega menu, responsive overhaul처럼 큰 보강의 기준 문서 생성 | A/B=일반 PRD, C-Standard=범위+상세 2회 |
+| wireframe | `/plan-wireframe`, `plan-wireframe-designer` | `.plans/wireframes/{slug}/` | menu open, sticky, mobile nav 구조를 ASCII/Mermaid로 정리 | Standard만 |
+| stitch | `/plan-stitch`, `plan-stitch-integrator` | `.plans/stitch/{slug}/` | PRD, wireframe, screenshot evidence, P3/P5 기준을 연결 | Standard만 |
+| bridge | `/plan-bridge` | bridge context 파일 | 승인된 plan 산출물을 `/dev-feature` 또는 `/copy-plan-unit` 입력으로 넘김 | A/B Standard + C Standard |
+| review | `/plan-review`, `plan-reviewer` | PASS/WARN/FAIL 검토 | 계획 산출물이 원본 fidelity 목표와 충돌하지 않는지 확인 | 모든 시나리오 |
+| archive | `/plan-archive` | `.plans/archive/{slug}/ARCHIVE-*` | 완료된 보강 라운드의 기준선, gap, 구현, 검증 묶음화 | 모든 시나리오 |
+| improve | `/plan-improve` | improvement 문서 | release 이후 발견된 gap을 재진입 흐름으로 연결 | 모든 시나리오 |
+
+### 3.1 시나리오×규모 매트릭스
+
+| 시나리오 | 규모 | 파이프라인 경로 | plan 커맨드 사용 |
+|---------|------|--------------|----------------|
+| A: 백지 | Lite | 레퍼런스 → 구현 → QA비교 | /plan-idea → /plan-screen → /plan-draft |
+| A: 백지 | Standard | 레퍼런스 → 마스터PRD → 서브PRD → 구현 → QA비교 | 전체 /plan-* 사용 |
+| B: 부분 | Lite | 레퍼런스 → 구현 → QA비교 | /plan-idea → /plan-screen → /plan-draft |
+| B: 부분 | Standard | 레퍼런스 → 마스터PRD → 서브PRD → 구현 → QA비교 | 전체 /plan-* 사용 |
+| C: 교정 | Lite | 갭 분석 → 실행 단위 → 구현 | /plan-idea → /plan-screen → /plan-draft |
+| C: 교정 | Standard | 범위PRD → 갭 분석 → 상세PRD → 구현 | /plan-prd 2회 (범위+상세) |
 
 ## 4. Turner 홈페이지 카피 프로젝트와의 매핑
 
@@ -191,19 +204,80 @@
 
 ```mermaid
 flowchart TD
-    A["Fidelity gap 또는 개선 요청"] --> B["/plan-idea: idea 등록"]
-    B --> C["/plan-screen: RICE 보정 + 사용자 승인 gate"]
-    C --> D{"Lite or Standard"}
-    D -->|Lite| E["/copy-plan-unit: 실행 단위 계획"]
-    D -->|Standard| F["/plan-draft"]
-    F --> G["/plan-prd"]
-    G --> H["/plan-wireframe 또는 /plan-stitch"]
-    H --> I["/plan-review: PCC 검토"]
-    I --> J["/plan-bridge: dev/copy handoff"]
-    J --> K["/copy-reference-refresh 또는 /dev-feature"]
-    K --> L["구현, 피드백, 검증"]
-    L --> M["/copy-closeout 또는 /plan-archive"]
-    M --> N["/plan-improve: 후속 gap 재진입"]
+    IDEA[/"Fidelity gap 또는 개선 요청"/]
+    SCREEN{"/plan-screen\nRICE 보정 + 사용자 승인 gate"}
+    DRAFT{"/plan-draft\nLite/Standard + 시나리오 판정"}
+
+    IDEA --> |"/plan-idea"| SCREEN
+    SCREEN -->|승인| DRAFT
+    SCREEN -->|거부| REJECT[/"거부 — 백로그"/]
+
+    %% ── 시나리오 A/B: 백지/부분 카피 ──
+    DRAFT -->|"A/B: 백지 or 부분 카피"| AB_REF
+
+    subgraph AB["시나리오 A/B: PRD 먼저 → 구현 → QA 비교"]
+        AB_REF["/copy-reference-refresh\n원본 레퍼런스 캡처"]
+        AB_PRD["/plan-prd\n원본 기반 PRD 작성"]
+        AB_WIRE["/plan-wireframe\n(Standard만)"]
+        AB_BRIDGE["/plan-bridge"]
+        AB_DEV["/dev-run\n구현 (TDD)"]
+        AB_QA_VR["/copy-visual-review\n원본 vs 구현 비교"]
+        AB_QA_IR["/copy-interaction-review\n상태 비교"]
+        AB_VERIFY["/copy-verify\nQA 검증"]
+        AB_CLOSE["/copy-closeout"]
+
+        AB_REF --> AB_PRD --> AB_WIRE --> AB_BRIDGE --> AB_DEV
+        AB_DEV --> AB_QA_VR
+        AB_DEV --> AB_QA_IR
+        AB_QA_VR --> AB_VERIFY
+        AB_QA_IR --> AB_VERIFY
+        AB_VERIFY --> AB_CLOSE
+    end
+
+    %% ── 시나리오 C: 충실도 교정 ──
+    DRAFT -->|"C: 충실도 교정"| C_REF
+
+    subgraph SC["시나리오 C: 갭 분석 먼저 → PRD → 구현"]
+        C_REF["/copy-reference-refresh\n원본 + 현재 캡처"]
+        C_VR["/copy-visual-review\n갭 분석"]
+        C_IR["/copy-interaction-review\n갭 분석"]
+        C_GB["/copy-gap-board\n갭 우선순위화"]
+        C_PRD["/plan-prd\n갭 기반 상세 PRD"]
+        C_WIRE["/plan-wireframe\n(Standard만)"]
+        C_BRIDGE["/plan-bridge"]
+        C_PU["/copy-plan-unit"]
+        C_DEV["/dev-run\n구현"]
+        C_VERIFY["/copy-verify"]
+        C_CLOSE["/copy-closeout"]
+
+        C_REF --> C_VR
+        C_REF --> C_IR
+        C_VR --> C_GB
+        C_IR --> C_GB
+        C_GB --> C_PRD --> C_WIRE --> C_BRIDGE --> C_PU --> C_DEV --> C_VERIFY --> C_CLOSE
+    end
+
+    %% ── Dev Feature (copy 불필요) ──
+    DRAFT -->|"Dev Feature\n(원본 대응 없음)"| DEV_PRD
+
+    subgraph DEV["Dev 경로: copy 워크플로우 건너뜀"]
+        DEV_PRD["/plan-prd"]
+        DEV_BRIDGE["/plan-bridge"]
+        DEV_FEAT["/dev-feature"]
+        DEV_RUN["/dev-run"]
+        DEV_VERIFY["/dev-verify"]
+
+        DEV_PRD --> DEV_BRIDGE --> DEV_FEAT --> DEV_RUN --> DEV_VERIFY
+    end
+
+    %% ── Phase 게이트 ──
+    AB_CLOSE --> PHASE_GATE
+    C_CLOSE --> PHASE_GATE
+    DEV_VERIFY --> PHASE_GATE
+
+    PHASE_GATE{"Phase/R 게이트\n사용자 승인"}
+    PHASE_GATE -->|승인| ARCHIVE["/plan-archive"]
+    ARCHIVE --> IMPROVE["/plan-improve: 후속 gap 재진입"]
 ```
 
 | 흐름 단계 | 기존 계층형 구조 연결 | 사용자 gate |
@@ -214,6 +288,30 @@ flowchart TD
 | bridge | 실행 단위 plan과 dev/copy command 입력 생성 | bridge context 승인 |
 | dev/copy 실행 | `대그룹 > 중그룹 > 소그룹 > 실행 단위` 유지 | 대그룹/Phase/R 종료 gate 유지 |
 | archive/improve | 완료 bundle과 후속 개선 연결 | archive 또는 improve 재진입 승인 |
+
+### 8.1 Feature 유형 태깅
+
+`/plan-draft` 출력에 각 Feature의 유형을 태깅한다.
+
+```
+/plan-draft 출력 예시:
+  E-01: Turner 홈페이지 카피 (Standard Epic)
+    F-HEADER:      type=copy  | P0 | 시나리오 C | 서브 PRD
+    F-HERO:        type=copy  | P0 | 시나리오 C | 서브 PRD
+    F-NEWS:        type=copy  | P1 | 시나리오 B | Lite
+    F-ANALYTICS:   type=dev   | P1 | Dev 경로
+    F-NEW-SECTION: type=copy  | P1 | 시나리오 A | Lite
+```
+
+### 8.2 시나리오 C 범위 PRD 개념
+
+시나리오 C + Standard에서는 `/plan-prd`를 2회 호출한다.
+
+| 단계 | PRD 유형 | 내용 | 갭 데이터 |
+|------|---------|------|----------|
+| 1차 | 범위 PRD | "어디를 분석할지": 대상 영역 목록, 뷰포트, 우선순위, 공유 제약 | 없음 (분석 전) |
+| 갭 분석 | — | `/copy-visual-review` + `/copy-interaction-review` | 생성됨 |
+| 2차 | 상세 PRD | "어떻게 닫을지": 갭별 수용 기준(acceptance criteria), 구체적 조정 방향 | 포함 |
 
 ## 9. 실행 단위 계획
 

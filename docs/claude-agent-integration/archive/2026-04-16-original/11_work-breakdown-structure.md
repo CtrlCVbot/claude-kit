@@ -58,6 +58,51 @@ Epic (대)
 
 ---
 
+## 2.5 카피 시나리오 분류
+
+WBS 분류와 별개로, **카피 작업의 시나리오**에 따라 파이프라인 순서가 달라진다.
+
+| 시나리오 | 상황 | 갭 분석 역할 | PRD 순서 | copy 워크플로우 |
+|---------|------|-----------|---------|--------------|
+| **A: 백지 카피** | 원본은 있지만 구현이 아예 없음. 처음부터 만드는 것 | 무의미 (비교할 현재가 없음) | **PRD 먼저** (원본 기반 스펙) | 레퍼런스 캡처만. 갭 분석은 QA 시점 |
+| **B: 부분 카피** | 기존 프로젝트에 원본의 특정 부분만 가져오는 것 | 해당 없음 (새 부분이라 시도한 적 없음) | **PRD 먼저** (원본 기반 스펙) | 레퍼런스 캡처만. 갭 분석은 QA 시점 |
+| **C: 충실도 교정** | 이미 카피를 시도했는데 원본과 다른 부분 수정 | **핵심** (현재 vs 원본 차이) | **갭 분석 후** 상세 PRD | copy 워크플로우 전체 사용 |
+
+### 시나리오 판정 기준
+
+```
+Feature 진입
+  │
+  ├── 해당 Feature의 구현이 이미 존재하는가?
+  │    │
+  │    ├── YES → 원본과 비교할 수 있는가?
+  │    │    │
+  │    │    ├── YES → 🔴 시나리오 C (충실도 교정)
+  │    │    │         → 갭 분석 → 상세 PRD → 구현
+  │    │    │
+  │    │    └── NO (구현은 있지만 해당 영역 미구현)
+  │    │         → 🟡 시나리오 B (부분 카피)
+  │    │           → 레퍼런스 캡처 → PRD → 구현 → QA 비교
+  │    │
+  │    └── NO (구현 자체가 없음)
+  │         → 🟢 시나리오 A (백지 카피)
+  │           → 레퍼런스 캡처 → PRD → 구현 → QA 비교
+```
+
+### 시나리오별 copy 워크플로우 사용 범위
+
+| 커맨드 | A: 백지 카피 | B: 부분 카피 | C: 충실도 교정 |
+|--------|:---:|:---:|:---:|
+| `/copy-reference-refresh` | 사용 (원본 캡처) | 사용 (원본 캡처) | 사용 (원본+현재 캡처) |
+| `/copy-visual-review` | QA 시점에서만 | QA 시점에서만 | **PRD 전에 사용** |
+| `/copy-interaction-review` | QA 시점에서만 | QA 시점에서만 | **PRD 전에 사용** |
+| `/copy-gap-board` | QA 시점에서만 | QA 시점에서만 | **PRD 전에 사용** |
+| `/copy-plan-unit` | 사용 안 함 | 사용 안 함 | 사용 |
+| `/copy-verify` | 사용 (QA 검증) | 사용 (QA 검증) | 사용 (QA 검증) |
+| `/copy-closeout` | 사용 | 사용 | 사용 |
+
+---
+
 ## 3. 옵션 비교
 
 ### 옵션 A: 마스터 PRD → 섹션별 분해
@@ -200,52 +245,46 @@ Epic (대)
 
 ---
 
-## 5. 권장안: C+D 혼합 (Adaptive WBS)
+## 5. 권장안: 시나리오 적응형 WBS (Scenario-Adaptive WBS)
 
 대규모 기획에는 **옵션 C**(구조적 안전성)와 **옵션 D**(증거 기반 점진성)를 결합한다.
 
 ### 5.1 핵심 아이디어
 
-> **마스터 Overview로 방향을 잡되, 실제 분해는 갭 보드가 주도한다.**
+> **시나리오(A/B/C)에 따라 파이프라인 순서를 결정하고, 규모(Lite/Standard)에 따라 문서 깊이를 조절한다.**
 
 ```
 Epic 진입
   │
   ├── /plan-screen (RICE)
   │
-  ├── /plan-draft → Lite or Standard 판정
+  ├── /plan-draft → Lite/Standard 판정 + 시나리오(A/B/C) 판정
   │    │
-  │    ├── Lite Epic (Feature 3개 미만, P1/P2 위주)
-  │    │    → 옵션 D 적용: 증거 → 갭 보드 → 즉시 실행
+  │    ├── 시나리오 A/B (백지/부분 카피)
+  │    │    │
+  │    │    ├── Lite: 레퍼런스 캡처 → PRD(경량) → 구현 → QA(copy 비교)
+  │    │    │
+  │    │    └── Standard: 레퍼런스 캡처 → 마스터 PRD → 서브 PRD
+  │    │         → wireframe → 구현 → QA(copy 비교)
   │    │
-  │    └── Standard Epic (Feature 3개 이상, P0 포함)
+  │    └── 시나리오 C (충실도 교정)
   │         │
-  │         ├── /plan-prd (마스터 Overview)
-  │         │    - 전체 Feature 목록
-  │         │    - 공유 제약 (글로벌 CSS, 브레이크포인트, 타이포 스케일)
-  │         │    - Feature 간 의존성 매트릭스
-  │         │    - 우선순위 (P0 Feature 먼저)
+  │         ├── Lite: 갭 분석 → 실행 단위 → 구현 → QA
   │         │
-  │         ├── 마스터 승인
-  │         │
-  │         ├── [병렬] Feature별 진행:
-  │         │    ├── P0 Feature → /plan-prd (서브) → /plan-wireframe → /plan-bridge
-  │         │    ├── P1 Feature → /copy-gap-board → /copy-plan-unit (Lite)
-  │         │    └── P2 Feature → 백로그
-  │         │
-  │         └── 각 Feature 내부:
-  │              └── 옵션 D 적용: 증거 → 갭 → Story → Task
+  │         └── Standard: 범위 PRD → 갭 분석 → 상세 PRD
+  │              → wireframe → 구현 → QA
 ```
 
 ### 5.2 판정 기준표
 
-| 판정 시점 | 조건 | 결과 | 적용 옵션 |
-|----------|------|------|----------|
-| `/plan-draft` | Feature 3개 미만 + P0 없음 | Lite Epic | D (갭 보드 직행) |
-| `/plan-draft` | Feature 3개 이상 또는 P0 존재 | Standard Epic | C (마스터 → 서브) |
-| 마스터 PRD 내 | P0 Feature | 서브 PRD 필수 | C 경로 |
-| 마스터 PRD 내 | P1 Feature | Lite 실행 | D 경로 |
-| 마스터 PRD 내 | P2 Feature | 백로그 | 보류 |
+| 판정 시점 | 조건 | 시나리오 | 규모 | 파이프라인 경로 |
+|----------|------|---------|------|--------------|
+| `/plan-draft` | 구현 없음 + Lite | A | Lite | 레퍼런스 → PRD(경량) → 구현 → QA |
+| `/plan-draft` | 구현 없음 + Standard | A | Standard | 레퍼런스 → 마스터 PRD → 서브 PRD → 구현 → QA |
+| `/plan-draft` | 해당 영역 미구현 + Lite | B | Lite | 레퍼런스 → PRD(경량) → 구현 → QA |
+| `/plan-draft` | 해당 영역 미구현 + Standard | B | Standard | 레퍼런스 → 마스터 PRD → 서브 PRD → 구현 → QA |
+| `/plan-draft` | 구현 존재 + 원본 비교 가능 + Lite | C | Lite | 갭 분석 → 실행 단위 → 구현 → QA |
+| `/plan-draft` | 구현 존재 + 원본 비교 가능 + Standard | C | Standard | 범위 PRD → 갭 분석 → 상세 PRD → 구현 → QA |
 
 ### 5.3 커맨드 매핑
 
