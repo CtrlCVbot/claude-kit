@@ -1,4 +1,4 @@
-<!-- kit-convert generated: 2026-04-16 -->
+<!-- kit-convert generated: 2026-04-17 -->
 ---
 name: plan-pipeline
 description: >
@@ -52,12 +52,14 @@ Blueprint Fast-Track (기존 설계 자산 정규화):
 - 입력: 승인된 IDEA ID
 - 출력: `.plans/features/drafts/{slug}/first-pass.md` 또는 `.plans/features/active/{slug}.md`
 - 분기: Lite → 파이프라인 종료 가능, Standard → P4로 진행
+- copy 도메인 활성 시: 시나리오(A/B/C) + Feature 유형(copy/dev) 동시 판정 → `07-routing-metadata.md` 기록
 - Human Checkpoint: Scope 확인
 
 ### P4: PRD 상세 작성 (/plan-prd)
 - 입력: First-pass 문서
 - 출력: `.plans/prd/00-draft/` → `10-approved/`
 - 에이전트: plan-prd-writer (opus)
+- copy Feature + 시나리오 C: `--scope` 모드(범위 PRD) → 갭 분석 → `--detail` 모드(상세 PRD)
 - Human Checkpoint: 승인/수정/반려
 
 ### P5: 와이어프레임 (/plan-wireframe)
@@ -74,8 +76,8 @@ Blueprint Fast-Track (기존 설계 자산 정규화):
 
 ### P7: 기획→개발 핸드오프 (/plan-bridge)
 - 입력: PRD + Wireframe + Stitch
-- 출력: Bridge context 파일들
-- 연결: `/dev-feature` (Phase A~E)
+- 출력: Bridge context 파일들 (routing-metadata 포함)
+- 연결: copy Feature → copy-reference-refresh 또는 갭 분석 경로 / dev Feature → `/dev-feature` (Phase A~E)
 
 ## Review Loop
 
@@ -90,6 +92,7 @@ Blueprint Fast-Track (기존 설계 자산 정규화):
 
 - P4, P5 완료 시 자동으로 `/plan-review` 호출
 - 수동 호출: `/plan-review <path> --type={stage}`
+- PCC-06: Gap Board ↔ Detail PRD (copy 도메인 활성 + 시나리오 C에서만 적용)
 
 ### P8: 아카이브 (/plan-archive) [선택]
 
@@ -130,10 +133,21 @@ P1 → P2 → P3 → [P4] → P5 → [P6] → P7 → Dev → [P8 Archive]
       "P2": { "status": "done", "completedAt": "2026-03-25" },
       "P3": { "status": "done", "completedAt": "2026-03-25" },
       "P4": { "status": "in-progress" }
+    },
+    "copyStages": {
+      "referenceRefresh": { "status": "pending" },
+      "visualReview": { "status": "pending" },
+      "interactionReview": { "status": "pending" },
+      "gapBoard": { "status": "pending" },
+      "planUnit": { "status": "pending" },
+      "verify": { "status": "pending" },
+      "closeout": { "status": "pending" }
     }
   }
 }
 ```
+
+`copyStages` 블록은 copy 도메인이 활성화되고 Feature 유형이 `copy`인 경우에만 생성됩니다. dev Feature에서는 이 블록이 없습니다. 각 copy 커맨드가 실행 시 해당 stage를 `"done"` + `completedAt`으로 갱신합니다.
 
 Archived 기능은 `currentStage: "archived"`로 표시되며, `archivePath` 필드가 추가됩니다:
 

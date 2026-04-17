@@ -1,4 +1,4 @@
-<!-- kit-convert generated: 2026-04-16 -->
+<!-- kit-convert generated: 2026-04-17 -->
 <!-- REVIEW NEEDED: complex command -->
 # dev-feature — Codex Entry Flow
 
@@ -10,7 +10,7 @@
 
 ## Invocation
 
-```
+```bash
 dev-feature {slug}
 dev-feature .plans/prd/10-approved/{slug}-prd.md
 ```
@@ -20,6 +20,9 @@ dev-feature .plans/prd/10-approved/{slug}-prd.md
 - 승인된 PRD가 존재한다.
 - `.plans/project/00-dev-architecture.md`가 존재하고 승인 상태다.
 - `.plans/features/active/{slug}/00-context/06-architecture-binding.md`가 존재한다.
+- Feature 유형 확인: `07-routing-metadata.md`가 있으면 Feature 유형(copy/dev)을 읽는다.
+  - Feature 유형이 `copy`이면 copy 도메인 경로(갭 분석, evidence 관리)가 선행되었는지 확인한다.
+  - copy Feature에서 넘어온 경우 bridge context에 시나리오/유형 메타데이터가 포함되어야 한다.
 
 위 조건이 충족되지 않으면 `dev-architecture {slug}`를 먼저 실행한다.
 
@@ -29,12 +32,12 @@ dev-feature .plans/prd/10-approved/{slug}-prd.md
 
 1. PRD, 브리지 문서, 프로젝트 구조 SSOT, 기능 구조 바인딩을 함께 읽는다.
 2. Lite 또는 Standard 범위를 결정한다.
-3. 아래 컨텍스트 문서를 생성하거나 갱신한다:
+3. 아래 컨텍스트 문서를 생성하거나 갱신한다.
    - `00-context/00-index.md`
    - `00-context/01-prd-freeze.md`
    - `00-context/02-decision-log.md`
 4. `02-package/00-overview.md`를 작성한다.
-5. Overview에는 아래 구조 계약을 반드시 포함한다:
+5. Overview에는 아래 구조 계약을 반드시 포함한다.
    - `Structure Mode`
    - `Allowed Target Paths`
    - `Layer Mapping`
@@ -49,7 +52,7 @@ dev-feature .plans/prd/10-approved/{slug}-prd.md
 
 ### Phase C: Feature Package
 
-9. 승인된 Overview를 기준으로 Feature Package 문서를 생성한다:
+9. 승인된 Overview를 기준으로 Feature Package 문서를 생성한다.
    - `01-requirements.md`
    - `02-ui-spec.md`
    - `03-flow.md` 필요 시

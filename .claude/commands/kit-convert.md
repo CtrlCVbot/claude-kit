@@ -75,6 +75,9 @@ Claude 자산을 Codex 형식으로 변환하여 `src/codex/`에 생성하고 pa
 7. 변환 성공 자산을 `src/pairing-registry.json`에 `paired`로 등록한다.
 8. skip 자산을 `codex-skip` + reason으로 등록한다.
 9. 기존 엔트리가 있으면 업데이트한다.
+10. 동기화 메타데이터를 기록한다 (초기 변환 및 `--force` 재변환 모두 적용):
+    - `lastSyncedAt`: 현재 시각 (ISO 8601)
+    - `contentHash`: Claude source 파일의 raw UTF-8 내용을 SHA-256 해싱 후 앞 8자 hex (`require('crypto').createHash('sha256').update(content,'utf8').digest('hex').slice(0,8)`)
 
 ### Phase 5: 결과 출력
 

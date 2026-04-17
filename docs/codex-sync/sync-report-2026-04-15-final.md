@@ -94,7 +94,7 @@
 
 남은 후속 작업 (rollout 후 별도 task):
 - Phase 5+ schema-codex-portability.md 검증 자동화 (kit-validate 통합)
-- C10 drift detection 실제 구현 (git log + semantic comparison)
+- C10 drift detection 실제 구현 (부분 완료: `audit-drift.js` 시간 기반 + `--content` 키워드 비대칭 구현, 심층 semantic comparison 미구현)
 - T18 runtime 실제 검증 (setup.js 실행 + plugin 결과 inspect)
 - 7개 informational hook의 evidenceLevel "추정" → "공식 지원" 재평가 (Codex runtime test)
 - EX-007 exec-policy split 재검토 (evidence 더 모일 때)

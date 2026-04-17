@@ -18,7 +18,7 @@
  *     direct 재현 불가 → skill/command fallback 필요
  *   - Windows: 현재 비활성화. 크로스플랫폼 가정 금지.
  *
- * kit-convert generated: 2026-04-16
+ * kit-convert generated: 2026-04-17
  */
 
 const fs = require("fs");
@@ -75,6 +75,9 @@ const PYTHON_EXEMPT_PATTERNS = [
 const COMMON_EXEMPT_PATTERNS = [
   /\.json$/, /\.yaml$/, /\.yml$/, /\.md$/, /\.sql$/, /\.css$/,
   /\.gitignore$/, /\.env/, /CLAUDE\.md$/,
+  // copy Feature 시각적 작업 면제: CSS/SCSS/스타일 관련 파일
+  /\.scss$/, /\.sass$/, /\.less$/, /\.styl$/,
+  /\.module\.css$/, /\.module\.scss$/,
 ];
 
 function detectStack(filePath) {

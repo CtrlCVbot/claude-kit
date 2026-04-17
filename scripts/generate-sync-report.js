@@ -114,7 +114,26 @@ ${pairing ? pairing.entries.map(e => `| ${e.identity} | ${e.type} | ${e.status} 
 
 ${commits.length > 0 ? commits.map(c => `- \`${c}\``).join('\n') : '(codex-sync 관련 commit 없음)'}
 
-## 8. 메타데이터
+## 8. Drift Detection 요약
+
+> \`node scripts/audit-drift.js --content\` 실행 결과를 별도로 확인하세요.
+> 이 섹션은 pairing-registry 기준의 정적 drift 후보만 표시합니다.
+
+${(() => {
+  if (!pairing) return '(pairing-registry 없음)';
+  const paired = pairing.entries.filter(e => e.status === 'paired' && e.claude && e.codex);
+  const withHash = paired.filter(e => e.contentHash);
+  const withoutHash = paired.filter(e => !e.contentHash);
+  return [
+    '| 항목 | 건수 |',
+    '|------|------|',
+    '| paired 자산 (총) | ' + paired.length + ' |',
+    '| contentHash 기록됨 | ' + withHash.length + ' |',
+    '| contentHash 미기록 (drift 후보) | ' + withoutHash.length + ' |',
+  ].join('\n');
+})()}
+
+## 9. 메타데이터
 
 | 항목 | 값 |
 |------|-----|

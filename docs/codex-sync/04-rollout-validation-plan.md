@@ -187,7 +187,7 @@ skipless conversion 전략을 실제 구현으로 옮길 때, 공식 문서 기�
 
 - T18 runtime 검증 (실제 setup.js 실행으로 plugin 생성 확인) — Phase 5
 - schema-codex-portability.md 신규 (codex-portability.json 자체 검증) — Phase 5+
-- C10 drift detection 실제 구현 (git log 비교 + semantic comparison) — Phase 5+
+- C10 drift detection 실제 구현 — Phase 5+ (부분 완료: 시간 기반 git log 비교 구현됨, 내용 기반 키워드 비대칭 감지 `--content` 플래그로 구현됨, 심층 semantic comparison은 미구현)
 - 7개 informational hook의 evidenceLevel 재평가 (추정 → 공식 지원/검증 필요) — Phase 5 runtime 검증
 
 ## 5. 검증 계획

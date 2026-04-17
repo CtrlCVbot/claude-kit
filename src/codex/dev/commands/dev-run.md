@@ -1,4 +1,4 @@
-<!-- kit-convert generated: 2026-04-16 -->
+<!-- kit-convert generated: 2026-04-17 -->
 <!-- REVIEW NEEDED: complex command -->
 # dev-run — Codex Entry Flow
 
@@ -10,8 +10,9 @@ Feature Package의 TASK를 TDD 기반으로 구현한다. 구현 범위와 파�
 
 ## Invocation
 
-```
+```bash
 dev-run .plans/features/active/{slug}
+dev-run .plans/features/active/{slug} --story S-HEADER-01  # copy 도메인에서 넘어온 Story ID 지정
 ```
 
 ## Invocation (Preconditions)
@@ -25,6 +26,8 @@ dev-run .plans/features/active/{slug}
 ### Phase D1: Task Resolution
 
 1. Feature Package, 구조 SSOT, 기능 바인딩을 함께 읽는다.
+   - `--story S-{AREA}-{NN}` 옵션이 있으면 copy 도메인의 해당 Story 범위로 TASK 필터링
+   - `07-routing-metadata.md`가 있으면 시나리오/Feature 유형을 인식하여 copy Feature 맥락 반영
 2. 다음 실행 가능한 TASK를 고른다.
 3. REQ, DEC, TC, target path를 묶은 Task Context Bundle을 만든다.
 

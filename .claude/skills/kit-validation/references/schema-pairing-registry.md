@@ -23,11 +23,13 @@
 | `identity` | FAIL | 존재 + 비어있지 않음 |
 | `type` | FAIL | enum: `skill` / `agent` / `command` / `hook` / `rule` |
 | `domain` | FAIL | enum: `core` / `dev` / `plan` |
-| `status` | FAIL | enum: `paired` / `codex-skip` / `codex-native-only` |
+| `status` | FAIL | enum: `paired` / `codex-skip` / `codex-native-only` / `unpaired` |
 | `reason` | WARN | status=codex-skip/codex-native-only일 때 비어있지 않음 |
 | `claude` | WARN | null 또는 존재하는 파일 경로 string |
 | `codex` | WARN | null 또는 존재하는 파일 경로 string |
 | `createdAt` | WARN | ISO 8601 타임스탬프 |
+| `lastSyncedAt` | INFO | ISO 8601 타임스탬프 또는 null (kit-convert가 변환/재변환 시 기록) |
+| `contentHash` | INFO | Claude source SHA-256 앞 8자 hex 또는 null (kit-convert가 변환 시 기록) |
 
 ## 무결성 검증
 
@@ -67,7 +69,7 @@ node -e "
   const d = JSON.parse(require('fs').readFileSync('src/pairing-registry.json','utf8'));
   const fs = require('fs');
   const validTypes = ['skill','agent','command','hook','rule'];
-  const validStatus = ['paired','codex-skip','codex-native-only'];
+  const validStatus = ['paired','codex-skip','codex-native-only','unpaired'];
   let fail = 0;
   for (const e of d.entries) {
     if (!validTypes.includes(e.type)) { console.log('FAIL type:', e.identity, e.type); fail++; }

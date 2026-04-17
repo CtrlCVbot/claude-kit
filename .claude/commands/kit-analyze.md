@@ -1,7 +1,7 @@
 ---
 allowed-tools: Read, Grep, Glob
 description: Claude 자산의 Codex 전환 준비 상태를 분석합니다.
-argument-hint: '[--domain <domain>] [--type <type>] [--verbose]'
+argument-hint: '[--domain <domain>] [--type <type>] [--verbose] [--include-paired]'
 ---
 
 # /kit-analyze
@@ -17,6 +17,7 @@ argument-hint: '[--domain <domain>] [--type <type>] [--verbose]'
 /kit-analyze --domain dev       # dev 도메인만
 /kit-analyze --type agent       # 에이전트만
 /kit-analyze --verbose          # 컴포넌트별 상세
+/kit-analyze --include-paired --verbose  # paired 자산 drift 상세
 ```
 
 ## 파라미터
@@ -26,6 +27,7 @@ argument-hint: '[--domain <domain>] [--type <type>] [--verbose]'
 | `--domain` | 도메인 필터 (`core`, `dev`, `plan`) | 전체 |
 | `--type` | 타입 필터 (`skill`, `agent`, `command`, `hook`, `rule`) | 전체 |
 | `--verbose` | 컴포넌트별 상세 출력 | 꺼짐 |
+| `--include-paired` | paired 자산의 content drift 상세 출력 | 꺼짐 |
 
 ## Workflow
 
@@ -45,6 +47,15 @@ argument-hint: '[--domain <domain>] [--type <type>] [--verbose]'
    - `strategy`: paired-direct / paired-fallback / paired-review / blocked (codex-sync Phase 4 4-tier)
    - `evidenceLevel`: 공식 지원 / 우회 가능 / 추정 / 검증 필요 (`src/claude/_meta/codex-portability.json` 참조)
    - `difficulty`: auto / review / skip (legacy 호환, 4-tier에 매핑)
+
+### Phase 2.5: paired 자산 drift 검사
+
+4-1. `--include-paired` 또는 기본 실행 시, `status: paired` 자산에 대해 content drift를 검사한다:
+   - Claude source와 Codex source를 읽어 도메인 키워드(`copy`, `scenario`, `Feature 유형`, `시나리오`, `/copy-`, `copy-reference`, `routing-metadata`, `갭 분석`) 비대칭을 확인
+   - Claude에 N>0 출현하는 키워드가 Codex에 0회 → `content-drift`
+   - git log 날짜 차이 > 7일 (기존 C10 기준) → `time-drift`
+   - 그 외 → `synced`
+   - 결과를 `driftStatus` 필드로 기록 (기본 실행에서는 요약 카운트만 출력, `--include-paired --verbose`에서 상세)
 
 ### Phase 3: 난이도 휴리스틱 (4-tier 매핑 포함)
 
@@ -97,10 +108,25 @@ argument-hint: '[--domain <domain>] [--type <type>] [--verbose]'
   ...
 ```
 
+  === 드리프트 감지 (paired 자산) ===
+  content-drift: X개 — Claude에 Codex에 없는 도메인 참조 발견
+  time-drift:    Y개 — 7일+ 수정 시간 차이
+  synced:        Z개
+
+  === 드리프트 상세 (--verbose --include-paired) ===
+  | Identity      | Type    | DriftType     | Missing in Codex            |
+  |---------------|---------|---------------|-----------------------------|
+  | plan-draft    | command | content-drift | copy, scenario, Feature유형  |
+  | dev-feature   | command | content-drift | copy, routing-metadata       |
+  ...
+```
+
 > Note (codex-sync Phase 4): 4-tier 컬럼이 정식 출력 형식이다. legacy `auto/review/skip` 컬럼은 `paired-direct (auto)`, `paired-direct (review)`, `paired-fallback`/`blocked`로 매핑하여 호환성 유지.
 
 ## Rules
 
 - 읽기 전용. 파일을 수정하지 않는다.
 - `_archive/` 디렉토리는 스캔에서 제외한다.
-- 이미 `paired`/`codex-skip` 상태인 자산은 "이미 처리됨"으로 표시한다.
+- 이미 `paired`/`codex-skip` 상태인 자산은 "이미 처리됨"으로 표시하되, drift 요약은 항상 출력한다.
+- `--include-paired --verbose` 시 drift 상세 테이블(Identity, DriftType, Missing in Codex)을 출력한다.
+- drift 감지 시 해결 방법 안내: `/kit-sync --resync --name {identity}`

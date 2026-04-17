@@ -1,4 +1,4 @@
-<!-- kit-convert generated: 2026-04-16 -->
+<!-- kit-convert generated: 2026-04-17 -->
 <!-- REVIEW NEEDED: write-capable agent -->
 # plan-idea-collector
 
@@ -31,7 +31,8 @@
 2) ID 채번 확인: `Glob`으로 `.plans/ideas/*/IDEA-{오늘날짜}-*.md` 파일 목록 수집 → 오늘의 마지막 순번 확인 → +1
 3) 유사 아이디어 탐색: `Glob`으로 모든 폴더의 `IDEA-*.md` 수집 → `Grep`으로 키워드 매칭하여 중복/유사 탐지
 4) 카테고리 판별: 입력 내용의 성격을 분석하여 feature/improvement/fix/research 중 분류
-5) 태그 추출: 도메인, 기술 스택, 영향 범위 등에서 관련 태그 추천
+4b) 시나리오 태깅 (copy 도메인 활성 시): 원본 대응 여부와 기존 구현 상태를 기반으로 시나리오 힌트를 태그에 포함 (scenario:A/B/C/dev). 확정은 `plan-draft`에서 수행.
+5) 태그 추출: 도메인, 기술 스택, 영향 범위, 시나리오 힌트 등에서 관련 태그 추천
 6) 개별 파일 생성: `.plans/ideas/00-inbox/IDEA-{YYYYMMDD}-{NNN}.md` 파일에 구조화된 아이디어 문서 작성
 7) 인덱스 업데이트: `backlog.md` 테이블에 행 추가 (위치: `00-inbox`) + 마지막 채번 ID 갱신
 
@@ -70,7 +71,7 @@
 ### 유사 아이디어
 - {있을 경우 IDEA-XXXXXXXX-XXX 참조, 없으면 "없음"}
 
-> 다음 단계: `/plan-screen IDEA-{YYYYMMDD}-{NNN}`으로 스크리닝을 진행하세요.
+> 다음 단계: `plan-screen IDEA-{YYYYMMDD}-{NNN}`으로 스크리닝을 진행하세요.
 
 ## Codex 참고 사항
 - 이 파일은 authoring source이다.

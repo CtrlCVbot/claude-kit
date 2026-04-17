@@ -107,16 +107,22 @@ C7이 cross-phase 피드백에서 식별한 silent failure 시나리오를 다�
   ```
 - **S4 감지** (pairing-registry enum value 오류): `.claude/skills/kit-validation/references/schema-pairing-registry.md` 참조 (codex-sync cross-phase review CC5, Phase 5+ 신규)
 
-### C10: codex-sync artifact drift detection (선택, codex-sync Phase 4)
+### C10: codex-sync artifact drift detection (권장, codex-sync Phase 4+5)
 
-> codex-sync Phase 2 피드백 N2 + Phase 3 후속 의무. 원본 source와 fallback artifact 간 drift를 INFO로 보고.
+> codex-sync Phase 2 피드백 N2 + Phase 3 후속 의무 + Phase 5 content drift 확장. 원본 source와 fallback artifact 간 drift를 보고.
 
 - **rule fallback drift**: `src/claude/core/rules/{name}.md` 변경 시 `src/templates/AGENTS.md.template ### {name}` 섹션 갱신 누락 감지 (INFO)
   - 검사: 두 파일의 git log 비교 → 원본 변경 후 template 미갱신 commit 식별
 - **hook fallback drift**: `src/claude/{domain}/hooks/{name}.js` 변경 시 fallback skill (`src/claude/{domain}/skills/{name}/SKILL.md`) 의도 정합성 (INFO)
   - 예: EX-001 session-wrap-suggest hook의 threshold 변경 시 skill의 trigger 조건 재확인 권장
-- **paired-direct sibling drift**: `claudeSource`와 `codexSource`가 모두 존재하는 항목의 의미적 차이 (INFO)
+- **paired-direct sibling drift** (시간 기반): `claudeSource`와 `codexSource`가 모두 존재하는 항목의 수정일 차이 > 7일 (INFO)
   - 예: EX-002 output-secret-filter의 Claude/Codex 버전 분기 일관성
+- **paired-content-drift** (내용 기반, `--content` 플래그): Claude source에 존재하는 도메인 키워드(`copy`, `scenario`, `Feature 유형` 등)가 Codex source에 없는 비대칭 감지 (WARN)
+  - 검사: `node scripts/audit-drift.js --content` 실행
+  - 해결: `/kit-sync --resync --name {identity}` 또는 `/kit-convert --name {identity} --force`
+  - 예: copy 도메인 도입으로 수정된 plan-draft, dev-feature 등 기존 컴포넌트의 Claude↔Codex 내용 불일치
+- **rule-content-drift** (내용 기반, `--content` 플래그): Rule source에 존재하는 도메인 키워드가 AGENTS.md.template 섹션에 없는 비대칭 감지 (INFO)
+  - 검사: `node scripts/audit-drift.js --content` 실행
 
 ### C8: 교차 참조 무결성 (필수)
 
@@ -186,6 +192,7 @@ C7이 cross-phase 피드백에서 식별한 silent failure 시나리오를 다�
 ## Rules
 
 - C1~C4, C6, C7, C8는 필수 감사 카테고리이다. 항상 실행된다 (C6는 codex-sync cross-phase review 후 mandatory 승격).
-- C5~C6, C9는 `--category C5` 또는 해당 카테고리 코드로 명시적 요청 시에만 실행된다.
+- C10은 권장 감사 카테고리이다. 기본 실행에서 포함되며, content drift 감지에는 `--content` 플래그가 추가로 필요하다.
+- C5, C9는 `--category C5` 또는 해당 카테고리 코드로 명시적 요청 시에만 실행된다.
 - `--fix`는 안전한 항목만 수정한다. 판단이 필요한 항목은 보고만 한다.
 - `_archive/` 디렉토리는 감사 대상에서 제외한다.

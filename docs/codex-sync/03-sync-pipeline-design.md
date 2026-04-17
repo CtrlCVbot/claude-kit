@@ -210,6 +210,15 @@ registry 역할은 아래처럼 분리한다.
 
 이렇게 해야 "왜 direct가 아닌가"와 "왜 그래도 skip하지 않는가"가 함께 설명된다.
 
+### 8.1 Content-Based Drift Detection (Phase 5+ 구현)
+
+시간 기반 drift (git log 날짜 비교)에 추가하여, `--content` 플래그로 내용 기반 drift를 감지한다:
+
+- **paired-content-drift** (WARN): Claude source에 존재하는 도메인 키워드(`copy`, `scenario`, `Feature 유형` 등 8개)가 Codex source에 0회 출현하는 비대칭 감지
+- **rule-content-drift** (INFO): Rule source와 AGENTS.md.template 섹션 간 키워드 비대칭 감지
+- 실행: `node scripts/audit-drift.js --content`
+- 해결: `/kit-sync --resync --name {identity}` 또는 `/kit-convert --name {identity} --force`
+
 ## 9. 정합성 규칙
 
 ### 9.1 `output-secret-filter`

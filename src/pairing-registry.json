@@ -260,7 +260,9 @@
       "reason": null,
       "claude": "src/claude/plan/skills/plan-pipeline/SKILL.md",
       "codex": "src/codex/plan/skills/plan-pipeline/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "dc7908a8"
     },
     {
       "identity": "dev-architect",
@@ -320,7 +322,9 @@
       "reason": null,
       "claude": "src/claude/dev/agents/dev-verify-agent.md",
       "codex": "src/codex/dev/agents/dev-verify-agent.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "206d3ca9"
     },
     {
       "identity": "plan-prd-writer",
@@ -330,7 +334,9 @@
       "reason": null,
       "claude": "src/claude/plan/agents/plan-prd-writer.md",
       "codex": "src/codex/plan/agents/plan-prd-writer.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "9d881adf"
     },
     {
       "identity": "plan-wireframe-designer",
@@ -360,7 +366,9 @@
       "reason": null,
       "claude": "src/claude/plan/agents/plan-reviewer.md",
       "codex": "src/codex/plan/agents/plan-reviewer.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "b44b5b88"
     },
     {
       "identity": "plan-idea-collector",
@@ -370,7 +378,9 @@
       "reason": null,
       "claude": "src/claude/plan/agents/plan-idea-collector.md",
       "codex": "src/codex/plan/agents/plan-idea-collector.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "45ba543c"
     },
     {
       "identity": "plan-idea-screener",
@@ -450,7 +460,9 @@
       "reason": null,
       "claude": "src/claude/dev/commands/dev-handoff-verify.md",
       "codex": "src/codex/dev/commands/dev-handoff-verify.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "8ac1bb5c"
     },
     {
       "identity": "dev-learn",
@@ -570,7 +582,9 @@
       "reason": null,
       "claude": "src/claude/dev/commands/dev-feature.md",
       "codex": "src/codex/dev/commands/dev-feature.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "1dc13cce"
     },
     {
       "identity": "dev-run",
@@ -580,7 +594,9 @@
       "reason": null,
       "claude": "src/claude/dev/commands/dev-run.md",
       "codex": "src/codex/dev/commands/dev-run.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "a3540365"
     },
     {
       "identity": "dev-verify",
@@ -600,7 +616,9 @@
       "reason": null,
       "claude": "src/claude/plan/commands/plan-prd.md",
       "codex": "src/codex/plan/commands/plan-prd.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "1f8b66d3"
     },
     {
       "identity": "plan-wireframe",
@@ -640,7 +658,9 @@
       "reason": null,
       "claude": "src/claude/plan/commands/plan-screen.md",
       "codex": "src/codex/plan/commands/plan-screen.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "1a1e995c"
     },
     {
       "identity": "plan-archive",
@@ -670,7 +690,9 @@
       "reason": null,
       "claude": "src/claude/plan/commands/plan-draft.md",
       "codex": "src/codex/plan/commands/plan-draft.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "de6dd741"
     },
     {
       "identity": "plan-review",
@@ -680,7 +702,9 @@
       "reason": null,
       "claude": "src/claude/plan/commands/plan-review.md",
       "codex": "src/codex/plan/commands/plan-review.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "7d36fd31"
     },
     {
       "identity": "plan-bridge",
@@ -690,7 +714,9 @@
       "reason": null,
       "claude": "src/claude/plan/commands/plan-bridge.md",
       "codex": "src/codex/plan/commands/plan-bridge.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "f98aaa89"
     },
     {
       "identity": "edit-tracker",
@@ -740,7 +766,9 @@
       "reason": null,
       "claude": "src/claude/dev/hooks/dev-tdd-guard.js",
       "codex": "src/codex/dev/hooks/dev-tdd-guard.js",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "5fb44fdb"
     },
     {
       "identity": "dev-feature-scope-guard",
@@ -766,111 +794,133 @@
       "identity": "copy-fidelity",
       "type": "agent",
       "domain": "copy",
-      "status": "unpaired",
-      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "status": "paired",
+      "reason": null,
       "claude": "src/claude/copy/agents/copy-fidelity.md",
-      "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "codex": "src/codex/copy/agents/copy-fidelity.md",
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "d16e5f07"
     },
     {
       "identity": "copy-interaction-fidelity",
       "type": "agent",
       "domain": "copy",
-      "status": "unpaired",
-      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "status": "paired",
+      "reason": null,
       "claude": "src/claude/copy/agents/copy-interaction-fidelity.md",
-      "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "codex": "src/codex/copy/agents/copy-interaction-fidelity.md",
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "bd072bb5"
     },
     {
       "identity": "copy-reference-baseline",
       "type": "agent",
       "domain": "copy",
-      "status": "unpaired",
-      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "status": "paired",
+      "reason": null,
       "claude": "src/claude/copy/agents/copy-reference-baseline.md",
-      "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "codex": "src/codex/copy/agents/copy-reference-baseline.md",
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "e80e49e5"
     },
     {
       "identity": "copy-qa-reviewer",
       "type": "agent",
       "domain": "copy",
-      "status": "unpaired",
-      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "status": "paired",
+      "reason": null,
       "claude": "src/claude/copy/agents/copy-qa-reviewer.md",
-      "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "codex": "src/codex/copy/agents/copy-qa-reviewer.md",
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "b8c55413"
     },
     {
       "identity": "copy-reference-refresh",
       "type": "command",
       "domain": "copy",
-      "status": "unpaired",
-      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "status": "paired",
+      "reason": null,
       "claude": "src/claude/copy/commands/copy-reference-refresh.md",
-      "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "codex": "src/codex/copy/commands/copy-reference-refresh.md",
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "b63b3511"
     },
     {
       "identity": "copy-visual-review",
       "type": "command",
       "domain": "copy",
-      "status": "unpaired",
-      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "status": "paired",
+      "reason": null,
       "claude": "src/claude/copy/commands/copy-visual-review.md",
-      "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "codex": "src/codex/copy/commands/copy-visual-review.md",
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "46a40f01"
     },
     {
       "identity": "copy-interaction-review",
       "type": "command",
       "domain": "copy",
-      "status": "unpaired",
-      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "status": "paired",
+      "reason": null,
       "claude": "src/claude/copy/commands/copy-interaction-review.md",
-      "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "codex": "src/codex/copy/commands/copy-interaction-review.md",
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "3d65c426"
     },
     {
       "identity": "copy-gap-board",
       "type": "command",
       "domain": "copy",
-      "status": "unpaired",
-      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "status": "paired",
+      "reason": null,
       "claude": "src/claude/copy/commands/copy-gap-board.md",
-      "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "codex": "src/codex/copy/commands/copy-gap-board.md",
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "c6dbdc86"
     },
     {
       "identity": "copy-plan-unit",
       "type": "command",
       "domain": "copy",
-      "status": "unpaired",
-      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "status": "paired",
+      "reason": null,
       "claude": "src/claude/copy/commands/copy-plan-unit.md",
-      "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "codex": "src/codex/copy/commands/copy-plan-unit.md",
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "c28d9181"
     },
     {
       "identity": "copy-verify",
       "type": "command",
       "domain": "copy",
-      "status": "unpaired",
-      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "status": "paired",
+      "reason": null,
       "claude": "src/claude/copy/commands/copy-verify.md",
-      "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "codex": "src/codex/copy/commands/copy-verify.md",
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "6c270b46"
     },
     {
       "identity": "copy-closeout",
       "type": "command",
       "domain": "copy",
-      "status": "unpaired",
-      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "status": "paired",
+      "reason": null,
       "claude": "src/claude/copy/commands/copy-closeout.md",
-      "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "codex": "src/codex/copy/commands/copy-closeout.md",
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "98f8dd7e"
     },
     {
       "identity": "copy-evidence-reminder",
@@ -976,51 +1026,61 @@
       "identity": "copy-pipeline",
       "type": "skill",
       "domain": "copy",
-      "status": "unpaired",
-      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "status": "paired",
+      "reason": null,
       "claude": "src/claude/copy/skills/copy-pipeline/SKILL.md",
-      "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "codex": "src/codex/copy/skills/copy-pipeline/SKILL.md",
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "165989fe"
     },
     {
       "identity": "copy-evidence-management",
       "type": "skill",
       "domain": "copy",
-      "status": "unpaired",
-      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "status": "paired",
+      "reason": null,
       "claude": "src/claude/copy/skills/copy-evidence-management/SKILL.md",
-      "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "codex": "src/codex/copy/skills/copy-evidence-management/SKILL.md",
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "8a679a11"
     },
     {
       "identity": "copy-gap-analysis",
       "type": "skill",
       "domain": "copy",
-      "status": "unpaired",
-      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "status": "paired",
+      "reason": null,
       "claude": "src/claude/copy/skills/copy-gap-analysis/SKILL.md",
-      "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "codex": "src/codex/copy/skills/copy-gap-analysis/SKILL.md",
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "1731c161"
     },
     {
       "identity": "copy-qa-workflow",
       "type": "skill",
       "domain": "copy",
-      "status": "unpaired",
-      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "status": "paired",
+      "reason": null,
       "claude": "src/claude/copy/skills/copy-qa-workflow/SKILL.md",
-      "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "codex": "src/codex/copy/skills/copy-qa-workflow/SKILL.md",
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "b5ec47a4"
     },
     {
       "identity": "copy-closeout-workflow",
       "type": "skill",
       "domain": "copy",
-      "status": "unpaired",
-      "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
+      "status": "paired",
+      "reason": null,
       "claude": "src/claude/copy/skills/copy-closeout-workflow/SKILL.md",
-      "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "codex": "src/codex/copy/skills/copy-closeout-workflow/SKILL.md",
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "contentHash": "58c78e5c"
     }
   ]
 }

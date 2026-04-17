@@ -1,4 +1,4 @@
-<!-- kit-convert generated: 2026-04-16 -->
+<!-- kit-convert generated: 2026-04-17 -->
 <!-- REVIEW NEEDED: complex command -->
 # dev-handoff-verify — Codex Entry Flow
 
@@ -74,6 +74,22 @@ git 레포가 아니면 → "git init 필요" 안내 후 중단.
 
 `.claude/handoff.md`에 완료한 작업, 변경 파일 요약, 테스트 필요 사항, 알려진 이슈, 주의사항, 검증 권장 설정을 작성한다.
 
+### security 판단 기준
+- `auth`, `login`, `session`, `token`, `password`, `secret`, `key`, `credential`, `middleware` 포함 파일 변경 시 → true
+- `.env`, `.env.*` 관련 변경 시 → true
+- 그 외 → false
+
+### effort 권장 기준
+- 단순 수정 (1~3 파일, 린트/포맷) → low
+- 기능 수정 (4~10 파일) → medium
+- 기능 추가/리팩토링 (10+ 파일) → high
+- 아키텍처 변경, 보안 관련, DB 스키마 변경 → max
+
+### coverage 판단 기준
+- 테스트 파일 (`*.test.*`, `*.spec.*`) 변경 시 → true
+- 비즈니스 로직 파일 변경이 있으나 대응 테스트 변경 없을 시 → true
+- 그 외 → false
+
 ---
 
 ### 3단계: 의도 병합
@@ -147,13 +163,36 @@ Non-Fixable 에러 (로직 오류, 아키텍처 문제, 테스트 실패 등)는
 
 Max Retry 실패 시 반복 실패 에러와 자동 수정 시도 이력을 보고한다.
 
+## --extract 모드 (에러 추출)
+
+에러를 파싱하고 분류한다 (루프 없음):
+
+severity 분류 기준:
+- CRITICAL: 빌드 실패, 런타임 크래시, 보안 취약점
+- HIGH: 타입 에러, 테스트 실패
+- MEDIUM: 린트 에러, 코드 스타일, unused variables
+- LOW: 경고, 최적화 제안, 문서 누락
+
+## --coverage 모드 (커버리지)
+
+커버리지 도구 실행 (루프 없음).
+
+테스트 생성 제안 예시:
+- 결제 실패 시나리오 (+15%)
+- 엣지 케이스 시나리오 (+8%)
+
+effort에 따른 커버리지 분석 깊이:
+- low/medium: 파일별 커버리지 수치만 표시
+- high: 미커버 라인 상세 + 테스트 제안
+- max: 미커버 라인 상세 + 테스트 코드 자동 생성 제안 + 브랜치 커버리지
+
 ## 주의사항
 
 - effort가 max일 때 ultrathink를 사용하므로 토큰 소비가 크다.
 - --security는 effort와 무관하게 security-reviewer 에이전트를 호출한다.
 - --extract와 --coverage는 루프하지 않는다 (분석 전용 모드).
 - 서브에이전트는 Sonnet 모델로 실행되어 비용 효율적이다.
-- v5의 /handoff, /dev-test-verify는 이 커맨드로 대체된다.
+- v5의 handoff, dev-test-verify는 이 커맨드로 대체된다.
 
 ## Codex 참고 사항
 - 이 파일은 authoring source이다.

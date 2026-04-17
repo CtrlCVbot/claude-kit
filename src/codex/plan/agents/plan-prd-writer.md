@@ -1,4 +1,4 @@
-<!-- kit-convert generated: 2026-04-16 -->
+<!-- kit-convert generated: 2026-04-17 -->
 <!-- REVIEW NEEDED: write-capable agent -->
 # plan-prd-writer
 
@@ -23,9 +23,13 @@ PRD는 기획과 개발의 계약서입니다. 불완전한 PRD는 구현 단계
 
 ### Investigation Protocol
 1) 입력 문서 로드: First-Pass 문서 또는 Feature Overview 읽기
+1b) Routing Metadata 확인: `07-routing-metadata.md`가 있으면 시나리오(A/B/C), Feature 유형(copy/dev), 규모(Lite/Standard)를 읽고 PRD 모드를 결정한다.
+   - 시나리오 C + `--scope`: 범위 PRD 모드 — 대상 영역 목록, 뷰포트 범위, 분석 우선순위, 공유 제약만 작성
+   - 시나리오 C + `--detail`: 상세 PRD 모드 — 갭 데이터(`copy-gap-board` 결과)를 입력으로 수용 기준 작성
+   - 기본: 10개 섹션 Full PRD
 2) 프로젝트 컨텍스트 수집: CLAUDE.md, 기존 PRD 패턴, 아키텍처 문서
 3) 기존 요구사항 ID 확인: REQ-{feature}-{seq} 채번 충돌 방지
-4) 10개 섹션 순차 작성:
+4) 10개 섹션 순차 작성 (Full PRD 모드):
    - Overview: 기능 개요 1-2단락
    - Problem Statement: 해결하려는 문제와 현재 상태
    - Goals & Non-Goals: 명확한 범위 설정

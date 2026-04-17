@@ -1,15 +1,18 @@
-<!-- kit-convert generated: 2026-04-16 -->
+<!-- kit-convert generated: 2026-04-17 -->
+<!-- REVIEW NEEDED: complex command -->
 # plan-prd — Codex Entry Flow
 
 ## Overview
 
-PRD 상세 작성. First-Pass 문서를 기반으로 10개 섹션의 상세 PRD를 생성합니다.
+PRD 상세 작성. First-Pass 문서를 기반으로 10개 섹션의 상세 PRD를 생성합니다. 시나리오 C(충실도 교정)에서는 2-pass 모드를 지원합니다.
 
 ## Invocation
 
 ```
 plan-prd {slug}                    # First-Pass 기반 PRD 생성
 plan-prd {slug} --revise           # 리뷰 피드백 반영 수정
+plan-prd {slug} --scope            # 시나리오 C: 범위 PRD (1차 — 어디를 분석할지)
+plan-prd {slug} --detail           # 시나리오 C: 상세 PRD (2차 — 갭 데이터 기반)
 ```
 
 ## Workflow
@@ -30,7 +33,11 @@ plan-prd {slug} --revise           # 리뷰 피드백 반영 수정
 
 - `.plans/prd/00-draft/{slug}-prd.md`
 - 승인 시: `.plans/prd/10-approved/{slug}-prd.md`
-- 다음 단계 안내: `plan-wireframe {slug}`
+- 시나리오 C 범위 PRD: `.plans/prd/00-draft/{slug}-scope-prd.md`
+- 시나리오 C 상세 PRD: `.plans/prd/00-draft/{slug}-detail-prd.md` (갭 데이터 기반)
+- 다음 단계 안내:
+  - 일반: `plan-wireframe {slug}`
+  - 시나리오 C 범위 PRD 승인 후: `copy-reference-refresh` → 갭 분석 → `plan-prd {slug} --detail`
 
 ## Codex 참고 사항
 - 이 파일은 authoring source이다.

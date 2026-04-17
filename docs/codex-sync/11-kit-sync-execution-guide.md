@@ -65,7 +65,7 @@ Claude: 전환 완료. 75개 중 60 auto 완료, 15 review 대기. 커밋할까�
 에이전트가 자동 처리하지만, 직접 확인하고 싶으면:
 
 ```bash
-node scripts/audit-pairing.js && node scripts/audit-drift.js
+node scripts/audit-pairing.js && node scripts/audit-drift.js --content
 ```
 
 ### 전환 후 수동 작업
@@ -105,7 +105,7 @@ audit-drift: 0 FAIL
 
 ```bash
 # 1. 현재 상태 확인 (30초)
-node scripts/audit-pairing.js && node scripts/audit-drift.js
+node scripts/audit-pairing.js && node scripts/audit-drift.js --content
 
 # 2. 파일럿 1개 실행 (변환 품질 확인)
 /kit-sync --dry-run --name dev-architect
