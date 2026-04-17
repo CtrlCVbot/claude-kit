@@ -1,7 +1,7 @@
 /**
- * copy-doc-drift-check.js — PostToolUse 훅 (Edit|Write)
- * 구현 파일과 copy 관련 문서 간 drift를 감지한다.
- * 차단하지 않음 (항상 exit 0).
+ * Hook: copy Doc Drift Check
+ * Event: PostToolUse (Edit|Write)
+ * Action: REMINDER (exit 0) — 구현 파일과 copy 관련 문서 간 drift 감지, 안내만
  */
 'use strict';
 

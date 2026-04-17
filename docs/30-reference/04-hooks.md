@@ -11,11 +11,11 @@
 
 | Hook | Event | Action | Source |
 |---|---|---|---|
-| `copy-doc-drift-check` | — | — | [src/claude/copy/hooks/copy-doc-drift-check.js](../../src/claude/copy/hooks/copy-doc-drift-check.js) |
-| `copy-evidence-reminder` | — | — | [src/claude/copy/hooks/copy-evidence-reminder.js](../../src/claude/copy/hooks/copy-evidence-reminder.js) |
-| `copy-gate-stop` | — | — | [src/claude/copy/hooks/copy-gate-stop.js](../../src/claude/copy/hooks/copy-gate-stop.js) |
-| `copy-scope-guard` | — | — | [src/claude/copy/hooks/copy-scope-guard.js](../../src/claude/copy/hooks/copy-scope-guard.js) |
-| `copy-variant-env-guard` | — | — | [src/claude/copy/hooks/copy-variant-env-guard.js](../../src/claude/copy/hooks/copy-variant-env-guard.js) |
+| `copy-doc-drift-check` | PostToolUse (Edit|Write) | REMINDER (exit 0) — 구현 파일과 copy 관련 문서 간 drift 감지, 안내만 | [src/claude/copy/hooks/copy-doc-drift-check.js](../../src/claude/copy/hooks/copy-doc-drift-check.js) |
+| `copy-evidence-reminder` | PostToolUse (Edit|Write) | REMINDER (exit 0) — 시각/인터랙션 파일 수정 시 evidence 갱신 안내 | [src/claude/copy/hooks/copy-evidence-reminder.js](../../src/claude/copy/hooks/copy-evidence-reminder.js) |
+| `copy-gate-stop` | Stop | REMINDER (exit 0) — Phase/R 종료 후 자동 진행 안내 (기본 비활성, blocking 전환은 별도 승인) | [src/claude/copy/hooks/copy-gate-stop.js](../../src/claude/copy/hooks/copy-gate-stop.js) |
+| `copy-scope-guard` | PreToolUse (Edit|Write) | REMINDER (exit 0) — 실행 단위 범위 밖 편집 경고 (향후 blocking 전환 가능) | [src/claude/copy/hooks/copy-scope-guard.js](../../src/claude/copy/hooks/copy-scope-guard.js) |
+| `copy-variant-env-guard` | PostToolUse (Edit|Write) | REMINDER (exit 0) — variant/host map 환경 변수 변경 시 QA 안내 | [src/claude/copy/hooks/copy-variant-env-guard.js](../../src/claude/copy/hooks/copy-variant-env-guard.js) |
 
 ## core 도메인
 

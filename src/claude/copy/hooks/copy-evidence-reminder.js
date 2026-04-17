@@ -1,7 +1,7 @@
 /**
- * copy-evidence-reminder.js — PostToolUse 훅 (Edit|Write)
- * 시각/인터랙션 관련 파일 수정 시 evidence 갱신을 안내한다.
- * 차단하지 않음 (항상 exit 0).
+ * Hook: copy Evidence Reminder
+ * Event: PostToolUse (Edit|Write)
+ * Action: REMINDER (exit 0) — 시각/인터랙션 파일 수정 시 evidence 갱신 안내
  */
 'use strict';
 
