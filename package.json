@@ -5,7 +5,9 @@
   "scripts": {
     "postinstall": "node scripts/setup.js",
     "generate:quickstart": "node scripts/generate-quickstart-doc.js",
-    "check:quickstart": "node scripts/generate-quickstart-doc.js --check"
+    "check:quickstart": "node scripts/generate-quickstart-doc.js --check",
+    "generate:docs": "node scripts/docs-generate.js",
+    "check:docs": "node scripts/docs-generate.js --check"
   },
   "files": [
     "src/",
