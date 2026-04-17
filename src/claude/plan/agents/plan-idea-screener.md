@@ -2,7 +2,7 @@
 name: plan-idea-screener
 description: RICE 프레임워크 기반 아이디어 스크리닝 전문 에이전트. Reach/Impact/Confidence/Effort 점수를 산출하고 Lite/Standard 카테고리를 판정합니다. 상태는 `screened`까지만 전환하며, `approved`는 사용자 승인 후 전환됩니다.
 tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash"]
-model: sonnet
+model: opus
 memory: project
 color: yellow
 ---

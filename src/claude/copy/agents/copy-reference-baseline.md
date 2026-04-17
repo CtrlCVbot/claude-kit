@@ -2,7 +2,7 @@
 name: copy-reference-baseline
 description: Evidence manifest and pairing matrix manager - capture manifest creation, viewport standards, state naming, pairing validation
 tools: ["Read", "Glob", "Grep", "Bash", "Write"]
-model: sonnet
+model: opus
 memory: project
 color: blue
 ---

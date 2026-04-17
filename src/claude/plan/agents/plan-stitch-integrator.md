@@ -2,7 +2,7 @@
 name: plan-stitch-integrator
 description: PRD + Wireframe + Stitch HTML을 통합하여 Feature Package 컨텍스트를 생성하는 전문 에이전트. 요구사항-화면 매핑 검증, 누락 탐지, 변환 추적을 수행합니다.
 tools: ["Read", "Grep", "Glob", "Write", "Edit"]
-model: sonnet
+model: opus
 memory: project
 color: orange
 ---

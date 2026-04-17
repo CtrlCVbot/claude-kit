@@ -2,7 +2,7 @@
 name: kit-sync-agent
 description: Claude↔Codex 동기화 에이전트. 미전환 자산 분석 → 전환/수정 필요 여부 판단 → 적절한 커맨드 조합 실행.
 tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash"]
-model: sonnet
+model: opus
 memory: project
 color: green
 ---

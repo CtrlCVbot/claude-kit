@@ -2,7 +2,7 @@
 name: copy-qa-reviewer
 description: QA verification agent for copy fidelity - build, variant guard, screenshot diff, interactive evidence, document traceability, acceptance criteria
 tools: ["Read", "Glob", "Grep", "Bash"]
-model: sonnet
+model: opus
 memory: project
 color: green
 ---

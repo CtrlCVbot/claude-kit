@@ -2,7 +2,7 @@
 name: kit-maintainer
 description: claude-kit 프로젝트의 벌크 유지보수 에이전트. 전수 검증, 자동 수정, 문서 갱신, setup.js 정합성 복구를 처리한다.
 tools: ["Read", "Write", "Edit", "Grep", "Glob", "Bash"]
-model: sonnet
+model: opus
 memory: project
 color: yellow
 ---

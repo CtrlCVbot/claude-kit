@@ -2,7 +2,7 @@
 name: dev-verify-agent
 description: 새로운 컨텍스트에서의 검증 서브에이전트. 빌드/타입/린트/테스트 검증 파이프라인을 실행합니다.
 tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
-model: sonnet
+model: opus
 memory: project
 color: cyan
 ---

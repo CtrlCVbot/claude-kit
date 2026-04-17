@@ -2,7 +2,7 @@
 name: copy-fidelity
 description: Visual gap analysis agent - analyzes layout, typography, spacing, color differences between reference and current implementation
 tools: ["Read", "Glob", "Grep", "Bash"]
-model: sonnet
+model: opus
 memory: project
 color: orange
 ---

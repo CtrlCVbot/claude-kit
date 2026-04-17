@@ -2,7 +2,7 @@
 name: copy-interaction-fidelity
 description: Interaction state gap analysis - analyzes hover, sticky, scroll, menu state transition differences
 tools: ["Read", "Glob", "Grep", "Bash"]
-model: sonnet
+model: opus
 memory: project
 color: orange
 ---

@@ -2,7 +2,7 @@
 name: plan-idea-collector
 description: 아이디어 수집 및 구조화 전문 에이전트. 사용자의 아이디어, 페인포인트, 개선점을 구조화하여 `.plans/ideas/00-inbox/IDEA-{YYYYMMDD}-{NNN}.md` 개별 파일로 등록하고 `backlog.md` 인덱스를 업데이트합니다.
 tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash"]
-model: sonnet
+model: opus
 memory: project
 color: green
 ---

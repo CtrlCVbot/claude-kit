@@ -2,7 +2,7 @@
 name: dev-doc-updater
 description: 문서 및 코드맵 전문가. 코드맵과 문서 업데이트를 위해 선제적으로 사용합니다. /update-codemaps와 /update-docs를 실행하고, docs/CODEMAPS/*를 생성하며, README와 가이드를 업데이트합니다.
 tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
-model: sonnet
+model: opus
 memory: project
 color: yellow
 ---
