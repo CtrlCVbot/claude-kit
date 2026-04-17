@@ -321,10 +321,15 @@ function genRules() {
       const lines = md.split('\n');
       const title = (lines.find(l => l.startsWith('# ')) || '').replace(/^# /, '').trim();
       const blockquote = lines.find(l => l.trim().startsWith('>')) || '';
+      const summary = blockquote
+        .replace(/^>\s*/, '')
+        .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+        .trim()
+        .slice(0, 160);
       rows.push({
         domain,
         name: title || f.replace(/\.md$/, ''),
-        summary: blockquote.replace(/^>\s*/, '').trim().slice(0, 160),
+        summary,
         source: relFromRoot(full),
       });
     }

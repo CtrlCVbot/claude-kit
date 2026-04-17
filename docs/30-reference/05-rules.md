@@ -26,5 +26,5 @@
 | `Golden Principles` | 12 core principles for writing clean, maintainable code. | [src/claude/core/rules/golden-principles.md](../../src/claude/core/rules/golden-principles.md) |
 | `Interaction Rules` | — | [src/claude/core/rules/interaction.md](../../src/claude/core/rules/interaction.md) |
 | `Security Guidelines` | — | [src/claude/core/rules/security.md](../../src/claude/core/rules/security.md) |
-| `Verification Before Completion` | Extends [Golden Principle #10: Evidence-Based Completion](golden-principles.md#10-evidence-based-completion). | [src/claude/core/rules/verification.md](../../src/claude/core/rules/verification.md) |
+| `Verification Before Completion` | Extends Golden Principle #10: Evidence-Based Completion. | [src/claude/core/rules/verification.md](../../src/claude/core/rules/verification.md) |
 
