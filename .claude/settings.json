@@ -1,12 +1,12 @@
 {
   "permissions": {
     "allow": [
-      "Read(*)",
-      "Edit(*)",
-      "Write(*)",
-      "Glob(*)",
-      "Grep(*)",
-      "Bash(*)"
+      "Read",
+      "Edit",
+      "Write",
+      "Glob",
+      "Grep",
+      "Bash"
     ],
     "deny": [
       "WebFetch",
@@ -92,6 +92,12 @@
   },
   "hooks": {
     "PreToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          "node .claude/hooks/dev-feature-scope-guard.js"
+        ]
+      },
       {
         "matcher": "Edit|Write",
         "hooks": [
