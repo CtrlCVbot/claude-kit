@@ -32,7 +32,7 @@
 
 ## Phase 1 신규 필드 검증 (codex-sync)
 
-> Phase 1 (rollout-validation-plan §4.2)부터 도입된 SSOT 필드. `docs/codex-sync/01-skipless-conversion-strategy.md` §4.1 상태 모델을 따른다.
+> Phase 1 (rollout-validation-plan §4.2)부터 도입된 SSOT 필드. `docs/archive/2026-04-17/codex-sync/01-skipless-conversion-strategy.md` §4.1 상태 모델을 따른다.
 
 | 필드 | 수준 | 기준 |
 |------|------|------|

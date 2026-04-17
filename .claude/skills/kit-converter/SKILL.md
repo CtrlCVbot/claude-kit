@@ -55,4 +55,4 @@ description: |
 - XML 매핑: `references/agent-section-mapping.md`
 - skip 대상: `references/skip-registry.md`
 - 커맨드: `.claude/commands/kit-convert.md`, `.claude/commands/kit-analyze.md`
-- 설계 문서: `docs/meta-tooling/10-conversion-tooling.md`
+- 설계 문서: `docs/archive/2026-04-17/meta-tooling/10-conversion-tooling.md`

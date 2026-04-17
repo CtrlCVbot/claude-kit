@@ -80,4 +80,4 @@ description: |
 ## 참조
 
 - 커맨드: `.claude/commands/kit-create.md`
-- 설계 문서: `docs/meta-tooling/01-scaffolding-templates.md`
+- 설계 문서: `docs/archive/2026-04-17/meta-tooling/01-scaffolding-templates.md`

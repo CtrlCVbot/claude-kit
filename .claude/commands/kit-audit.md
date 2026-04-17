@@ -77,7 +77,7 @@ argument-hint: '[--category <cat>] [--fix] [--verbose]'
 - 파일시스템의 agent/command가 레지스트리에 등록되어 있는지 (WARN)
 - `codex-skip` 상태인데 reason이 비어있는 항목 (FAIL)
 - `paired` 상태인데 한쪽 파일만 존재하는 항목 (FAIL)
-- **exception-registry ↔ pairing-registry cross-check** (codex-sync Phase 4, [03-sync-pipeline-design.md §7.1](../../docs/codex-sync/03-sync-pipeline-design.md#71-vocabulary-mapping-exception-registry--pairing-registry) vocabulary mapping):
+- **exception-registry ↔ pairing-registry cross-check** (codex-sync Phase 4, [03-sync-pipeline-design.md §7.1](../../docs/archive/2026-04-17/codex-sync/03-sync-pipeline-design.md#71-vocabulary-mapping-exception-registry--pairing-registry) vocabulary mapping):
   - exception `strategy=paired-direct` + `status=resolved` → pairing entry 존재 + `status=paired` (FAIL: 모순)
   - exception `strategy=paired-direct` + pairing `status=codex-skip` (FAIL: strategy/status 모순)
   - exception `strategy=blocked` + pairing `status=paired` (FAIL: blocked인데 sibling 존재)
@@ -139,7 +139,7 @@ C7이 cross-phase 피드백에서 식별한 silent failure 시나리오를 다�
 
 - G1: pairing-registry에서 미등록 agent/command (WARN)
 - G2: src/claude/ 자산 중 src/codex/ 대응 없는 required sibling (WARN)
-- G3: docs/meta-tooling/ 명세에 정의됐지만 .claude/에 없는 도구 (WARN)
+- G3: docs/archive/2026-04-17/meta-tooling/ 명세에 정의됐지만 .claude/에 없는 도구 (WARN)
 - G5: 컴포넌트 카운트 불일치 (INFO)
 
 ## Workflow
