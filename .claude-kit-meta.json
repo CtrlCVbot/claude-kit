@@ -1,0 +1,49 @@
+{
+  "version": "2.1.0",
+  "installedAt": "2026-04-16T06:03:53.845Z",
+  "updatedAt": "2026-04-16T06:03:53.845Z",
+  "domains": [
+    "core",
+    "dev"
+  ],
+  "targets": [
+    "claude"
+  ],
+  "components": {
+    "agents": 6,
+    "commands": 21,
+    "skills": 18,
+    "hooks": 8,
+    "rules": 6
+  },
+  "byDomain": {
+    "core": {
+      "skills": 3,
+      "hooks": 5,
+      "rules": 6
+    },
+    "dev": {
+      "agents": 6,
+      "commands": 21,
+      "skills": 15,
+      "hooks": 3
+    }
+  },
+  "totalComponents": 59,
+  "preservedFiles": [],
+  "outputs": {
+    "shared": {
+      "root": ".",
+      "generated": [
+        "CLAUDE-KIT-QUICKSTART.md"
+      ]
+    },
+    "claude": {
+      "root": ".claude",
+      "generated": [
+        "CLAUDE.md",
+        ".claude/settings.json"
+      ]
+    }
+  }
+}

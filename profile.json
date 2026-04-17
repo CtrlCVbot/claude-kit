@@ -1,0 +1,18 @@
+{
+  "project": {
+    "name": "claude-kit",
+    "description": "AI 거버넌스 밀키트. TDD 강제 + Hexagonal + Clean Architecture + Rich Domain Model. Claude + Codex 멀티타겟.",
+    "type": "monorepo"
+  },
+  "domains": ["core", "dev"],
+  "targets": ["claude"],
+  "monorepo": {
+    "packageManager": "npm",
+    "framework": "turborepo"
+  },
+  "stack": {
+    "language": "typescript",
+    "testRunner": "vitest",
+    "architecture": "hexagonal"
+  }
+}

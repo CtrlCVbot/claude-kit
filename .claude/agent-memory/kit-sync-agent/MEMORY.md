@@ -1,0 +1,2 @@
+- [copy-domain-resync-2026-04-17](project_copy_domain_resync.md) — copy 도메인 도입으로 11개 자산 재변환 완료 (2026-04-17)
+- [copy-domain-codex-conversion-2026-04-17](project_copy_domain_codex_conversion.md) — copy 도메인 16개 신규 자산 Codex 전환 완료 (2026-04-17)
