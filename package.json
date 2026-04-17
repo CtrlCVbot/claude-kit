@@ -4,8 +4,8 @@
   "description": "AI 거버넌스 밀키트. TDD 강제 + Hexagonal + Clean Architecture + Rich Domain Model. Claude + Codex 멀티타겟.",
   "scripts": {
     "postinstall": "node scripts/setup.js",
-    "generate:quickstart": "node scripts/generate-quickstart-doc.js",
-    "check:quickstart": "node scripts/generate-quickstart-doc.js --check"
+    "generate:docs": "node scripts/docs-generate.js",
+    "check:docs": "node scripts/docs-generate.js --check"
   },
   "files": [
     "src/",

@@ -1,7 +1,7 @@
 /**
- * copy-scope-guard.js — PreToolUse 훅 (Edit|Write)
- * 실행 단위 범위 밖 편집을 경고한다.
- * 초기 모드: reminder (exit 0). 향후 blocking(exit 2) 전환 가능.
+ * Hook: copy Scope Guard
+ * Event: PreToolUse (Edit|Write)
+ * Action: REMINDER (exit 0) — 실행 단위 범위 밖 편집 경고 (향후 blocking 전환 가능)
  */
 'use strict';
 

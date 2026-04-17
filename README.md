@@ -11,7 +11,7 @@ pnpm add -D github:CtrlCVbot/claude-kit
 
 `postinstall`이 `profile.json`을 읽어 활성 `domains`와 `targets`에 맞는 컴포넌트를 설치한다. 기본값은 `domains: ["core", "dev"]`, `targets: ["claude"]`다.
 
-설치가 끝나면 프로젝트 루트에 `CLAUDE-KIT-QUICKSTART.md`가 생성된다. 이 문서는 설치 직후 사용자가 바로 열어볼 **self-contained 온보딩 문서**이며, 핵심 시작 절차는 이 문서 안에서 끝나도록 유지한다. `docs/guide/*`는 저장소 내부 상세 reference다.
+설치가 끝나면 프로젝트 루트에 `CLAUDE-KIT-QUICKSTART.md`가 생성된다. 이 문서는 설치 직후 사용자가 바로 열어볼 **self-contained 온보딩 문서**이며, 핵심 시작 절차는 이 문서 안에서 끝나도록 유지한다. 저장소 내부 상세 reference 는 [docs/](docs/README.md) 패키지에 있다.
 
 ## 도메인 선택
 
@@ -78,7 +78,7 @@ Codex v1 지원 범위는 다음과 같다.
 - `rules`: Partial. 별도 디렉토리 복사 대신 `AGENTS.md`에 핵심 규칙 흡수
 - `mcp`: Excluded. 인증 및 transport 설계가 필요해 v1 범위에서 제외
 
-자산 매핑 규칙과 skip 정책은 [docs/guide/09-architecture.md](docs/guide/09-architecture.md)를 기준으로 본다. Codex hook의 공식 지원/검증 필요/skip 분류는 `src/claude/_meta/codex-portability.json`과 `scripts/codex-hook-compat.js`가 기준이다. 현재 Codex에서는 `Edit|Write` matcher 기반 hook이 제한될 수 있으며, `session-wrap-suggest.js`는 Claude session state 의존성 때문에 의도적으로 plugin hook에서 제외하고 skill fallback으로 다룬다.
+자산 매핑 규칙과 skip 정책은 [docs/10-features/04-multi-target.md](docs/10-features/04-multi-target.md)를 기준으로 본다. Codex hook의 공식 지원/검증 필요/skip 분류는 `src/claude/_meta/codex-portability.json`과 `scripts/codex-hook-compat.js`가 기준이다. 현재 Codex에서는 `Edit|Write` matcher 기반 hook이 제한될 수 있으며, `session-wrap-suggest.js`는 Claude session state 의존성 때문에 의도적으로 plugin hook에서 제외하고 skill fallback으로 다룬다.
 
 ## postinstall 동작
 
@@ -104,10 +104,11 @@ pnpm update claude-kit
 
 ## 저장소 문서
 
-- [docs/guide/13-quick-start.md](docs/guide/13-quick-start.md): 설치본 Quick Start와 같은 shared source에서 생성한 저장소용 variant
-- [docs/guide/00-overview.md](docs/guide/00-overview.md): 문서 세트 진입점과 읽기 순서
-- [docs/guide/09-architecture.md](docs/guide/09-architecture.md): 출력 구조, 타겟 차이, emitter 계약
-- [docs/codex-compatibility/00-overview.md](docs/codex-compatibility/00-overview.md): Codex 호환 문서 세트 진입점
+- [docs/README.md](docs/README.md): 문서 패키지 진입점 (5개 섹션 구조)
+- [docs/00-overview/01-what-is-claude-kit.md](docs/00-overview/01-what-is-claude-kit.md): 프로젝트 정체성과 가치
+- [docs/20-user-guide/01-installation.md](docs/20-user-guide/01-installation.md): 설치·설정·업데이트 가이드
+- [docs/10-features/04-multi-target.md](docs/10-features/04-multi-target.md): Claude + Codex 멀티타깃 운영
+- [docs/archive/2026-04-17/](docs/archive/2026-04-17/): 이전 설계 이력 (codex-compatibility, codex-sync, team-orchestration 등)
 
 ## License
 

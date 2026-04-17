@@ -1,7 +1,7 @@
 /**
- * copy-variant-env-guard.js — PostToolUse 훅 (Edit|Write)
- * variant/host map 관련 환경 변수 변경 시 QA를 안내한다.
- * 차단하지 않음 (항상 exit 0).
+ * Hook: copy Variant Env Guard
+ * Event: PostToolUse (Edit|Write)
+ * Action: REMINDER (exit 0) — variant/host map 환경 변수 변경 시 QA 안내
  */
 'use strict';
 

@@ -7,7 +7,7 @@
 >
 > 이 view는 kit-converter가 비-direct 항목을 한눈에 파악하기 위한 **보조 문서**다. 판단 기준이 상충하면 `exception-registry`가 우선한다.
 >
-> 근거: `docs/codex-sync/03-sync-pipeline-design.md` §7 (registry 역할 분리), `docs/codex-sync/04-rollout-validation-plan.md` §4.2 (Phase 1 완료 기준).
+> 근거: `docs/archive/2026-04-17/codex-sync/03-sync-pipeline-design.md` §7 (registry 역할 분리), `docs/archive/2026-04-17/codex-sync/04-rollout-validation-plan.md` §4.2 (Phase 1 완료 기준).
 
 ## Hook 비-direct (2개)
 

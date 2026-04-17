@@ -1,7 +1,7 @@
 /**
- * copy-gate-stop.js — Stop 훅
- * Phase/R 종료 후 자동 진행을 안내한다.
- * 기본 비활성: exit 0 (정보 제공만). blocking(exit 2) 전환은 별도 승인 후.
+ * Hook: copy Gate Stop
+ * Event: Stop
+ * Action: REMINDER (exit 0) — Phase/R 종료 후 자동 진행 안내 (기본 비활성, blocking 전환은 별도 승인)
  */
 'use strict';
 
