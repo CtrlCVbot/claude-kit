@@ -33,6 +33,7 @@
 - [20-user-guide/01-installation.md](20-user-guide/01-installation.md) — 설치
 - [20-user-guide/03-first-run.md](20-user-guide/03-first-run.md) — 설치 직후 10분
 - [../README.md](../README.md) — 패키지 개요
+- [../CHANGELOG.md](../CHANGELOG.md) — 릴리스 이력 (Keep a Changelog 형식)
 - [../CLAUDE.md](../CLAUDE.md) — Claude 런타임 컨텍스트
 - [archive/2026-04-17/README.md](archive/2026-04-17/README.md) — 이전 설계 이력
 

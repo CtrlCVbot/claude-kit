@@ -116,7 +116,9 @@ gh release create v2.2.0 --notes "$(cat CHANGELOG.md | head -50)"
 
 ## 10. CHANGELOG 관행
 
-현 시점 저장소에 공식 `CHANGELOG.md` 는 없습니다. 릴리스 이력은 git tag 와 GitHub Release 에 의존합니다. 채택 시 권장 형식 ([Keep a Changelog](https://keepachangelog.com/)):
+저장소 루트의 [`CHANGELOG.md`](../../CHANGELOG.md) 가 공식 릴리스 이력입니다. [Keep a Changelog](https://keepachangelog.com/) 형식을 따르며, 새 변경은 `[Unreleased]` 섹션에 먼저 추가하고 릴리스 시점에 `[X.Y.Z] - YYYY-MM-DD` 로 승격합니다.
+
+권장 형식:
 
 ```markdown
 # Changelog
