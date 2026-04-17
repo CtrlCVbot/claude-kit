@@ -1,8 +1,9 @@
 # claude-kit 문서
 
-> **Status**: 재구축 진행 중 (Phase 2 scaffold 완료, 2026-04-17)
+> **Status**: 재구축 완료 (P1–P6, 2026-04-17)
 >
-> 이 디렉터리는 최종 문서 패키지의 뼈대입니다. 실제 콘텐츠는 [documentation-package-plan.md](plan/documentation-package-plan.md) Phase 4 이후 순차 작성됩니다.
+> 31개 문서 드래프트 + reference 6개 자동 생성. 세부 검증·폴리싱은 운영 중 지속.
+> 재구축 이력: [plan/documentation-package-plan.md](plan/documentation-package-plan.md)
 
 ## 📖 읽기 순서
 
@@ -26,25 +27,26 @@
 | [archive/2026-04-17/](archive/2026-04-17/) | 재구축 이전의 설계·리뷰 이력 | 이력 참조 |
 | [plan/](plan/) | 문서 재구축 계획서 | 유지보수 |
 
-## 🔗 주요 진입점 (현행)
+## 🔗 주요 진입점
 
-재구축이 완료되기 전까지는 다음 원본 문서를 우선 참조하세요.
-
-- [../README.md](../README.md) — 패키지 개요, 설치
+- [00-overview/01-what-is-claude-kit.md](00-overview/01-what-is-claude-kit.md) — 프로젝트 정체성
+- [20-user-guide/01-installation.md](20-user-guide/01-installation.md) — 설치
+- [20-user-guide/03-first-run.md](20-user-guide/03-first-run.md) — 설치 직후 10분
+- [../README.md](../README.md) — 패키지 개요
 - [../CLAUDE.md](../CLAUDE.md) — Claude 런타임 컨텍스트
-- 아카이브 진입점: [archive/2026-04-17/README.md](archive/2026-04-17/README.md)
+- [archive/2026-04-17/README.md](archive/2026-04-17/README.md) — 이전 설계 이력
 
-## 🚧 재구축 상태
+## ✅ 재구축 완료 (2026-04-17)
 
 | Phase | 산출 | 상태 |
 |-------|------|------|
 | P0. 계획 승인 | [plan/documentation-package-plan.md](plan/documentation-package-plan.md) | ✅ 완료 |
 | P1. Archive freeze | [archive/2026-04-17/](archive/2026-04-17/) | ✅ 완료 |
-| P2. Scaffold | 본 문서 + 30 placeholders | 🔄 진행 중 |
-| P3. Generator | `scripts/docs-generate.js` | ⏳ 대기 |
-| P4. Content draft | 각 섹션 실제 콘텐츠 | ⏳ 대기 |
-| P5. Review & polish | 링크·용어 일관성, 시범 온보딩 | ⏳ 대기 |
-| P6. Cutover | 루트 README/CLAUDE.md 링크 갱신 | ⏳ 대기 |
+| P2. Scaffold | 본 문서 + 30 placeholders | ✅ 완료 |
+| P3. Generator | [`scripts/docs-generate.js`](../scripts/docs-generate.js) | ✅ 완료 |
+| P4. Content draft | 31개 문서 전부 드래프트 | ✅ 완료 |
+| P5. Review & polish | 링크 검증, generator 보정 | ✅ 완료 |
+| P6. Cutover | docs/guide → archive 이동, 루트 README 갱신 | ✅ 완료 |
 
 ## 📜 정책
 
@@ -55,4 +57,9 @@
 
 ## 기여
 
-문서 재구축 진행 기여 또는 제보는 [40-contributing/](40-contributing/) 참조 (Phase 4 작성 예정).
+기여 절차와 표준은 [40-contributing/](40-contributing/) 참조:
+- [개발 환경](40-contributing/01-development-setup.md)
+- [컴포넌트 추가](40-contributing/02-adding-a-component.md)
+- [도메인 작성](40-contributing/03-domain-authoring.md)
+- [릴리스 체크리스트](40-contributing/04-release-checklist.md)
+- [품질 게이트](40-contributing/05-quality-gates.md)

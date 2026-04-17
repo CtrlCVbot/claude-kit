@@ -114,12 +114,82 @@ gh release create v2.2.0 --notes "$(cat CHANGELOG.md | head -50)"
 
 관행은 시간에 따라 변합니다. 현행 관행은 최근 3-5개 커밋·PR 을 참조하는 것이 확실.
 
-## 10. 미도입 / 향후
+## 10. CHANGELOG 관행
 
-- 자동 CI 파이프라인 (현재는 수동)
-- 자동 CHANGELOG 생성
+현 시점 저장소에 공식 `CHANGELOG.md` 는 없습니다. 릴리스 이력은 git tag 와 GitHub Release 에 의존합니다. 채택 시 권장 형식 ([Keep a Changelog](https://keepachangelog.com/)):
+
+```markdown
+# Changelog
+
+## [Unreleased]
+
+### Added
+- 새 기능
+
+### Changed
+- 기존 기능 변경
+
+### Deprecated
+- 향후 제거 예정
+
+### Removed
+- 이번 버전에서 제거됨
+
+### Fixed
+- 버그 수정
+
+### Security
+- 보안 이슈 수정
+
+## [2.2.0] - 2026-04-XX
+
+...
+```
+
+## 11. 릴리스 노트 템플릿
+
+GitHub Release 본문:
+
+```markdown
+## Highlights
+- (2~3 주요 변경 요약)
+
+## Breaking Changes
+- (있을 경우만)
+- Migration: `docs/40-contributing/upgrade-guides/vX.Y.Z.md` 참조
+
+## New
+- (기능 추가)
+
+## Improved
+- (개선)
+
+## Fixed
+- (수정)
+
+## Contributors
+@user1, @user2, ...
+```
+
+## 12. 마이그레이션 가이드 작성 기준
+
+파괴적 변경 (MAJOR) 시 `docs/40-contributing/upgrade-guides/vX.Y.Z.md` 신설. 포함 사항:
+
+1. **무엇이 바뀌는가** — before/after 코드
+2. **왜 바뀌는가** — 1–2문장 배경
+3. **마이그레이션 단계** — 체크박스 목록
+4. **자동화 가능한 부분** — sed/스크립트 예시
+5. **롤백 절차** — 이전 버전으로 되돌리는 법
+
+예: `.claude/settings.json` 구조 변경 시, 자동 마이그레이션 스크립트를 `scripts/migrate-vX.Y.js` 로 동봉.
+
+## 13. 미도입 / 향후
+
+- 자동 CI 파이프라인 (현재는 수동 체크)
+- 자동 CHANGELOG 생성 (conventional commits 기반)
 - Canary 릴리스 채널
 - 설치 metric 수집
+- `upgrade-guides/` 디렉터리 실제 도입
 
 위 항목을 추가하고 싶다면 이슈 또는 PR 로 제안하세요.
 

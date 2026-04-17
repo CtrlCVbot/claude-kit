@@ -82,7 +82,9 @@ claude-kit 의 현재 구조를 이해하기 위해 알아둘 **주요 설계 �
 
 **현재 core rules**: 6개 (golden-principles, coding-style, security, verification, date-calculation, interaction). 8개 이상 확장은 병합·분할 검토 필요.
 
-## D8. 재구축 계획 — 문서 패키지 전면 개편 (2026-04-17)
+## D8. 재구축 — 문서 패키지 전면 개편 (2026-04-17)
+
+**상태**: ✅ 완료 (2026-04-17). P0–P6 11개 커밋으로 전 단계 종료. 31개 문서 드래프트 + reference 6개 자동 생성. `docs/guide/` 14개 파일은 `docs/archive/2026-04-17/_guide/` 로 이동, `generate-quickstart-doc.js` 제거로 저장소 variant 생성 기능 종료.
 
 **결정**: 기존 `docs/` 를 설계 이력/사용자 문서 혼재 상태에서, **5계층 구조 (00-overview / 10-features / 20-user-guide / 30-reference / 40-contributing)** 로 재구축. 기존은 `docs/archive/2026-04-17/` 로 동결.
 
