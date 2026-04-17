@@ -107,7 +107,7 @@ pnpm update claude-kit
 - [docs/guide/13-quick-start.md](docs/guide/13-quick-start.md): 설치본 Quick Start와 같은 shared source에서 생성한 저장소용 variant
 - [docs/guide/00-overview.md](docs/guide/00-overview.md): 문서 세트 진입점과 읽기 순서
 - [docs/guide/09-architecture.md](docs/guide/09-architecture.md): 출력 구조, 타겟 차이, emitter 계약
-- [docs/codex-compatibility/00-overview.md](docs/codex-compatibility/00-overview.md): Codex 호환 문서 세트 진입점
+- [docs/archive/2026-04-17/codex-compatibility/00-overview.md](docs/archive/2026-04-17/codex-compatibility/00-overview.md): Codex 호환 문서 세트 (2026-04-17 아카이빙, 현행 문서는 재구축 중)
 
 ## License
 
