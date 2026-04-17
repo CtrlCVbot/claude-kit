@@ -193,7 +193,6 @@ drift 나 누락이 없으면 커밋.
 
 - [ ] `/kit-validate` 통과
 - [ ] `pnpm check:docs` 통과
-- [ ] `pnpm check:quickstart` 통과
 - [ ] (듀얼 타깃) `audit-pairing.js` 통과
 - [ ] 실제 Claude Code 세션에서 동작 확인
 - [ ] 관련 문서 (features/reference) 갱신

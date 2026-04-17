@@ -25,7 +25,6 @@ claude-kit 새 버전 릴리스 전에 확인할 체크리스트입니다.
 전부 통과해야 릴리스 가능.
 
 - [ ] `pnpm install` 정상 완료
-- [ ] `pnpm check:quickstart` drift 0
 - [ ] `pnpm check:docs` drift 0
 - [ ] `node scripts/audit-pairing.js` 통과
 - [ ] `node scripts/audit-drift.js` 통과
@@ -58,7 +57,6 @@ git log --oneline -5    # 최근 커밋 확인
 
 # 스크립트 게이트
 pnpm install
-pnpm check:quickstart
 pnpm check:docs
 node scripts/audit-pairing.js
 node scripts/audit-drift.js

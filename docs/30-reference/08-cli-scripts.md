@@ -14,23 +14,21 @@
 | [`claude-md-renderer.js`](../../scripts/claude-md-renderer.js) | `setup.js` 내부 | `CLAUDE.md` 의 kit-managed 섹션을 도메인 블록 조합으로 렌더링 |
 | [`claude-md-merger.js`](../../scripts/claude-md-merger.js) | `setup.js` 내부 | 기존 `CLAUDE.md` 에 kit-managed 블록 병합 (마커 기반) |
 | [`merge-settings.js`](../../scripts/merge-settings.js) | `setup.js` 내부 | 템플릿 `settings.json` 을 사용자 `.claude/settings.json` 에 병합 (커스텀 보존) |
-| [`quickstart-renderer.js`](../../scripts/quickstart-renderer.js) | `generate-quickstart-doc.js` 내부 | `CLAUDE-KIT-QUICKSTART.md` 를 도메인/타깃 조합으로 조립 |
+| [`quickstart-renderer.js`](../../scripts/quickstart-renderer.js) | `setup.js` 내부 | 설치본 `CLAUDE-KIT-QUICKSTART.md` 를 도메인/타깃 조합으로 조립 |
 
 ## 2. 문서 생성
 
 | 스크립트 | npm script | 역할 |
 |---------|-----------|------|
-| [`generate-quickstart-doc.js`](../../scripts/generate-quickstart-doc.js) | `generate:quickstart`, `check:quickstart` | `docs/guide/13-quick-start.md` 저장소 variant 생성 (이후 재구축에서 `20-user-guide/` 로 이관 예정) |
 | [`docs-generate.js`](../../scripts/docs-generate.js) | `generate:docs`, `check:docs` | `docs/30-reference/*.md` 자동 생성 (commands, agents, skills, hooks, rules, pairing) |
 | [`generate-sync-report.js`](../../scripts/generate-sync-report.js) | 수동 | codex-sync 상태 보고서 (markdown) 생성 — portability/exception/pairing 기준 |
 
 ### --check 모드 규약
 
-`generate-*.js` 중 `--check` 를 지원하는 스크립트는 **현재 파일과 생성 결과가 다르면 exit 1**. CI 파이프라인에서 drift 감지용.
+`docs-generate.js --check` 는 **현재 파일과 생성 결과가 다르면 exit 1**. CI 파이프라인에서 drift 감지용.
 
 ```bash
-node scripts/generate-quickstart-doc.js --check
-node scripts/docs-generate.js --check
+pnpm check:docs
 ```
 
 ## 3. 감사·검증
@@ -59,7 +57,7 @@ postinstall
       │   └── (templates/claude-md/ 블록 조합)
       ├── claude-md-merger.js
       ├── (Codex 타깃) codex-hook-compat.js
-      └── quickstart-renderer.js  (generate-quickstart-doc.js 경유 호출 가능)
+      └── quickstart-renderer.js  (CLAUDE-KIT-QUICKSTART.md 생성)
 ```
 
 ## 6. package.json 스크립트 연결
@@ -67,11 +65,9 @@ postinstall
 ```json
 {
   "scripts": {
-    "postinstall": "node scripts/setup.js",
-    "generate:quickstart": "node scripts/generate-quickstart-doc.js",
-    "check:quickstart":    "node scripts/generate-quickstart-doc.js --check",
-    "generate:docs":       "node scripts/docs-generate.js",
-    "check:docs":          "node scripts/docs-generate.js --check"
+    "postinstall":   "node scripts/setup.js",
+    "generate:docs": "node scripts/docs-generate.js",
+    "check:docs":    "node scripts/docs-generate.js --check"
   }
 }
 ```
@@ -86,8 +82,12 @@ postinstall
 4. `package.json` 에 npm script 로 노출할 가치가 있는지 판단
 5. 본 문서에 항목 추가 (이 문서는 수기 인덱스)
 
+## 8. 변경 이력 주의
+
+- **2026-04-17**: `generate-quickstart-doc.js` 제거 (저장소 variant 생성 기능 종료). 설치본 `CLAUDE-KIT-QUICKSTART.md` 하나로 단일화. `quickstart-renderer.js` 는 `setup.js` 가 직접 호출.
+
 ## 다음 읽기
 
 - [06-settings.md](06-settings.md) — `setup.js` 가 생성하는 settings 구조
 - [../10-features/04-multi-target.md](../10-features/04-multi-target.md) — audit/codex-compat 스크립트의 배경
-- [../40-contributing/05-quality-gates.md](../40-contributing/05-quality-gates.md) — CI 통합 관점 (P4 예정)
+- [../40-contributing/05-quality-gates.md](../40-contributing/05-quality-gates.md) — CI 통합 관점

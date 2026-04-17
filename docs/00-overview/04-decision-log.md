@@ -69,7 +69,7 @@ claude-kit 의 현재 구조를 이해하기 위해 알아둘 **주요 설계 �
 
 **렌더링**: `src/templates/quickstart/blocks/*.md` 를 도메인/타깃 조합에 따라 `quickstart-renderer.js` 가 조립.
 
-**주의**: 2026-04 재구축에서 `docs/guide/*` 는 신규 `docs/20-user-guide/*` 로 **인입 후 원본 삭제** 예정 (계획 §3.2). Quick Start 자체는 그대로.
+**후기 (2026-04-17 P6)**: `docs/guide/*` 는 `docs/archive/2026-04-17/_guide/` 로 이동됐고, 저장소 variant `13-quick-start.md` 를 생성하던 `scripts/generate-quickstart-doc.js` 도 함께 제거. 설치본 `CLAUDE-KIT-QUICKSTART.md` 는 `setup.js` → `quickstart-renderer.js` 경로로 그대로 생성됨.
 
 ## D7. Rules 는 소수·핵심 (토큰 비용 고려)
 

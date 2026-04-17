@@ -310,6 +310,6 @@ Phase별 Done 조건. 각 조건은 **증거 기반**으로 확인한다 (verifi
 
 - [README.md](../../README.md) — 패키지 개요
 - [CLAUDE.md](../../CLAUDE.md) — 현행 Claude 런타임 컨텍스트
-- [docs/guide/00-overview.md](../guide/00-overview.md) — 현행 가이드 진입점
+- [docs/archive/2026-04-17/_guide/00-overview.md](../archive/2026-04-17/_guide/00-overview.md) — 구 가이드 진입점 (P6 에서 archive 이동)
 - [src/templates/profile.json.template](../../src/templates/profile.json.template) — 도메인/타겟 기본값
 - [scripts/setup.js](../../scripts/setup.js) — installer 동작

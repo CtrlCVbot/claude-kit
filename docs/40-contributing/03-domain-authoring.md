@@ -121,9 +121,8 @@ node scripts/audit-pairing.js
 ## 9. 검증 파이프라인
 
 ```bash
-pnpm install                              # setup.js 재실행
+pnpm install                              # setup.js 재실행 (QUICKSTART.md 재생성 포함)
 pnpm generate:docs && pnpm check:docs     # reference 반영
-pnpm check:quickstart                     # quickstart 반영
 node scripts/audit-pairing.js             # pairing 일관성
 /kit-validate                             # 새 자산 검증
 ```

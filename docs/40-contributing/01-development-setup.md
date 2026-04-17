@@ -45,9 +45,7 @@ docs/                                 ← 문서 패키지 (재구축 중)
 
 | Script | 용도 |
 |--------|------|
-| `pnpm install` (= `postinstall`) | `setup.js` 실행, `.claude/` 재생성 |
-| `pnpm generate:quickstart` | `docs/guide/13-quick-start.md` 재생성 |
-| `pnpm check:quickstart` | drift 검증 (CI 용) |
+| `pnpm install` (= `postinstall`) | `setup.js` 실행, `.claude/` 재생성 + `CLAUDE-KIT-QUICKSTART.md` 갱신 |
 | `pnpm generate:docs` | `docs/30-reference/*.md` 6개 자동 생성 |
 | `pnpm check:docs` | reference drift 검증 |
 
@@ -88,9 +86,8 @@ scope 예시: `core`, `dev`, `plan`, `copy`, `kit` (kit-* 자산), `scripts`, `d
 3. `pnpm install` 로 `.claude/` 재생성 (변경 반영)
 4. Claude Code 세션에서 실제 커맨드/훅 동작 확인
 5. 필요 시 `pnpm generate:docs` + `pnpm check:docs` 로 reference drift 검증
-6. `pnpm check:quickstart` 로 quickstart drift 검증
-7. `node scripts/audit-pairing.js` 로 pairing 일관성 확인 (듀얼 타깃일 때)
-8. 커밋 + PR
+6. `node scripts/audit-pairing.js` 로 pairing 일관성 확인 (듀얼 타깃일 때)
+7. 커밋 + PR
 
 ## 9. IDE 통합
 

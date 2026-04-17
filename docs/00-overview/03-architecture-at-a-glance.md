@@ -29,9 +29,8 @@ claude-kit/
 │   └── exception-registry.json        ← skip 사유 SSOT
 │
 ├── scripts/                           ← 빌드·검증 유틸 (Node.js)
-│   ├── setup.js                       ← postinstall 엔트리
+│   ├── setup.js                       ← postinstall 엔트리 + QUICKSTART.md 생성
 │   ├── docs-generate.js               ← reference 문서 자동 생성
-│   ├── generate-quickstart-doc.js     ← QUICKSTART.md 생성
 │   ├── audit-pairing.js               ← pairing 일관성 검증
 │   ├── audit-drift.js                 ← artifact drift 검증
 │   ├── codex-hook-compat.js           ← Codex 훅 호환 분류

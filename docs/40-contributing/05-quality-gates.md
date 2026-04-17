@@ -10,7 +10,7 @@ claude-kit 에서 품질 드리프트를 방지하는 **자동 게이트** 들�
 
 | 카테고리 | 검증 대상 | 도구 |
 |---------|----------|------|
-| **Doc Drift** | 자동 생성 문서 vs 소스 일치 | `check:quickstart`, `check:docs` |
+| **Doc Drift** | 자동 생성 문서 vs 소스 일치 | `check:docs` |
 | **Pairing** | Claude↔Codex 자산 매핑 일관성 | `audit-pairing.js` |
 | **Artifact Drift** | 원본 source vs fallback 동기화 | `audit-drift.js` |
 | **Codex Compatibility** | Hook 의 Codex 호환성 분류 | `codex-hook-compat.js` |
@@ -18,21 +18,7 @@ claude-kit 에서 품질 드리프트를 방지하는 **자동 게이트** 들�
 
 ## 2. Doc Drift 게이트
 
-### 2.1 `check:quickstart`
-
-```bash
-pnpm check:quickstart
-# = node scripts/generate-quickstart-doc.js --check
-```
-
-`docs/guide/13-quick-start.md` 가 현재 소스 (`src/templates/quickstart/blocks/`, `profile.json`) 와 일치하는지 검증. 다르면 `exit 1`.
-
-재동기화:
-```bash
-pnpm generate:quickstart
-```
-
-### 2.2 `check:docs`
+### 2.1 `check:docs`
 
 ```bash
 pnpm check:docs
@@ -168,7 +154,6 @@ jobs:
           node-version: 20
 
       - run: pnpm install
-      - run: pnpm check:quickstart
       - run: pnpm check:docs
       - run: node scripts/audit-pairing.js
       - run: node scripts/audit-drift.js
@@ -193,7 +178,7 @@ jobs:
 ```bash
 # .git/hooks/pre-commit
 #!/bin/bash
-pnpm check:quickstart && pnpm check:docs || exit 1
+pnpm check:docs || exit 1
 ```
 
 매 커밋마다 drift 자동 차단.
