@@ -27,6 +27,7 @@ Evidence manifest and pairing matrix manager. Handles capture manifest creation,
 - 시나리오 인식: C = 라이브+현재 양쪽 캡처, A/B = 라이브 캡처만
 - 캡처 파일이 실제 존재하는지 파일시스템에서 검증
 - 뷰포트 기준을 임의로 변경하지 않음 (프로젝트 설정 따름)
+- **디렉토리 배타 (IMP-KIT-004 병렬 실행 보증)**: `evidence/` 디렉토리 외 파일을 **절대 수정하지 않는다**. 특히 `.plans/features/active/{slug}/00-context/`는 `plan-bridge-writer`의 전용 영역이므로 접근 금지. 본 에이전트는 `plan-bridge-writer`와 동시 실행되어도 파일 충돌이 없어야 한다.
 
 ## Workflow
 
