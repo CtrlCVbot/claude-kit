@@ -85,9 +85,10 @@ color: cyan
     6) **다음 경로 안내** (routing metadata 기반):
        - feature_type: copy → `/copy-reference-refresh --scope {...} --viewport {...}` (시나리오별 분기 안내)
        - feature_type: dev, hybrid: false → `/dev-feature {slug}`
-       - feature_type: dev, hybrid: true:
-         - IMP-KIT-006 활성: `/dev-feature {slug}` + 병행 `/copy-reference-refresh --reference-only --scope {...}`
-         - IMP-KIT-006 미활성: `/dev-feature {slug}` 단독 + 사용자에게 "Hybrid 감지됨 — 수동 레퍼런스 캡처 권장 (IMP-KIT-006 완료 후 자동화 예정)" 안내
+       - feature_type: dev, hybrid: true: **IMP-KIT-006 활성 여부 판정 후 분기**
+         - **판정 방법**: `src/claude/copy/commands/copy-reference-refresh.md`를 Read하여 `--reference-only` 문자열이 Parameters/Flags 섹션에 존재하는지 확인 (또는 Codex sibling을 확인). 존재하면 **활성**.
+         - **활성 시**: `/dev-feature {slug}` + 병행 `/copy-reference-refresh --reference-only --scope {...}`
+         - **미활성 시**: `/dev-feature {slug}` 단독 + 사용자에게 "Hybrid 감지됨 — 수동 레퍼런스 캡처 권장 (IMP-KIT-006 완료 후 자동화 예정)" 안내
        - feature_type: null (routing metadata 미생성/비어있음) → `/plan-draft` 선행 안내
     7) **병렬 실행 주의사항**:
        - 본 에이전트는 `copy-reference-baseline`과 **동시 실행 가능**

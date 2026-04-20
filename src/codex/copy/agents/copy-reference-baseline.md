@@ -48,6 +48,7 @@ Evidence manifest and pairing matrix manager. Handles capture manifest creation,
 
 ```json
 {
+  "mode": "full | reference-only",
   "captures": [
     {
       "capture_id": "CAP-{NNN}",
@@ -72,6 +73,16 @@ Evidence manifest and pairing matrix manager. Handles capture manifest creation,
 | Viewport | State | Reference | Current | Status |
 |----------|-------|-----------|---------|--------|
 | {viewport} | {state} | {ref_path} | {cur_path} | paired / gap |
+
+## mode 필드 규약 (IMP-KIT-006)
+
+- `"full"`: 기본 모드. live + current 양쪽 captures 기록.
+- `"reference-only"`: Hybrid 모드. live만 기록, `paired_with`는 null.
+- **미기재 manifest**: backward compat로 `"full"`로 간주 (기존 프로젝트 보호).
+
+## routing-metadata 파싱 (hybrid 감지)
+
+`.plans/features/active/{slug}/00-context/07-routing-metadata.md`의 pipe 표에서 `| Hybrid | true |` 행을 찾는다. 표 형식이 아니면 본문에서 `hybrid:\s*true` 정규식 매칭 (YAML frontmatter 포함 가능).
 
 ## Failure Modes
 

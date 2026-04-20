@@ -32,6 +32,7 @@
 
 ```json
 {
+  "mode": "full",
   "captures": [
     {
       "capture_id": "cap-001",
@@ -52,6 +53,7 @@
 
 | 필드 | 타입 | 설명 |
 |------|------|------|
+| **mode** (최상위, IMP-KIT-006) | enum | `"full"` \| `"reference-only"`. 미기재 시 backward compat로 `"full"` 간주. reference-only 모드는 Hybrid dev Feature 전용. |
 | capture_id | string | 고유 캡처 식별자 (`cap-NNN`) |
 | source | enum | `live`, `current`, `approved` |
 | variant | string | 사이트 variant 식별자 |
@@ -63,6 +65,11 @@
 | scenario | enum | `A`, `B`, `C` |
 | paired_with | string | 비교 대상 capture_id (nullable) |
 | notes | string | 부가 설명 |
+
+### Mode별 구조 차이 (IMP-KIT-006)
+
+- **`mode: "full"`**: 기본 모드. `captures[]`에 `live`와 `current` 양쪽 기록. `paired_with` 필드로 페어링. copy-visual-review/interaction-review/gap-board 진입 가능.
+- **`mode: "reference-only"`**: Hybrid dev Feature 전용. `captures[]`에 `live`만 기록. `paired_with`는 항상 null. copy-visual-review/interaction-review/gap-board 진입 시 **Precondition 실패로 거부**.
 
 ## Pairing 규칙
 

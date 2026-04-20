@@ -20,6 +20,25 @@ copy-reference-refresh --scope {sections} --viewport {viewports} --reference-onl
 - `--scope`: 캡처 대상 섹션 (콤마 구분, 예: `header,hero,footer`)
 - `--viewport`: 캡처 뷰포트 (콤마 구분, 예: `desktop,mobile`)
 - `--reference-only` (IMP-KIT-006): **Hybrid 모드** — dev Feature에서 시각적 참조로만 사용할 evidence 캡처. 갭 분석/visual-review/interaction-review 등 copy 파이프라인 후속 단계를 건너뛴다.
+- `--full` (IMP-KIT-006 후속): **자동 감지 override**. routing-metadata의 `hybrid: true`로 자동 reference-only 모드가 적용되는 상황에서 사용자가 일반 모드(current 캡처 포함 full 분석)로 강제 실행하고자 할 때 사용. `--reference-only`와 동시 지정 시 `--reference-only` 우선.
+
+## Hybrid Feature 처리 (요약)
+
+dev Feature에서 레퍼런스 캡처가 필요한 경우 reference-only 모드로 경량 실행한다.
+
+**진입 조건** (둘 중 하나):
+1. 자동 감지: routing-metadata.md의 `hybrid: true` 기록
+2. 명시적 플래그: `--reference-only`
+
+**수행 작업**: evidence 캡처 + manifest(`mode: "reference-only"`) 생성만.
+
+**건너뛰는 단계**: `copy-gap-board`, `copy-visual-review`, `copy-interaction-review`, `copy-plan-unit`, `copy-verify`, `copy-closeout`.
+
+**사용처**: dev 구현 시 시각적 참조로만. copy 파이프라인 풀 진입하지 않음.
+
+**전환 규칙**:
+- reference-only → full: 갭 분석 요청 시 경고 + 일반 모드 재실행 권장 (또는 `--full` override)
+- hybrid=false + `--reference-only`: 사용자 의도 재확인
 
 ## Preconditions
 

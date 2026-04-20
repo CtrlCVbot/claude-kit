@@ -23,6 +23,7 @@ copy-interaction-review --section {section} --viewport {viewport}
 
 - evidence manifest가 존재한다 (`copy-reference-refresh` 완료).
 - 해당 section/viewport의 기준 캡처가 manifest에 등록되어 있다.
+- **manifest.json의 `mode`가 `"full"`이어야 함** (IMP-KIT-006). `mode: "reference-only"`이면 갭 분석 불가 — 일반 모드로 `copy-reference-refresh` 재실행 요구. `mode` 필드 미기재는 backward compat로 `full`로 간주.
 
 ## Workflow
 

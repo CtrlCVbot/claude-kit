@@ -16,6 +16,7 @@ visual 갭과 interaction 갭을 통합하여 우선순위 기반 실행 후보 
 
 - Visual Gap Board가 존재한다 (`/copy-visual-review` 완료).
 - Interaction Gap Board가 존재한다 (`/copy-interaction-review` 완료).
+- **manifest.json의 `mode`가 `"full"`이어야 함** (IMP-KIT-006). `mode: "reference-only"`이면 갭 분석 불가 — 일반 모드로 `/copy-reference-refresh` 재실행 요구. `mode` 필드 미기재는 backward compat로 `full`로 간주.
 
 ## Workflow
 

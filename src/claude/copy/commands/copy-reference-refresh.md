@@ -16,6 +16,7 @@ description: 기준 캡처 + evidence manifest 생성/갱신. Hybrid dev Feature
 - `--scope`: 캡처 대상 섹션 (콤마 구분, 예: `header,hero,footer`)
 - `--viewport`: 캡처 뷰포트 (콤마 구분, 예: `desktop,mobile`)
 - `--reference-only` (IMP-KIT-006): **Hybrid 모드** — dev Feature에서 시각적 참조로만 사용할 evidence 캡처. 갭 분석/visual-review/interaction-review 등 copy 파이프라인 후속 단계를 건너뛴다.
+- `--full` (IMP-KIT-006 후속): **자동 감지 override**. routing-metadata의 `hybrid: true`로 자동 reference-only 모드가 적용되는 상황에서 사용자가 일반 모드(current 캡처 포함 full 분석)로 강제 실행하고자 할 때 사용. `--reference-only`와 동시 지정 시 `--reference-only` 우선.
 
 ## Preconditions
 
