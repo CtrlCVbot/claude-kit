@@ -8,6 +8,32 @@
 
 ## 설치·환경
 
+### Q. `pnpm add` 결과가 `Already up to date` 로 끝나고 `.claude/` 가 생성되지 않습니다
+
+**증상**:
+```
+pnpm add -D github:CtrlCVbot/claude-kit
+Already up to date
+```
+설치 후 루트에 `CLAUDE-KIT-QUICKSTART.md`, `.claude/`, `CLAUDE.md` 중 어느 것도 생기지 않음.
+
+**원인**: pnpm 은 의존성이 변경되지 않았다고 판단하면 `postinstall` 훅을 건너뜁니다. GitHub 설치본이 같은 커밋 해시로 이미 캐시돼 있으면 `scripts/setup.js` 가 실행되지 않습니다.
+
+**해결** (하나만 선택):
+```bash
+# 1) postinstall 만 강제 재실행
+pnpm rebuild claude-kit
+
+# 2) setup.js 직접 실행
+node node_modules/claude-kit/scripts/setup.js
+
+# 3) 최신 커밋 강제 (브랜치 또는 SHA 명시)
+pnpm remove claude-kit
+pnpm add -D github:CtrlCVbot/claude-kit#main
+```
+
+**확인**: 실행 후 루트에 `CLAUDE-KIT-QUICKSTART.md` 와 `.claude/` 가 생성됐는지. 없으면 `setup.js` 출력 로그에서 실패 지점을 찾습니다.
+
 ### Q. `postinstall` 이 실패합니다
 
 **증상**: `pnpm add` 후 에러 메시지 + `.claude/` 미생성
@@ -22,6 +48,37 @@
 pnpm claude-kit:setup   # setup.js 수동 실행
 ```
 출력 로그에서 실패 지점 확인.
+
+### Q. (Windows) `pnpm rebuild claude-kit` 가 `MODULE_NOT_FOUND` 로 실패합니다
+
+**증상**:
+```
+pnpm rebuild claude-kit
+...
+현재 디렉터리를 UNC 경로로 하여 CMD.EXE가 시작되었습니다. UNC 경로는
+지원되지 않습니다. Windows 디렉터리를 기본값으로 합니다.
+Error: Cannot find module 'C:\Windows\scripts\setup.js'
+```
+
+**원인**: 프로젝트 경로에 공백/괄호가 포함되면 (예: `C:\Program Files (user)\...`) pnpm 이 긴 경로 처리를 위해 `\\?\` UNC 접두사를 붙입니다. Windows CMD.EXE 는 UNC 경로를 작업 디렉터리로 지원하지 않으므로 `C:\Windows` 로 폴백하고, `node scripts/setup.js` 의 상대 경로가 `C:\Windows\scripts\setup.js` 로 해석되어 실패합니다.
+
+**해결** (우선순위 순):
+
+```bash
+# 1) pnpm install 재실행 (가장 간단, 대부분 이것으로 해결)
+pnpm install
+
+# 2) setup.js 를 직접 실행 (pnpm 훅 우회)
+cd node_modules/claude-kit
+node scripts/setup.js
+
+# 3) 프로젝트를 공백·괄호 없는 경로로 이동 (근본 해결)
+#    예: C:\projects\my-app, C:\dev\my-app
+```
+
+**왜 `pnpm install` 이 통하는가**: `pnpm rebuild` 는 단일 패키지의 postinstall 만 재실행하면서 `node_modules/.pnpm/<hash>` UNC 경로에서 CMD 를 띄우는 반면, `pnpm install` 은 워크스페이스 루트 컨텍스트에서 전체 훅을 재구성하므로 CMD UNC 이슈를 회피합니다.
+
+**예방**: Windows 에서 Node.js 프로젝트는 가능하면 `Program Files`, `Program Files (x86)`, 공백·괄호가 포함된 경로를 피합니다. 로컬 `.npmrc` 에 `node-linker=hoisted` 를 추가하면 `.pnpm/` 심볼릭 링크 구조를 우회할 수 있으나, pnpm 의 격리 이점이 사라지므로 일반 권장 사항은 아닙니다.
 
 ### Q. `.claude/` 는 있는데 커맨드가 등록 안 됨
 

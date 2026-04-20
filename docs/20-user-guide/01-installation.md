@@ -118,6 +118,8 @@ pnpm remove claude-kit
 
 | 증상 | 원인 | 해결 |
 |------|------|------|
+| `pnpm add` 가 `Already up to date` 로 끝나고 `.claude/` 미생성 | pnpm 이 의존성 변경 없음으로 판단해 `postinstall` 생략 | `pnpm rebuild claude-kit` 또는 `node node_modules/claude-kit/scripts/setup.js` 수동 실행 |
+| (Windows) `pnpm rebuild` 시 `Cannot find module 'C:\Windows\scripts\setup.js'` | 프로젝트 경로의 공백/괄호 (`Program Files (...)` 등) 때문에 pnpm 이 UNC 경로(`\\?\`)를 사용 → CMD.EXE 가 UNC 작업 디렉터리 미지원 | `pnpm install` 재실행. 근본 해결은 공백·괄호 없는 경로로 프로젝트 이동 ([07-troubleshooting.md](07-troubleshooting.md#q-windows-pnpm-rebuild-claude-kit-가-module_not_found-로-실패합니다)) |
 | `postinstall` 실패: "Node version" | Node 20 미만 | Node 20+ 로 업그레이드 |
 | `.claude/commands/` 가 비어 있음 | `profile.json` 의 `domains` 가 빈 배열 | `["core", "dev"]` 이상 명시 |
 | Codex 훅이 작동 안 함 | Codex 호환 매처 한정 | [codex-portability](../../src/claude/_meta/codex-portability.json) 확인 |

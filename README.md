@@ -92,6 +92,8 @@ Codex v1 지원 범위는 다음과 같다.
 4. 루트 Quick Start 문서 `CLAUDE-KIT-QUICKSTART.md`를 생성 또는 갱신한다.
 5. `.claude-kit-meta.json`에 설치 메타데이터를 기록한다.
 
+> **Note**: `pnpm add` 결과가 `Already up to date`로 끝나고 `.claude/`가 생성되지 않는다면, pnpm이 의존성 변경 없음으로 판단해 `postinstall`을 건너뛴 상황이다. `pnpm rebuild claude-kit` 로 재실행하거나 `node node_modules/claude-kit/scripts/setup.js` 를 수동 실행한다. 자세한 사례는 [docs/20-user-guide/07-troubleshooting.md](docs/20-user-guide/07-troubleshooting.md) 참조.
+
 ## 업데이트
 
 ```bash
