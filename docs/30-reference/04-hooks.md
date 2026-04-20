@@ -5,7 +5,7 @@
 >
 > 이 파일은 **수기 편집 금지**. 재생성: `node scripts/docs-generate.js`
 
-전체 14개. 각 hook 파일 상단 JSDoc의 `Hook/Event/Action` 라인에서 추출.
+전체 15개. 각 hook 파일 상단 JSDoc의 `Hook/Event/Action` 라인에서 추출.
 
 ## copy 도메인
 
@@ -21,6 +21,7 @@
 
 | Hook | Event | Action | Source |
 |---|---|---|---|
+| `agent-completion-cache-invalidate` | — | — | [src/claude/core/hooks/agent-completion-cache-invalidate.js](../../src/claude/core/hooks/agent-completion-cache-invalidate.js) |
 | `code-quality-reminder` | — | — | [src/claude/core/hooks/code-quality-reminder.js](../../src/claude/core/hooks/code-quality-reminder.js) |
 | `edit-tracker` | PostToolUse (Edit|Write) | log (exit 0) -- 편집 파일을 .ai/.edit-log.json에 기록 | [src/claude/core/hooks/edit-tracker.js](../../src/claude/core/hooks/edit-tracker.js) |
 | `output-secret-filter` | — | — | [src/claude/core/hooks/output-secret-filter.js](../../src/claude/core/hooks/output-secret-filter.js) |

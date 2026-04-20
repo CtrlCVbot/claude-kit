@@ -102,3 +102,39 @@ Use MCP-based alternatives instead:
 | 2nd | `mcp__fetch__fetch` | Fallback if Jina fails, free |
 
 No exceptions — WebFetch is denied in all scenarios.
+
+## Agent Delegation & Read Cache (CRITICAL)
+
+서브에이전트(Task tool)에 파일 편집을 위임한 직후, 메인 세션의 **Read 캐시가 해당 파일의 변경 전 내용을 가리킨다**. 이 상태에서 메인이 Edit를 시도하면 `File has not been read yet` 에러가 발생한다.
+
+### 원인
+
+메인 세션과 서브에이전트 세션은 **파일 캐시를 공유하지 않는다**. 에이전트가 수정한 파일을 메인이 편집할 때, 메인 입장에서는 "이 세션에서 처음 보는 파일"이므로 harness가 거부한다.
+
+### 패턴
+
+```
+# BAD: 에이전트 완료 후 바로 Edit 시도
+Agent(subagent_type=plan-wireframe-designer, ...)  # 파일 수정
+  ↓
+Edit(file_path=수정된-파일.md, ...)  # ❌ "File has not been read yet" 에러
+```
+
+```
+# GOOD: Edit 전에 Read 재호출
+Agent(subagent_type=plan-wireframe-designer, ...)
+  ↓
+Read(file_path=수정된-파일.md)  # ✅ 캐시 재인증
+  ↓
+Edit(file_path=수정된-파일.md, ...)  # ✅ 성공
+```
+
+### 자동 알림 (hook)
+
+`agent-completion-cache-invalidate` 훅이 write-capable 에이전트 완료 시 systemMessage로 경고한다. 경고가 보이면 **Edit 전 Read를 반드시 재호출**한다.
+
+### Read-only 에이전트는 예외
+
+`dev-architect`, `dev-code-reviewer`, `Explore`, `Plan`, `plan-reviewer` 등 **파일을 수정하지 않는 에이전트**는 Read 재호출이 불필요하다. 훅도 이들에 대해 경고하지 않는다.
+
+상세 규칙: `verification.md`의 "Agent Edit Race (Read Cache)" 섹션.

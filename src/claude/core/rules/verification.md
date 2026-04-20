@@ -96,6 +96,21 @@ CORRECT: Agent reports success → Check VCS diff → Verify changes → Report 
 WRONG:   Trust agent report without independent verification
 ```
 
+### Agent Edit Race (Read Cache)
+
+에이전트(Task tool) 위임 시 **메인 세션의 Read 캐시**와 에이전트가 실제 수정한 파일 내용이 불일치할 수 있다. 에이전트 완료 직후 메인이 같은 파일을 Edit하려 시도하면 `File has not been read yet in this session. Read it first before writing to it.` 에러가 발생한다.
+
+**Checklist (에이전트 위임 후)**:
+
+- [ ] 에이전트가 **파일을 수정했는지** (read-only 에이전트면 skip)
+- [ ] 수정 대상 파일이 **메인이 이어서 Edit할 파일과 겹치는지**
+- [ ] 겹치면 **Edit 전 Read를 반드시 재호출** (캐시 재인증)
+- [ ] `agent-completion-cache-invalidate` 훅 경고 메시지가 떴다면 무시하지 말 것
+
+**Read-only 에이전트 예시**: `dev-architect`, `dev-code-reviewer`, `dev-security-reviewer`, `dev-database-reviewer`, `dev-verify-agent`, `plan-reviewer`, `Explore`, `Plan` — 이들은 파일을 수정하지 않으므로 Read 재호출 불필요.
+
+**Write-capable 에이전트 예시**: `dev-doc-updater`, `plan-idea-collector`, `plan-idea-screener`, `plan-prd-writer`, `plan-wireframe-designer`, `plan-draft-writer`, `plan-bridge-writer`, `copy-reference-baseline`, `general-purpose` — 이들 완료 후에는 Read 재호출 권장.
+
 ## When to Apply
 
 **Always**, before:

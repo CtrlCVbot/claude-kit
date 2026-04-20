@@ -5,7 +5,7 @@
 >
 > 이 파일은 **수기 편집 금지**. 재생성: `node scripts/docs-generate.js`
 
-전체 34개.
+전체 35개.
 
 ## copy 도메인
 
@@ -21,6 +21,7 @@
 
 | Skill | Description | Source |
 |---|---|---|
+| `agent-completion-cache-invalidate` | 서브에이전트 완료 후 메인 세션이 같은 파일을 Edit할 때 "File has not been read yet" 에러를 방지하는 Read 캐시 재인증 가이드. Codex runtime이 SubagentStop 훅을 지원하지 않는 환경에서 동일 의도를 보존하는 runtime-indepen | [src/claude/core/skills/agent-completion-cache-invalidate/SKILL.md](../../src/claude/core/skills/agent-completion-cache-invalidate/SKILL.md) |
 | `continuous-learning` | — | [src/claude/core/skills/continuous-learning/SKILL.md](../../src/claude/core/skills/continuous-learning/SKILL.md) |
 | `session-wrap` | — | [src/claude/core/skills/session-wrap/SKILL.md](../../src/claude/core/skills/session-wrap/SKILL.md) |
 | `session-wrap-suggest` | | | [src/claude/core/skills/session-wrap-suggest/SKILL.md](../../src/claude/core/skills/session-wrap-suggest/SKILL.md) |
