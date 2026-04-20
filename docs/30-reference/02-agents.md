@@ -5,7 +5,7 @@
 >
 > 이 파일은 **수기 편집 금지**. 재생성: `node scripts/docs-generate.js`
 
-전체 18개.
+전체 19개.
 
 ## copy 도메인
 
@@ -38,6 +38,7 @@
 
 | Agent | Description | Model | Source |
 |---|---|---|---|
+| `plan-draft-writer` | /plan-draft 1차 기능 기획(First Pass) 작성 전문 에이전트. 승인된 아이디어(`20-approved/`)를 입력받아 Lite/Standard + 시나리오(A/B/C) + Feature 유형(copy/dev) 3중 판정을 수행하고,  | opus | [src/claude/plan/agents/plan-draft-writer.md](../../src/claude/plan/agents/plan-draft-writer.md) |
 | `plan-idea-collector` | — | — | [src/claude/plan/agents/plan-idea-collector.md](../../src/claude/plan/agents/plan-idea-collector.md) |
 | `plan-idea-screener` | RICE 또는 5축 가중 프레임워크 기반 아이디어 스크리닝 전문 에이전트. `/plan-screen --framework rice|5axis` 지정에 따라 해당 스키마로 Go/Hold/Kill 판정 **제안**을 산출합니다. 상태는 `screened` | opus | [src/claude/plan/agents/plan-idea-screener.md](../../src/claude/plan/agents/plan-idea-screener.md) |
 | `plan-prd-writer` | — | — | [src/claude/plan/agents/plan-prd-writer.md](../../src/claude/plan/agents/plan-prd-writer.md) |

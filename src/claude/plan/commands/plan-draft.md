@@ -2,6 +2,9 @@
 
 스크리닝 통과한 아이디어 기반 Feature Overview 1차 생성. Lite/Standard 판정 + 시나리오(A/B/C) + Feature 유형(copy/dev)을 동시 판정하여 파이프라인 경로가 결정됩니다.
 
+> 에이전트: `plan-draft-writer` (IMP-KIT-003으로 신설)
+> 참조 스킬: `.claude/skills/plan-draft/SKILL.md` (있는 경우)
+
 ## Usage
 
 ```
@@ -10,26 +13,33 @@
 
 ## Workflow
 
-1. **입력 확인**: IDEA-{YYYYMMDD}-{NNN}의 승인 상태 확인 (`20-approved/` 폴더에 존재 + `approved` 상태 필수. `screened` 상태는 불가)
-2. **1차 기획 작성**:
-   - 유저 스토리, 러프 요구사항, 실현 가능성 평가 작성
-   - 기존 아키텍처, 기술 스택과의 정합성 분석
-3. **3중 판정** (Lite/Standard + 시나리오 + Feature 유형):
-   - **Lite/Standard** (6개 트리거 기준): Lite=소규모, Standard=상세 기획 필요
-   - **시나리오** (copy 도메인 활성 시):
-     - A(백지): 원본은 있지만 구현이 없음 → PRD 먼저
-     - B(부분): 기존 프로젝트에 원본 일부를 가져옴 → PRD 먼저
-     - C(충실도 교정): 이미 카피 시도, 원본과 차이 수정 → 갭 분석 먼저
-   - **Feature 유형**: copy(원본 대응 시각/인터랙션 차이 닫기) / dev(원본 대응 없음 또는 비시각적)
-   - 판정 결과를 `07-routing-metadata.md`에 기록
-4. **경로 분기**:
-   - Lite → `.plans/features/active/{slug}.md` (파이프라인 종료 가능)
-   - Standard → `.plans/features/drafts/{slug}/first-pass.md` (P4 PRD로 진행)
-   - copy Feature + 시나리오 C → 범위 PRD 후 `/copy-reference-refresh` → 갭 분석
-   - copy Feature + 시나리오 A/B → PRD 후 `/copy-reference-refresh` (원본 캡처만)
-   - dev Feature → 기존 dev 경로 직행
-5. **PCC-02 검증**: 승인된 아이디어에 기획이 존재하는지 확인
-6. **Human Checkpoint**: Scope 확인
+1. **입력 검증**: IDEA-{YYYYMMDD}-{NNN}의 위치/상태 확인
+   - `20-approved/` 폴더에 존재 + `approved` 상태 필수
+   - `screened`/`on-hold`/`rejected` 상태는 거부 (적절한 커맨드 안내)
+2. **에이전트 스폰**: `plan-draft-writer` 에이전트를 Task tool로 호출
+   - 입력: IDEA ID + 커맨드 컨텍스트 (프로젝트 활성 도메인)
+   - 에이전트가 수행:
+     - IDEA + 관련 SCREENING 파일 로드
+     - Blueprint Fast-Track 분기 (태그 `blueprint-import` 있으면)
+     - 프로젝트 컨텍스트 수집 (CLAUDE.md/AGENTS.md, 아키텍처)
+     - 1차 기획 초안 작성 (유저 스토리, 러프 요구사항, 실현 가능성)
+     - **3중 판정**: Lite/Standard + 시나리오 + Feature 유형 (각각 명시적 근거)
+     - Hybrid 감지 (dev Feature + 레퍼런스 시그널)
+     - 파일 생성:
+       - Lite → `.plans/features/active/{slug}.md`
+       - Standard → `.plans/features/drafts/{slug}/first-pass.md`
+       - `.plans/features/active/{slug}/00-context/07-routing-metadata.md`
+     - PCC-02 자기 검증
+3. **경로 분기** (에이전트 출력 기반):
+   - Lite → 파이프라인 종료 가능 (또는 `/dev-feature` 직행)
+   - Standard + copy Feature + 시나리오 C → 범위 PRD 후 `/copy-reference-refresh` → 갭 분석
+   - Standard + copy Feature + 시나리오 A/B → PRD 후 `/copy-reference-refresh` (원본 캡처만)
+   - Standard + dev Feature → `/plan-prd`
+   - Hybrid dev Feature → `/plan-prd` → `/copy-reference-refresh --reference-only` (IMP-KIT-006 연계)
+4. **Human Checkpoint** (Scope 확인):
+   - 3중 판정 결과와 추천 경로를 사용자에게 제시
+   - 사용자가 경로를 변경하거나 Hybrid 감지를 오버라이드할 수 있음
+   - 승인 시 다음 커맨드로 진행 안내
 
 ## Blueprint Fast-Track 진입
 
