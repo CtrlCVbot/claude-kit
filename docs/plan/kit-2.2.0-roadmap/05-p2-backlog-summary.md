@@ -34,6 +34,20 @@
 | IMP-KIT-025 | 세션 메모리 ↔ 프로젝트 메모리 경계 규칙 | 4 | 관찰 |
 | IMP-KIT-026 | 와이어프레임 ↔ 실제 구현 drift 검출 | 4 | 관찰 |
 
+### 1.3 사용자 요청 기반 (1건) — **2.2.1 hotfix 포함 예정** (확정)
+
+| ID | 제목 | RICE | 원본 |
+|----|------|:-:|:-:|
+| **IMP-KIT-027** | `/plan-design` 커맨드 + claude-design-workflow 스킬 신설 + wireframe 후속 단계 택일 구조화 | 12 | 사용자 요청 (2026-04-20) |
+
+**특이 사항**:
+- P2 우선순위이나 **2.2.1 hotfix 릴리스 타깃**으로 2.4.0+가 아닌 **가장 빠른 경로**로 진행
+- Anthropic Claude Design (2026-04-17 출시) 통합 기회 포착
+- wireframe을 필수 선행 단계로 재정의 + `/plan-design` vs `/plan-stitch` 택일 구조 도입
+- 프롬프트 2단계 순차 출력 (wireframe → high fidelity)
+- 상세 스펙: [03-p0-detailed-specs/IMP-KIT-027-plan-design-integration.md](03-p0-detailed-specs/IMP-KIT-027-plan-design-integration.md)
+  - 파일 위치는 P0 폴더에 유지 (hybrid 정책 — 본 요약 + 상세 스펙 분리 관리)
+
 ---
 
 ## 2. 원본 백로그 참조
@@ -53,6 +67,7 @@
 - IMP-KIT-024: 원본 §P2 IMP-KIT-024
 - IMP-KIT-025: 원본 §P2 IMP-KIT-025
 - IMP-KIT-026: 원본 §P2 IMP-KIT-026
+- IMP-KIT-027: **사용자 요청 기반** — 회고 외 자산. 상세 스펙은 `03-p0-detailed-specs/IMP-KIT-027-plan-design-integration.md` 참조
 
 ---
 
@@ -116,3 +131,4 @@ Phase 2 설계 시 위 3건을 **선행 조건 후보**로 평가 예정. 일부
 | 일시 | 변경 | 작성자 |
 |------|------|--------|
 | 2026-04-20 | 초안 작성 | claude-kit roadmap author |
+| 2026-04-20 | IMP-KIT-027 사용자 요청 기반 항목 추가 (2.2.1 hotfix 타깃) — §1.3 신설 + 빠른 조회 섹션 갱신 | claude-kit roadmap author |
