@@ -5,7 +5,7 @@
 >
 > 이 파일은 **수기 편집 금지**. 재생성: `node scripts/docs-generate.js`
 
-전체 45개.
+전체 46개.
 
 ## copy 도메인
 
@@ -63,12 +63,13 @@
 |---|---|---|
 | `/plan-archive` | 완료된 기능의 산출물을 아카이빙한다. | [src/claude/plan/commands/plan-archive.md](../../src/claude/plan/commands/plan-archive.md) |
 | `/plan-bridge` | 기획 산출물을 개발 파이프라인으로 넘기기 전에 브리지 컨텍스트와 개발 구조 게이트 상태를 확인한다. | [src/claude/plan/commands/plan-bridge.md](../../src/claude/plan/commands/plan-bridge.md) |
+| `/plan-design` | PRD + Wireframe을 통합하여 Claude Design용 **2단계 프롬프트**(wireframe → high fidelity)를 생성하고, 결과 URL을 등록한다. Hybrid dev Feature 또는 시각 자산이 필요한 copy Feat | [src/claude/plan/commands/plan-design.md](../../src/claude/plan/commands/plan-design.md) |
 | `/plan-draft` | 스크리닝 통과한 아이디어 기반 Feature Overview 1차 생성. Lite/Standard 판정 + 시나리오(A/B/C) + Feature 유형(copy/dev)을 동시 판정하여 파이프라인 경로가 결정됩니다. | [src/claude/plan/commands/plan-draft.md](../../src/claude/plan/commands/plan-draft.md) |
 | `/plan-idea` | 아이디어 등록, 조회, 관리. 사용자의 아이디어를 구조화하여 `.plans/ideas/00-inbox/IDEA-{YYYYMMDD}-{NNN}.md` 개별 파일로 등록합니다. | [src/claude/plan/commands/plan-idea.md](../../src/claude/plan/commands/plan-idea.md) |
 | `/plan-improve` | 아카이브된 기능에 대한 개선요청을 등록하고 분석한다. | [src/claude/plan/commands/plan-improve.md](../../src/claude/plan/commands/plan-improve.md) |
 | `/plan-prd` | PRD 상세 작성. First-Pass 문서를 기반으로 10개 섹션의 상세 PRD를 생성합니다. 시나리오 C(충실도 교정)에서는 2-pass 모드를 지원합니다. | [src/claude/plan/commands/plan-prd.md](../../src/claude/plan/commands/plan-prd.md) |
 | `/plan-review` | 기획 산출물 리뷰. 아이디어, PRD, Wireframe, Feature Package의 품질을 검증합니다. | [src/claude/plan/commands/plan-review.md](../../src/claude/plan/commands/plan-review.md) |
 | `/plan-screen` | IDEA-{YYYYMMDD}-{NNN} 스크리닝 실행. **RICE 또는 5축 가중** 프레임워크를 명시적으로 선택하여 Go/Hold/Kill 판정을 **제안**한 뒤, 사용자 **명시적 승인**을 거쳐 상태를 전환합니다. | [src/claude/plan/commands/plan-screen.md](../../src/claude/plan/commands/plan-screen.md) |
-| `/plan-stitch` | PRD + Wireframe 통합. 기획 산출물을 통합하여 Feature Package 컨텍스트를 생성합니다. | [src/claude/plan/commands/plan-stitch.md](../../src/claude/plan/commands/plan-stitch.md) |
+| `/plan-stitch` | PRD + Wireframe 통합 검증. 기획 산출물을 통합하여 Feature Package 컨텍스트를 생성합니다. | [src/claude/plan/commands/plan-stitch.md](../../src/claude/plan/commands/plan-stitch.md) |
 | `/plan-wireframe` | 와이어프레임 생성. 승인된 PRD를 기반으로 ASCII + Mermaid 와이어프레임을 설계합니다. | [src/claude/plan/commands/plan-wireframe.md](../../src/claude/plan/commands/plan-wireframe.md) |
 

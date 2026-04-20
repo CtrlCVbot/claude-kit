@@ -1,0 +1,49 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://claude-kit/codex/plan/v1/routing-metadata.schema.json",
+  "title": "Plan Routing Metadata (Codex)",
+  "description": "Codex 대응본. Claude 버전(src/claude/plan/_schemas/routing-metadata.schema.json)과 구조 동일. Feature 파이프라인의 경로 결정/추적 메타데이터. plan-draft-writer가 초기 생성, plan-bridge-writer가 검증(Read-only), plan-design/plan-stitch가 post_wireframe_path 필드 갱신. 관련: IMP-KIT-003/IMP-KIT-004/IMP-KIT-006/IMP-KIT-027.",
+  "type": "object",
+  "required": ["schema_version", "category", "feature_type"],
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^1\\.\\d+$" },
+    "category": { "enum": ["Lite", "Standard"] },
+    "scenario": { "enum": ["A", "B", "C", null] },
+    "feature_type": { "enum": ["copy", "dev"] },
+    "hybrid": { "type": "boolean", "default": false },
+    "triggers_matched": {
+      "type": "array",
+      "items": { "type": "integer", "minimum": 1, "maximum": 6 }
+    },
+    "entryPoint": { "type": "string" },
+    "blueprintSource": { "type": "string" },
+    "override": {
+      "type": "object",
+      "required": ["field", "from", "to"],
+      "properties": {
+        "field": { "type": "string" },
+        "from": {},
+        "to": {},
+        "reason": { "type": "string" }
+      }
+    },
+    "post_wireframe_path": {
+      "enum": ["design", "stitch", "design+stitch", "stitch+design", "skipped", null],
+      "default": null
+    },
+    "sequential_reason": { "type": "string" },
+    "skip_reason": { "type": "string" }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "post_wireframe_path": { "enum": ["design+stitch", "stitch+design"] }
+        }
+      },
+      "then": {
+        "required": ["sequential_reason"]
+      }
+    }
+  ]
+}

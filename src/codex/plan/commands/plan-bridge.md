@@ -56,6 +56,20 @@ plan-bridge {slug}
    - copy-reference-baseline 에이전트도 `00-context/` 접근 금지 규약을 따름 (쌍방 배타 — IMP-KIT-004 보강 커밋)
    - 병렬 실행 시 전체 파이프라인 시간 단축 (bridge 산출물 생성과 evidence 캡처가 독립적)
 
+5. **IMP-KIT-027 Checkpoint** — wireframe 후속 단계 미실행 감지:
+   - routing-metadata의 `post_wireframe_path` 값 확인
+   - `null` 감지 시 사용자에게 확인 요청:
+     ```
+     ⚠️ wireframe 후속 단계(design/stitch)가 선택되지 않았습니다.
+     1) plan-design {slug} — Claude Design 시각 자산 생성
+     2) plan-stitch {slug} — PRD ↔ 화면 매핑 검증
+     3) 건너뛰고 bridge 진행 (간단한 Feature 또는 미구독 환경)
+     선택 [1/2/3]:
+     ```
+   - 사용자가 `3` 선택 시: routing-metadata에 `post_wireframe_path: skipped` + `skip_reason` 기록 후 bridge 계속 진행
+   - 사용자가 `1` 또는 `2` 선택 시: 해당 커맨드 안내 + bridge 보류
+   - `design` | `stitch` | `design+stitch` | `stitch+design` | `skipped` 감지 시: Checkpoint 생략하고 정상 진행
+
 ## Output
 
 - 기획 산출물을 개발 문서가 참조할 수 있는 브리지 컨텍스트로 정리

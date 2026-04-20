@@ -5,6 +5,9 @@
 
 와이어프레임 생성. 승인된 PRD를 기반으로 ASCII + Mermaid 와이어프레임을 설계합니다.
 
+> **IMP-KIT-027 포지셔닝**: plan 파이프라인의 **필수 선행 단계**. `plan-design`과 `plan-stitch`는 wireframe 완료 후 택일 실행.
+> 파이프라인: `plan-prd` → **`plan-wireframe`** → `plan-design` 또는 `plan-stitch` (택일) → `plan-bridge`
+
 ## Invocation
 
 ```

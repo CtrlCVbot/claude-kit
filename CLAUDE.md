@@ -37,7 +37,7 @@ AI 거버넌스 밀키트. TDD 강제 + Hexagonal + Clean Architecture + Rich Do
 <!-- kit:managed:start -->
 ## claude-kit 활성 구성
 
-- domains: core, dev | targets: claude | version: 2.1.0
+- domains: core, dev | targets: claude | version: 2.2.0
 - Kit 관리 영역. 아래 섹션들은 `pnpm claude-kit:setup` 실행 시 재생성된다. 직접 편집 지양.
 
 ## dev 도메인

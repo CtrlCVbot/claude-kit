@@ -5,7 +5,7 @@
 >
 > 이 파일은 **수기 편집 금지**. 재생성: `node scripts/docs-generate.js`
 
-전체 20개.
+전체 21개.
 
 ## copy 도메인
 
@@ -39,6 +39,7 @@
 | Agent | Description | Model | Source |
 |---|---|---|---|
 | `plan-bridge-writer` | /plan-bridge 전용 에이전트. 승인된 PRD + 와이어프레임 + 스티치를 개발 문서가 참조할 수 있는 브리지 컨텍스트 4종으로 정리합니다. 구조 SSOT 및 feature binding 존재 여부를 확인하고, routing metadata 기 | opus | [src/claude/plan/agents/plan-bridge-writer.md](../../src/claude/plan/agents/plan-bridge-writer.md) |
+| `plan-design-writer` | /plan-design 전용 에이전트. PRD + Wireframe을 통합 로드하여 Claude Design용 2단계 프롬프트(wireframe → high fidelity)를 생성합니다. `--register` 플래그로 결과 URL/매니페스트 관리. | opus | [src/claude/plan/agents/plan-design-writer.md](../../src/claude/plan/agents/plan-design-writer.md) |
 | `plan-draft-writer` | /plan-draft 1차 기능 기획(First Pass) 작성 전문 에이전트. 승인된 아이디어(`20-approved/`)를 입력받아 Lite/Standard + 시나리오(A/B/C) + Feature 유형(copy/dev) 3중 판정을 수행하고,  | opus | [src/claude/plan/agents/plan-draft-writer.md](../../src/claude/plan/agents/plan-draft-writer.md) |
 | `plan-idea-collector` | — | — | [src/claude/plan/agents/plan-idea-collector.md](../../src/claude/plan/agents/plan-idea-collector.md) |
 | `plan-idea-screener` | RICE 또는 5축 가중 프레임워크 기반 아이디어 스크리닝 전문 에이전트. `/plan-screen --framework rice|5axis` 지정에 따라 해당 스키마로 Go/Hold/Kill 판정 **제안**을 산출합니다. 상태는 `screened` | opus | [src/claude/plan/agents/plan-idea-screener.md](../../src/claude/plan/agents/plan-idea-screener.md) |

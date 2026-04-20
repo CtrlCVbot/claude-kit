@@ -5,7 +5,7 @@
 >
 > 이 파일은 **수기 편집 금지**. 재생성: `node scripts/docs-generate.js`
 
-전체 35개.
+전체 36개.
 
 ## copy 도메인
 
@@ -58,6 +58,7 @@
 
 | Skill | Description | Source |
 |---|---|---|
+| `claude-design-workflow` | > | [src/claude/plan/skills/claude-design-workflow/SKILL.md](../../src/claude/plan/skills/claude-design-workflow/SKILL.md) |
 | `plan-archive-workflow` | — | [src/claude/plan/skills/plan-archive-workflow/SKILL.md](../../src/claude/plan/skills/plan-archive-workflow/SKILL.md) |
 | `plan-idea-management` | — | [src/claude/plan/skills/plan-idea-management/SKILL.md](../../src/claude/plan/skills/plan-idea-management/SKILL.md) |
 | `plan-pipeline` | — | [src/claude/plan/skills/plan-pipeline/SKILL.md](../../src/claude/plan/skills/plan-pipeline/SKILL.md) |
