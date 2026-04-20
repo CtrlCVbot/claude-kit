@@ -23,7 +23,7 @@
 | `dev-architect` | 시스템 설계, 확장성, 기술적 의사결정을 위한 소프트웨어 아키텍처 전문가. 새 기능 기획, 대규모 시스템 리팩토링, 아키텍처 결정 시 선제적으로 사용합니다. | opus | [src/claude/dev/agents/dev-architect.md](../../src/claude/dev/agents/dev-architect.md) |
 | `dev-code-reviewer` | 전문 코드 리뷰 전문가. 코드 품질, 보안, 유지보수성을 선제적으로 리뷰합니다. 코드 작성 또는 수정 직후 사용. 모든 코드 변경에 반드시 사용해야 합니다. | opus | [src/claude/dev/agents/dev-code-reviewer.md](../../src/claude/dev/agents/dev-code-reviewer.md) |
 | `dev-database-reviewer` | 쿼리 최적화, 스키마 설계, 보안, 성능을 위한 PostgreSQL 데이터베이스 전문가. SQL 작성, 마이그레이션 생성, 스키마 설계, 데이터베이스 성능 문제 해결 시 선제적으로 사용합니다. | opus | [src/claude/dev/agents/dev-database-reviewer.md](../../src/claude/dev/agents/dev-database-reviewer.md) |
-| `dev-doc-updater` | 문서 및 코드맵 전문가. 코드맵과 문서 업데이트를 위해 선제적으로 사용합니다. /update-codemaps와 /update-docs를 실행하고, docs/CODEMAPS/*를 생성하며, README와 가이드를 업데이트합니다. | sonnet | [src/claude/dev/agents/dev-doc-updater.md](../../src/claude/dev/agents/dev-doc-updater.md) |
+| `dev-doc-updater` | 문서 및 코드맵 전문가. 코드맵과 문서 업데이트를 위해 선제적으로 사용합니다. /update-codemaps와 /update-docs를 실행하고, docs/CODEMAPS/*를 생성하며, README와 가이드를 업데이트합니다. | opus | [src/claude/dev/agents/dev-doc-updater.md](../../src/claude/dev/agents/dev-doc-updater.md) |
 | `dev-security-reviewer` | 보안 취약점 탐지 및 수정 전문가. 사용자 입력, 인증, API 엔드포인트 또는 민감한 데이터를 처리하는 코드 작성 후 선제적으로 사용. 시크릿, SSRF, 인젝션, 안전하지 않은 암호화, OWASP Top 10 취약점을 탐지합니다. | opus | [src/claude/dev/agents/dev-security-reviewer.md](../../src/claude/dev/agents/dev-security-reviewer.md) |
 | `dev-verify-agent` | — | — | [src/claude/dev/agents/dev-verify-agent.md](../../src/claude/dev/agents/dev-verify-agent.md) |
 
@@ -31,17 +31,17 @@
 
 | Agent | Description | Model | Source |
 |---|---|---|---|
-| `kit-maintainer` | claude-kit 프로젝트의 벌크 유지보수 에이전트. 전수 검증, 자동 수정, 문서 갱신, setup.js 정합성 복구를 처리한다. | sonnet | [.claude/agents/kit-maintainer.md](../../.claude/agents/kit-maintainer.md) |
-| `kit-sync-agent` | Claude↔Codex 동기화 에이전트. 미전환 자산 분석 → 전환/수정 필요 여부 판단 → 적절한 커맨드 조합 실행. | sonnet | [.claude/agents/kit-sync-agent.md](../../.claude/agents/kit-sync-agent.md) |
+| `kit-maintainer` | claude-kit 프로젝트의 벌크 유지보수 에이전트. 전수 검증, 자동 수정, 문서 갱신, setup.js 정합성 복구를 처리한다. | opus | [.claude/agents/kit-maintainer.md](../../.claude/agents/kit-maintainer.md) |
+| `kit-sync-agent` | — | — | [.claude/agents/kit-sync-agent.md](../../.claude/agents/kit-sync-agent.md) |
 
 ## plan 도메인
 
 | Agent | Description | Model | Source |
 |---|---|---|---|
 | `plan-idea-collector` | — | — | [src/claude/plan/agents/plan-idea-collector.md](../../src/claude/plan/agents/plan-idea-collector.md) |
-| `plan-idea-screener` | RICE 프레임워크 기반 아이디어 스크리닝 전문 에이전트. Reach/Impact/Confidence/Effort 점수를 산출하고 Lite/Standard 카테고리를 판정합니다. 상태는 `screened`까지만 전환하며, `approved`는 사용자  | sonnet | [src/claude/plan/agents/plan-idea-screener.md](../../src/claude/plan/agents/plan-idea-screener.md) |
+| `plan-idea-screener` | RICE 또는 5축 가중 프레임워크 기반 아이디어 스크리닝 전문 에이전트. `/plan-screen --framework rice|5axis` 지정에 따라 해당 스키마로 Go/Hold/Kill 판정 **제안**을 산출합니다. 상태는 `screened` | opus | [src/claude/plan/agents/plan-idea-screener.md](../../src/claude/plan/agents/plan-idea-screener.md) |
 | `plan-prd-writer` | — | — | [src/claude/plan/agents/plan-prd-writer.md](../../src/claude/plan/agents/plan-prd-writer.md) |
 | `plan-reviewer` | — | — | [src/claude/plan/agents/plan-reviewer.md](../../src/claude/plan/agents/plan-reviewer.md) |
-| `plan-stitch-integrator` | PRD + Wireframe + Stitch HTML을 통합하여 Feature Package 컨텍스트를 생성하는 전문 에이전트. 요구사항-화면 매핑 검증, 누락 탐지, 변환 추적을 수행합니다. | sonnet | [src/claude/plan/agents/plan-stitch-integrator.md](../../src/claude/plan/agents/plan-stitch-integrator.md) |
+| `plan-stitch-integrator` | PRD + Wireframe + Stitch HTML을 통합하여 Feature Package 컨텍스트를 생성하는 전문 에이전트. 요구사항-화면 매핑 검증, 누락 탐지, 변환 추적을 수행합니다. | opus | [src/claude/plan/agents/plan-stitch-integrator.md](../../src/claude/plan/agents/plan-stitch-integrator.md) |
 | `plan-wireframe-designer` | ASCII + Mermaid 기반 와이어프레임 설계 전문 에이전트. PRD의 UX 섹션을 기반으로 화면 구조, 네비게이션 플로우, 컴포넌트 명세를 생성합니다. | opus | [src/claude/plan/agents/plan-wireframe-designer.md](../../src/claude/plan/agents/plan-wireframe-designer.md) |
 

@@ -49,9 +49,9 @@
 
 | Skill | Description | Source |
 |---|---|---|
-| `kit-converter` | | | [.claude/skills/kit-converter/SKILL.md](../../.claude/skills/kit-converter/SKILL.md) |
-| `kit-scaffolding` | | | [.claude/skills/kit-scaffolding/SKILL.md](../../.claude/skills/kit-scaffolding/SKILL.md) |
-| `kit-validation` | | | [.claude/skills/kit-validation/SKILL.md](../../.claude/skills/kit-validation/SKILL.md) |
+| `kit-converter` | — | [.claude/skills/kit-converter/SKILL.md](../../.claude/skills/kit-converter/SKILL.md) |
+| `kit-scaffolding` | — | [.claude/skills/kit-scaffolding/SKILL.md](../../.claude/skills/kit-scaffolding/SKILL.md) |
+| `kit-validation` | — | [.claude/skills/kit-validation/SKILL.md](../../.claude/skills/kit-validation/SKILL.md) |
 
 ## plan 도메인
 

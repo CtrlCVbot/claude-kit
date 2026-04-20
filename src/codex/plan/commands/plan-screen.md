@@ -1,45 +1,71 @@
-<!-- kit-convert generated: 2026-04-17 -->
+<!-- kit-convert generated: 2026-04-20 -->
 # plan-screen — Codex Entry Flow
 
 ## Overview
 
-IDEA-{YYYYMMDD}-{NNN} 스크리닝 실행. RICE 프레임워크 기반으로 아이디어를 평가하고 Go/Hold/Kill 판정을 **제안**한 뒤, 사용자 **명시적 승인**을 거쳐 상태를 전환합니다.
+IDEA-{YYYYMMDD}-{NNN} 스크리닝 실행. **RICE 또는 5축 가중** 프레임워크를 명시적으로 선택하여 Go/Hold/Kill 판정을 **제안**한 뒤, 사용자 **명시적 승인**을 거쳐 상태를 전환합니다.
 
 ## Invocation
 
 ```
-plan-screen IDEA-20260325-001          # 특정 아이디어 스크리닝
-plan-screen IDEA-20260325-001 --rescore  # 기존 스크리닝 재평가
-plan-screen --pending                  # 미스크리닝 아이디어 일괄 스크리닝
-plan-screen --pending --auto-approve   # 일괄 스크리닝 + Go 판정 자동 승인
+plan-screen IDEA-20260325-001                          # 기본 프레임워크로 스크리닝
+plan-screen IDEA-20260325-001 --framework rice         # RICE 프레임워크 명시
+plan-screen IDEA-20260325-001 --framework 5axis        # 5축 가중 프레임워크 명시
+plan-screen IDEA-20260325-001 --rescore                # 기존 스크리닝 재평가
+plan-screen --pending                                   # 미스크리닝 아이디어 일괄 스크리닝
+plan-screen --pending --auto-approve                    # 일괄 스크리닝 + Go 판정 자동 승인
 ```
+
+## Flags
+
+- `--framework rice` — Intercom RICE 공식 (Reach × Impact × Confidence / Effort)
+- `--framework 5axis` — 5축 가중 점수 (비즈니스/사용자/기술/전략/긴급도, 0-100)
+- 생략 시: 프로젝트 AGENTS.md/CLAUDE.md의 `idea-screening framework` 기본값 사용. 기본값 미설정 시 `rice`로 폴백 + 출력에 명시적 고지.
+- `--rescore` — 기존 스크리닝 결과 재평가 (framework 변경 가능)
+- `--pending` — 미스크리닝 아이디어 일괄 처리
+- `--auto-approve` — 배치 작업에서 Go 판정 자동 승인
+
+## Framework 임계값
+
+| 프레임워크 | Go | Hold | Kill |
+|:-:|:-:|:-:|:-:|
+| RICE | ≥ 10.0 | 2.0 ~ 10.0 | < 2.0 |
+| 5axis | 70+ | 40 ~ 69 | < 40 |
+
+임계값은 프로젝트별 조정 가능 (AGENTS.md/CLAUDE.md `idea-screening thresholds` 섹션).
 
 ## Workflow
 
-1. **대상 확인**: `backlog.md` 인덱스에서 위치 확인 → 해당 폴더의 IDEA 파일 로드
-2. **에이전트 스폰**: `plan-idea-screener` 에이전트를 Task tool로 스폰
+1. **프레임워크 결정**: `--framework` 인자 → AGENTS.md/CLAUDE.md 기본값 → `rice` 폴백 순으로 해석
+2. **대상 확인**: `backlog.md` 인덱스에서 위치 확인 → 해당 폴더의 IDEA 파일 로드
+3. **에이전트 스폰**: `plan-idea-screener` 에이전트 호출 (framework 인자 전달)
    - IDEA 파일을 `00-inbox/` → `10-screening/`으로 이동
-   - 5축 평가 + Go/Hold/Kill **제안** 산출
-   - `SCREENING-{YYYYMMDD}-{NNN}.md`를 `10-screening/`에 생성
+   - 선택된 프레임워크로 평가 + Go/Hold/Kill **제안** 산출
+   - `SCREENING-{YYYYMMDD}-{NNN}.md`를 `10-screening/`에 생성 (첫 줄에 프레임워크 명시)
    - `backlog.md` 상태를 `screened`로, 위치를 `10-screening`으로 업데이트
-3. **PCC-01 검증**: 모든 아이디어가 스크리닝되었는지 확인
-4. **Human Checkpoint 1 — 점수 확인**: 점수 확인/오버라이드 기회 제공
-5. **Human Checkpoint 2 — 승인 결정** (핵심 게이트):
+4. **PCC-01 검증**: 모든 아이디어가 스크리닝되었는지 확인
+5. **Human Checkpoint 1 — 점수 확인**: 점수 확인/오버라이드 기회 제공
+6. **Human Checkpoint 2 — 승인 결정** (핵심 게이트):
    - 각 아이디어에 대해 승인/보류/반려 결정을 사용자에게 요청
    - **승인** → IDEA + SCREENING 파일을 `10-screening/` → `20-approved/`로 이동, 상태 `approved`
    - **보류** → 파일을 `10-screening/` → `90-archive/`로 이동, 상태 `on-hold`
    - **반려** → 파일을 `10-screening/` → `90-archive/`로 이동, 상태 `rejected`
    - `backlog.md` 인덱스의 상태 + 위치 컬럼 업데이트
-6. **`--auto-approve` 옵션**: Go 제안(70+) 아이디어를 Checkpoint 2 생략하고 자동 승인 (배치 작업용)
+7. **`--auto-approve` 옵션**: Go 제안 아이디어를 Checkpoint 2 생략하고 자동 승인 (배치 작업용)
+
+## 출력 스키마
+
+- RICE: `src/codex/plan/_schemas/rice.schema.json`
+- 5축: `src/codex/plan/_schemas/5axis.schema.json`
 
 ## Output
 
-- `.plans/ideas/10-screening/SCREENING-{YYYYMMDD}-{NNN}.md` 개별 파일에 상세 점수 및 판정 기록
-- `screening-matrix.md` 인덱스에 요약 행 반영
+- `.plans/ideas/10-screening/SCREENING-{YYYYMMDD}-{NNN}.md` 개별 파일에 상세 점수 및 판정 기록 (첫 줄에 사용한 framework 명시)
+- `screening-matrix.md` 인덱스에 요약 행 반영 (framework 컬럼 포함)
 - 승인된 아이디어는 `20-approved/`로 이동
 - Lite/Standard 카테고리 판정 포함
 - WBS 계층 예비 분류: Epic(10+ 파일, 5+ 뷰포트) / Feature(3~10 파일) / Story(1~3 파일) / Task(단일 파일)
-- 충실도 해석: RICE Impact에 시각적 충실도 영향도를 반영 (copy 도메인 활성 시)
+- 충실도 해석: RICE Impact 또는 5축 사용자 영향에 시각적 충실도 영향도를 반영 (copy 도메인 활성 시)
 - 다음 단계 안내: `plan-draft IDEA-{YYYYMMDD}-{NNN}` (approved 상태에서만)
 
 ## Codex 참고 사항

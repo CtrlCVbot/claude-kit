@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://claude-kit/codex/plan/screening/5axis.schema.json",
+  "title": "5-Axis Weighted Screening Result (Codex)",
+  "description": "plan-idea-screener의 5축 가중 점수 프레임워크 출력 스키마 — Codex 대응본. Claude 버전(src/claude/plan/_schemas/5axis.schema.json)과 구조 동일.",
+  "type": "object",
+  "required": ["schema_version", "framework", "idea_id", "score", "verdict", "category"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$"
+    },
+    "framework": {
+      "const": "5axis"
+    },
+    "idea_id": {
+      "type": "string",
+      "pattern": "^IDEA-\\d{8}-\\d{3}$"
+    },
+    "score": {
+      "type": "object",
+      "required": ["business_value", "user_impact", "technical_feasibility", "strategic_alignment", "urgency", "total"],
+      "properties": {
+        "business_value": {
+          "type": "object",
+          "required": ["raw", "weighted"],
+          "properties": {
+            "raw": { "type": "number", "minimum": 0, "maximum": 100 },
+            "weighted": { "type": "number", "description": "raw × 0.30" }
+          },
+          "description": "비즈니스 가치 (가중치 30%): 매출/비용/경쟁 우위"
+        },
+        "user_impact": {
+          "type": "object",
+          "required": ["raw", "weighted"],
+          "properties": {
+            "raw": { "type": "number", "minimum": 0, "maximum": 100 },
+            "weighted": { "type": "number", "description": "raw × 0.25" }
+          },
+          "description": "사용자 영향 (가중치 25%): 사용자 수/빈도/만족도"
+        },
+        "technical_feasibility": {
+          "type": "object",
+          "required": ["raw", "weighted"],
+          "properties": {
+            "raw": { "type": "number", "minimum": 0, "maximum": 100 },
+            "weighted": { "type": "number", "description": "raw × 0.20" }
+          },
+          "description": "기술적 실현성 (가중치 20%): 난이도/의존성/인프라"
+        },
+        "strategic_alignment": {
+          "type": "object",
+          "required": ["raw", "weighted"],
+          "properties": {
+            "raw": { "type": "number", "minimum": 0, "maximum": 100 },
+            "weighted": { "type": "number", "description": "raw × 0.15" }
+          },
+          "description": "전략적 정렬 (가중치 15%): 비전/로드맵 적합성"
+        },
+        "urgency": {
+          "type": "object",
+          "required": ["raw", "weighted"],
+          "properties": {
+            "raw": { "type": "number", "minimum": 0, "maximum": 100 },
+            "weighted": { "type": "number", "description": "raw × 0.10" }
+          },
+          "description": "긴급도 (가중치 10%): 시장 타이밍/규제/의존 관계"
+        },
+        "total": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "가중 합산 총점 (0-100)"
+        }
+      }
+    },
+    "rationale": {
+      "type": "object",
+      "required": ["business_value", "user_impact", "technical_feasibility", "strategic_alignment", "urgency"],
+      "properties": {
+        "business_value": { "type": "string" },
+        "user_impact": { "type": "string" },
+        "technical_feasibility": { "type": "string" },
+        "strategic_alignment": { "type": "string" },
+        "urgency": { "type": "string" }
+      }
+    },
+    "verdict": {
+      "enum": ["Go", "Hold", "Kill"],
+      "description": "Go (70+), Hold (40-69), Kill (<40) 판정 제안"
+    },
+    "category": {
+      "enum": ["Lite", "Standard"]
+    },
+    "risk_analysis": {
+      "type": "object",
+      "properties": {
+        "technical": { "type": "string" },
+        "business": { "type": "string" },
+        "schedule": { "type": "string" }
+      }
+    }
+  }
+}
