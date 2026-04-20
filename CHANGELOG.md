@@ -6,7 +6,32 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
-다음 릴리스: **v2.2.1** (hotfix — IMP-KIT-027 `/plan-design` + wireframe 후속 단계 택일 구조). 스펙 `ready-to-implement` 상태.
+다음 릴리스: **v2.2.1** — IMP-KIT-027 `/plan-design` 신설 + wireframe 후속 단계 택일 구조 전환. 구현 완료.
+
+### Added
+
+- **IMP-KIT-027** — `/plan-design` Claude Design 통합 ([`41330d3`](https://github.com/CtrlCVbot/claude-kit/commit/41330d3), [`993e500`](https://github.com/CtrlCVbot/claude-kit/commit/993e500), [`28580b9`](https://github.com/CtrlCVbot/claude-kit/commit/28580b9))
+  - 신규 커맨드 `/plan-design` + 서브에이전트 `plan-design-writer`
+  - 신규 스킬 `claude-design-workflow` + 2단계 프롬프트 템플릿 (`design-prompt-wireframe.template.md` · `design-prompt-highfidelity.template.md` · `design-manifest.template.md`)
+  - `routing-metadata.schema.json` v1 신설 — `post_wireframe_path` enum (`design` / `stitch` / `design+stitch` / `stitch+design` / `skipped` / `null`) 으로 배타 게이트 구현
+  - `--force-sequential` + `--sequential-reason` 플래그 (stitch 후 design 순차 실행 허용, 사유 필수)
+  - `--register` URL 검증: scheme 정확히 `https` + hostname 정확히 `claude.ai` (서브도메인 불허, userinfo spoofing 차단)
+  - `--fidelity` 플래그 (wireframe / highfidelity / both) + `--ignore-mismatch` (SCR-ID 누락 우회)
+  - Standard Feature 전용 (Lite 거부 + `/dev-feature` 또는 `/copy-reference-refresh` 안내)
+  - Codex sibling 전체 동기화 (커맨드·에이전트·스킬·템플릿·스키마)
+
+### Changed
+
+- `/plan-stitch` 와 `/plan-design` **배타 관계화** — wireframe 후 택일. 동시 실행 차단, 순차 실행은 `--force-sequential` 필수
+- `/plan-bridge` Checkpoint 로직 추가 — `post_wireframe_path: null` 감지 시 [1] design / [2] stitch / [3] skip 선택 프롬프트. `[3] skip` 시 `skip_reason` 기록
+- `plan-draft-writer` routing-metadata 초기값에 `schema_version: "1.0"` + `post_wireframe_path: null` 기록 (후속 단계 추적 준비)
+- `/plan-wireframe` 커맨드 설명에 "design/stitch 의 선행 필수" 명시
+
+### Docs
+
+- `docs/10-features/03-plan-domain.md` — 파이프라인 다이어그램·커맨드·에이전트·스킬·산출물 표에 `/plan-design` 체계 반영 ([`289a012`](https://github.com/CtrlCVbot/claude-kit/commit/289a012))
+- `docs/20-user-guide/05-plan-pipeline.md` — §5 를 3-step(구조 확정 / 시각 완성 택일 / Checkpoint skip) 구조로 재구성 ([`289a012`](https://github.com/CtrlCVbot/claude-kit/commit/289a012))
+- `docs/20-user-guide/07-troubleshooting.md` + `README.md` + `01-installation.md` — Windows pnpm postinstall 트러블슈팅 가이드 추가 ([`679b451`](https://github.com/CtrlCVbot/claude-kit/commit/679b451))
 
 ---
 
