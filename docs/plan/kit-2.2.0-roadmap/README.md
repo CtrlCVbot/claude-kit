@@ -30,7 +30,8 @@ kit-2.2.0-roadmap/
 ├── 04-p1-backlog-summary.md           ← P1 11건 요약
 ├── 05-p2-backlog-summary.md           ← P2 9건 요약
 ├── 06-verification-strategy.md        ← 회귀 시나리오 + 지표
-└── 07-release-notes-2.2.0-draft.md    ← 릴리스 노트 초안
+├── 07-release-notes-2.2.0-draft.md    ← 릴리스 노트 (Phase 1.3 V4 확정본)
+└── 08-regression-scenario.md          ← 회귀 실행 체크리스트 (Phase 1.3 V1)
 ```
 
 ---
