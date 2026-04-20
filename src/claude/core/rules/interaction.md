@@ -115,26 +115,33 @@ No exceptions — WebFetch is denied in all scenarios.
 
 ```
 # BAD: 에이전트 완료 후 바로 Edit 시도
-Agent(subagent_type=plan-wireframe-designer, ...)  # 파일 수정
+Agent(subagent_type=plan-wireframe-designer, ...)   # 파일 수정
   ↓
-Edit(file_path=수정된-파일.md, ...)  # ❌ "File has not been read yet" 에러
+Edit(file_path=수정된-파일.md, ...)                 # "File has not been read yet" 에러
 ```
 
 ```
 # GOOD: Edit 전에 Read 재호출
 Agent(subagent_type=plan-wireframe-designer, ...)
   ↓
-Read(file_path=수정된-파일.md)  # ✅ 캐시 재인증
+Read(file_path=수정된-파일.md)                      # 캐시 재인증
   ↓
-Edit(file_path=수정된-파일.md, ...)  # ✅ 성공
+Edit(file_path=수정된-파일.md, ...)                 # 성공
 ```
 
 ### 자동 알림 (hook)
 
-`agent-completion-cache-invalidate` 훅이 write-capable 에이전트 완료 시 systemMessage로 경고한다. 경고가 보이면 **Edit 전 Read를 반드시 재호출**한다.
+`agent-completion-cache-invalidate` 훅이 write-capable 에이전트 완료 시 systemMessage로 경고한다. 경고가 보이면 **Edit 전 Read를 반드시 재호출**한다. 동일 세션 내 같은 에이전트 반복 호출은 1회만 경고한다 (tmpdir 마커 dedup).
 
 ### Read-only 에이전트는 예외
 
-`dev-architect`, `dev-code-reviewer`, `Explore`, `Plan`, `plan-reviewer` 등 **파일을 수정하지 않는 에이전트**는 Read 재호출이 불필요하다. 훅도 이들에 대해 경고하지 않는다.
+분류 원천은 각 에이전트 파일의 `tools:` 필드다. 아래 **8개**는 Write/Edit를 보유하지 않으므로 Read 재호출이 불필요하고 훅도 경고를 생략한다:
+
+- dev 도메인: `dev-architect`, `dev-code-reviewer`
+- plan 도메인: `plan-reviewer`
+- copy 도메인: `copy-fidelity`, `copy-interaction-fidelity`, `copy-qa-reviewer`
+- Claude Code 기본: `Explore`, `Plan`
+
+그 외 에이전트(`dev-doc-updater`, `dev-security-reviewer`, `dev-database-reviewer`, `dev-verify-agent`, `plan-idea-collector`, `plan-idea-screener`, `plan-prd-writer`, `plan-stitch-integrator`, `plan-wireframe-designer`, `copy-reference-baseline`, `general-purpose` 등)는 모두 write-capable이다.
 
 상세 규칙: `verification.md`의 "Agent Edit Race (Read Cache)" 섹션.

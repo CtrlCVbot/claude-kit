@@ -62,6 +62,9 @@ const PYTHON_EXEMPT_PATTERNS = [
 const COMMON_EXEMPT_PATTERNS = [
   /\.json$/, /\.yaml$/, /\.yml$/, /\.md$/, /\.sql$/, /\.css$/,
   /\.gitignore$/, /\.env/, /CLAUDE\.md$/,
+  // copy Feature 시각적 작업 면제: CSS/SCSS/스타일 관련 파일
+  /\.scss$/, /\.sass$/, /\.less$/, /\.styl$/,
+  /\.module\.css$/, /\.module\.scss$/,
 ];
 
 function detectStack(filePath) {

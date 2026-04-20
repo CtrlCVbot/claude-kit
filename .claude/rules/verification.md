@@ -96,6 +96,55 @@ CORRECT: Agent reports success → Check VCS diff → Verify changes → Report 
 WRONG:   Trust agent report without independent verification
 ```
 
+### Agent Edit Race (Read Cache)
+
+에이전트(Task tool) 위임 시 **메인 세션의 Read 캐시**와 에이전트가 실제 수정한 파일 내용이 불일치할 수 있다. 에이전트 완료 직후 메인이 같은 파일을 Edit하려 시도하면 `File has not been read yet in this session. Read it first before writing to it.` 에러가 발생한다.
+
+```
+CORRECT: Agent(write-capable) completes → Read(file) → Edit(file) → "Success"
+WRONG:   Agent(write-capable) completes → Edit(file) → "File has not been read yet" error
+```
+
+**Checklist (에이전트 위임 후)**:
+
+- [ ] 에이전트가 **파일을 수정했는지** (read-only 에이전트면 skip)
+- [ ] 수정 대상 파일이 **메인이 이어서 Edit할 파일과 겹치는지**
+- [ ] 겹치면 **Edit 전 Read를 반드시 재호출** (캐시 재인증)
+- [ ] `agent-completion-cache-invalidate` 훅 경고 메시지가 떴다면 무시하지 말 것
+
+**에이전트 분류 원천**: 각 에이전트 파일(`src/claude/**/agents/*.md`)의 `tools:` 필드가 SSOT. Write/Edit 보유 시 write-capable. Role 서술이 아닌 **능력 기반** 분류.
+
+**Read-only 에이전트** (Read 재호출 불필요):
+
+| 에이전트 | 도메인 | 비고 |
+|----------|--------|------|
+| `dev-architect` | dev | Read/Grep/Glob만 보유 |
+| `dev-code-reviewer` | dev | Bash 추가, 분석 전용 |
+| `plan-reviewer` | plan | Read/Grep/Glob, PCC 검증 |
+| `copy-fidelity` | copy | visual fidelity 리뷰 |
+| `copy-interaction-fidelity` | copy | interaction 리뷰 |
+| `copy-qa-reviewer` | copy | 최종 QA |
+| `Explore` | (Claude Code 기본) | 탐색 전용 |
+| `Plan` | (Claude Code 기본) | 계획 설계 |
+
+**Write-capable 에이전트** (완료 후 Read 재호출 권장):
+
+| 에이전트 | 도메인 | 비고 |
+|----------|--------|------|
+| `dev-doc-updater` | dev | Write/Edit 보유 |
+| `dev-security-reviewer` | dev | Write/Edit 보유 (보고서/fix 작성) |
+| `dev-database-reviewer` | dev | Write/Edit 보유 (SQL/migration 작성) |
+| `dev-verify-agent` | dev | Write/Edit 보유 (라운드당 ≤10파일) |
+| `plan-idea-collector` | plan | IDEA 파일 생성/수정 |
+| `plan-idea-screener` | plan | SCREENING 파일 생성 |
+| `plan-prd-writer` | plan | PRD 문서 작성 |
+| `plan-stitch-integrator` | plan | Feature Package 작성 |
+| `plan-wireframe-designer` | plan | 와이어프레임 파일 작성 |
+| `copy-reference-baseline` | copy | evidence/ 파일 생성 |
+| `general-purpose` | (Claude Code 기본) | 전범위 Edit 가능 |
+| `plan-draft-writer` | plan | (IMP-KIT-003, 2.2.0+ 예정) |
+| `plan-bridge-writer` | plan | (IMP-KIT-004, 2.2.0+ 예정) |
+
 ## When to Apply
 
 **Always**, before:
@@ -106,6 +155,13 @@ WRONG:   Trust agent report without independent verification
 - Marking tasks as complete
 - Moving to the next task
 - Delegating to sub-agents
+
+## Copy Domain Verification (copy 도메인 활성 시)
+
+copy 도메인이 활성화된 경우, 시나리오별로 evidence 요구사항이 다르다:
+- **시나리오 A/B**: 구현 후 QA 시점에서 `/copy-verify` 실행. evidence manifest 존재 필수.
+- **시나리오 C**: 갭 분석 데이터가 상세 PRD에 반영되었는지 PCC-06으로 추가 검증.
+- 상세 기준은 `copy-evidence.md` 룰 참조.
 
 ## The Bottom Line
 

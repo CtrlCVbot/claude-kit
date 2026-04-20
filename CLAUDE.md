@@ -53,5 +53,5 @@ AI 거버넌스 밀키트. TDD 강제 + Hexagonal + Clean Architecture + Rich Do
 - **주요 서브에이전트**: `dev-architect`, `dev-code-reviewer`, `dev-security-reviewer`, `dev-database-reviewer`, `dev-doc-updater`, `dev-verify-agent`
 
 # currentDate
-Today's date is 2026-04-16.
+Today's date is 2026-04-20.
 <!-- kit:managed:end -->

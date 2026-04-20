@@ -30,6 +30,9 @@ color: cyan
     - 관련 기능에 대한 회귀 위험 평가
     - 코드 리뷰 깊이가 요청된 작업 수준과 일치
     - 라운드당 10개 파일 이하 수정
+    - Feature 유형 인식: `07-routing-metadata.md`가 있으면 copy/dev 유형에 따라 QA 범위 조정
+      - copy Feature: `/copy-verify` 결과가 있으면 참조, 없으면 copy QA 미수행으로 기록
+      - dev Feature: 기존 검증 파이프라인만 적용
   </Success_Criteria>
 
   <Constraints>

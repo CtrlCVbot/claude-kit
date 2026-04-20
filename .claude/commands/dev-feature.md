@@ -16,6 +16,9 @@
 - 승인된 PRD가 존재한다.
 - `.plans/project/00-dev-architecture.md`가 존재하고 승인 상태다.
 - `.plans/features/active/{slug}/00-context/06-architecture-binding.md`가 존재한다.
+- Feature 유형 확인: `07-routing-metadata.md`가 있으면 Feature 유형(copy/dev)을 읽는다.
+  - Feature 유형이 `copy`이면 copy 도메인 경로(갭 분석, evidence 관리)가 선행되었는지 확인한다.
+  - copy Feature에서 넘어온 경우 bridge context에 시나리오/유형 메타데이터가 포함되어야 한다.
 
 위 조건이 충족되지 않으면 `/dev-architecture {slug}`를 먼저 실행한다.
 

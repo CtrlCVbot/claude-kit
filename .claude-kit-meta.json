@@ -1,7 +1,7 @@
 {
   "version": "2.1.0",
   "installedAt": "2026-04-16T06:03:53.845Z",
-  "updatedAt": "2026-04-16T06:03:53.845Z",
+  "updatedAt": "2026-04-20T03:52:25.799Z",
   "domains": [
     "core",
     "dev"
@@ -12,14 +12,14 @@
   "components": {
     "agents": 6,
     "commands": 21,
-    "skills": 18,
-    "hooks": 8,
+    "skills": 19,
+    "hooks": 9,
     "rules": 6
   },
   "byDomain": {
     "core": {
-      "skills": 3,
-      "hooks": 5,
+      "skills": 4,
+      "hooks": 6,
       "rules": 6
     },
     "dev": {
@@ -29,8 +29,11 @@
       "hooks": 3
     }
   },
-  "totalComponents": 59,
-  "preservedFiles": [],
+  "totalComponents": 61,
+  "preservedFiles": [
+    "profile.json",
+    "CLAUDE.md"
+  ],
   "outputs": {
     "shared": {
       "root": ".",

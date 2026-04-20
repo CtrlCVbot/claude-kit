@@ -549,6 +549,9 @@ function buildHooksConfig(activeDomains) {
     ],
     Stop: [
       { hooks: ['node .claude/hooks/session-wrap-suggest.js'] }
+    ],
+    SubagentStop: [
+      { hooks: ['node .claude/hooks/agent-completion-cache-invalidate.js'] }
     ]
   };
 

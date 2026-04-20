@@ -36,7 +36,7 @@ audit drift detection) 범위.
 
 **Red Flags — 이런 생각이 들면 멈춰라**: "It probably works" / "I'm confident" / "Just this once" / "Linter passed, so..." / "I already ran it earlier" / "Should/probably/seems to" — 모두 검증 부재 신호.
 
-**Agent Edit Race (Read Cache)**: 서브에이전트(Task tool) 완료 직후, 메인이 같은 파일을 Edit하면 `File has not been read yet` 에러가 발생할 수 있다. write-capable 에이전트(`dev-doc-updater`, `plan-*-writer`, `copy-reference-baseline`, `general-purpose` 등) 완료 후에는 **Edit 전 Read 재호출**로 캐시를 재인증한다. read-only 에이전트(`dev-architect`, `*-reviewer`, `Explore`, `Plan`)는 예외. Codex fallback: `src/claude/core/skills/agent-completion-cache-invalidate/SKILL.md` 참조.
+**Agent Edit Race (Read Cache)**: 서브에이전트(Task tool) 완료 직후, 메인이 같은 파일을 Edit하면 `File has not been read yet` 에러가 발생할 수 있다. 분류 원천은 각 에이전트 파일의 `tools:` 필드(Write/Edit 보유 시 write-capable). read-only 8개(`dev-architect`, `dev-code-reviewer`, `plan-reviewer`, `copy-fidelity`, `copy-interaction-fidelity`, `copy-qa-reviewer`, `Explore`, `Plan`)는 예외이며, 그 외(`dev-doc-updater`, `dev-security-reviewer`, `dev-database-reviewer`, `dev-verify-agent`, `plan-idea-collector`, `plan-idea-screener`, `plan-prd-writer`, `plan-stitch-integrator`, `plan-wireframe-designer`, `copy-reference-baseline`, `general-purpose` 등)는 모두 write-capable로 취급하여 **Edit 전 Read 재호출**로 캐시를 재인증한다. Codex fallback: `src/claude/core/skills/agent-completion-cache-invalidate/SKILL.md` 참조.
 
 > 전체 가이드: `src/claude/core/rules/verification.md`
 
