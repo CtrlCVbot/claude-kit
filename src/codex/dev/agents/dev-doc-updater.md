@@ -59,29 +59,39 @@
 - `mcp__context7__*`을 사용하여 라이브러리 문서 참조.
 - `mcp__memory__*`를 사용하여 문서 변경 이력 관리.
 
-### Input Format (선택적 — 체이닝 계약)
+## Input Format (선택적 — IMP-KIT-001 체이닝 계약)
 
 dev-architect 또는 다른 read-only 에이전트로부터 편집 좌표 JSON을 받은 경우 아래 절차로 처리한다. JSON 입력이 없는 경우 기존 Investigation Protocol을 따라 자율적으로 수행한다.
 
-**스키마**: `src/codex/dev/_schemas/edit-coordinates.schema.json`
+**스키마**: `src/codex/dev/_schemas/edit-coordinates.schema.json` (schema_version 1.x만 지원)
 
 **입력 처리 절차**:
-1) 입력 JSON을 파싱하고 `schema_version`, `phase`, `edits` 필수 필드를 검증한다.
-2) 스키마 버전 호환성 확인 — `1.x` 이외 버전이면 사용자에게 알림 후 중단.
-3) `edits` 배열을 순회하며 각 항목 실행:
+1) 입력 JSON을 파싱하고 `schema_version`, `phase`, `agent`, `edits` 필수 필드를 검증한다.
+2) **schema_version 호환성 확인**: `schema_version.startsWith("1.")` 검사. 1.x 이외(예: "2.0") 감지 시 처리 중단 + 사용자에게 "본 에이전트는 schema_version 1.x만 지원 — 1.x용 doc-updater 버전을 사용하거나 스키마를 다운그레이드하십시오" 보고.
+3) **edits 무결성 검증** (schema validator 외 추가 검사):
+   - `edits.length === 0`이면 "체이닝 생략: 편집 없음" 보고 후 정상 종료 (에러 아님).
+   - 각 item의 `line_range` 역전(`line_range[0] > line_range[1]`) 감지 시 해당 edit 건너뛰고 "skipped: line_range reversed" 기록.
+   - action별 필수 필드 재검증 (schema validator 미사용 환경 대비):
+     - create: `new_content` 필수
+     - replace/insert: `line_range` + `new_content` 필수
+     - delete: `line_range` 필수
+4) **각 file_path 편집 전 Read 먼저 호출** — 에이전트 내부 캐시 인증 목적 (IMP-KIT-005 **메인 세션 SubagentStop 훅과는 별개 층위**). 본 절차는 이 에이전트 자신의 Edit 도구가 캐시 인증을 요구하기 때문.
+5) `edits` 배열을 순회하며 각 항목 실행:
    - `action: "create"` → 신규 파일 Write
-   - `action: "replace"` → 지정 `line_range` 범위 Edit로 교체
-   - `action: "insert"` → `line_range[0]` 위치에 `new_content` 삽입 (Edit로 구현)
-   - `action: "delete"` → 지정 범위 제거 (Edit로 빈 내용 교체)
-4) 각 `file_path`를 처음 편집하기 전에 **Read를 먼저 호출**하여 캐시 인증 (IMP-KIT-005 안티패턴 방지).
-5) `risk: "high"` 항목은 **사용자 명시적 확인** 후 실행. 확인 없이 진행 금지.
-6) 실행 중 실패 발생 시 즉시 중단하고 **남은 `edits`를 보고**. 부분 성공 상태를 명확히.
-7) 완료 후 `metadata.total_edits` 대비 **실제 성공한 편집 수** 보고.
+   - `action: "replace"` → `line_range` 범위 Edit로 교체
+   - `action: "insert"` → `line_range[0]` 라인 **앞에** `new_content` 삽입 (line_range는 단일 원소 `[line]` 또는 중복 `[line, line]` 모두 허용)
+   - `action: "delete"` → `line_range` 범위 제거 (Edit로 빈 내용 교체)
+6) **`risk: "high"` 항목은 사용자 명시적 확인 후 실행 — 확인 없이 진행 금지**. 자동 실행 기본값은 low/medium만 해당. (schema/architect/doc-updater 공통 SSOT)
+7) 실행 중 실패 발생 시 즉시 중단하고 **남은 `edits`를 보고**. 부분 성공 상태를 명확히 (`completed: N, skipped: M, failed at: edit-XXX`).
+8) 완료 후 `metadata.total_edits` 대비 **실제 성공한 편집 수** 보고.
+9) Commit message 생성 시:
+   - `rationale` 필드가 있으면 **그대로 활용** (수정 금지).
+   - `rationale` 누락 시 **fallback 패턴**: `{action} {file_path}` 형식 (예: `replace src/foo/bar.ts`). 여러 edit가 같은 파일을 수정하면 action 열거: `replace+insert src/foo/bar.ts`.
 
 **실행 제약**:
 - JSON에 명시되지 않은 파일은 절대 수정하지 않는다 (범위 엄수).
 - 에이전트 자체 판단으로 `edits`를 **추가/변경/삭제하지 않는다**. 의견 있으면 보고만.
-- `rationale` 필드는 commit message나 PR 본문 작성 시 **그대로 활용** 가능.
+- architect가 JSON을 **생성했어야** 하는데 메인이 JSON 없이 호출한 경우(예: Phase C 직접 호출) → 기존 Investigation Protocol로 자율 수행하되, 사용자에게 "편집 좌표 JSON 미수신 — 자율 판단으로 진행" 1회 고지.
 
 ## Constraints
 

@@ -25,6 +25,16 @@ Phase별 책임과 에이전트 매핑:
 - 메인 세션이 직접 수행하는 경우는 자체 책임으로 Phase A/C를 각각 이행한다.
 - **Phase C 재위임 금지**: Phase C를 architect에게 요청하면 거부되어야 한다 (편집 권한 부재).
 
+**JSON 미출력 감지 절차** (Phase A → Phase C 연결 무결성):
+
+1. architect가 Phase A 분석을 완료했지만 편집 좌표 JSON을 **생략**한 경우:
+   - 메인은 분석 결과에서 "편집이 필요"한지 판단 (파일 수정/신규 생성이 권고에 포함).
+   - 편집이 필요해 보이면 architect에게 **1회 재요청**: "이 권고의 편집 좌표 JSON을 추가 출력해 주십시오 (edit-coordinates.schema.json)".
+2. 재요청에도 architect가 JSON을 출력하지 않으면 **사용자에게 알림**: "Phase A가 편집 좌표 JSON 없이 종료됨 — 메인이 수동으로 Phase C를 수행하거나 architect에게 명시적 요청이 필요합니다".
+3. 사용자 지시 없이 doc-updater를 "자율 수행" 모드로 호출하지 말 것 (재위임 루프 재발 방지).
+
+**risk 정책**: JSON 내 `risk: "high"` 항목은 doc-updater가 **사용자 확인 없이 실행 금지** (schema/architect/doc-updater 공통 SSOT).
+
 ## Invocation
 
 ```bash
