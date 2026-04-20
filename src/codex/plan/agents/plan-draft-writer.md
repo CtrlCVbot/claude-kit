@@ -76,7 +76,9 @@ plan-draft 1차 기능 기획(First Pass) 작성 전문 에이전트. 승인된 
      - Lite → `.plans/features/active/{slug}/{slug}.md` (단일 파일, 유저 스토리 + 러프 요구사항 + 다음 단계 포함)
      - Standard → `.plans/features/drafts/{slug}/first-pass.md` (P4 PRD로 진행)
    - **Metadata 공통**: `.plans/features/active/{slug}/00-context/07-routing-metadata.md` 생성
-     - 필드: `category`, `scenario`, `feature_type`, `hybrid`, `triggers_matched`, `entryPoint`, `blueprintSource`(선택), `override`(선택)
+     - 필드: `schema_version: "1.0"`, `category`, `scenario`, `feature_type`, `hybrid`, `triggers_matched`, `entryPoint`, `blueprintSource`(선택), `override`(선택)
+     - **IMP-KIT-027 필수 초기값**: `post_wireframe_path: null` (이후 `plan-design`, `plan-stitch`, `plan-bridge` Checkpoint가 갱신)
+     - 스키마 레퍼런스: `src/codex/plan/_schemas/routing-metadata.schema.json` (v1)
    - **기존 metadata 존재 시 재실행 정책**:
      - 동일 판정 (모든 필드 일치) → no-op
      - 판정 변경 → 기존 파일을 `07-routing-metadata.prev-{timestamp}.md`로 백업 후 재생성

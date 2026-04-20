@@ -13,27 +13,29 @@ PRD + Wireframe을 통합하여 Claude Design용 **2단계 프롬프트**(wirefr
 /plan-design {slug} --fidelity wireframe                 # 1단계(wireframe)만 생성
 /plan-design {slug} --fidelity high                      # 2단계(high fidelity)만 생성
 /plan-design {slug} --register <url>                     # 결과 URL 등록
+/plan-design {slug} --ignore-mismatch                    # SCR-ID ↔ Wireframe 매핑 불일치 무시 (경고만)
 /plan-design {slug} --force-sequential --sequential-reason "이유"  # stitch 선택 후에도 순차 실행
 ```
 
 ## Flags
 
 - `--fidelity wireframe|high` — 프롬프트 생성 범위 제한. 생략 시 **둘 다 생성** (기본).
-- `--register <url>` — claude.ai/design 결과 URL 등록. 도메인 검증 후 manifest.md 생성/갱신.
+- `--register <url>` — claude.ai/design 결과 URL 등록. URL 검증 규칙: scheme은 **정확히 `https`** + hostname은 **정확히 `claude.ai`** (서브도메인 불허, userinfo spoofing 차단). 경로는 `/design/*` 권장. 검증 통과 시 `manifest.md` 생성/갱신.
 - `--force-sequential` — routing-metadata의 `post_wireframe_path`가 이미 `stitch`인 경우에도 진행 (배타 원칙 우회).
 - `--sequential-reason "..."` — `--force-sequential`과 함께 필수 (감사 추적).
+- `--ignore-mismatch` — PRD의 SCR-ID가 wireframe 화면에 매핑되지 않는 경우 경고만 출력하고 진행. 기본(미지정 시)은 **거부**.
 
 ## Required Inputs
 
-- routing-metadata: `.plans/features/active/{slug}/00-context/07-routing-metadata.md`
-- PRD: `.plans/prd/10-approved/{slug}-prd.md` 또는 first-pass
+- routing-metadata: `.plans/features/active/{slug}/00-context/07-routing-metadata.md` (`category`는 **Standard 필수**, Lite는 거부)
+- 승인된 PRD: `.plans/prd/10-approved/{slug}-prd.md` (first-pass 단독은 거부 — wireframe 기반 프롬프트는 승인된 PRD를 요구)
 - **Wireframe** (IMP-KIT-027 필수 선행): `.plans/wireframes/{slug}/`
 
 ## Workflow
 
 1. **입력 검증**:
-   - routing-metadata 존재 + `category` (Standard 권장; Lite도 허용 — 간단 Feature도 시각 자산 생성 가능)
-   - PRD 또는 first-pass 존재 확인
+   - routing-metadata 존재 + **`category: Standard` 필수** (Lite는 거부 + `/dev-feature` 또는 `/copy-reference-refresh` 직행 안내)
+   - **승인된 PRD** 존재 확인 (`.plans/prd/10-approved/{slug}-prd.md`). 없으면 `/plan-prd` 완료 + 승인 필요 안내 + 중단
    - **wireframe 디렉터리 존재 필수**. 미존재 시 `/plan-wireframe {slug}` 선행 안내 + 중단
 2. **배타 게이트 확인** (IMP-KIT-027 §2.6):
    - routing-metadata의 `post_wireframe_path` 값 확인
@@ -76,7 +78,7 @@ PRD + Wireframe을 통합하여 Claude Design용 **2단계 프롬프트**(wirefr
 
 ## 연계
 
-- IMP-KIT-003 (plan-draft-writer): Hybrid 자동 감지 → routing-metadata 생성 시점
-- IMP-KIT-004 (plan-bridge-writer): Hybrid dev 경로에서 `/plan-design --reference-only 유사` 안내
-- IMP-KIT-006 (Hybrid 모드): `/copy-reference-refresh --reference-only`는 시각 자산이 **아닌** evidence 캡처만 담당 (본 커맨드는 **시각 자산 프롬프트 생성**)
+- IMP-KIT-003 (plan-draft-writer): Hybrid 자동 감지 → routing-metadata 생성 시점 + `post_wireframe_path: null` 초기값 기록
+- IMP-KIT-004 (plan-bridge-writer): Hybrid dev 경로에서 **시각 자산 프롬프트 생성**용으로 본 커맨드 호출 안내
+- IMP-KIT-006 (Hybrid 모드): `/copy-reference-refresh --reference-only`는 **evidence 캡처**만 담당 — 본 커맨드는 **Claude Design용 프롬프트 생성**으로 역할 분리
 - 본 커맨드 완료 후: `/plan-bridge {slug}`로 개발 핸드오프

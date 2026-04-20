@@ -44,6 +44,16 @@
       "then": {
         "required": ["sequential_reason"]
       }
+    },
+    {
+      "if": {
+        "properties": {
+          "post_wireframe_path": { "const": "skipped" }
+        }
+      },
+      "then": {
+        "required": ["skip_reason"]
+      }
     }
   ]
 }

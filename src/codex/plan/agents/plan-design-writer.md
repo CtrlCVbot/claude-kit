@@ -31,7 +31,8 @@ Claude Design은 브라우저 GUI 제품이므로 API/CLI 자동 호출이 불�
 ### Investigation Protocol
 1) **입력 게이트 검증**:
    - routing-metadata 파일 존재 확인. 없으면 `plan-draft` 선행 안내 + 중단.
-   - PRD 또는 first-pass 존재 확인. 둘 다 없으면 `plan-prd` 안내 + 중단.
+   - **`category: Standard` 필수**. Lite Feature는 거부 + `dev-feature` 또는 `copy-reference-refresh` 직행 안내.
+   - **승인된 PRD** 존재 확인. 없으면 `plan-prd` 안내 + 중단. first-pass만 있는 경우는 거부.
    - Wireframe 디렉터리(`.plans/wireframes/{slug}/`) 존재 확인. 없으면 `plan-wireframe` 안내 + 중단.
 2) **배타 게이트 확인** (IMP-KIT-027 §2.6):
    - routing-metadata의 `post_wireframe_path` 값 읽기
@@ -39,14 +40,21 @@ Claude Design은 브라우저 GUI 제품이므로 API/CLI 자동 호출이 불�
    - `stitch`: `--force-sequential` + `sequential_reason` 검증
    - `skipped`: 사용자에게 재확인 요청
 3) **PRD 컨텍스트 추출**: SCR-ID 목록, REQ-ID, 비기능 요구사항, Success Metrics
-4) **Wireframe 컨텍스트 추출**: screens/components/navigation/decision-log (각 화면 요약 최대 30줄)
+4) **Wireframe 컨텍스트 추출** (4개 단일 파일: `screens.md`/`components.md`/`navigation.md`/`decision-log.md`). screens.md에서 각 화면 섹션 ASCII 레이아웃 발췌 (≤30줄/화면)
 5) **SCR-ID ↔ Wireframe 매핑**: 매칭 구성, 누락 시 경고 (`--ignore-mismatch`로 우회)
 6) **프롬프트 템플릿 렌더링**: `--fidelity` 플래그에 따라 2개 또는 1개
    - wireframe 고유: rough 지시, 저포화 색상, 텍스트 플레이스홀더 허용
    - high fidelity 고유: wireframe 산출물 기준 유지, 브랜드 컬러/타이포/마이크로인터랙션, breakpoint 상세
 7) **파일 쓰기**: `.plans/design/{slug}/prompt-01-wireframe.md`, `prompt-02-highfidelity.md` (기존 있으면 `.prev-{timestamp}.md` 백업)
-8) **`--register` 처리**: URL 도메인 검증(claude.ai) + `manifest.md` 생성/갱신
-9) **routing-metadata 갱신**: `post_wireframe_path` 필드만 수정
+8) **`--register` 처리**: URL **엄격 검증** + `manifest.md` 생성/갱신
+   - 검증: scheme 정확히 `https`, hostname 정확히 `claude.ai` (서브도메인 불허), userinfo 차단, 경로 `/design/*` 권장
+   - 기존 manifest 존재 시 다른 URL이면 `.prev-{timestamp}.md` 백업, 동일 URL이면 갱신
+9) **routing-metadata 갱신** (`post_wireframe_path` + `sequential_reason` 필드만 Edit):
+   - 첫 실행 (이전 값 `null`): `post_wireframe_path: "design"` 기록
+   - `--force-sequential` + 이전 값 `stitch`: `post_wireframe_path: "stitch+design"` + `sequential_reason` 기록
+   - 재실행 (이전 값 이미 `design` 또는 `design+stitch` 또는 `stitch+design`): 값 유지. "이미 design 경로에 있음 — 프롬프트 재생성만 수행" 안내.
+   - 이전 값이 `skipped`: 경고 + 사용자 재확인. 계속 시 `post_wireframe_path: "design"`으로 재설정, `skip_reason` 제거.
+   - 다른 필드(category, scenario, feature_type, hybrid, schema_version)는 수정 금지
 10) **stdout 2단계 안내** 출력
 
 ### Tool Usage

@@ -46,7 +46,8 @@ color: magenta
   <Investigation_Protocol>
     1) **입력 게이트 검증**:
        - routing-metadata 파일 존재 여부 확인. 없으면 `/plan-draft` 선행 안내 + 중단.
-       - PRD(`.plans/prd/10-approved/{slug}-prd.md`) 또는 first-pass(`.plans/features/drafts/{slug}/first-pass.md`) 존재 확인. 둘 다 없으면 `/plan-prd` 안내 + 중단.
+       - **`category: Standard` 필수**. Lite Feature는 거부 + `/dev-feature` 또는 `/copy-reference-refresh` 직행 안내 (Lite는 wireframe 없이도 파이프라인 완결 가능).
+       - **승인된 PRD**(`.plans/prd/10-approved/{slug}-prd.md`) 존재 확인. 없으면 `/plan-prd` 안내 + 중단. first-pass만 있는 경우는 거부 (승인된 PRD 필수).
        - Wireframe 디렉터리(`.plans/wireframes/{slug}/`) 존재 확인. 없으면 `/plan-wireframe` 안내 + 중단.
     2) **배타 게이트 확인** (IMP-KIT-027 §2.6):
        - routing-metadata의 `post_wireframe_path` 값 읽기
@@ -58,11 +59,12 @@ color: magenta
        - 요구사항 ID (REQ-{feat}-001~nnn)
        - 비기능 요구사항 (반응형/접근성/브랜드 — Technical Considerations)
        - Success Metrics (가능하면)
-    4) **Wireframe 컨텍스트 추출**:
-       - `screens/*.md` 파일 목록 + 각 화면의 ASCII 레이아웃 요약 (최대 30줄/화면)
-       - `components/*.md` 컴포넌트 계층
-       - `navigation.md` 화면 간 이동 흐름
-       - `decision-log.md` 의사결정 근거 (viewport 판정, 3-column 유지 등)
+    4) **Wireframe 컨텍스트 추출** (4개 단일 파일 구조):
+       - `screens.md`: 각 화면 섹션(`### SCR-XXX: {화면명}`)의 ASCII 레이아웃 발췌 (최대 30줄/화면)
+       - `components.md`: 컴포넌트 계층 요약
+       - `navigation.md`: 화면 간 이동 흐름
+       - `decision-log.md`: 의사결정 근거 (viewport 판정, 3-column 유지 등)
+       - **주의**: plan-wireframe-designer는 단일 파일 4개 구조를 사용 (`screens/*.md` 디렉터리 분할이 아님)
     5) **SCR-ID ↔ Wireframe 매핑 구성**:
        - wireframe-designer가 기록한 `SCR-001 ↔ screens/home.md` 형식 연결 추출
        - 매핑 누락 감지 시 경고 + 대상 SCR-ID/screen 목록 보고
@@ -80,16 +82,22 @@ color: magenta
        - `prompt-02-highfidelity.md` (필요 시)
        - 기존 파일 있으면 backup (`.prev-{YYYYMMDD-HHmmss}.md`) 후 재생성
     8) **`--register` 플래그 처리** (해당 시):
-       - URL 도메인 검증 (claude.ai 필수)
-       - `manifest.md` 생성 또는 갱신 (템플릿: `design-manifest.template.md`)
+       - URL 파싱 및 **엄격한 검증**:
+         - scheme은 **정확히 `https`** (http/ftp/file 등 거부)
+         - hostname은 **정확히 `claude.ai`** (서브도메인 `*.claude.ai` 거부, `claude.ai.attacker.com` 같은 spoofing 거부)
+         - userinfo 포함 URL(`https://user:pass@claude.ai/...`) 거부
+         - 경로는 `/design/*` 권장 (`/^\/design\/.+$/`) — 다른 경로는 경고 후 사용자 확인
+       - 검증 실패 시 사용자에게 명확한 에러 반환 + `manifest.md` 생성 중단
+       - 검증 통과 시 `manifest.md` 생성 또는 갱신 (템플릿: `design-manifest.template.md`)
+         - 기존 manifest가 있고 URL이 다르면: `.prev-{timestamp}.md`로 백업 후 재작성
+         - 동일 URL 재등록: 경고 출력 + 갱신 (등록 시각 업데이트)
        - 메타데이터: URL, fidelity 모드, export 포맷, 등록 시각, SCR-ID 매핑
-    9) **routing-metadata 갱신**:
-       - `post_wireframe_path` 필드 설정:
-         - 첫 실행: `"design"`
-         - `--force-sequential` + 기존 `stitch`: `"stitch+design"` (순서 보존)
-         - `--force-sequential` + 기존 `design`: `"design+stitch"` (이미 design인 상태에서는 의미 없음 — 경고)
-       - `sequential_reason` 필드 설정 (force 플래그 사용 시)
-       - 다른 필드(category, scenario, feature_type, hybrid)는 **수정 금지**
+    9) **routing-metadata 갱신** (`post_wireframe_path` + `sequential_reason` 필드만 Edit):
+       - 첫 실행 (이전 값 `null`): `post_wireframe_path: "design"` 기록
+       - `--force-sequential` + 이전 값 `stitch`: `post_wireframe_path: "stitch+design"` (순서 보존) + `sequential_reason` 기록
+       - 재실행 (이전 값 이미 `design` 또는 `design+stitch` 또는 `stitch+design`): **값 유지** (변경 없음 보고). `--force-sequential` 유무와 무관하게 승격하지 않음. "이미 design 경로에 있음 — 프롬프트 재생성만 수행" 안내.
+       - 이전 값이 `skipped`: 경고 + 사용자 재확인. 계속 진행 선택 시 `post_wireframe_path: "design"`으로 **재설정**하고 `skip_reason` 필드 제거.
+       - 다른 필드(category, scenario, feature_type, hybrid, schema_version)는 **수정 금지**
     10) **stdout 2단계 안내** 출력:
        ```
        [1단계] prompt-01-wireframe.md → claude.ai/design → Wireframe 모드

@@ -45,7 +45,7 @@ color: cyan
     - 구조 SSOT 부재 또는 미승인(`status: approved` 아님) 시 **브리지 문서 생성 금지** — 중단 + 안내로 끝낸다.
     - Feature binding 부재 시 **브리지 문서 생성 금지** — 중단 + 안내.
     - `00-context/` 디렉토리 외 파일을 **절대 수정하지 않는다** (evidence/ 영역은 copy-reference-baseline 담당).
-    - Routing metadata는 **Read 전용** (Write 금지 — plan-draft-writer가 SSOT). drift 감지 시 재생성 없이 경고 + 중단.
+    - Routing metadata는 원칙상 **Read 전용**. 단 **IMP-KIT-027 Checkpoint 스킵 시**(사용자 `3` 선택)에만 `post_wireframe_path: skipped` + `skip_reason` 필드를 Edit로 갱신. 이 외 필드 수정 금지. drift 감지 시 재생성 없이 경고 + 중단.
     - 브리지 문서는 원본(PRD/와이어프레임/스티치)을 **경로로 참조**하고 내용을 복제하지 않는다 (SSOT + IMP-KIT-017 원칙).
     - 재실행 시 내용 동일이면 **no-op**, 변경 필요 시 `.prev-{YYYYMMDD-HHmmss}.md` 백업 후 재생성. `<!-- manual edit -->` 마커 섹션은 보존.
   </Constraints>
@@ -82,13 +82,27 @@ color: cyan
        - PCC-03: 리뷰 결과 반영 (review 로그 있는 경우)
        - PCC-04: 와이어프레임 viewport 판정 존재 — **scenario=null(copy 비활성) 또는 와이어프레임 부재 시 N/A 처리 후 PASS로 간주**
        - PCC-05: routing metadata의 feature_type 채움
-    6) **다음 경로 안내** (routing metadata 기반):
+    6) **IMP-KIT-027 Checkpoint** (wireframe 후속 단계 미실행 감지):
+       - routing-metadata의 `post_wireframe_path` 필드 Read
+       - 값이 `null` 감지 시 사용자에게 확인 요청 (Output_Format의 "Checkpoint 질문" 섹션 참조):
+         ```
+         ⚠️ wireframe 후속 단계(design/stitch)가 선택되지 않았습니다.
+         1) /plan-design {slug} — Claude Design 시각 자산 생성
+         2) /plan-stitch {slug} — PRD ↔ 화면 매핑 검증
+         3) 건너뛰고 bridge 진행 (간단한 Feature 또는 미구독 환경)
+         선택 [1/2/3]:
+         ```
+       - 사용자가 `1` 또는 `2` 선택 시: 해당 커맨드 안내 + bridge 보류 (routing-metadata는 건드리지 않음)
+       - 사용자가 `3` 선택 시: routing-metadata에 `post_wireframe_path: skipped` + `skip_reason` 기록 + bridge 정상 진행
+         - `skip_reason`은 사용자에게 한 줄 이유 입력 요청 (예: "간단한 내부 도구", "미구독 환경", "수동 레퍼런스 캡처 예정")
+       - 값이 `design` | `stitch` | `design+stitch` | `stitch+design` | `skipped`: Checkpoint 생략하고 다음 단계로 진행
+    7) **다음 경로 안내** (routing metadata 기반):
        - feature_type: copy → `/copy-reference-refresh --scope {...} --viewport {...}` (시나리오별 분기 안내)
        - feature_type: dev, hybrid: false → `/dev-feature {slug}`
        - feature_type: dev, hybrid: true: **IMP-KIT-006 활성 여부 판정 후 분기**
-         - **판정 방법**: `src/claude/copy/commands/copy-reference-refresh.md`를 Read하여 `--reference-only` 문자열이 Parameters/Flags 섹션에 존재하는지 확인 (또는 Codex sibling을 확인). 존재하면 **활성**.
+         - **판정 방법**: `src/claude/copy/commands/copy-reference-refresh.md`를 Read하여 `--reference-only` 문자열이 Parameters/Flags 섹션에 존재하는지 확인
          - **활성 시**: `/dev-feature {slug}` + 병행 `/copy-reference-refresh --reference-only --scope {...}`
-         - **미활성 시**: `/dev-feature {slug}` 단독 + 사용자에게 "Hybrid 감지됨 — 수동 레퍼런스 캡처 권장 (IMP-KIT-006 완료 후 자동화 예정)" 안내
+         - **미활성 시**: `/dev-feature {slug}` 단독 + "Hybrid 감지됨 — 수동 레퍼런스 캡처 권장" 안내
        - feature_type: null (routing metadata 미생성/비어있음) → `/plan-draft` 선행 안내
     7) **병렬 실행 주의사항**:
        - 본 에이전트는 `copy-reference-baseline`과 **동시 실행 가능**

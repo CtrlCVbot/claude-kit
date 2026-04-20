@@ -8,13 +8,15 @@ Claude Design [High Fidelity 모드] 전용 프롬프트 템플릿 (2단계 — 
 - `{{prd_summary}}` → PRD Overview + Goals
 - `{{scr_id_list}}` → SCR-ID 목록
 - `{{screens_mapping_table}}` → SCR-ID ↔ Wireframe 화면 매핑 표
-- `{{wireframe_layouts}}` → screens/*.md 각 화면 ASCII 레이아웃 요약
-- `{{components_hierarchy}}` → components/*.md 컴포넌트 계층
-- `{{navigation_flow}}` → navigation.md 핵심 흐름
-- `{{decision_log_summary}}` → decision-log.md 의사결정 근거
+- `{{wireframe_layouts}}` → **`screens.md` 단일 파일**에서 각 화면 섹션의 ASCII 레이아웃 발췌
+- `{{components_hierarchy}}` → `components.md` 컴포넌트 계층 (단일 파일)
+- `{{navigation_flow}}` → `navigation.md` 핵심 흐름 (단일 파일)
+- `{{decision_log_summary}}` → `decision-log.md` 의사결정 근거 (단일 파일)
 - `{{viewports_with_breakpoints}}` → viewport별 breakpoint 상세
 - `{{brand_hints}}` → 브랜드 컬러/타이포/에셋 hint (프로젝트 설정에서)
 - `{{accessibility_requirements}}` → PRD의 접근성 요구사항
+
+※ plan-wireframe-designer는 `screens.md`/`components.md`/`navigation.md`/`decision-log.md` **4개 단일 파일** 구조를 사용한다.
 -->
 
 # Claude Design 프롬프트 — 2단계 High Fidelity ({{slug}})

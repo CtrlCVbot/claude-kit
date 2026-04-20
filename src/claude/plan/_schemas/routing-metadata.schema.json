@@ -63,7 +63,7 @@
     },
     "skip_reason": {
       "type": "string",
-      "description": "post_wireframe_path가 'skipped'인 경우 사용자가 입력한 이유 (bridge Checkpoint). 선택적이지만 권장."
+      "description": "post_wireframe_path가 'skipped'인 경우 사용자가 입력한 이유 (bridge Checkpoint). 필수."
     }
   },
   "allOf": [
@@ -75,6 +75,16 @@
       },
       "then": {
         "required": ["sequential_reason"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "post_wireframe_path": { "const": "skipped" }
+        }
+      },
+      "then": {
+        "required": ["skip_reason"]
       }
     }
   ]

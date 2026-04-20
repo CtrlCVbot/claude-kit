@@ -19,27 +19,29 @@ plan-design {slug}
 plan-design {slug} --fidelity wireframe
 plan-design {slug} --fidelity high
 plan-design {slug} --register <url>
+plan-design {slug} --ignore-mismatch
 plan-design {slug} --force-sequential --sequential-reason "이유"
 ```
 
 ## Flags
 
 - `--fidelity wireframe|high` — 프롬프트 생성 범위 제한. 생략 시 둘 다 생성 (기본).
-- `--register <url>` — claude.ai/design 결과 URL 등록. 도메인 검증 후 manifest.md 생성/갱신.
+- `--register <url>` — claude.ai/design 결과 URL 등록. 검증: scheme **정확히 `https`** + hostname **정확히 `claude.ai`** (서브도메인 불허, userinfo 차단). 경로는 `/design/*` 권장.
 - `--force-sequential` — routing-metadata의 `post_wireframe_path`가 이미 `stitch`인 경우에도 진행.
 - `--sequential-reason "..."` — `--force-sequential`과 함께 필수.
+- `--ignore-mismatch` — SCR-ID ↔ Wireframe 매핑 불일치 시 경고만 출력하고 진행. 기본은 거부.
 
 ## Required Inputs
 
-- routing-metadata: `.plans/features/active/{slug}/00-context/07-routing-metadata.md`
-- PRD: `.plans/prd/10-approved/{slug}-prd.md` 또는 first-pass
+- routing-metadata: `.plans/features/active/{slug}/00-context/07-routing-metadata.md` (`category: Standard` 필수, Lite는 거부)
+- **승인된 PRD**: `.plans/prd/10-approved/{slug}-prd.md` (first-pass 단독은 거부)
 - **Wireframe** (IMP-KIT-027 필수 선행): `.plans/wireframes/{slug}/`
 
 ## Workflow
 
 1. **입력 검증**:
-   - routing-metadata 존재 확인
-   - PRD 또는 first-pass 존재 확인
+   - routing-metadata 존재 + `category: Standard` 필수 (Lite는 거부 + `dev-feature`/`copy-reference-refresh` 직행 안내)
+   - 승인된 PRD 존재 확인 (first-pass는 거부)
    - **wireframe 디렉터리 존재 필수**. 미존재 시 `plan-wireframe {slug}` 선행 안내 + 중단
 2. **배타 게이트 확인** (IMP-KIT-027 §2.6):
    - routing-metadata의 `post_wireframe_path` 값 확인

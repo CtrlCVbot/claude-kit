@@ -33,7 +33,11 @@ plan-wireframe {slug} --revise     # 리뷰 피드백 반영 수정
   - `screens.md` — 화면별 와이어프레임
   - `navigation.md` — 네비게이션 플로우
   - `components.md` — 컴포넌트 명세
-- 다음 단계 안내: `plan-stitch {slug}`
+  - `decision-log.md` — 의사결정 근거 (viewport 판정 등, IMP-KIT-023에서 템플릿화 예정)
+- 다음 단계 안내 (IMP-KIT-027 택일):
+  - **시각 자산 중심**: `plan-design {slug}` (Claude Design 2단계 프롬프트 생성 → 고품질 시안까지)
+  - **통합 검증 중심**: `plan-stitch {slug}` (PRD ↔ 화면 매핑 검증)
+  - **간단 Feature**: `plan-bridge {slug}` 직행 (Checkpoint에서 skip 선택)
 
 ## Codex 참고 사항
 - 이 파일은 authoring source이다.

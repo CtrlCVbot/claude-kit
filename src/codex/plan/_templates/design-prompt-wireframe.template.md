@@ -8,11 +8,13 @@ Claude Design [Wireframe 모드] 전용 프롬프트 템플릿 (1단계 — roug
 - `{{prd_summary}}` → PRD Overview + Goals (핵심 3~5줄)
 - `{{scr_id_list}}` → SCR-ID 목록 (bullet)
 - `{{screens_mapping_table}}` → SCR-ID ↔ Wireframe 화면 매핑 표
-- `{{wireframe_layouts}}` → screens/*.md 각 화면 ASCII 레이아웃 요약 (화면당 ≤30줄)
-- `{{components_hierarchy}}` → components/*.md 컴포넌트 계층 요약
-- `{{navigation_flow}}` → navigation.md 핵심 흐름
-- `{{decision_log_summary}}` → decision-log.md 의사결정 근거
+- `{{wireframe_layouts}}` → **`screens.md` 단일 파일**에서 각 화면 섹션(`### SCR-XXX: {화면명}`)의 ASCII 레이아웃 발췌 (화면당 ≤30줄)
+- `{{components_hierarchy}}` → `components.md` 컴포넌트 계층 요약 (단일 파일)
+- `{{navigation_flow}}` → `navigation.md` 핵심 흐름 (단일 파일)
+- `{{decision_log_summary}}` → `decision-log.md` 의사결정 근거 (단일 파일)
 - `{{viewports}}` → 활성 viewport 목록 (desktop/tablet/mobile)
+
+※ plan-wireframe-designer는 `screens.md`/`components.md`/`navigation.md`/`decision-log.md` **4개 단일 파일** 구조를 사용한다 (screens/*.md 디렉터리 분할 아님).
 -->
 
 # Claude Design 프롬프트 — 1단계 Wireframe ({{slug}})

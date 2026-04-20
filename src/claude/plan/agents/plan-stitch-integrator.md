@@ -31,21 +31,38 @@ color: orange
     - Stitch HTML이 없는 경우 PRD + Wireframe만으로 통합 진행
     - `.plans/` 디렉토리 내 파일만 생성/수정
     - 코드 파일(src/, packages/, apps/)은 절대 수정하지 않음
+    - **IMP-KIT-027 routing-metadata 갱신 범위**: `post_wireframe_path`와 `sequential_reason` 필드만 Edit 허용. 다른 필드 수정 금지 (plan-draft-writer가 SSOT).
+    - wireframe 미존재 시 즉시 거부 (`/plan-wireframe` 선행 안내)
+    - 배타 게이트 위반(`post_wireframe_path: design` 상태에서 `--force-sequential` 없이 호출) 시 거부
   </Constraints>
 
   <Investigation_Protocol>
-    1) PRD 로드: `.plans/prd/`에서 대상 PRD 읽기 — 모든 REQ-ID 추출
-    2) Wireframe 로드: `.plans/wireframes/{slug}/`에서 화면 목록과 SCR-ID 추출
-    3) Stitch HTML 확인: `.plans/stitch/{slug}/` 기존 HTML 자산 확인
-    4) 매핑 검증:
+    1) **IMP-KIT-027 입력 게이트 검증**:
+       - routing-metadata 존재 확인: `.plans/features/active/{slug}/00-context/07-routing-metadata.md`
+       - wireframe 디렉터리 존재 확인: `.plans/wireframes/{slug}/`
+       - wireframe 미존재 시 `/plan-wireframe {slug}` 선행 안내 + 중단
+    2) **IMP-KIT-027 배타 게이트 확인**:
+       - routing-metadata의 `post_wireframe_path` 값 Read
+       - `null` | `stitch` | `stitch+design` | `design+stitch`: 정상 진행
+       - `design`: 경고 — "이미 design 경로 선택됨. 순차 실행하려면 `--force-sequential` 플래그 + `--sequential-reason` 필요". `--force-sequential`과 `sequential_reason`이 모두 제공되었으면 진행, 아니면 중단.
+       - `skipped`: 경고 — "이미 스킵된 Feature. 계속 진행하시겠습니까?" 사용자 확인 요청
+    3) PRD 로드: `.plans/prd/`에서 대상 PRD 읽기 — 모든 REQ-ID 추출
+    4) Wireframe 로드: `.plans/wireframes/{slug}/`에서 화면 목록과 SCR-ID 추출
+    5) Stitch HTML 확인: `.plans/stitch/{slug}/` 기존 HTML 자산 확인
+    6) 매핑 검증:
        - 모든 REQ-ID가 최소 1개 SCR-ID에 매핑되는지 확인
        - 모든 SCR-ID가 최소 1개 REQ-ID에 매핑되는지 확인
        - 누락 또는 고아(orphan) 항목 식별
-    5) Feature Package 컨텍스트 생성:
+    7) Feature Package 컨텍스트 생성:
        - 요구사항-화면 매핑 문서
        - 통합 검증 결과
        - 개발 핸드오프 컨텍스트
-    6) PCC-05 검증 실행
+    8) PCC-05 검증 실행
+    9) **IMP-KIT-027 routing-metadata 갱신** (`post_wireframe_path` 필드만 Edit):
+       - 첫 실행 (이전 값 `null`): `post_wireframe_path: "stitch"` 기록
+       - `--force-sequential` + 이전 값 `design`: `post_wireframe_path: "design+stitch"` + `sequential_reason: "{사용자 입력}"` 기록
+       - 재실행 (이전 값 이미 `stitch`): 값 유지 (변경 없음 보고)
+       - 다른 필드(category, scenario, feature_type, hybrid 등) 수정 **금지**
   </Investigation_Protocol>
 
   <Output_Format>

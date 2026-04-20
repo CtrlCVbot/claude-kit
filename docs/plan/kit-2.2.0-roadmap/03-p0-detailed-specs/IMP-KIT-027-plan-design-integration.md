@@ -568,13 +568,17 @@ describe('/plan-bridge Checkpoint (후속 단계 미실행 감지)', () => {
 
 ---
 
-## 6. 롤백 시나리오
+## 6. 롤백 시나리오 (v2.3 정정)
 
 Claude Design 통합이 팀 워크플로우에 맞지 않을 경우:
 
-1. `/plan-design` 커맨드를 **프롬프트 생성 전용**으로 축소 (manifest/stitch 통합 제거)
-2. `/plan-stitch` Design 경로 인식 제거 → 기존 Wireframe 전용 복귀
-3. 스킬 파일은 유지 (참조 자료로 활용)
+1. `/plan-design` 커맨드를 **프롬프트 생성 전용**으로 축소 (manifest 등록 기능 제거)
+2. `routing-metadata.schema.json`에서 `post_wireframe_path`/`sequential_reason`/`skip_reason` 필드 제거 (또는 enum을 축소하여 통상 동작 복귀)
+3. `plan-wireframe` 다음 단계 안내를 기존 `plan-stitch`로 복구 (design/skip 선택지 제거)
+4. `plan-stitch-integrator`/`plan-bridge-writer`에서 IMP-KIT-027 배타 게이트/Checkpoint 로직 제거 (이전 커밋 revert)
+5. 스킬 파일과 템플릿은 유지 (참조 자료로 활용)
+
+v1 제안("stitch의 Design manifest 인식")은 v2에서 철회되었으므로 롤백 대상 아님. 본 항목 리스트는 v2 이후 복구 시나리오.
 
 ---
 
