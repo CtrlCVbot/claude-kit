@@ -13,6 +13,27 @@ AI 거버넌스 밀키트. TDD 강제 + Hexagonal + Clean Architecture + Rich Do
 ## Skills
 `.claude/skills/`에서 자동 로드. 컨텍스트에 맞는 스킬이 자동 활성화됨.
 
+## Plan 도메인 설정 (다운스트림 프로젝트용 예시)
+
+> 본 claude-kit 자체 레포는 plan 도메인을 활성화하지 않지만, plan 도메인을 사용하는 다운스트림 프로젝트는 아래 섹션을 자신의 CLAUDE.md(또는 AGENTS.md)에 포함한다.
+
+### 아이디어 스크리닝 프레임워크
+
+`/plan-screen --framework` 플래그 미지정 시 사용할 **기본 프레임워크**를 지정한다.
+
+```markdown
+## plan 도메인 기본 설정
+
+- `idea-screening framework`: `rice` | `5axis` (기본: `rice`)
+- `idea-screening thresholds` (선택): 프레임워크별 Go/Hold/Kill 임계값 오버라이드
+  - RICE: Go ≥ 10.0, Hold 2.0 ~ 10.0, Kill < 2.0 (기본)
+  - 5axis: Go ≥ 70, Hold 40 ~ 69, Kill < 40 (기본)
+```
+
+**해석 우선순위**: 커맨드 인자 `--framework` → 위 설정값 → `rice` 폴백. 폴백 시 에이전트 출력 첫 줄에 명시적 고지 (`> 프레임워크: RICE (폴백)`).
+
+상세: `src/claude/plan/commands/plan-screen.md` 및 `src/claude/plan/skills/plan-screening-workflow/SKILL.md`.
+
 <!-- kit:managed:start -->
 ## claude-kit 활성 구성
 

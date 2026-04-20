@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://claude-kit/codex/plan/screening/rice.schema.json",
   "title": "RICE Screening Result (Codex)",
-  "description": "plan-idea-screener의 RICE 프레임워크 출력 스키마 — Codex 대응본. Claude 버전(src/claude/plan/_schemas/rice.schema.json)과 구조 동일.",
+  "description": "plan-idea-screener의 RICE 프레임워크 출력 스키마 — Codex 대응본. Intercom RICE 공식을 기반으로 하되, Reach를 원 공식의 실수(영향 사용자/요청 수)가 아닌 1~5 등급으로 정규화한 변형(claude-kit 표준). Claude 버전(src/claude/plan/_schemas/rice.schema.json)과 구조 동일.",
   "type": "object",
   "required": ["schema_version", "framework", "idea_id", "score", "verdict", "category"],
   "properties": {

@@ -18,9 +18,21 @@ IDEA-{YYYYMMDD}-{NNN} 스크리닝 실행. **RICE 또는 5축 가중** 프레임
 - `--framework rice` — Intercom RICE 공식 (Reach × Impact × Confidence / Effort)
 - `--framework 5axis` — 5축 가중 점수 (비즈니스/사용자/기술/전략/긴급도, 0-100)
 - 생략 시: 프로젝트 CLAUDE.md의 `idea-screening framework` 기본값 사용. 기본값 미설정 시 `rice`로 폴백 + 출력에 명시적 고지.
-- `--rescore` — 기존 스크리닝 결과 재평가 (framework 변경 가능)
+- **잘못된 값 거부**: `--framework`에 `rice` / `5axis` 이외 값이 주어지면 즉시 실패하고 `프레임워크는 rice 또는 5axis 중 하나여야 합니다` 에러를 반환한다. 임의 폴백 금지.
+- `--rescore` — 기존 스크리닝 결과 재평가 (framework 변경 가능, 아래 §Rescore 정책 참조)
 - `--pending` — 미스크리닝 아이디어 일괄 처리
-- `--auto-approve` — 배치 작업에서 Go 판정 자동 승인
+- `--auto-approve` — 배치 작업에서 Go 판정 자동 승인 (Go 기준은 위 §Framework 임계값 표를 사용한 프레임워크별 판정 따름)
+
+## Rescore 정책 (--rescore + framework 변경)
+
+`--rescore`로 framework를 이전과 다르게 지정하면:
+
+1. 기존 `SCREENING-{YYYYMMDD}-{NNN}.md`를 `SCREENING-{YYYYMMDD}-{NNN}-{prev_framework}.md`로 rename하여 이력 보존
+2. 새 framework 기준으로 `SCREENING-{YYYYMMDD}-{NNN}.md`를 재생성
+3. `screening-matrix.md`의 해당 행에 `framework` 컬럼을 신규 값으로 갱신
+4. 기존 5축 결과 파일은 **절대 재작성하지 않음** (rename 이후 원본 보존)
+
+Framework가 동일한 경우 `--rescore`는 기존 파일을 덮어쓸 수 있다 (기존 동작 유지).
 
 ## Framework 임계값
 

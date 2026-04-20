@@ -84,6 +84,8 @@ color: yellow
   </Investigation_Protocol>
 
   <Output_Format>
+    **중요 — 배타 출력**: 아래 두 평가 표 중 **선택된 프레임워크(`framework` 값)에 해당하는 표 하나만** 출력한다. 나머지 표는 출력에서 완전히 제외한다. 두 표를 동시에 출력하면 silent drift가 재발한다.
+
     ## 스크리닝 결과: IDEA-{YYYYMMDD}-{NNN}
 
     > 프레임워크: **{RICE | 5축 가중}** (출처: {커맨드 인자 | CLAUDE.md 기본값 | 폴백})

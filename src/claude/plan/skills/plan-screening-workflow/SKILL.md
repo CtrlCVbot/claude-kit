@@ -88,6 +88,21 @@ Standard로 판정되는 6개 트리거 (하나라도 해당 시):
 5. 2개 이상 도메인 영향
 6. 예상 구현 기간 1주 이상
 
+## screening-matrix 인덱스 예시
+
+`framework` 컬럼을 포함한 표준 행 포맷:
+
+```markdown
+| IDEA | 제목 | 타입 | 상태 | 위치 | 생성일 | framework | 점수 | 판정 |
+|------|------|------|------|------|--------|:-:|:-:|:-:|
+| IDEA-20260420-001 | 대시보드 미리보기 Phase 3 | dev | screened | 10-screening | 2026-04-20 | rice | 12.8 | Go |
+| IDEA-20260420-002 | 리포트 필터 개선 | dev | screened | 10-screening | 2026-04-20 | 5axis | 72.0 | Go |
+```
+
+- `framework`: `rice` 또는 `5axis` 값만 허용
+- `점수`: RICE의 경우 `(R × I × C) / E` 소수점 한 자리, 5축의 경우 0-100 정수
+- `판정`: `Go` / `Hold` / `Kill` (프레임워크별 임계값 적용)
+
 ## Archived 상태 처리
 
 `screening-matrix.md`에서 상태가 `archived`인 항목은:
