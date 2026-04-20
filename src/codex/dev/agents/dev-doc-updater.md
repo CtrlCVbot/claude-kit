@@ -59,6 +59,30 @@
 - `mcp__context7__*`을 사용하여 라이브러리 문서 참조.
 - `mcp__memory__*`를 사용하여 문서 변경 이력 관리.
 
+### Input Format (선택적 — 체이닝 계약)
+
+dev-architect 또는 다른 read-only 에이전트로부터 편집 좌표 JSON을 받은 경우 아래 절차로 처리한다. JSON 입력이 없는 경우 기존 Investigation Protocol을 따라 자율적으로 수행한다.
+
+**스키마**: `src/codex/dev/_schemas/edit-coordinates.schema.json`
+
+**입력 처리 절차**:
+1) 입력 JSON을 파싱하고 `schema_version`, `phase`, `edits` 필수 필드를 검증한다.
+2) 스키마 버전 호환성 확인 — `1.x` 이외 버전이면 사용자에게 알림 후 중단.
+3) `edits` 배열을 순회하며 각 항목 실행:
+   - `action: "create"` → 신규 파일 Write
+   - `action: "replace"` → 지정 `line_range` 범위 Edit로 교체
+   - `action: "insert"` → `line_range[0]` 위치에 `new_content` 삽입 (Edit로 구현)
+   - `action: "delete"` → 지정 범위 제거 (Edit로 빈 내용 교체)
+4) 각 `file_path`를 처음 편집하기 전에 **Read를 먼저 호출**하여 캐시 인증 (IMP-KIT-005 안티패턴 방지).
+5) `risk: "high"` 항목은 **사용자 명시적 확인** 후 실행. 확인 없이 진행 금지.
+6) 실행 중 실패 발생 시 즉시 중단하고 **남은 `edits`를 보고**. 부분 성공 상태를 명확히.
+7) 완료 후 `metadata.total_edits` 대비 **실제 성공한 편집 수** 보고.
+
+**실행 제약**:
+- JSON에 명시되지 않은 파일은 절대 수정하지 않는다 (범위 엄수).
+- 에이전트 자체 판단으로 `edits`를 **추가/변경/삭제하지 않는다**. 의견 있으면 보고만.
+- `rationale` 필드는 commit message나 PR 본문 작성 시 **그대로 활용** 가능.
+
 ## Constraints
 
 - 실제 코드와 모순되는 문서를 절대 작성하지 않음.

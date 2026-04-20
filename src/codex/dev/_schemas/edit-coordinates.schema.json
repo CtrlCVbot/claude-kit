@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://claude-kit/codex/dev/edit-coordinates.schema.json",
+  "title": "Edit Coordinates (Codex)",
+  "description": "Codex 대응본. Claude 버전(src/claude/dev/_schemas/edit-coordinates.schema.json)과 구조 동일. dev-architect(분석) → dev-doc-updater(편집) 체이닝 계약. 관련: IMP-KIT-001.",
+  "type": "object",
+  "required": ["schema_version", "phase", "agent", "edits"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+$"
+    },
+    "phase": {
+      "enum": ["A", "B", "C"]
+    },
+    "agent": {
+      "type": "string"
+    },
+    "edits": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "file_path", "action"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^edit-\\d{3,}$" },
+          "file_path": { "type": "string" },
+          "line_range": {
+            "type": "array",
+            "items": { "type": "integer", "minimum": 1 },
+            "minItems": 2,
+            "maxItems": 2
+          },
+          "action": { "enum": ["create", "replace", "insert", "delete"] },
+          "new_content": { "type": "string" },
+          "rationale": { "type": "string" },
+          "risk": { "enum": ["low", "medium", "high"] }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "total_files": { "type": "integer", "minimum": 0 },
+        "total_edits": { "type": "integer", "minimum": 0 },
+        "generated_at": { "type": "string", "format": "date-time" },
+        "source_files_analyzed": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    }
+  }
+}

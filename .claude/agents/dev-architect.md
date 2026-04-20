@@ -79,6 +79,43 @@ color: blue
 
     ## 참고 자료
     - `path/to/file.ts:42` - [무엇을 보여주는지]
+
+    ## 편집 좌표 (선택적 — 구현 위임이 필요한 경우)
+
+    권고를 **dev-doc-updater** 또는 write-capable 에이전트에 위임해 실제 파일 편집이 필요하면 아래 JSON을 추가 출력한다. 이는 IMP-KIT-001 체이닝 계약의 핵심으로, architect의 read-only 원칙을 유지하면서 편집 실행을 분리한다.
+
+    **스키마**: `src/claude/dev/_schemas/edit-coordinates.schema.json`
+
+    ```json
+    {
+      "schema_version": "1.0",
+      "phase": "A",
+      "agent": "dev-architect",
+      "edits": [
+        {
+          "id": "edit-001",
+          "file_path": "src/foo/bar.ts",
+          "line_range": [42, 58],
+          "action": "replace",
+          "new_content": "...",
+          "rationale": "타입 좁히기 + null 가드 추가",
+          "risk": "low"
+        }
+      ],
+      "metadata": {
+        "total_files": 1,
+        "total_edits": 1,
+        "generated_at": "2026-04-20T10:00:00+09:00",
+        "source_files_analyzed": ["src/foo/bar.ts"]
+      }
+    }
+    ```
+
+    **규칙**:
+    - 편집 JSON은 **선택적**이다. 분석/권고만으로 충분한 경우 생략 가능.
+    - `phase` 값은 호출 맥락과 일치해야 함 (예: `/dev-feature` Phase C 분석 시 `"phase": "C"`).
+    - `risk: "high"` 항목은 doc-updater가 사용자 확인 후 실행한다.
+    - Edit 도구 미보유 제약(`<Constraints>`)은 변함없다. JSON 생성은 **쓰기 작업이 아니다**.
   </Output_Format>
 
   <Failure_Modes_To_Avoid>

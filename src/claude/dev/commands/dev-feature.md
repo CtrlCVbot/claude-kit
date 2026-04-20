@@ -3,6 +3,23 @@
 승인된 PRD를 Feature Overview와 Feature Package로 전환한다. 이때 모든 경로, 레이어, 공유 정책은 아키텍처 SSOT와 기능 바인딩을 기준으로 고정한다.
 
 > 참조: `.claude/skills/dev-feature-plan/SKILL.md`
+> 체이닝 계약: `src/claude/dev/_schemas/edit-coordinates.schema.json` (IMP-KIT-001)
+
+## Agent Chaining (IMP-KIT-001)
+
+Phase별 책임과 에이전트 매핑:
+
+| Phase | 책임 | 권장 에이전트 | Tool 요구 |
+|:-:|------|---------------|----------|
+| **A** | 컨텍스트 수집 + 구조 계약 설계 (분석) | `dev-architect` (또는 메인) | Read-only |
+| **B** | Human Review | 사용자 (에이전트 없음) | — |
+| **C** | Feature Package 문서 생성 (편집) | `dev-doc-updater` (또는 메인) | Write/Edit |
+
+**체이닝 원칙**:
+- Phase A에서 `dev-architect`를 호출한 경우, 편집이 필요하면 architect가 **편집 좌표 JSON**을 반환하고 Phase C에서 `dev-doc-updater`가 이를 입력받아 실행한다 (스키마: `edit-coordinates.schema.json`).
+- architect의 read-only 제약은 변함없다 (권한 확장 아님). 역할 분리로 해결.
+- 메인 세션이 직접 수행하는 경우는 자체 책임으로 Phase A/C를 각각 이행한다.
+- **Phase C 재위임 금지**: Phase C를 architect에게 요청하면 거부되어야 한다 (편집 권한 부재).
 
 ## Usage
 
