@@ -6,7 +6,13 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
-다음 릴리스: **v2.2.1** — IMP-KIT-027 `/plan-design` 신설 + wireframe 후속 단계 택일 구조 전환. 구현 완료.
+다음 릴리스 미정. IMP-KIT-027 런타임 회귀 검증(V1~V5) 결과에 따라 2.2.2 또는 2.3.0 으로 분기.
+
+---
+
+## [2.2.1] - 2026-04-20
+
+IMP-KIT-027 `/plan-design` 신설 + wireframe 후속 단계 택일 구조 전환. 2.2.0 릴리스 직후 별도 스프린트로 구현.
 
 ### Added
 
