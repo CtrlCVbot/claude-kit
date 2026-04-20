@@ -18,7 +18,11 @@
 1차 기획 (Lite | Standard 판정)
   ↓ /plan-prd (Standard 만)
 상세 PRD
-  ↓ /plan-wireframe /plan-stitch  (선택)
+  ↓ /plan-wireframe   (와이어프레임 = 구조 확정)
+와이어프레임 산출물
+  ↓ [택일]  ┌─ /plan-design  (Claude Design: 2단계 프롬프트 → 고충실도 시안)
+           └─ /plan-stitch  (Stitch HTML 기반 통합)
+           ※ 미실행 시 /plan-bridge 진입 시 Checkpoint에서 skip 선언
 디자인 산출물
   ↓ /plan-bridge
 dev 도메인 → /dev-feature
@@ -80,14 +84,30 @@ Lite 또는 Standard 중 하나로 판정:
 
 생성물: `.plans/prd/{slug}.md`
 
-## 5. (선택) 디자인
+## 5. 와이어프레임 → 시각 완성 (택일)
+
+UI 비중이 있는 Feature는 아래 3-step 을 거칩니다. 백엔드 전용이면 전체를 건너뛰고 `/plan-bridge` Checkpoint 에서 `skipped` 를 선언합니다.
+
+### 5a. 구조 확정 — `/plan-wireframe`
 
 ```
-/plan-wireframe   — 와이어프레임
-/plan-stitch      — 시안 통합
+/plan-wireframe
 ```
 
-UI 가 큰 비중을 차지하면 사용. 백엔드 전용이면 건너뜀.
+`plan-wireframe-designer` 가 `screens.md` / `components.md` / `navigation.md` / `decision-log.md` 4 종을 `.plans/wireframes/{slug}/` 에 생성합니다. 이 단계는 **design / stitch 의 선행 필수**.
+
+### 5b. 시각 완성 — `/plan-design` 또는 `/plan-stitch` **(둘 중 택일)**
+
+| 커맨드 | 산출물 | 언제 선택 |
+|-------|--------|---------|
+| `/plan-design` | `.plans/design/{slug}/prompt-01-wireframe.md` + `prompt-02-highfidelity.md` + `manifest.md` | Claude Design(claude.ai/design) 으로 시각 완성도를 끌어올리고 싶을 때 (권장) |
+| `/plan-stitch` | `.plans/stitch/{slug}/` 통합 컨텍스트 | 기존 Stitch HTML 결과를 그대로 통합할 때 |
+
+두 커맨드는 `routing-metadata.md` 의 `post_wireframe_path` 필드로 **상호 배제** 됩니다. design 실행 후 stitch 를 추가하려면 `/plan-stitch --force-sequential --sequential-reason "<사유>"` 가 필요합니다 (`design+stitch` 또는 `stitch+design` 기록).
+
+### 5c. 시각 완성 생략 — `/plan-bridge` Checkpoint
+
+design / stitch 를 모두 생략할 수 있으나, 이 경우 `/plan-bridge` 진입 시 Checkpoint 가 **[1] design 실행 / [2] stitch 실행 / [3] skip** 을 사용자에게 묻습니다. `[3] skip` 선택 시 `post_wireframe_path: skipped` + `skip_reason` 이 기록되어 감사 추적이 남습니다.
 
 ## 6. 개발 핸드오프 — `/plan-bridge <slug>`
 
@@ -135,6 +155,9 @@ plan 도메인에서 만든 문서를 **`/dev-feature` 입력 형태로 변환**
 |------|--------|
 | Screen → Draft | **사용자 명시적 승인 필수** |
 | Draft → PRD | Lite/Standard 판정 결과 |
+| PRD → Wireframe | wireframe 은 design/stitch 의 선행 필수 (Standard 기준) |
+| Wireframe → [Design \| Stitch] | **둘 중 택일** — `post_wireframe_path` 에 `design` / `stitch` / `design+stitch` / `stitch+design` / `skipped` 기록 |
+| Design/Stitch 생략 → Bridge | `/plan-bridge` Checkpoint 에서 [1/2/3] 선택 — skip 시 `skip_reason` 필수 |
 | PRD → Bridge | plan-review 통과 권장 |
 | Bridge → dev-feature | Feature Overview 필수 |
 
@@ -146,6 +169,9 @@ plan 도메인에서 만든 문서를 **`/dev-feature` 입력 형태로 변환**
 | Screen | 3-5분 |
 | Draft | 5-10분 |
 | PRD | 10-20분 |
+| Wireframe | 10-20분 |
+| Design (Claude Design 세션 포함) | 5-15분 |
+| Stitch | 10-20분 |
 | Bridge | 5-10분 |
 
 실제 구현 (dev 도메인) 은 기능 규모에 따라.

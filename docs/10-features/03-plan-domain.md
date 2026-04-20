@@ -11,15 +11,17 @@
 ## 파이프라인 단계
 
 ```
-아이디어 → /plan-idea        → .plans/ideas/00-inbox/{IDEA-ID}.md
-아이디어 → /plan-screen       → RICE 스크리닝 + ★ 승인 게이트 ★
-(승인)   → /plan-draft       → 1차 기획 (Lite/Standard 판정)
-Standard → /plan-prd         → 상세 PRD (plan-prd-writer)
-(옵션)   → /plan-wireframe   → 와이어프레임
-          → /plan-stitch      → 디자인 시안 통합
- 완성    → /plan-bridge      → 개발 핸드오프 (dev 도메인으로)
- 완료    → /plan-archive     → 번들화 + 아카이빙
-          → /plan-improve    → 회고·개선 제안
+아이디어  → /plan-idea        → .plans/ideas/00-inbox/{IDEA-ID}.md
+아이디어  → /plan-screen      → RICE 스크리닝 + ★ 승인 게이트 ★
+(승인)    → /plan-draft       → 1차 기획 (Lite/Standard 판정)
+Standard  → /plan-prd         → 상세 PRD (plan-prd-writer)
+(옵션)    → /plan-wireframe   → 와이어프레임 (구조 확정)
+           ├─ /plan-design    → Claude Design 2단계 프롬프트 (wireframe → high fidelity)
+           └─ /plan-stitch    → Stitch 기반 디자인 시안 통합
+             ※ design / stitch는 둘 중 택일. 미사용 시 /plan-bridge Checkpoint에서 skip.
+ 완성     → /plan-bridge      → 개발 핸드오프 (dev 도메인으로)
+ 완료     → /plan-archive     → 번들화 + 아카이빙
+           → /plan-improve    → 회고·개선 제안
 ```
 
 ## 승인 게이트
@@ -36,8 +38,9 @@ Standard → /plan-prd         → 상세 PRD (plan-prd-writer)
 | [`/plan-screen <IDEA-ID>`](../../src/claude/plan/commands/plan-screen.md) | 스크리닝 | RICE 점수·우선순위 평가, 승인 게이트 |
 | [`/plan-draft <IDEA-ID>`](../../src/claude/plan/commands/plan-draft.md) | 초안 | 1차 기능 기획, Lite/Standard 판정 |
 | [`/plan-prd <draft-path>`](../../src/claude/plan/commands/plan-prd.md) | PRD | Standard 기능 상세 PRD 작성 |
-| [`/plan-wireframe`](../../src/claude/plan/commands/plan-wireframe.md) | 디자인 | 와이어프레임 |
-| [`/plan-stitch`](../../src/claude/plan/commands/plan-stitch.md) | 디자인 | 디자인 시안 통합 |
+| [`/plan-wireframe`](../../src/claude/plan/commands/plan-wireframe.md) | 디자인 | 와이어프레임 구조 확정 (design/stitch 선행 필수) |
+| [`/plan-design`](../../src/claude/plan/commands/plan-design.md) | 디자인 | **(wireframe 후 택일)** Claude Design용 2단계 프롬프트 생성 + 결과 URL 등록 |
+| [`/plan-stitch`](../../src/claude/plan/commands/plan-stitch.md) | 디자인 | **(wireframe 후 택일)** Stitch HTML 기반 디자인 시안 통합 |
 | [`/plan-review`](../../src/claude/plan/commands/plan-review.md) | 리뷰 | plan-reviewer 서브에이전트 호출 |
 | [`/plan-bridge <slug>`](../../src/claude/plan/commands/plan-bridge.md) | 브리지 | dev 도메인으로 핸드오프 (Feature Package 로 변환) |
 | [`/plan-archive <slug>`](../../src/claude/plan/commands/plan-archive.md) | 아카이빙 | 완료 기능 번들화 |
@@ -52,7 +55,8 @@ Standard → /plan-prd         → 상세 PRD (plan-prd-writer)
 | [`plan-prd-writer`](../../src/claude/plan/agents/plan-prd-writer.md) | PRD 상세 작성 |
 | [`plan-reviewer`](../../src/claude/plan/agents/plan-reviewer.md) | 계획 문서 품질 리뷰 |
 | [`plan-wireframe-designer`](../../src/claude/plan/agents/plan-wireframe-designer.md) | 와이어프레임 설계 |
-| [`plan-stitch-integrator`](../../src/claude/plan/agents/plan-stitch-integrator.md) | 디자인 시안 통합 |
+| [`plan-design-writer`](../../src/claude/plan/agents/plan-design-writer.md) | Claude Design용 2단계 프롬프트(wireframe · high fidelity) 생성 + URL 등록 |
+| [`plan-stitch-integrator`](../../src/claude/plan/agents/plan-stitch-integrator.md) | Stitch HTML 기반 디자인 시안 통합 |
 
 ## 스킬
 
@@ -63,6 +67,7 @@ Standard → /plan-prd         → 상세 PRD (plan-prd-writer)
 | [`plan-review-criteria`](../../src/claude/plan/skills/plan-review-criteria/SKILL.md) | 리뷰 기준 |
 | [`plan-prd-authoring`](../../src/claude/plan/skills/plan-prd-authoring/SKILL.md) | PRD 작성 가이드 |
 | [`plan-wireframe-design`](../../src/claude/plan/skills/plan-wireframe-design/SKILL.md) | 와이어프레임 패턴 |
+| [`claude-design-workflow`](../../src/claude/plan/skills/claude-design-workflow/SKILL.md) | Claude Design 2단계 프롬프트 워크플로우 (IMP-KIT-027) |
 | [`plan-stitch-workflow`](../../src/claude/plan/skills/plan-stitch-workflow/SKILL.md) | 시안 통합 |
 | [`plan-archive-workflow`](../../src/claude/plan/skills/plan-archive-workflow/SKILL.md) | 아카이빙 절차 |
 
@@ -73,6 +78,8 @@ Standard → /plan-prd         → 상세 PRD (plan-prd-writer)
 | `.plans/ideas/00-inbox/` | 수집된 아이디어 |
 | `.plans/ideas/10-screened/` | 스크리닝 통과한 아이디어 |
 | `.plans/prd/` | Standard 기능 PRD |
+| `.plans/wireframes/<slug>/` | 와이어프레임 산출물 (screens.md / components.md / navigation.md / decision-log.md) |
+| `.plans/design/<slug>/` | Claude Design 프롬프트 및 매니페스트 (`prompt-01-wireframe.md`, `prompt-02-highfidelity.md`, `manifest.md`) |
 | `.plans/features/active/<slug>/` | 진행 중 Feature (dev 도메인에서 이어서 사용) |
 | `.plans/archive/<slug>/` | 완료된 Feature 번들 |
 
