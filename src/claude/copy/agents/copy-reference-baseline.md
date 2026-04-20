@@ -36,11 +36,16 @@ color: blue
   </Constraints>
 
   <Investigation_Protocol>
-    1) 프로젝트 캡처 디렉토리 스캔: Glob으로 스크린샷 파일 목록 수집
-    2) 네이밍 규칙 검증: 파일명에서 뷰포트, 상태, 소스 정보 추출 및 규칙 준수 확인
-    3) 매니페스트 생성/갱신: capture_id, source, variant, viewport, state, file_path, captured_at, status 기록
-    4) 페어링 매트릭스 구축: 동일 뷰포트/상태의 레퍼런스-현재 쌍 매핑
-    5) 누락 증거 보고: 페어링되지 않은 캡처, 누락된 뷰포트/상태 식별
+    1) **모드 결정** (IMP-KIT-006):
+       - 호출 인자에 `--reference-only` 또는 routing-metadata.md의 `hybrid: true` 감지 → **reference-only 모드**
+       - 그 외 → **full 모드** (기본)
+    2) 프로젝트 캡처 디렉토리 스캔: Glob으로 스크린샷 파일 목록 수집
+    3) 네이밍 규칙 검증: 파일명에서 뷰포트, 상태, 소스 정보 추출 및 규칙 준수 확인
+    4) 매니페스트 생성/갱신: capture_id, source, variant, viewport, state, file_path, captured_at, status 기록 + **`mode` 필드 (`"full"` 또는 `"reference-only"`)** 포함
+    5) **모드별 분기**:
+       - full: 페어링 매트릭스 구축 (동일 뷰포트/상태의 레퍼런스-현재 쌍 매핑) + 누락 증거 보고
+       - reference-only: 페어링 매트릭스 생략 (현재 캡처 없이 레퍼런스만 기록) + 누락 레퍼런스만 보고
+    6) 최종 출력: manifest.json + 모드별 보고서
   </Investigation_Protocol>
 
   <Output_Format>

@@ -51,13 +51,53 @@
 | dev Feature | 건너뜀 | dev 도메인 워크플로우만 사용 |
 | Hybrid Feature | reference-only 모드 | 아래 참조 |
 
-## Hybrid Feature 처리
+## Hybrid Feature 처리 (IMP-KIT-006 공식 정의)
 
-dev Feature이지만 레퍼런스 캡처가 필요한 경우 reference-only 모드를 사용한다.
+dev Feature이지만 레퍼런스 캡처가 필요한 경우 **reference-only 모드**로 경량 실행한다.
 
-- `/copy-reference-refresh`만 실행 (evidence 캡처만 수행)
-- 갭 분석, visual/interaction review 건너뜀
-- 캡처된 evidence는 dev 구현 시 시각적 참조로만 사용
+### 진입 조건
+
+Hybrid 모드는 아래 둘 중 하나로 진입한다:
+
+1. **자동 감지** (routing-metadata 기반):
+   - `plan-draft-writer`가 IDEA/SCREENING에서 결정론적 시그널(`reference-needed: true`, `hybrid-candidate: true`) 또는 휴리스틱 키워드("레퍼런스 캡처 필요", "기존 사이트 참조", "디자인 기반", "시각 참조")를 감지
+   - `07-routing-metadata.md`에 `hybrid: true` 기록
+   - `/copy-reference-refresh` 호출 시 `hybrid: true`를 읽어 자동 reference-only 모드
+
+2. **명시적 플래그**:
+   - `/copy-reference-refresh --reference-only --scope {...} --viewport {...}`
+
+### 수행 작업
+
+Hybrid 모드에서 다음만 수행:
+- evidence 캡처 (레퍼런스 소스만)
+- `evidence/manifest.json` 생성 (`mode: "reference-only"` 필드 포함)
+- 누락 레퍼런스 보고
+
+### 건너뛰는 단계
+
+- 갭 분석 (`/copy-gap-board`)
+- visual/interaction review (`/copy-visual-review`, `/copy-interaction-review`)
+- plan-unit (`/copy-plan-unit`)
+- verify/closeout (`/copy-verify`, `/copy-closeout`)
+
+### 사용처
+
+캡처된 evidence는 **dev 구현 시 시각적 참조**로만 사용된다:
+- 개발자가 화면 레이아웃/색상/간격 등을 확인
+- dev Feature의 UI 구현에 디자인 기준 제공
+- copy 도메인 풀 파이프라인 진입은 하지 않음
+
+### 모드 전환 규칙
+
+- reference-only 모드 진입 후 사용자가 갭 분석을 추가 요청 시: **모드 전환 경고** + 일반 모드 재실행 권장
+- routing-metadata의 `hybrid: false`인데 `--reference-only` 플래그 명시 시: 사용자 의도 재확인
+
+### 연계 구현
+
+- `plan-draft-writer` (IMP-KIT-003): Hybrid 자동 감지 + routing-metadata 기록
+- `plan-bridge-writer` (IMP-KIT-004): Hybrid dev Feature 경로 분기에서 `/copy-reference-refresh --reference-only` 안내
+- `copy-reference-baseline` 에이전트: mode 필드 기반 페어링 매트릭스 생략 분기
 
 ## 금지 사항
 
