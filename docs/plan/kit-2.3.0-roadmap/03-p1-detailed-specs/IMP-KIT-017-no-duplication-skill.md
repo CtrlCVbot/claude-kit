@@ -9,7 +9,8 @@ Phase: 2.1
 원본 타임라인: (관찰) dash-preview-phase3 회고
 선행 의존: IMP-KIT-016 (본 로드맵 Phase 2.1 선행 — 훅 체인 안정화 후 Skill 레이어 확장)
 이해관계자 승인일: 2026-04-21
-상태: reviewed
+구현 완료일: 2026-04-21 (Claude Code 대행, 커밋 예정)
+상태: shipped
 ---
 
 # IMP-KIT-017 — 문서 재복제 금지 원칙 Skill 수준 강제

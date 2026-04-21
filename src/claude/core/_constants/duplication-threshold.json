@@ -1,0 +1,12 @@
+{
+  "_description": "IMP-KIT-017 — 문서 재복제 감지 임계값. 유사도(n-gram Jaccard)가 이 값 이상이면 '재복제'로 경고.",
+  "_spec": "docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-017-no-duplication-skill.md",
+  "schema_version": "1.0",
+  "defaultThreshold": 0.8,
+  "ngramSize": 8,
+  "_notes": [
+    "threshold 0.8은 초기값. Phase 2.1 회귀 시나리오에서 오탐·미탐 균형 측정 후 조정.",
+    "ngramSize 8은 문자 단위 8-gram. 한국어/영어 혼용 문서에 무난.",
+    "runtime 시 opt-in: ~/.claude/settings.json의 'duplicationGuard: true' 설정 시 PreToolUse 훅 활성화."
+  ]
+}

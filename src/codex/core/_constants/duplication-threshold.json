@@ -1,0 +1,12 @@
+{
+  "_description": "IMP-KIT-017 — 문서 재복제 감지 임계값 (Codex sibling). Claude peer: src/claude/core/_constants/duplication-threshold.json (동일 내용).",
+  "_spec": "docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-017-no-duplication-skill.md",
+  "schema_version": "1.0",
+  "defaultThreshold": 0.8,
+  "ngramSize": 8,
+  "_notes": [
+    "threshold 0.8은 초기값. Phase 2.1 회귀 시나리오에서 조정.",
+    "runtime 시 opt-in: ~/.codex/settings.json의 'duplicationGuard: true' 설정 시 활성화.",
+    "원칙 문서: Codex는 AGENTS.md 기반 관리 — Phase 2.1 마무리 통합 단계에서 src/templates/AGENTS.md.template에 §13 원칙 추가 예정."
+  ]
+}
