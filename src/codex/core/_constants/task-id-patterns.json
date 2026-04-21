@@ -1,0 +1,10 @@
+{
+  "_description": "IMP-KIT-015 — TASK ID 정규식 (Codex sibling). Claude peer 동일.",
+  "schema_version": "1.0",
+  "patterns": {
+    "dev":    { "regex": "^T-[A-Z]{2,6}-\\d{2,3}$",      "example": "T-HERO-01" },
+    "plan":   { "regex": "^TASK-[a-z0-9-]{3,40}-\\d{2,3}$", "example": "TASK-hero-refresh-03" },
+    "legacy": { "regex": "^LEGACY-[A-Z]{2,6}-\\d{2,3}$",   "example": "LEGACY-AUTH-07" },
+    "spike":  { "regex": "^SPIKE-[A-Z]{2,6}-\\d{2,3}$",    "example": "SPIKE-PERF-02" }
+  }
+}
