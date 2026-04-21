@@ -9,7 +9,8 @@ Phase: 2.2
 원본 타임라인: #22 → #23 (dash-preview-phase3 회고)
 선행 의존: IMP-KIT-001 (2.2.0 완료 — 체이닝 + v1 스키마 초안)
 이해관계자 승인일: 2026-04-21
-상태: reviewed
+구현 완료일: 2026-04-21 (Claude Code 대행, ajv 8.18.0 devDependency 추가)
+상태: shipped
 ---
 
 # IMP-KIT-011 — dev-architect ↔ doc-updater 스키마 거버넌스 표준화
