@@ -1,0 +1,88 @@
+name: Verify 2.3.0
+
+on:
+  pull_request:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'tests/**'
+      - 'scripts/**'
+      - 'package.json'
+      - 'vitest.config.ts'
+  push:
+    branches: [main]
+
+jobs:
+  test:
+    name: Unit Tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --ignore-workspace --frozen-lockfile
+
+      - name: Run tests
+        run: pnpm test
+
+      - name: Verify docs consistency
+        run: pnpm check:docs
+
+  audit-pairing:
+    name: Codex Sibling Audit
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Verify Claude ↔ Codex pairing
+        run: node scripts/audit-pairing.js
+        continue-on-error: false
+
+      - name: Verify content drift
+        run: node scripts/audit-drift.js
+        continue-on-error: false
+
+  verify-metrics:
+    name: 2.3.0 New Metrics (#7, #8, #9, #10)
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v3
+        with:
+          version: 9
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+      - run: pnpm install --ignore-workspace --frozen-lockfile
+
+      # Phase 2.1~2.3 담당자가 각 IMP-KIT 구현 시점에 스크립트 추가.
+      # 스크립트 부재 시 초기 안정화 기간 동안 continue-on-error 허용.
+      - name: Metric #7 — /plan-review 수동 호출
+        run: node scripts/verify-auto-review.js
+        continue-on-error: true
+
+      - name: Metric #8 — 재복제 감지
+        run: node scripts/verify-no-duplication.js
+        continue-on-error: true
+
+      - name: Metric #9 — 텔레메트리 커버리지
+        run: node scripts/verify-telemetry-coverage.js
+        continue-on-error: true
+
+      - name: Metric #10 — trust-only 위반 감지
+        run: node scripts/verify-schema-enforcement.js
+        continue-on-error: true
