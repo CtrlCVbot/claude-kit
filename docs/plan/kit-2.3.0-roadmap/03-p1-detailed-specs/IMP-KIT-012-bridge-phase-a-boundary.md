@@ -9,7 +9,8 @@ Phase: 2.3
 원본 타임라인: #19 ↔ #20 (dash-preview-phase3 회고)
 선행 의존: IMP-KIT-003, IMP-KIT-004 (2.2.0 완료 — draft/bridge 에이전트 확립)
 이해관계자 승인일: 2026-04-21
-상태: reviewed
+구현 완료일: 2026-04-21 (Claude Code 대행)
+상태: shipped
 ---
 
 # IMP-KIT-012 — plan-bridge ↔ dev-feature Phase A 작업 경계 명확화

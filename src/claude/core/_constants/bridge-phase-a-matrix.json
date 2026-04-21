@@ -1,0 +1,32 @@
+{
+  "_description": "IMP-KIT-012 — Bridge vs Phase A 책임 매트릭스 SSOT.",
+  "_spec": "docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-012-bridge-phase-a-boundary.md",
+  "schema_version": "1.0",
+  "matrix": {
+    "feature-intent.md": {
+      "bridge":  ["intent", "purpose"],
+      "phase-a": ["acceptance-detail", "requirement-elaboration"]
+    },
+    "stakeholder-matrix.md": {
+      "bridge":  ["key-stakeholders"],
+      "phase-a": ["raci-matrix"]
+    },
+    "dependency-graph.md": {
+      "bridge":  ["high-level-dependencies"],
+      "phase-a": ["file-module-dependencies"]
+    },
+    "risk-register.md": {
+      "bridge":  ["major-risks"],
+      "phase-a": ["mitigation-actions"]
+    },
+    "acceptance-criteria.md": {
+      "bridge":  ["criteria-headlines"],
+      "phase-a": ["given-when-then"]
+    }
+  },
+  "_notes": [
+    "bridge는 의도·고수준만. phase-a는 상세·실행 수준만.",
+    "phase-a가 bridge 섹션을 수정하면 canEdit()이 차단. 대신 Phase A 상세 섹션에 append.",
+    "초안 마커 `<!-- bridge:section -->` ... `<!-- /bridge:section -->` 로 구분."
+  ]
+}
