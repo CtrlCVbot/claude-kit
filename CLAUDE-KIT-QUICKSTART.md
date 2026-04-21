@@ -8,7 +8,7 @@
 
 ## 이번 설치 결과 요약
 
-- 버전: `2.2.0`
+- 버전: `2.2.1`
 - 활성 도메인: `core, dev`
 - 활성 타겟: `claude`
 - 메모: 아래 요약은 현재 설치 결과를 기준으로 작성되었다.
@@ -46,12 +46,13 @@
 | P3 | `/plan-draft` | 1차 기능 기획 + Lite/Standard 판정 | `.plans/features/drafts/{slug}/first-pass.md` |
 | P4 | `/plan-prd` | Standard 기능의 PRD 상세 작성 | `.plans/prd/00-draft/` -> `10-approved/` |
 | P5 | `/plan-wireframe` | ASCII/Mermaid 와이어프레임 | `.plans/wireframes/{slug}/` |
-| P6 | `/plan-stitch` | Stitch 디자인 반영 | `.plans/stitch/{slug}/` |
+| P6a | `/plan-design` | (wireframe 후 택일) Claude Design 2단계 프롬프트 | `.plans/design/{slug}/` |
+| P6b | `/plan-stitch` | (wireframe 후 택일) Stitch 디자인 반영 | `.plans/stitch/{slug}/` |
 | P7 | `/plan-bridge` | 개발 핸드오프 | bridge context 파일들 |
 | P8 | `/plan-archive` | 완료 기능 번들화 | `.plans/archive/{slug}/ARCHIVE-{KEY}.md` |
 
 - 핵심 게이트: `/plan-screen` 완료 후 사용자 **명시적 승인**이 있어야 `/plan-draft` 이후 단계로 진입할 수 있다.
-- 와이어프레임과 디자인이 필요하면 `/plan-wireframe`, `/plan-stitch`를 중간에 추가한다.
+- 와이어프레임과 디자인이 필요하면 `/plan-wireframe` 이후 `/plan-design` 또는 `/plan-stitch`를 **택일**하여 추가한다 (둘은 배타 관계, 순차 실행은 `--force-sequential` 필수).
 - 완료된 기능은 `/plan-archive`로 번들화하고, `/plan-improve`로 다시 진입할 수 있다.
 
 최소 경로 구조:

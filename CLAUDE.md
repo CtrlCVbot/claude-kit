@@ -37,8 +37,8 @@ AI 거버넌스 밀키트. TDD 강제 + Hexagonal + Clean Architecture + Rich Do
 <!-- kit:managed:start -->
 ## claude-kit 활성 구성
 
-- domains: core, dev | targets: claude | version: 2.2.0
-- Kit 관리 영역. 아래 섹션들은 `pnpm claude-kit:setup` 실행 시 재생성된다. 직접 편집 지양.
+- domains: core, dev | targets: claude | version: 2.2.1
+- Kit 관리 영역. 아래 섹션들은 `pnpm install` (또는 `pnpm update claude-kit`) 실행 시 `postinstall` 훅을 통해 재생성된다. 직접 편집 지양.
 
 ## dev 도메인
 
@@ -53,5 +53,5 @@ AI 거버넌스 밀키트. TDD 강제 + Hexagonal + Clean Architecture + Rich Do
 - **주요 서브에이전트**: `dev-architect`, `dev-code-reviewer`, `dev-security-reviewer`, `dev-database-reviewer`, `dev-doc-updater`, `dev-verify-agent`
 
 # currentDate
-Today's date is 2026-04-20.
+Today's date is 2026-04-21.
 <!-- kit:managed:end -->
