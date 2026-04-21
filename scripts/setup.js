@@ -567,6 +567,10 @@ function buildHooksConfig(activeDomains) {
     hooks.PreToolUse.push(
       { matcher: 'Edit|Write', hooks: ['node .claude/hooks/plan-doc-guard.js'] }
     );
+    // IMP-KIT-007: /plan-review 자동 후속 트리거 (Stop 훅)
+    hooks.Stop.push(
+      { hooks: ['node .claude/hooks/plan-review-trigger.js'] }
+    );
   }
 
   if (activeDomains.includes('copy')) {

@@ -43,7 +43,10 @@ plan-draft IDEA-042                # 특정 아이디어의 1차 기능 기획 �
 
    > **주의**: `--reference-only` 플래그는 IMP-KIT-006 구현 완료 시점부터 활성. 그 이전에는 draft-writer가 Hybrid를 감지하되 사용자에게 "수동 레퍼런스 캡처가 필요하다"고 안내.
 
-4. **Human Checkpoint** (Scope 확인):
+4. **자동 리뷰** (IMP-KIT-007): draft 산출물(first-pass.md 또는 Lite feature, routing-metadata) 품질 검증을 위해 `plan-review` 자동 호출
+   - `autoReview` 설정이 `true`인 경우에만 호출 (`~/.codex/settings.json`의 `"autoReview": false`로 비활성화)
+   - Stop 훅 `plan-review-trigger.js`가 세션 종료 시 리뷰 누락을 추가 감지하여 보조 안내 (Codex v1 hook runtime 지원 시)
+5. **Human Checkpoint** (Scope 확인):
    - 3중 판정 결과와 추천 경로를 사용자에게 제시
    - 사용자가 경로를 변경하거나 Hybrid 감지를 오버라이드할 수 있음
    - **오버라이드 기록**: 변경 발생 시 routing-metadata.md에 `override: {field, from, to, reason}` 필드 추가 (자동). 감사 추적 + 재실행 시 원 판정과 구분 가능.
