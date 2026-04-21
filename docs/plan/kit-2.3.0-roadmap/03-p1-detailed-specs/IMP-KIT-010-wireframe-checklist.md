@@ -9,7 +9,8 @@ Phase: 2.2
 원본 타임라인: #13~#17 (dash-preview-phase3 회고)
 선행 의존: 없음 (독립)
 이해관계자 승인일: 2026-04-21
-상태: reviewed
+구현 완료일: 2026-04-21 (Claude Code 대행)
+상태: shipped
 ---
 
 # IMP-KIT-010 — plan-wireframe-designer 체크리스트 확장
