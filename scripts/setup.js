@@ -565,7 +565,9 @@ function buildHooksConfig(activeDomains) {
 
   if (activeDomains.includes('plan')) {
     hooks.PreToolUse.push(
-      { matcher: 'Edit|Write', hooks: ['node .claude/hooks/plan-doc-guard.js'] }
+      { matcher: 'Edit|Write', hooks: ['node .claude/hooks/plan-doc-guard.js'] },
+      // IMP-KIT-009: IDEA 폴더 이동 화이트리스트 가드 (Bash matcher)
+      { matcher: 'Bash', hooks: ['node .claude/hooks/plan-idea-move-guard.js'] }
     );
     // IMP-KIT-007: /plan-review 자동 후속 트리거 (Stop 훅)
     hooks.Stop.push(

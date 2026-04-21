@@ -9,7 +9,8 @@ Phase: 2.2
 원본 타임라인: #6 (dash-preview-phase3 회고)
 선행 의존: IMP-KIT-002 (2.2.0 완료) · IMP-KIT-008 (병렬 가능, 통합 시 순서 권장)
 이해관계자 승인일: 2026-04-21
-상태: reviewed
+구현 완료일: 2026-04-21 (Claude Code 대행)
+상태: shipped
 ---
 
 # IMP-KIT-009 — plan-idea-screener 파일 이동 권한 확장

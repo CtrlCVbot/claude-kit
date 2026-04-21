@@ -1,0 +1,22 @@
+{
+  "_description": "IMP-KIT-009 — plan 도메인 idea 폴더 경로 SSOT. 스크리닝 파이프라인 이동 허용 범위.",
+  "_spec": "docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-009-screener-file-move.md",
+  "schema_version": "1.0",
+  "basePath": ".plans/ideas",
+  "folders": [
+    { "name": "00-inbox",     "description": "수집 직후 미스크리닝 상태" },
+    { "name": "10-screening", "description": "스크리닝 진행 중" },
+    { "name": "20-approved",  "description": "승인 (Lite/Standard 분기로 이행)" },
+    { "name": "30-on-hold",   "description": "보류 (재스크리닝 대기)" }
+  ],
+  "allowedTransitions": [
+    "00-inbox → 10-screening",
+    "10-screening → 20-approved",
+    "10-screening → 30-on-hold",
+    "30-on-hold → 10-screening"
+  ],
+  "_notes": [
+    "rejected 상태는 폴더 이동 없이 IDEA 파일 프론트매터에만 기록 (삭제 금지).",
+    "가드 훅 plan-idea-move-guard.js가 이 JSON을 참조하여 mv 명령 화이트리스트 검증."
+  ]
+}

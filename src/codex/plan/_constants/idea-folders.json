@@ -1,0 +1,18 @@
+{
+  "_description": "IMP-KIT-009 — plan idea 폴더 경로 SSOT (Codex sibling). Claude peer 동일.",
+  "_spec": "docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-009-screener-file-move.md",
+  "schema_version": "1.0",
+  "basePath": ".plans/ideas",
+  "folders": [
+    { "name": "00-inbox",     "description": "수집 직후 미스크리닝" },
+    { "name": "10-screening", "description": "스크리닝 진행 중" },
+    { "name": "20-approved",  "description": "승인" },
+    { "name": "30-on-hold",   "description": "보류" }
+  ],
+  "allowedTransitions": [
+    "00-inbox → 10-screening",
+    "10-screening → 20-approved",
+    "10-screening → 30-on-hold",
+    "30-on-hold → 10-screening"
+  ]
+}
