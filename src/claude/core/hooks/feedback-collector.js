@@ -163,6 +163,52 @@ function writeEntry(entryPath, entry) {
   fs.writeFileSync(absPath, JSON.stringify(entry, null, 2));
 }
 
+// Phase 3.2.5 — 도메인별 수집기 통합
+const issueDetectors = require('../collectors/issue-detectors.js');
+const planCollector = require('../collectors/plan-collector.js');
+const copyCollector = require('../collectors/copy-collector.js');
+const devCollector = require('../collectors/dev-collector.js');
+
+/**
+ * 런타임 감지 (기본: 명시 > env 변수 > other).
+ */
+function detectRuntime(input) {
+  const opts = input || {};
+  if (opts.runtime) return opts.runtime;
+  const env = opts.env || process.env;
+  if (env.CLAUDE_SESSION_ID) return 'claude';
+  if (env.CODEX_SESSION_ID) return 'codex';
+  return 'other';
+}
+
+/**
+ * 전체 엔트리 생성 — base + domain-specific + issues 통합.
+ * Phase 3.2.5 main() 통합 API.
+ * @param {object} input
+ * @returns {object} feedback entry
+ */
+function buildFullEntry(input) {
+  const opts = input || {};
+  const command = opts.command || '/unknown';
+  const domain = issueDetectors.extractDomain(command);
+
+  const base = buildBaseEntry(Object.assign({ domain }, opts));
+
+  // domain-specific 필드 병합
+  if (domain === 'plan') {
+    base.plan_specific = planCollector.collectPlanSpecific(opts);
+  } else if (domain === 'copy') {
+    base.copy_specific = copyCollector.collectCopySpecific(opts);
+  } else if (domain === 'dev') {
+    base.dev_specific = devCollector.collectDevSpecific(opts);
+  }
+
+  // 이슈 감지
+  base.issues_observed = issueDetectors.detectAllIssues(opts);
+
+  return base;
+}
+
 function main() {
   let input = '';
   process.stdin.setEncoding('utf8');
@@ -175,8 +221,9 @@ function main() {
         process.exit(0);
       }
 
-      // Phase 3.2 도메인별 수집이 여기에 확장됨.
-      // 현재는 no-op (구조만 준비).
+      // Phase 3.2 도메인별 수집 확장.
+      // 현재는 runtime 훅에서 transcript 접근 방법이 확정되지 않아 구조적 no-op.
+      // Phase 3.3 index/stats 생성 시 buildFullEntry() 호출 경로 활성화.
       // chain-point: plan-review-trigger 이후 feedback-collector가 발동됨.
     } catch {
       // 파싱 실패 시 조용히 exit 0 (세션 종료 차단 금지)
@@ -189,6 +236,8 @@ module.exports = {
   buildEntryId,
   applyRedactions,
   buildBaseEntry,
+  buildFullEntry,
+  detectRuntime,
   validateFeedbackEntry,
   archivePath,
   writeEntry,

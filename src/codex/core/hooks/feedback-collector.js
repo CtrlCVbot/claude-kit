@@ -114,6 +114,33 @@ function writeEntry(entryPath, entry) {
   fs.writeFileSync(absPath, JSON.stringify(entry, null, 2));
 }
 
+// Phase 3.2.5 — 도메인별 수집기 통합 (Codex sibling)
+const issueDetectors = require('../collectors/issue-detectors.js');
+const planCollector = require('../collectors/plan-collector.js');
+const copyCollector = require('../collectors/copy-collector.js');
+const devCollector = require('../collectors/dev-collector.js');
+
+function detectRuntime(input) {
+  const opts = input || {};
+  if (opts.runtime) return opts.runtime;
+  const env = opts.env || process.env;
+  if (env.CODEX_SESSION_ID) return 'codex';
+  if (env.CLAUDE_SESSION_ID) return 'claude';
+  return 'other';
+}
+
+function buildFullEntry(input) {
+  const opts = input || {};
+  const command = opts.command || '/unknown';
+  const domain = issueDetectors.extractDomain(command);
+  const base = buildBaseEntry(Object.assign({ domain }, opts));
+  if (domain === 'plan') base.plan_specific = planCollector.collectPlanSpecific(opts);
+  else if (domain === 'copy') base.copy_specific = copyCollector.collectCopySpecific(opts);
+  else if (domain === 'dev') base.dev_specific = devCollector.collectDevSpecific(opts);
+  base.issues_observed = issueDetectors.detectAllIssues(opts);
+  return base;
+}
+
 function main() {
   // Codex v1 hook runtime의 Stop 이벤트 지원 여부에 따라 동작.
   // 미지원 시 fallback Skill로 전환 필요 (05-codex-vs-claude.md 참조).
@@ -124,6 +151,8 @@ module.exports = {
   buildEntryId,
   applyRedactions,
   buildBaseEntry,
+  buildFullEntry,
+  detectRuntime,
   validateFeedbackEntry,
   archivePath,
   writeEntry,

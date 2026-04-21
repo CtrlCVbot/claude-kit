@@ -556,7 +556,12 @@ function buildHooksConfig(activeDomains) {
       }
     ],
     SubagentStop: [
-      { hooks: ['node .claude/hooks/agent-completion-cache-invalidate.js'] }
+      { hooks: ['node .claude/hooks/agent-completion-cache-invalidate.js'] },
+      // kit-feedback-archiving Phase 3.2.5 (core): 9 추적 에이전트 SubagentStop 누적 → agents_chain 통합
+      {
+        matcher: '(plan-draft-writer|plan-bridge-writer|dev-architect|dev-doc-updater|plan-wireframe-designer|plan-idea-screener|plan-prd-writer|plan-reviewer|copy-reference-baseline)',
+        hooks: ['node .claude/hooks/feedback-subagent-collector.js']
+      }
     ]
   };
 
