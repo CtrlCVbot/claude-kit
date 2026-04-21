@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://claude-kit/core/v1/stage-manifest.schema.json",
+  "title": "Stage Manifest",
+  "description": "IMP-KIT-014 — Feature Package stage-manifest.json 스키마 v1.0. 각 Feature의 P1~P6 단계 상태를 추적.",
+  "type": "object",
+  "required": ["schema_version", "slug", "stages"],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d+$",
+      "description": "스키마 버전 (1.x)"
+    },
+    "slug": {
+      "type": "string",
+      "description": "Feature 식별자 (kebab-case)"
+    },
+    "stages": {
+      "type": "object",
+      "description": "단계별 상태 맵 (P1/P2/P3/P4/P5/P6 등)",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": ["pending", "in-progress", "done", "skipped", "blocked"]
+          },
+          "reason": { "type": "string" },
+          "started_at": { "type": "string" },
+          "completed_at": { "type": "string" }
+        }
+      }
+    },
+    "entryPoint": {
+      "type": "string",
+      "description": "파이프라인 진입 단계 (예: P3-blueprint-fast-track)"
+    },
+    "blueprintSource": {
+      "type": "string",
+      "description": "Blueprint fast-track 진입 시 원본 경로"
+    }
+  }
+}
