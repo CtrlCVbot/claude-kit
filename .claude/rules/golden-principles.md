@@ -68,6 +68,12 @@ When using subagent-driven development: spec compliance first, issues found = no
 - Unrelated dead code: mention it, don't delete it
 - Only clean up orphans (unused imports, etc.) that YOUR changes created
 
+## 13. Document Non-Duplication
+
+**Why?** Same content duplicated across files creates multi-SSOT. When one updates, copies become stale. IMP-KIT-017.
+
+**How?** When referencing existing docs, use path links only. Don't copy content. Edit existing docs instead of creating new copies. When similarity (8-gram Jaccard) exceeds 0.8 with an existing file, the optional `no-duplication-guard.js` hook warns.
+
 ---
 
 ## Anti-Rationalization (These excuses don't work)
@@ -91,3 +97,4 @@ When using subagent-driven development: spec compliance first, issues found = no
 | /simplify | "The complexity is necessary" | Run /simplify. If it finds reduction, it wasn't necessary |
 | Surgical | "While I'm here, let me clean up" | Only change requested lines. Cleanup is a separate request |
 | Simplicity | "Need abstraction for extensibility" | Only what's needed now. Abstract when repetition hits 3+ times |
+| Non-Duplication | "Just this one time copy-paste" | Duplication grows silently. Link to the source, don't copy |
