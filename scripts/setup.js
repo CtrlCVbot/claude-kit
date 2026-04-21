@@ -549,8 +549,11 @@ function buildHooksConfig(activeDomains) {
     ],
     Stop: [
       { hooks: ['node .claude/hooks/session-wrap-suggest.js'] },
-      // kit-feedback-archiving Phase 3.1 (core): 세션 종료 시 피드백 엔트리 수집 훅. 현재 no-op, Phase 3.2에서 도메인별 수집 확장.
-      { hooks: ['node .claude/hooks/feedback-collector.js'] }
+      // kit-feedback-archiving Phase 3.2.1 (core): 23 커맨드 화이트리스트 matcher + 피드백 엔트리 수집 훅.
+      {
+        matcher: '^/(plan-(idea|screen|draft|prd|review|wireframe|stitch|bridge|archive)|copy-(reference-refresh|visual-review|interaction-review|gap-board|plan-unit|verify|closeout)|dev-(architecture|feature|verify|verify-all|verify-fe|commit|commit-push-pr))($|\\s)',
+        hooks: ['node .claude/hooks/feedback-collector.js']
+      }
     ],
     SubagentStop: [
       { hooks: ['node .claude/hooks/agent-completion-cache-invalidate.js'] }
