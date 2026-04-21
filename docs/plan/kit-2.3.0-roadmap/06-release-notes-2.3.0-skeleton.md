@@ -2,8 +2,9 @@
 제목: 06 Release Notes 2.3.0 — Skeleton
 작성일: 2026-04-21
 이해관계자 승인일: 2026-04-21 (D1/D2/D3 전체 승인, [_reviews/2026-04-21-stakeholder-approval.md](_reviews/2026-04-21-stakeholder-approval.md))
+릴리스 일자: 2026-04-21
 대상: 릴리스 책임자, 사용자 공지
-상태: reviewed (implementation 전 스켈레톤, D3 승인)
+상태: shipped (정식 릴리스 노트는 [CHANGELOG.md §2.3.0](../../../CHANGELOG.md#230---2026-04-21))
 ---
 
 # 06 Release Notes 2.3.0 — Skeleton

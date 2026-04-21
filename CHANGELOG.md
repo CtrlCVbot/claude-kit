@@ -6,7 +6,147 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
-다음 릴리스 미정. IMP-KIT-027 런타임 회귀 검증(V1~V5) 결과에 따라 2.2.2 또는 2.3.0 으로 분기.
+차기 릴리스 미정. 2.3.0 Exit Criteria 회귀 측정(dash-preview-phase3 복제) 결과에 따라 2.3.1 또는 2.4.0 분기.
+
+---
+
+## [2.3.0] - 2026-04-21
+
+P1 백로그 **11건 전체 완료**. **프로세스 자동화 + 에이전트 메모리/권한 보완 + 경계·네이밍 정리** 3개 그룹으로 수동 개입 최소화·문서 SSOT 강화·Dev 착수 Gate 조기화 달성. D1/D2/D3 이해관계자 승인 완료 ([`stakeholder-approval.md`](docs/plan/kit-2.3.0-roadmap/_reviews/2026-04-21-stakeholder-approval.md)).
+
+### Added (P1 11건)
+
+**Phase 2.1 — 프로세스 자동화 (3건)**
+
+- **IMP-KIT-007** — `/plan-review` 자동 후속 트리거 ([`f57b44d`](https://github.com/CtrlCVbot/claude-kit/commit/f57b44d))
+  - Stop 훅 `plan-review-trigger.js` (Claude+Codex), decideTrigger 순수 함수
+  - `autoReview` 설정 (`~/.claude/settings.json`의 `"autoReview": false`로 비활성)
+  - `chain-point: feedback-collector` 표식 (kit-feedback-archiving Phase 3 연계)
+  - 11 단위 테스트
+- **IMP-KIT-016** — Checkpoint 자동 진행 플래그 ([`a081bd7`](https://github.com/CtrlCVbot/claude-kit/commit/a081bd7))
+  - `--auto-proceed-on-pass` 플래그 + Critical 화이트리스트 (destructive/external-api-call/breaking-change/initial-approval-gate)
+  - `src/claude/core/checkpoint/auto-proceed.js` decideCheckpoint 순수 함수
+  - `src/claude/core/rules/checkpoint-policy.md` 정책 SSOT
+  - 13 단위 테스트
+- **IMP-KIT-017** — 재복제 금지 Skill 수준 강제 ([`f03535b`](https://github.com/CtrlCVbot/claude-kit/commit/f03535b))
+  - `golden-principles.md §13 Document Non-Duplication` 원칙 추가
+  - `no-duplication-guard.js` (8-gram Jaccard 유사도) + opt-in 활성
+  - 11 단위 테스트
+
+**Phase 2.2 — 에이전트 메모리/권한 보완 (4건)**
+
+- **IMP-KIT-009** — plan-idea-screener 파일 이동 화이트리스트 ([`5a2f073`](https://github.com/CtrlCVbot/claude-kit/commit/5a2f073))
+  - `plan-idea-move-guard.js` PreToolUse Bash matcher (10-screening ↔ 20-approved/30-on-hold)
+  - `idea-folders.json` 4 폴더 SSOT
+  - 13 단위 테스트
+- **IMP-KIT-008** — screener 재판정 메모리 유틸 ([`38ed8f2`](https://github.com/CtrlCVbot/claude-kit/commit/38ed8f2))
+  - `plan-idea-screener-rescoring.js` (shouldRecord/buildRescoringLogEntry/isValidEntry)
+  - `rescoring-log-entry.schema.json` + 템플릿
+  - 9 단위 테스트
+- **IMP-KIT-010** — wireframe Pre-render 체크리스트 ([`108f8b5`](https://github.com/CtrlCVbot/claude-kit/commit/108f8b5))
+  - `plan-wireframe-checklist.js` (validateWireframePrerender 4항목 + applyPiiMasking)
+  - `pii-masking-rules.json` 2 규칙 (phone-kr, business-id-kr)
+  - `decision-log.template.md`
+  - 12 단위 테스트
+- **IMP-KIT-011** — edit-coordinates 스키마 거버넌스 ([`a37fccd`](https://github.com/CtrlCVbot/claude-kit/commit/a37fccd))
+  - ajv 2020-12 런타임 검증 (`_router.js`의 validate/getValidator/extractMajor)
+  - `edit-coordinates-governance.md` SemVer + 하위호환 보장 + action enum 확장 절차
+  - 13 단위 테스트
+
+**Phase 2.3 — 경계·네이밍 정리 (4건)**
+
+- **IMP-KIT-015** — TASK ID 네이밍 표준 유틸 ([`e58ca37`](https://github.com/CtrlCVbot/claude-kit/commit/e58ca37))
+  - 4 패턴 (`T-{AREA}-{NN}`, `TASK-{SLUG}-{NN}`, `LEGACY-{AREA}-{NN}`, `SPIKE-{AREA}-{NN}`)
+  - `task-id.js` (validateTaskId/detectDomain/suggestFix)
+  - `task-id-naming.md` 규칙 SSOT
+  - 20 단위 테스트
+- **IMP-KIT-013** — Dev Gate Draft 조기 플래그 ([`527ca78`](https://github.com/CtrlCVbot/claude-kit/commit/527ca78))
+  - `plan-dev-gate.js` (buildDevGateSection Standard dev만 + validateDevGate)
+  - 4항목 체크리스트 (Legacy 격리, TASK ID 네이밍, 의존 Feature, 마이그레이션)
+  - `dev-gate-items.json` + 템플릿
+  - 8 단위 테스트
+- **IMP-KIT-012** — bridge ↔ Phase A 경계 유틸 ([`3aec71a`](https://github.com/CtrlCVbot/claude-kit/commit/3aec71a))
+  - `bridge-phase-a.js` (canEdit + extractBridgeSections)
+  - `bridge-phase-a-matrix.json` (5 파일 × bridge/phase-a 책임)
+  - BRIDGE_MARKER + PHASE_A_SECTION
+  - 9 단위 테스트
+- **IMP-KIT-014** — stage-manifest 스키마 거버넌스 ([`b22f43d`](https://github.com/CtrlCVbot/claude-kit/commit/b22f43d), [`f1279ba`](https://github.com/CtrlCVbot/claude-kit/commit/f1279ba))
+  - `stage-manifest.schema.json` v1.0 + `stage-manifest-router.js` (validateStageManifest/checkConsumerPaths)
+  - `stage-manifest-consumers.json` 소비자 등록부
+  - `scripts/validate-stage-manifest-schema.js` CI 검증 스크립트 (D3 후속 보강)
+  - 11 단위 테스트
+
+### Added (테스트 인프라)
+
+- Vitest 2.1.9 + `@vitest/coverage-v8` 2.1.9 devDependency ([`9b4154b`](https://github.com/CtrlCVbot/claude-kit/commit/9b4154b))
+- ajv 8.18.0 devDependency (IMP-KIT-011/014 공통)
+- **132 단위 테스트** passed (12 test files) — `pnpm test`
+- `vitest.config.ts` (v8 coverage, passWithNoTests)
+- `tests/` 디렉터리 구조 (claude/{core,plan,dev}/ hooks/agents/_schemas/_utils/boundary/)
+- GitHub Actions CI `.github/workflows/verify-2.3.0.yml` 3 jobs: test · audit-pairing · verify-metrics ([`0729510`](https://github.com/CtrlCVbot/claude-kit/commit/0729510))
+
+### Added (문서)
+
+- `docs/plan/kit-2.3.0-roadmap/` 전체 문서 패키지 ([`c7915b1`](https://github.com/CtrlCVbot/claude-kit/commit/c7915b1))
+  - 최상위 9 문서 (README, 00~08)
+  - 상세 스펙 11건 (IMP-KIT-007~017)
+  - `_reviews/` 리뷰 이력 (메인테이너 기술 리뷰·이슈 해소·이해관계자 승인·2단계 리뷰·IMP-KIT별 리뷰 11건·3단계 통합 리뷰)
+  - `_assignments/` Phase 2.1 담당자·주간 회고 템플릿·인프라 체크리스트
+
+### Changed
+
+- `package.json` — devDependencies (vitest, @vitest/coverage-v8, ajv) + scripts (test, test:watch, test:coverage)
+- `.gitignore` — `coverage/`, `*.tsbuildinfo` 추가
+- `scripts/setup.js` — `buildHooksConfig` plan 도메인에 Stop 훅(IMP-KIT-007) + Bash matcher(IMP-KIT-009) 추가
+- `src/claude/core/rules/golden-principles.md` — §13 Document Non-Duplication + Anti-Rationalization 표 1행 추가
+- `src/claude/plan/commands/plan-draft.md`, `src/codex/plan/commands/plan-draft.md` — "자동 리뷰" 단계 4 삽입
+
+### Breaking Changes
+
+- **BC-2.3.0-01** TASK ID 네이밍 규칙 강제 (IMP-KIT-015)
+  - 4 패턴 미매칭 ID(`M1-07`, `LEGACY` 등)는 경고 수준에서 시작
+  - 2.4.0+ 차단 수준으로 단계 상향 예정
+  - **마이그레이션**: 기존 Feature의 TASK ID를 `T-{AREA}-{NN}` 등으로 변환
+- **BC-2.3.0-02** stage-manifest.json `schema_version` 필수 (IMP-KIT-014)
+  - 새로 생성되는 `stage-manifest.json`은 `"schema_version": "1.0"` 필수
+  - 기존 파일은 v0으로 간주, 경고 출력
+  - **마이그레이션**: 기존 stage-manifest 상단에 `"schema_version": "1.0"` 추가
+- **BC-2.3.0-03** edit-coordinates ajv 런타임 검증 (IMP-KIT-011)
+  - IMP-KIT-001 v1 payload는 **그대로 통과** — 하위호환 보장
+  - 사실상 Behavioral Change (향후 재분류 검토)
+
+### Migration (2.2.1 → 2.3.0)
+
+1. `pnpm install --ignore-workspace` (monorepo workspace 격리 필수)
+2. TASK ID 변환 (BC-01): 기존 Feature의 `stage-manifest.json` 및 Draft 문서 검색 → 4 패턴 준수
+3. stage-manifest 스키마 버전 (BC-02): 기존 파일에 `"schema_version": "1.0"` 추가
+4. 테스트 러너 도입 확인: `pnpm test` 명령 동작
+
+### 릴리스 메트릭
+
+| 지표 | 값 |
+|------|----|
+| P1 구현 | **11/11 (100%)** |
+| 단위 테스트 | **132 passed** (12 files) |
+| 커밋 수 | **18개** (세션 내) |
+| 듀얼 타깃 | **Claude + Codex sibling 완비** (~22 sibling 파일) |
+| 문서 | 31+ 파일 (스펙·리뷰·assignments) |
+
+### 제한 사항 (4단계 회귀 이월)
+
+- **지표 #7~#10 실측 대기**: stub 구현 완료, 실제 측정은 dash-preview-phase3 복제 회귀 시나리오 필요
+- **에이전트 프롬프트 명시적 참조**: 30+ 기존 커맨드·에이전트 .md는 정책 SSOT 방식 암묵적 참조 (Phase 2.1 마무리 통합 시 선택적 보강)
+- **가드 훅 runtime 미등록 항목**: IMP-KIT-015 task-id 검증 → plan-doc-guard 확장, IMP-KIT-011 validator → dev-doc-updater 입력 연계는 후속
+- **Codex 원칙 문서**: IMP-KIT-017 §13은 Claude golden-principles.md에 추가, Codex AGENTS.md.template 반영은 이월
+- **audit-pairing FAIL 10건**: copy 도메인 unpaired 기존 이슈 (본 릴리스 범위 외), 2.4.0에서 해소 예정
+
+### 설계 패턴 (공통)
+
+1. **TDD Red-Green-Improve**: 11건 모두 적용
+2. **순수 함수 export**: `decide*`/`validate*`/`build*` 함수로 분리, 테스트 용이
+3. **정책 SSOT**: 정책 문서 1건 + JSON 상수로 30+ .md 개별 수정 회피
+4. **Codex 듀얼 타깃 동시 sibling**: 모든 IMP-KIT의 Codex peer 동시 생성
+5. **opt-in 훅 등록**: 성능 부담 가드는 사용자 설정 기반 활성화
 
 ---
 
