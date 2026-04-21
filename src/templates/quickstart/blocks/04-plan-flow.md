@@ -7,7 +7,7 @@
 {{PLAN_FLOW_ROWS}}
 
 - 핵심 게이트: `/plan-screen` 완료 후 사용자 **명시적 승인**이 있어야 `/plan-draft` 이후 단계로 진입할 수 있다.
-- 와이어프레임과 디자인이 필요하면 `/plan-wireframe`, `/plan-stitch`를 중간에 추가한다.
+- 와이어프레임과 디자인이 필요하면 `/plan-wireframe` 이후 `/plan-design` 또는 `/plan-stitch`를 **택일**하여 추가한다 (둘은 배타 관계, 순차 실행은 `--force-sequential` 필수).
 - 완료된 기능은 `/plan-archive`로 번들화하고, `/plan-improve`로 다시 진입할 수 있다.
 
 최소 경로 구조:

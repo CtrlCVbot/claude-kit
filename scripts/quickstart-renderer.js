@@ -139,7 +139,8 @@ function buildPlanFlowRows() {
     '| P3 | `/plan-draft` | 1차 기능 기획 + Lite/Standard 판정 | `.plans/features/drafts/{slug}/first-pass.md` |',
     '| P4 | `/plan-prd` | Standard 기능의 PRD 상세 작성 | `.plans/prd/00-draft/` -> `10-approved/` |',
     '| P5 | `/plan-wireframe` | ASCII/Mermaid 와이어프레임 | `.plans/wireframes/{slug}/` |',
-    '| P6 | `/plan-stitch` | Stitch 디자인 반영 | `.plans/stitch/{slug}/` |',
+    '| P6a | `/plan-design` | (wireframe 후 택일) Claude Design 2단계 프롬프트 | `.plans/design/{slug}/` |',
+    '| P6b | `/plan-stitch` | (wireframe 후 택일) Stitch 디자인 반영 | `.plans/stitch/{slug}/` |',
     '| P7 | `/plan-bridge` | 개발 핸드오프 | bridge context 파일들 |',
     '| P8 | `/plan-archive` | 완료 기능 번들화 | `.plans/archive/{slug}/ARCHIVE-{KEY}.md` |'
   ].join('\n');
