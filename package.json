@@ -5,7 +5,10 @@
   "scripts": {
     "postinstall": "node scripts/setup.js",
     "generate:docs": "node scripts/docs-generate.js",
-    "check:docs": "node scripts/docs-generate.js --check"
+    "check:docs": "node scripts/docs-generate.js --check",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "files": [
     "src/",
@@ -23,5 +26,9 @@
   "engines": {
     "node": ">=20.0.0"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "vitest": "^2.0.0",
+    "@vitest/coverage-v8": "^2.0.0"
+  }
 }
