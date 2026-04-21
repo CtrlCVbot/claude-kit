@@ -5,7 +5,7 @@
 >
 > 이 파일은 **수기 편집 금지**. 재생성: `node scripts/docs-generate.js`
 
-전체 11개. 각 rule 문서의 h1 + 첫 blockquote 에서 추출.
+전체 14개. 각 rule 문서의 h1 + 첫 blockquote 에서 추출.
 
 ## copy 도메인
 
@@ -21,10 +21,18 @@
 
 | Rule | Summary | Source |
 |---|---|---|
+| `Checkpoint 정책` | **결론**: 본 정책은 claude-kit 전반의 **Human Checkpoint** 처리 기준. `autoProceedOnPass: true` 플래그가 활성이고 리뷰 결과가 PASS이면 Checkpoint 자동 통과. 단 Critical 화이트리스트 타입은 플래그 무시하고 항상 정 | [src/claude/core/rules/checkpoint-policy.md](../../src/claude/core/rules/checkpoint-policy.md) |
 | `Coding Style` | — | [src/claude/core/rules/coding-style.md](../../src/claude/core/rules/coding-style.md) |
 | `Date & Time Calculation (CRITICAL)` | — | [src/claude/core/rules/date-calculation.md](../../src/claude/core/rules/date-calculation.md) |
 | `Golden Principles` | 12 core principles for writing clean, maintainable code. | [src/claude/core/rules/golden-principles.md](../../src/claude/core/rules/golden-principles.md) |
 | `Interaction Rules` | — | [src/claude/core/rules/interaction.md](../../src/claude/core/rules/interaction.md) |
 | `Security Guidelines` | — | [src/claude/core/rules/security.md](../../src/claude/core/rules/security.md) |
+| `TASK ID 네이밍 표준` | **결론**: IMP-KIT-015. claude-kit 전체에서 TASK ID는 **4패턴** 중 하나를 따른다. 정규식 SSOT + validateTaskId 유틸로 자동 검증. golden-principles #14 참조. | [src/claude/core/rules/task-id-naming.md](../../src/claude/core/rules/task-id-naming.md) |
 | `Verification Before Completion` | Extends Golden Principle #10: Evidence-Based Completion. | [src/claude/core/rules/verification.md](../../src/claude/core/rules/verification.md) |
+
+## dev 도메인
+
+| Rule | Summary | Source |
+|---|---|---|
+| `edit-coordinates 스키마 거버넌스` | **결론**: dev-architect → dev-doc-updater 체이닝의 핵심 계약인 `edit-coordinates` JSON 스키마의 SemVer 규칙·검증 절차·변경 절차. IMP-KIT-011. ajv 런타임 검증을 표준화하여 "암묵적 해석"을 "명시적 검증"으로 승격. | [src/claude/dev/rules/edit-coordinates-governance.md](../../src/claude/dev/rules/edit-coordinates-governance.md) |
 

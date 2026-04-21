@@ -5,7 +5,7 @@
 >
 > 이 파일은 **수기 편집 금지**. 재생성: `node scripts/docs-generate.js`
 
-전체 15개. 각 hook 파일 상단 JSDoc의 `Hook/Event/Action` 라인에서 추출.
+전체 18개. 각 hook 파일 상단 JSDoc의 `Hook/Event/Action` 라인에서 추출.
 
 ## copy 도메인
 
@@ -24,6 +24,7 @@
 | `agent-completion-cache-invalidate` | — | — | [src/claude/core/hooks/agent-completion-cache-invalidate.js](../../src/claude/core/hooks/agent-completion-cache-invalidate.js) |
 | `code-quality-reminder` | — | — | [src/claude/core/hooks/code-quality-reminder.js](../../src/claude/core/hooks/code-quality-reminder.js) |
 | `edit-tracker` | PostToolUse (Edit|Write) | log (exit 0) -- 편집 파일을 .ai/.edit-log.json에 기록 | [src/claude/core/hooks/edit-tracker.js](../../src/claude/core/hooks/edit-tracker.js) |
+| `no-duplication-guard` | — | — | [src/claude/core/hooks/no-duplication-guard.js](../../src/claude/core/hooks/no-duplication-guard.js) |
 | `output-secret-filter` | — | — | [src/claude/core/hooks/output-secret-filter.js](../../src/claude/core/hooks/output-secret-filter.js) |
 | `security-auto-trigger` | — | — | [src/claude/core/hooks/security-auto-trigger.js](../../src/claude/core/hooks/security-auto-trigger.js) |
 | `session-wrap-suggest` | — | — | [src/claude/core/hooks/session-wrap-suggest.js](../../src/claude/core/hooks/session-wrap-suggest.js) |
@@ -41,4 +42,6 @@
 | Hook | Event | Action | Source |
 |---|---|---|---|
 | `plan-doc-guard` | PreToolUse (Edit|Write) | BLOCKING (exit 2) -- 기획 문서 구조/형식 검증 + 코드 파일 편집 차단 | [src/claude/plan/hooks/plan-doc-guard.js](../../src/claude/plan/hooks/plan-doc-guard.js) |
+| `plan-idea-move-guard` | PreToolUse (Bash matcher) | mv 명령이 .plans/ideas/ 내부 허용된 폴더 간 이동인지 검증. | [src/claude/plan/hooks/plan-idea-move-guard.js](../../src/claude/plan/hooks/plan-idea-move-guard.js) |
+| `plan-review-trigger` | — | — | [src/claude/plan/hooks/plan-review-trigger.js](../../src/claude/plan/hooks/plan-review-trigger.js) |
 
