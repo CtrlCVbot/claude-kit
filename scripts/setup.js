@@ -548,7 +548,9 @@ function buildHooksConfig(activeDomains) {
       { matcher: 'Edit|Write', hooks: ['node .claude/hooks/security-auto-trigger.js'] }
     ],
     Stop: [
-      { hooks: ['node .claude/hooks/session-wrap-suggest.js'] }
+      { hooks: ['node .claude/hooks/session-wrap-suggest.js'] },
+      // kit-feedback-archiving Phase 3.1 (core): 세션 종료 시 피드백 엔트리 수집 훅. 현재 no-op, Phase 3.2에서 도메인별 수집 확장.
+      { hooks: ['node .claude/hooks/feedback-collector.js'] }
     ],
     SubagentStop: [
       { hooks: ['node .claude/hooks/agent-completion-cache-invalidate.js'] }
