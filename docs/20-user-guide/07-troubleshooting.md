@@ -45,7 +45,9 @@ pnpm add -D github:CtrlCVbot/claude-kit#main
 
 **해결**:
 ```bash
-pnpm claude-kit:setup   # setup.js 수동 실행
+pnpm install                                   # postinstall 재실행
+# 또는 직접 실행:
+node node_modules/claude-kit/scripts/setup.js  # setup.js 수동 실행
 ```
 출력 로그에서 실패 지점 확인.
 

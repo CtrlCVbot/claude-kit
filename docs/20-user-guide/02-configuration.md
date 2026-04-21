@@ -112,7 +112,7 @@ Quick Start 문서 생성 시 패키지 매니저별 명령어 예시가 분기�
 `profile.json` 을 수정했다면 반드시 다음을 실행하여 자산을 재배포합니다.
 
 ```bash
-pnpm install   # 또는 pnpm claude-kit:setup
+pnpm install   # 또는 pnpm update claude-kit
 ```
 
 `postinstall` 이 다시 돌면서 도메인 변경에 맞춰 `.claude/` 구성이 갱신됩니다.

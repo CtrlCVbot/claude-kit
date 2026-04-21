@@ -65,7 +65,7 @@
 | Codex 컴포넌트 | `src/codex/{domain}/...` | — |
 | 규칙 (rules) | `src/claude/core/rules/*.md` | `.claude/rules/` 은 복사본 |
 
-`.claude/` 의 사본을 직접 고치면 다음 `pnpm claude-kit:setup` 실행 시 덮어쓰기됩니다. 항상 SSOT 수정 후 재설치.
+`.claude/` 의 사본을 직접 고치면 다음 `pnpm install` (또는 `pnpm update claude-kit`) 실행 시 `postinstall` 훅이 돌면서 덮어쓰기됩니다. 항상 SSOT 수정 후 재설치.
 
 ## 6. Guard Hooks (가드 훅)
 
