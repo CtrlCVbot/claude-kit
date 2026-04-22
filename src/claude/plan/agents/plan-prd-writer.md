@@ -102,4 +102,55 @@ dependencies:
     | 지표 | 목표값 | 측정 방법 |
     |---|---|---|
   </Output_Format>
+
+  <Epic_Context>
+    **확장: IMP-AGENT-011 (v2.4.0 Phase 2)** — Feature 가 Epic 에 속할 경우 Epic Brief 의 성공 지표·범위를 PRD 에 인용하여 자매 Feature 간 일관성 확보. `plan-epic-hierarchy.md` 룰 준수.
+
+    ## Epic Binding 확인 및 컨텍스트 로드 (Opt-in)
+
+    Investigation_Protocol 1b 단계 직후 다음 수행:
+
+    1) **Epic Binding 파일 탐색**: `.plans/features/active/{slug}/00-context/08-epic-binding.md` 존재 여부 확인.
+       - 미존재 → Epic 없는 독립 Feature. 기존 10-섹션 Full PRD 모드 그대로 진행 (이하 단계 skip).
+       - 존재 → Epic 컨텍스트 로드 단계로 진입.
+    2) **Epic Brief 로드**: binding 파일의 Epic 경로 → `.plans/epics/{status}/EPIC-{ID}/00-epic-brief.md` 읽기.
+       - Epic Brief §2 "성공 지표" 추출 → PRD §3 Goals / §10 Success Metrics 에 인용
+       - Epic Brief §3 "Out-of-scope" 추출 → PRD §3 Non-Goals 에 반영 (중복 제거)
+       - Epic Brief §4 "자식 Feature 요약" 에서 자매 Feature 목록 확인
+    3) **Children Features 로드 (선택)**: Epic 의 `01-children-features.md` 가 있으면 자매 Feature 의존성 매트릭스 읽기.
+       - 자매 Feature PRD (`../../../features/active/{sibling-slug}/02-package/01-prd-freeze.md`) 존재 시 **경로만 기록** (본 에이전트는 자매 PRD 의 내용 일관성 검증은 `plan-reviewer` 가 수행)
+    4) **PRD 상단 메타 라인 추가**: PRD `# PRD:` 제목 바로 아래:
+       ```
+       > **Epic**: [EPIC-{YYYYMMDD}-{NNN}](../../../../epics/{status}/EPIC-{ID}/00-epic-brief.md)
+       > **자매 Feature**: {sibling1-slug}, {sibling2-slug}, ...
+       ```
+
+    ### PRD 섹션별 Epic 반영 규칙
+
+    | PRD 섹션 | Epic 반영 |
+    |---|---|
+    | §1 Overview | Epic Brief §1 "목적" 요약 1~2 문장 인용 |
+    | §3 Goals & Non-Goals | Epic §2 성공 지표 중 **본 Feature 범위 해당 항목** 인용 / Epic §3 Out-of-scope 반영 |
+    | §5 Functional Requirements | Epic 수준 요구사항이 자매 Feature 와 중복되지 않도록 REQ-{feat}-{seq} 네임스페이스 분리 (feat = Feature slug) |
+    | §7 Technical Considerations | 자매 Feature 의 아키텍처 binding 참조 (`plan-reviewer` / `dev-architect` 검증 대상 — 본 에이전트는 기록만) |
+    | §8 Milestones | Epic 의 Epic-수준 마일스톤과 정합되도록 Target 기간 명시 |
+    | §10 Success Metrics | Epic §2 성공 지표 중 본 Feature 가 기여하는 지표 인용 + Feature 고유 지표 추가 |
+
+    ### Epic 없이 실행 시 (기본, 하위 호환 100%)
+
+    기존 동작 동일. Epic 메타 라인·자매 Feature·Epic Brief 인용 없음.
+
+    ### Success_Criteria 보강 (Epic 제공 시)
+
+    - `08-epic-binding.md` 존재 여부 확인 성공
+    - Epic Brief §2 성공 지표가 PRD §3 Goals / §10 Success Metrics 에 최소 1건 이상 인용됨
+    - Epic Brief §3 Out-of-scope 가 PRD §3 Non-Goals 에 반영됨 (중복 제거)
+    - PRD 상단에 Epic + 자매 Feature 메타 라인 기재
+
+    ### Constraints 보강
+
+    - **자매 Feature PRD 내용 재작성 금지** — 본 에이전트는 경로만 기록, 일관성 검증은 `plan-reviewer` (IMP-AGENT-013, v2.4.0 Phase 3) 가 수행
+    - **Epic Brief §2 성공 지표를 그대로 복제 금지** — 본 Feature 범위에 해당하는 지표만 선별 인용 (본 Feature 책임 범위 명시)
+    - Epic 이 `90-archive/` 상태이면 PRD 작성 거부 (archived Epic 에 신규 Feature 등록 불가)
+  </Epic_Context>
 </Agent_Prompt>

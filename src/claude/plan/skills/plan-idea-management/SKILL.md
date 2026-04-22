@@ -120,3 +120,43 @@ IDEA 파일 탐색 시 active + archive 양쪽을 탐색한다:
 - 인덱스: `.plans/ideas/backlog.md`
 - ID 형식: `IDEA-{YYYYMMDD}-{NNN}` (날짜 + 일별 순번)
 - 카테고리: feature / improvement / fix / research
+
+## Epic 연결 (Opt-in, v2.4.0+)
+
+claude-kit v2.4.0 Hierarchical Plan Structure 도입으로 IDEA 를 상위 Epic 에 연결할 수 있다. **Opt-in** — Epic 없이도 기존 flat 플로우 100% 호환. SSOT: `src/claude/plan/rules/plan-epic-hierarchy.md`.
+
+### `--epic` 파라미터 (IMP-AGENT-010)
+
+`/plan-idea "{제목}" --epic=EPIC-{YYYYMMDD}-{NNN}` 전달 시 `plan-idea-collector` 에이전트가 다음 수행:
+
+1. Epic 디렉터리 존재 확인 (`.plans/epics/{status}/EPIC-{ID}/`) — 미존재 시 FAIL + `/plan-epic` 먼저 실행 안내
+2. IDEA 파일 프론트매터에 Epic 링크 삽입
+3. `backlog.md` Epic 컬럼에 Epic 링크 채움 (없으면 헤더 자동 추가)
+4. Epic 의 `01-children-features.md` 에 "pending IDEA" 행 추가 (선택)
+
+### IDEA 파일 프론트매터 확장
+
+```markdown
+### IDEA-{YYYYMMDD}-{NNN}: {제목}
+- **카테고리**: {feature|improvement|fix|research}
+- **태그**: {tag1}, {tag2}
+- **상태**: {new|screening|screened|approved|on-hold|rejected}
+- **등록일**: {YYYY-MM-DD}
+- **Epic** (optional): [EPIC-{YYYYMMDD}-{NNN}](../../epics/{status}/EPIC-{ID}/00-epic-brief.md)
+```
+
+### backlog.md 인덱스 스키마 확장
+
+```markdown
+| ID | 제목 | 카테고리 | 상태 | 등록일 | 위치 | 파일 | Epic |
+```
+
+- Epic 없음: `—` 또는 빈 셀
+- Epic 있음: `[EPIC-{ID}](../epics/{status}/EPIC-{ID}/00-epic-brief.md)`
+
+### 하위 호환
+
+- `--epic` 미지정 → 기존 동작 완전 동일
+- 기존 IDEA 파일의 Epic 필드 없음 → 유효 (Epic 없는 독립 Feature)
+- `backlog.md` 의 Epic 컬럼 없음 → 첫 `--epic` 요청 시 에이전트가 자동 추가
+- `plan-epic-integrity.js` hook (Phase 2 disable 기본) 이 Epic ↔ Feature binding cross-reference 검증

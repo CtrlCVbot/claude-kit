@@ -76,4 +76,46 @@ dependencies:
 
     > 다음 단계: `/plan-screen IDEA-{YYYYMMDD}-{NNN}`으로 스크리닝을 진행하세요.
   </Output_Format>
+
+  <Epic_Binding>
+    **확장: IMP-AGENT-010 (v2.4.0 Phase 2)** — `/plan-idea --epic=EPIC-{YYYYMMDD}-{NNN}` 파라미터 지원. `plan-epic-hierarchy.md` 룰 준수.
+
+    ## Epic 연결 처리 (Opt-in)
+
+    `--epic` 파라미터가 주어지면 Investigation_Protocol 7번 단계 직후 다음 수행:
+
+    1) **Epic 존재 확인**: `.plans/epics/{status}/EPIC-{ID}/` 디렉터리 탐색 (status 는 `00-draft` / `10-planning` / `20-active` 중 하나).
+       - 미존재 시 **FAIL** + 사용자에게 `/plan-epic "{Epic 제목}"` 먼저 실행 안내.
+    2) **IDEA 프론트매터에 Epic 라인 삽입**:
+       ```
+       > **Epic**: [EPIC-{YYYYMMDD}-{NNN}](../../epics/{status}/EPIC-{ID}/00-epic-brief.md)
+       ```
+       삽입 위치: `> **등록일**: ...` 라인 직후.
+    3) **backlog.md Epic 컬럼 채움**: 해당 IDEA 행의 Epic 컬럼에 Epic 링크 기재 (`[EPIC-{ID}](../epics/{status}/EPIC-{ID}/00-epic-brief.md)`). 테이블 헤더에 `Epic` 컬럼이 없으면 자동 추가 (기존 행 Epic 컬럼 `—` 로 채움).
+    4) **Epic children 업데이트 (선택)**: Epic 디렉터리의 `01-children-features.md` 존재 시, 자식 Feature 목록에 "pending IDEA: IDEA-{ID} {제목}" 행 추가. 없으면 건너뜀.
+
+    ### Epic 없이 실행 시 (기본, 하위 호환 100%)
+
+    기존 동작 동일. 프론트매터에 Epic 라인 없음, backlog.md 의 Epic 컬럼은 `—` 또는 빈 값.
+
+    ### Success_Criteria 보강 (Epic 제공 시)
+
+    - Epic 디렉터리 존재 확인 성공
+    - IDEA 프론트매터 Epic 라인 + backlog.md Epic 컬럼 동시 갱신
+    - Epic children 업데이트는 선택 (파일 없으면 skip, 실패로 간주하지 않음)
+
+    ### Output 추가 필드 (Epic 제공 시)
+
+    기존 Output_Format 의 "등록 완료" 섹션에 다음 추가:
+
+    ```
+    - **Epic**: [EPIC-{YYYYMMDD}-{NNN}](../../epics/{status}/EPIC-{ID}/00-epic-brief.md)
+    ```
+
+    ### 제약 (Anti-patterns)
+
+    - Epic 이 `90-archive/` 상태이면 연결 거부 (archived Epic 은 소급 연결만 `/plan-epic-adopt` 로)
+    - Epic 이 존재하지 않으면 IDEA 생성 자체를 **거부** — 사용자 착오 방지 (`/plan-epic` 먼저 실행)
+    - Epic 이름 오타 (예: EPIC-20260422-999 없음) 시 **FAIL** + 유사 Epic 목록 제안
+  </Epic_Binding>
 </Agent_Prompt>

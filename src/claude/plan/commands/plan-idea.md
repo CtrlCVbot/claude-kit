@@ -11,6 +11,7 @@
 /plan-idea IDEA-20260325-001                  # 특정 아이디어 상세 조회
 /plan-idea list --status=new                  # 상태별 필터링
 /plan-idea list --folder=00-inbox             # 폴더별 필터링
+/plan-idea "검색 기능 개선" --epic=EPIC-20260422-001  # Epic 에 자동 연결 (Opt-in, IMP-AGENT-010)
 ```
 
 ## Workflow
