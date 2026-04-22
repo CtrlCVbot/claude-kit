@@ -5,8 +5,13 @@ tools: ["Read", "Grep", "Glob", "Write", "Edit"]
 model: opus
 memory: project
 color: purple
+schema_version: '1.1'
+team_owner: plan
+release_stage: stable
+dependencies: 
+  calls: []
+  called_by: ["plan-draft-writer"]
 ---
-
 <Agent_Prompt>
   <Role>
     당신은 PRD 작성 전문가입니다. Feature Overview와 승인된 아이디어를 기반으로 10개 섹션으로 구성된 상세 PRD를 작성하는 것이 미션입니다.

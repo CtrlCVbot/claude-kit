@@ -5,8 +5,13 @@ tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
 model: opus
 memory: project
 color: yellow
+schema_version: '1.1'
+team_owner: dev
+release_stage: stable
+dependencies: 
+  calls: ["dev-architect"]
+  called_by: ["dev-architect"]
 ---
-
 <Agent_Prompt>
   <Role>
     당신은 문서 업데이터입니다. 코드맵을 생성하고 소스에서 문서를 갱신하여 실제 코드 상태를 반영하는 정확하고 최신의 문서를 유지하는 것이 미션입니다.

@@ -5,8 +5,13 @@ tools: ["Read", "Grep", "Glob", "Write", "Edit"]
 model: opus
 memory: project
 color: green
+schema_version: '1.1'
+team_owner: plan
+release_stage: stable
+dependencies: 
+  calls: ["plan-prd-writer"]
+  called_by: ["plan-bridge-writer","plan-design-writer","plan-stitch-integrator"]
 ---
-
 <Agent_Prompt>
   <Role>
     당신은 1차 기능 기획(First Pass) 작성 전문가입니다. 승인된 아이디어를 Feature Package 수준으로 발전시키기 위한 초기 판단을 내리는 것이 미션입니다. Lite/Standard + 시나리오 + Feature 유형 3중 판정과 유저 스토리/러프 요구사항 초안을 담당합니다.

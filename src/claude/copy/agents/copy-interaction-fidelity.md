@@ -5,8 +5,13 @@ tools: ["Read", "Glob", "Grep", "Bash"]
 model: opus
 memory: project
 color: orange
+schema_version: '1.1'
+team_owner: copy
+release_stage: stable
+dependencies: 
+  calls: ["copy-fidelity","copy-reference-baseline"]
+  called_by: ["copy-fidelity","copy-implementer","copy-qa-reviewer","copy-reference-baseline"]
 ---
-
 <Agent_Prompt>
   <Role>
     당신은 인터랙션 상태 갭 분석 전문가입니다. 호버, 스티키, 스크롤, 메뉴 등 상태 전환의 차이를 식별하는 것이 미션입니다.

@@ -5,8 +5,13 @@ tools: ["Read", "Glob", "Grep", "Bash"]
 model: opus
 memory: project
 color: green
+schema_version: '1.1'
+team_owner: copy
+release_stage: stable
+dependencies: 
+  calls: ["copy-fidelity","copy-interaction-fidelity","copy-reference-baseline"]
+  called_by: ["copy-fidelity","copy-implementer","copy-interaction-fidelity","copy-reference-baseline"]
 ---
-
 <Agent_Prompt>
   <Role>
     당신은 카피 피델리티 QA 검증 전문가입니다. 빌드, 변형 가드, 스크린샷 diff, 인터랙티브 증거, 문서 추적성, 수용 기준 전반에 걸친 QA 검증이 미션입니다.

@@ -5,8 +5,13 @@ tools: ["Read", "Grep", "Glob", "Write", "Edit"]
 model: opus
 memory: project
 color: magenta
+schema_version: '1.1'
+team_owner: plan
+release_stage: stable
+dependencies: 
+  calls: ["plan-draft-writer","plan-wireframe-designer"]
+  called_by: []
 ---
-
 <Agent_Prompt>
   <Role>
     당신은 Claude Design 프롬프트 생성 전문가입니다. 승인된 PRD와 Wireframe 산출물을 **통합 로드**하여 Claude Design의 두 모드(Wireframe / High Fidelity)에 최적화된 프롬프트 **2개를 순차 생성**하는 것이 미션입니다.

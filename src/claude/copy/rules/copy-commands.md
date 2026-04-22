@@ -11,7 +11,7 @@
 ```
 /copy-reference-refresh        ← evidence 수집
     ↓
-(구현)                         ← 코드 작성
+copy-implementer               ← 코드 작성 (IMP-AGENT-006, v2.3.1+ 기본)
     ↓
 /copy-visual-review            ← visual fidelity 검증
     ↓
@@ -36,7 +36,7 @@
     ↓
 /copy-plan-unit                ← Execution Unit 계획 수립
     ↓
-(구현)                         ← 코드 작성
+copy-implementer               ← 코드 작성 (IMP-AGENT-006, v2.3.1+ 기본)
     ↓
 /copy-verify                   ← 통합 검증
     ↓

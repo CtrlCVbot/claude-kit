@@ -1,0 +1,75 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://claude-kit/core/v1.1/agent-frontmatter.schema.json",
+  "title": "Agent Frontmatter (v1.1)",
+  "description": "claude-kit 에이전트 정의 파일 frontmatter 표준. v1.0(기존 6필드) + v1.1(team_owner, release_stage, dependencies, schema_version). BC-2.3.1-04. IMP-AGENT-008.",
+  "type": "object",
+  "required": [
+    "name",
+    "description",
+    "tools",
+    "model",
+    "memory",
+    "color",
+    "schema_version",
+    "team_owner",
+    "release_stage"
+  ],
+  "properties": {
+    "name": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]{1,63}$",
+      "description": "kebab-case 에이전트 이름."
+    },
+    "description": {
+      "type": "string",
+      "minLength": 10,
+      "description": "한 줄 설명. 한국어 허용."
+    },
+    "tools": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "에이전트가 사용할 수 있는 도구 목록."
+    },
+    "model": {
+      "type": "string",
+      "description": "사용할 모델 (현재 표준: opus)."
+    },
+    "memory": {
+      "enum": ["project", "session", "none"],
+      "description": "메모리 스코프."
+    },
+    "color": {
+      "type": "string",
+      "description": "UI 색상 식별자 (semantic)."
+    },
+    "schema_version": {
+      "const": "1.1",
+      "description": "frontmatter 스키마 버전. v1.1부터 아래 3필드 필수."
+    },
+    "team_owner": {
+      "enum": ["core", "dev", "plan", "copy", "community"],
+      "description": "에이전트 소유 팀. 실패율 초과 시 알림 라우팅·PR 리뷰 책임자 결정."
+    },
+    "release_stage": {
+      "enum": ["experimental", "beta", "stable", "deprecated"],
+      "description": "릴리스 단계. 텔레메트리(IMP-AGENT-009) 집계 + BC 파급 판단 근거."
+    },
+    "dependencies": {
+      "type": "object",
+      "description": "에이전트 간 호출 그래프 명시.",
+      "properties": {
+        "calls": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "이 에이전트가 호출하는 다른 에이전트 이름 목록. 빈 배열 허용."
+        },
+        "called_by": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "이 에이전트를 호출하는 커맨드/스킬/에이전트 이름 목록."
+        }
+      }
+    }
+  }
+}

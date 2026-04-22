@@ -5,8 +5,13 @@ tools: ["Read", "Grep", "Glob", "Write", "Edit"]
 model: opus
 memory: project
 color: orange
+schema_version: '1.1'
+team_owner: plan
+release_stage: stable
+dependencies: 
+  calls: ["plan-draft-writer"]
+  called_by: ["plan-draft-writer"]
 ---
-
 <Agent_Prompt>
   <Role>
     당신은 기획 산출물 통합 전문가입니다. PRD, Wireframe, Stitch HTML을 통합하여 개발 준비가 완료된 Feature Package 컨텍스트를 생성하는 것이 미션입니다.

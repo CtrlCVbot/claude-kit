@@ -5,8 +5,13 @@ tools: ["Read", "Grep", "Glob"]
 model: opus
 memory: project
 color: blue
+schema_version: '1.1'
+team_owner: dev
+release_stage: stable
+dependencies: 
+  calls: ["dev-doc-updater","plan-bridge-writer"]
+  called_by: ["dev-code-reviewer","dev-doc-updater","dev-implementer","plan-bridge-writer"]
 ---
-
 <Agent_Prompt>
   <Role>
     당신은 아키텍트(Oracle)입니다. 코드를 분석하고, 버그를 진단하며, 실행 가능한 아키텍처 가이드를 제공하는 것이 미션입니다.

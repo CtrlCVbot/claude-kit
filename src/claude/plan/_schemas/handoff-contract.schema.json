@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://claude-kit/plan/v1/handoff-contract.schema.json",
+  "title": "Handoff Contract (plan → dev/copy)",
+  "description": "plan-bridge-writer가 생성하는 구조화 핸드오프 계약. bridge 4종 문서와 함께 handoff-contract.json 파일로 저장되어 dev-implementer/copy-implementer가 자동 소비. IMP-AGENT-007.",
+  "type": "object",
+  "required": ["schema_version", "feature_slug", "feature_type", "owner_domain", "next_step"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d+$",
+      "description": "스키마 버전 (1.x). 1.0 기준선."
+    },
+    "feature_slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]{1,63}$",
+      "description": "Feature slug (kebab-case, 2~64자)."
+    },
+    "feature_type": {
+      "enum": ["dev", "copy", "hybrid"],
+      "description": "Feature 유형. plan-draft-writer 판정 결과 (routing-metadata 기반)."
+    },
+    "scenario": {
+      "enum": ["A", "B", "C", "N/A"],
+      "description": "copy Feature 시나리오. dev Feature는 'N/A'."
+    },
+    "owner_domain": {
+      "enum": ["dev", "copy", "mixed"],
+      "description": "구현 주체 도메인. hybrid Feature는 'mixed'."
+    },
+    "task_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "description": "TASK ID (IMP-KIT-015 표준: T-AREA-NN, TASK-slug-NN, LEGACY-AREA-NN, SPIKE-AREA-NN)."
+      },
+      "description": "Feature Package TASK ID 목록. dev-implementer가 순회 대상."
+    },
+    "req_ids": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "REQ-ID 목록. plan-prd-writer가 채번한 요구사항 ID."
+    },
+    "next_step": {
+      "type": "object",
+      "required": ["command", "agent"],
+      "description": "메인 세션이 수행할 다음 디스패치.",
+      "properties": {
+        "command": {
+          "type": "string",
+          "description": "실행 커맨드 (예: '/dev-run dash-preview-phase3')."
+        },
+        "agent": {
+          "type": "string",
+          "description": "호출 대상 에이전트 이름 (예: 'dev-implementer', 'copy-implementer'). 'none' 허용 — 사용자 수동 진행 시."
+        },
+        "inputs": {
+          "type": "object",
+          "description": "에이전트에 전달할 추가 입력 (자유 구조)."
+        }
+      }
+    },
+    "constraints": {
+      "type": "object",
+      "description": "구현 시 준수해야 할 제약.",
+      "properties": {
+        "file_scope": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "구현 허용 파일/디렉터리 경로 (glob 지원). dev-feature-scope-guard 훅이 검증."
+        },
+        "forbidden_paths": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "수정 금지 경로. file_scope 포함이어도 예외 처리."
+        },
+        "dependencies": {
+          "type": "array",
+          "items": { "type": "string" },
+          "description": "선행 Feature/라이브러리. slug 또는 패키지명."
+        }
+      }
+    },
+    "generated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "핸드오프 계약 생성 시각 (ISO 8601). plan-bridge-writer가 채움."
+    }
+  }
+}

@@ -135,12 +135,14 @@ WRONG:   Agent(write-capable) completes → Edit(file) → "File has not been re
 | `dev-security-reviewer` | dev | Write/Edit 보유 (보고서/fix 작성) |
 | `dev-database-reviewer` | dev | Write/Edit 보유 (SQL/migration 작성) |
 | `dev-verify-agent` | dev | Write/Edit 보유 (라운드당 ≤10파일) |
+| `dev-implementer` | dev | **신설 (IMP-AGENT-005, BC-2.3.1-02)** — TDD Red-Green-Refactor 자율 실행. `/dev-run` 기본 디스패치 |
 | `plan-idea-collector` | plan | IDEA 파일 생성/수정 |
 | `plan-idea-screener` | plan | SCREENING 파일 생성 |
 | `plan-prd-writer` | plan | PRD 문서 작성 |
 | `plan-stitch-integrator` | plan | Feature Package 작성 |
 | `plan-wireframe-designer` | plan | 와이어프레임 파일 작성 |
 | `copy-reference-baseline` | copy | evidence/ 파일 생성 |
+| `copy-implementer` | copy | **신설 (IMP-AGENT-006, BC-2.3.1-03)** — VF/IF gap 소비 + Execution Unit 범위 구현. `/copy-plan-unit` 승인 후 호출 |
 | `general-purpose` | (Claude Code 기본) | 전범위 Edit 가능 |
 | `plan-draft-writer` | plan | (IMP-KIT-003, 2.2.0+ 예정) |
 | `plan-bridge-writer` | plan | (IMP-KIT-004, 2.2.0+ 예정) |

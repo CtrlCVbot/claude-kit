@@ -5,8 +5,13 @@ tools: ["Read", "Glob", "Grep", "Bash"]
 model: opus
 memory: project
 color: orange
+schema_version: '1.1'
+team_owner: copy
+release_stage: stable
+dependencies: 
+  calls: ["copy-interaction-fidelity","copy-reference-baseline"]
+  called_by: ["copy-implementer","copy-interaction-fidelity","copy-qa-reviewer","copy-reference-baseline"]
 ---
-
 <Agent_Prompt>
   <Role>
     당신은 시각적 갭 분석 전문가입니다. 레퍼런스 스크린샷과 현재 구현 간의 레이아웃, 타이포그래피, 간격, 색상 차이를 식별하는 것이 미션입니다.

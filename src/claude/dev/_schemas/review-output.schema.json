@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://claude-kit/dev/v1/review-output.schema.json",
+  "title": "Review Output (dev-code-reviewer Contract)",
+  "description": "dev-code-reviewer가 Milestone/Feature 리뷰 종료 시 본문 끝에 첨부하는 구조화 출력. IMP-KIT-028(decision-log 자동 기록)과 IMP-KIT-035(Top 3 수술적 처리 rule)를 단일 계약으로 통합. IMP-AGENT-002.",
+  "type": "object",
+  "required": ["schema_version", "summary", "top3_surgical", "decision_log_entries"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d+$",
+      "description": "스키마 버전 (1.x). 1.0 기준선."
+    },
+    "summary": {
+      "type": "object",
+      "required": ["severity_counts", "verdict"],
+      "description": "리뷰 요약. 텔레메트리(IMP-AGENT-009) 집계 대상.",
+      "properties": {
+        "severity_counts": {
+          "type": "object",
+          "required": ["critical", "high", "medium", "low"],
+          "properties": {
+            "critical": { "type": "integer", "minimum": 0 },
+            "high": { "type": "integer", "minimum": 0 },
+            "medium": { "type": "integer", "minimum": 0 },
+            "low": { "type": "integer", "minimum": 0 }
+          }
+        },
+        "verdict": {
+          "enum": ["PASS", "WARN", "FAIL"],
+          "description": "종합 판정. CRITICAL 1건 이상 = FAIL, HIGH 1건 이상 = WARN, 이외 PASS (reviewer 재량)."
+        },
+        "scope": {
+          "type": "string",
+          "description": "리뷰 대상 범위 (예: dash-preview-phase3 M3)."
+        }
+      }
+    },
+    "top3_surgical": {
+      "type": "array",
+      "maxItems": 3,
+      "description": "IMP-KIT-035 'Top 3 수술적 처리' rule. CRITICAL 또는 HIGH 중 독립 수정 가능 + 5파일/50줄 이하인 항목만 선정. 3건 초과 시 reviewer가 우선순위로 축소.",
+      "items": {
+        "type": "object",
+        "required": ["issue_id", "file_path", "severity", "surgical_fix"],
+        "properties": {
+          "issue_id": {
+            "type": "string",
+            "description": "리뷰 세션 내 고유 ID (예: R-001)."
+          },
+          "file_path": {
+            "type": "string",
+            "description": "문제 파일 경로 (리포 루트 기준)."
+          },
+          "line_range": {
+            "type": "string",
+            "description": "라인 범위 (예: '42-58'). 단일 라인 '42' 허용."
+          },
+          "severity": {
+            "enum": ["CRITICAL", "HIGH"],
+            "description": "MEDIUM/LOW는 Top 3에 포함하지 않는다."
+          },
+          "surgical_fix": {
+            "type": "string",
+            "description": "수술적 수정 요약 (1~3문장). 구현 에이전트가 바로 실행 가능한 수준."
+          }
+        }
+      }
+    },
+    "decision_log_entries": {
+      "type": "array",
+      "description": "IMP-KIT-028 '리뷰 사이클 decision-log 자동 기록'. 논쟁 있던 리뷰 코멘트의 최종 판정과 근거.",
+      "items": {
+        "type": "object",
+        "required": ["decision_id", "context", "rationale"],
+        "properties": {
+          "decision_id": {
+            "type": "string",
+            "description": "결정 고유 ID (예: D-001). decision-log.md §N 에서 참조."
+          },
+          "context": {
+            "type": "string",
+            "description": "결정의 배경 / 논쟁 지점 (1~2문장)."
+          },
+          "rationale": {
+            "type": "string",
+            "description": "채택/기각 근거. 기존 결정·룰·증거(file:line)를 인용."
+          },
+          "tags": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "분류 태그 (예: 'security', 'performance', 'refactor')."
+          }
+        }
+      }
+    }
+  }
+}

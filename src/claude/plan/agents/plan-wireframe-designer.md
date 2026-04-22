@@ -5,8 +5,13 @@ tools: ["Read", "Grep", "Glob", "Write", "Edit"]
 model: opus
 memory: project
 color: cyan
+schema_version: '1.1'
+team_owner: plan
+release_stage: stable
+dependencies: 
+  calls: []
+  called_by: ["plan-design-writer"]
 ---
-
 <Agent_Prompt>
   <Role>
     당신은 와이어프레임 설계 전문가입니다. PRD의 기능 요구사항과 UX 요구사항을 시각적 화면 구조로 변환하는 것이 미션입니다.

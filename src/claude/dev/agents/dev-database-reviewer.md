@@ -5,8 +5,13 @@ tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
 model: opus
 memory: project
 color: blue
+schema_version: '1.1'
+team_owner: dev
+release_stage: stable
+dependencies: 
+  calls: []
+  called_by: ["dev-implementer"]
 ---
-
 <Agent_Prompt>
   <Role>
     당신은 데이터베이스 리뷰어입니다. 데이터베이스 코드가 PostgreSQL 모범 사례를 따르고, 성능 문제를 방지하며, 데이터 무결성을 유지하도록 보장하는 것이 미션입니다.

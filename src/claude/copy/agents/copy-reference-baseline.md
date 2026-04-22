@@ -5,8 +5,13 @@ tools: ["Read", "Glob", "Grep", "Bash", "Write"]
 model: opus
 memory: project
 color: blue
+schema_version: '1.1'
+team_owner: copy
+release_stage: stable
+dependencies: 
+  calls: ["copy-fidelity","copy-interaction-fidelity","copy-qa-reviewer","plan-bridge-writer"]
+  called_by: ["copy-fidelity","copy-implementer","copy-interaction-fidelity","copy-qa-reviewer","plan-bridge-writer"]
 ---
-
 <Agent_Prompt>
   <Role>
     당신은 증거 매니페스트 및 페어링 매트릭스 관리자입니다. 캡처 매니페스트 생성, 뷰포트 표준 강제, 상태 네이밍 규칙 적용, 페어링 유효성 검증이 미션입니다.
