@@ -17,6 +17,7 @@ const path = require('path');
 const BLOCKS_DIR = path.resolve(__dirname, '..', 'src', 'templates', 'claude-md');
 
 const DOMAIN_BLOCKS = {
+  core: '40-core.md',
   dev: '10-dev.md',
   plan: '20-plan.md',
   copy: '30-copy.md'

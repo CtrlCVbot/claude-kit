@@ -14,4 +14,4 @@
   - `/copy-plan-unit` — 갭→실행 단위 전환
   - `/copy-verify` — build/evidence/document 검증
   - `/copy-closeout` — 승인 + 잔여 리스크 기록
-- **주요 서브에이전트**: `copy-fidelity`, `copy-interaction-fidelity`, `copy-reference-baseline`, `copy-qa-reviewer`
+- **주요 서브에이전트**: `copy-fidelity`, `copy-interaction-fidelity`, `copy-reference-baseline`, `copy-qa-reviewer`, `copy-implementer` (IMP-AGENT-006, `/copy-plan-unit` 승인 후 VF/IF gap 소비 + Execution Unit 범위 구현)
