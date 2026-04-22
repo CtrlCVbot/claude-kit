@@ -6,7 +6,71 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [Unreleased]
 
-차기 릴리스 미정. 2.3.0 Exit Criteria 회귀 측정(dash-preview-phase3 복제) 결과에 따라 2.3.1 또는 2.4.0 분기.
+v2.4.0 정식 릴리스 (2026-06-23 목표) 로 이동 예정. Phase 3 전면 도입 (hook enable + `/plan-epic-adopt` + Codex sibling 동기화).
+
+---
+
+## [2.4.0-beta.1] - 2026-04-22
+
+Hierarchical Plan Structure 도입 (Phase 2 beta). Epic(대) / Feature(중) / Task(소) 3단 Opt-in 계층 + v2.3.1 IMP-AGENT 001~009 소급 포함 + 다운스트림 템플릿 동기화.
+
+### Added — v2.4.0 Phase 2 Epic 도메인
+
+- **Rule**: `src/claude/plan/rules/plan-epic-hierarchy.md` (SSOT, Epic 계층 정의 + Opt-in 원칙 + 금지 사항)
+- **Skill**: `src/claude/plan/skills/plan-epic-workflow/` (라이프사이클 + 상태 머신 + 3 템플릿: epic-brief / children-features / epic-binding)
+- **Command**: `/plan-epic` (create/list/show/advance/archive 서브커맨드)
+- **Hook**: `src/claude/plan/hooks/plan-epic-integrity.js` (FLAG only, Phase 2 disable 기본)
+- **Parameter**: `/plan-idea --epic=EPIC-{ID}` Opt-in 자동 연결
+- **Agent extension (IMP-AGENT-010)**: `plan-idea-collector` Epic_Binding 섹션 — Epic 존재 확인 + 프론트매터/backlog/children 자동 갱신
+- **Agent extension (IMP-AGENT-011)**: `plan-prd-writer` Epic_Context 섹션 — Epic Brief §2 성공지표 인용 + 자매 Feature 참조
+- **Skill extension**: `plan-idea-management` 에 Epic 연결 규칙 섹션
+
+### Added — Downstream Template Sync
+
+- `src/templates/claude-md/40-core.md` 신규 (core 도메인 블록 — telemetry, feedback-archiving, 주요 룰 SSOT)
+- `scripts/claude-md-renderer.js` DOMAIN_BLOCKS 에 core 등록
+- `src/templates/claude-md/{10-dev,20-plan,30-copy}.md` v2.3.1 + v2.4.0 반영 (dev-implementer / copy-implementer / Epic P0 + Spike)
+- `scripts/quickstart-renderer.js` plan flow / actions / pipeline chooser / paths / mini glossary 확장 (Epic/Children Features/Spike/Telemetry 용어 추가)
+
+### Tests
+
+- `plan-epic-integrity.js` TDD 25 단위 테스트 (RED → GREEN 검증)
+- 전체 테스트 스위트 294/294 pass, 회귀 0
+
+### Migration (2.3.0 → 2.4.0-beta.1)
+
+- `pnpm update claude-kit` → `postinstall` 자동 실행 → CLAUDE.md + CLAUDE-KIT-QUICKSTART.md 자동 재생성 (v2.3.1 + v2.4.0 반영)
+- Epic 계층은 Opt-in — 기존 flat 플로우 변경 없음
+- `plan-epic-integrity.js` 는 Phase 2 disable 기본, `.claude/settings.json` 에서 수동 enable 가능
+
+---
+
+## [2.3.1] - 2026-04-22 (retroactive)
+
+IMP-AGENT 시리즈 9건 + kit-feedback-archiving Phase 3 전체 완료. CHANGELOG 소급 기록 (개별 release tag 없음, v2.4.0-beta.1 에 통합 태그).
+
+### Added — IMP-AGENT 시리즈 (9건)
+
+- **IMP-AGENT-001** — edit-coordinates v1.1: `binding_updates` 필드 추가 (dev-architect → dev-doc-updater architecture-binding 동기화 계약 승격). 하위호환 유지.
+- **IMP-AGENT-002** — 리뷰 출력 표준화: code/security/database reviewer 출력 포맷 통일
+- **IMP-AGENT-003** — archive guard 프롬프트: archive 원본 불변 보호 강화
+- **IMP-AGENT-004** — Spike 워크플로우: `plan-bridge-writer` + `dev-architect` 협력 계약 (Day-End Go/No-Go/Extend 1일). TASK ID `SPIKE-{AREA}-NN`. Budget 1일 hard cap (IMP-KIT-036)
+- **IMP-AGENT-005** — `dev-implementer` 신설: `/dev-run` 기본 디스패치, TDD Red-Green-Refactor 자율 실행 (BC-2.3.1-02)
+- **IMP-AGENT-006** — `copy-implementer` 신설: `/copy-plan-unit` 승인 후 VF/IF gap 소비 + Execution Unit 범위 구현 (BC-2.3.1-03)
+- **IMP-AGENT-007** — 도메인 간 핸드오프: plan → dev → copy 크로스 링크 표준화
+- **IMP-AGENT-008** — 에이전트 frontmatter v1.1: `team_owner` / `release_stage` / `schema_version` 표준 필드 + migrate 스크립트
+- **IMP-AGENT-009** — 에이전트 텔레메트리: 스키마 v1 + `/agent-report` 커맨드 + `agent-telemetry.md` 룰 (emit 훅 구현은 v2.4.0 후속 세션)
+
+### Added — kit-feedback-archiving Phase 3
+
+- Phase 3.3 index/stats/rollup 전체 완료 (커밋 `65368b3`)
+- IMP-KIT-007 자동 후속 트리거 + IMP-KIT-024 stub → `IMP-AGENT-009` 승계
+- 피드백 엔트리 자동 아카이빙 경로 확립
+
+### Rules 신규
+
+- `src/claude/core/rules/agent-telemetry.md` — 텔레메트리 스키마 + 수집 파이프라인 + 개인정보 보호 원칙
+- `src/claude/core/rules/spike-workflow-agents.md` — Spike 모드 에이전트 협력 계약
 
 ---
 
