@@ -112,6 +112,7 @@ function buildOutputRows(activeTargets) {
 
 function buildPipelineChooserRows() {
   return [
+    '| 여러 Feature 를 제품 Theme 으로 묶어 관리해야 함 | `core + dev + plan` | `/plan-epic` | **(v2.4.0 Opt-in)** Epic 계층으로 3개 이상 Feature 를 묶어 의존성/실행 순서를 한 번에 관리한다. |',
     '| 아이디어를 먼저 수집하고 우선순위를 정해야 함 | `core + dev + plan` | `/plan-idea` | 아이디어 -> 스크리닝 -> PRD -> 브리지까지 한 흐름으로 이어진다. |',
     '| 승인 전 아이디어를 걸러야 함 | `core + dev + plan` | `/plan-screen` | RICE와 승인 게이트로 실행 여부를 먼저 결정한다. |',
     '| 이미 요구사항이나 PRD가 있고 바로 구현하면 됨 | `core + dev` | `/dev-feature` | 기획 단계를 생략하고 Feature Package 생성부터 시작한다. |',
@@ -134,14 +135,15 @@ function buildPlanStatusNote(variant, activeDomains) {
 
 function buildPlanFlowRows() {
   return [
-    '| P1 | `/plan-idea` | 아이디어 수집 | `.plans/ideas/00-inbox/IDEA-{YYYYMMDD}-{NNN}.md` |',
+    '| P0 | `/plan-epic "{제목}"` | **(Opt-in, v2.4.0)** Epic 생성 — 3개 이상 Feature 묶음 관리 | `.plans/epics/00-draft/EPIC-{YYYYMMDD}-{NNN}/` |',
+    '| P1 | `/plan-idea "{제목}" [--epic=EPIC-...]` | 아이디어 수집 (Epic 자동 연결 optional, IMP-AGENT-010) | `.plans/ideas/00-inbox/IDEA-{YYYYMMDD}-{NNN}.md` |',
     '| P2 | `/plan-screen` | RICE 스크리닝 + 승인 게이트 | `.plans/ideas/10-screening/SCREENING-{YYYYMMDD}-{NNN}.md` |',
     '| P3 | `/plan-draft` | 1차 기능 기획 + Lite/Standard 판정 | `.plans/features/drafts/{slug}/first-pass.md` |',
-    '| P4 | `/plan-prd` | Standard 기능의 PRD 상세 작성 | `.plans/prd/00-draft/` -> `10-approved/` |',
+    '| P4 | `/plan-prd` | Standard 기능의 PRD 상세 작성 (Epic 시 §2 성공지표 인용, IMP-AGENT-011) | `.plans/prd/00-draft/` -> `10-approved/` |',
     '| P5 | `/plan-wireframe` | ASCII/Mermaid 와이어프레임 | `.plans/wireframes/{slug}/` |',
     '| P6a | `/plan-design` | (wireframe 후 택일) Claude Design 2단계 프롬프트 | `.plans/design/{slug}/` |',
     '| P6b | `/plan-stitch` | (wireframe 후 택일) Stitch 디자인 반영 | `.plans/stitch/{slug}/` |',
-    '| P7 | `/plan-bridge` | 개발 핸드오프 | bridge context 파일들 |',
+    '| P7 | `/plan-bridge` | 개발 핸드오프 (Spike 모드 포함, IMP-AGENT-004) | bridge context 파일들 |',
     '| P8 | `/plan-archive` | 완료 기능 번들화 | `.plans/archive/{slug}/ARCHIVE-{KEY}.md` |'
   ].join('\n');
 }
@@ -150,6 +152,7 @@ function buildPlanPaths() {
   return [
     '```text',
     '.plans/',
+    '├── epics/{status}/          Epic 컨테이너 (Opt-in, v2.4.0) — draft/planning/active/completed/archive',
     '├── ideas/00-inbox/          신규 아이디어',
     '├── ideas/20-approved/       승인 완료 -> /plan-draft 대상',
     '├── prd/10-approved/         개발 핸드오프 직전 PRD',
@@ -233,11 +236,18 @@ function buildPlanActionsNote(variant, activeDomains) {
 function buildPlanActions() {
   return [
     '```text',
+    '# 기본 경로 (Epic 없음)',
     '/plan-idea "새 기능 아이디어"',
     '/plan-screen IDEA-YYYYMMDD-001',
     '/plan-draft IDEA-YYYYMMDD-001',
     '/plan-prd .plans/features/drafts/<slug>/first-pass.md',
     '/plan-bridge <slug>',
+    '',
+    '# Epic 묶음 관리 (Opt-in, v2.4.0)',
+    '/plan-epic "OPTIC Landing 제품 라인"',
+    '/plan-idea "F1 세부 기능" --epic=EPIC-YYYYMMDD-001',
+    '/plan-idea "F2 세부 기능" --epic=EPIC-YYYYMMDD-001',
+    '# 이후 /plan-screen ~ /plan-archive 기본 경로와 동일',
     '```'
   ].join('\n');
 }
@@ -333,7 +343,13 @@ function buildMiniGlossaryRows() {
     '| `Gap Board` | copy 도메인에서 visual/interaction 갭을 우선순위별로 통합한 보드 |',
     '| `Evidence Manifest` | 기준 캡처(screenshot, state capture)의 메타데이터 목록 |',
     '| `WBS` | Work Breakdown Structure. Epic > Feature > Story > Task 4계층 분류 |',
-    '| `시나리오 A/B/C` | A(백지), B(부분), C(충실도 교정). 카피 작업의 파이프라인 순서를 결정 |'
+    '| `시나리오 A/B/C` | A(백지), B(부분), C(충실도 교정). 카피 작업의 파이프라인 순서를 결정 |',
+    '| `Epic` | **(v2.4.0 Opt-in)** 여러 Feature 를 묶는 상위 컨테이너. 1~3개월 단위 제품 Theme |',
+    '| `Children Features` | Epic 의 자식 Feature 목록 + 의존성 매트릭스 + Phase 실행 순서 |',
+    '| `Epic Binding` | Feature 측에서 Epic 을 참조하는 파일 (`00-context/08-epic-binding.md`) |',
+    '| `Spike` | **(v2.3.1)** Standard Feature 진입 전 1일 게이트 검증 — Go/No-Go/Extend 판정 |',
+    '| `Telemetry` | **(v2.3.1)** `~/.claude/logs/agent-telemetry.jsonl` 에이전트 호출 이벤트 로컬 집계 |',
+    '| `Agent Frontmatter v1.1` | **(IMP-AGENT-008)** `team_owner` / `release_stage` / `schema_version` 표준 필드 |'
   ].join('\n');
 }
 
