@@ -83,19 +83,31 @@ kit-feedback-archiving Phase 3 착수가 가능하려면 **본 로드맵 Phase 2
 
 ---
 
-## 4. IMP-KIT-024 Stub
+## 4. IMP-KIT-024 Stub (v2.3.1에서 본체 승격)
 
-### 4.1 2.3.0에서는 Stub만
+### 4.1 2.3.0 Stub — 완료
 
-IMP-KIT-024 (에이전트 호출 텔레메트리)는 P2로 2.4.0+ 범위. 본 2.3.0에서는 **트리거 호출 카운터 최소 형태**만 도입.
+IMP-KIT-024 (에이전트 호출 텔레메트리)는 2.3.0에서 **트리거 호출 카운터 최소 형태**만 도입.
 
 - 파일: `.claude/telemetry-stub.json` (선택적 생성)
 - 내용: `{ trigger_id, timestamp, agent_name }` 단순 배열
 - 용도: Phase 3 진입 시 베이스라인 데이터 확보
 
-### 4.2 Phase 3/5에서 확장
+### 4.2 v2.3.1 본체 승격 — IMP-AGENT-009
 
-kit-feedback-archiving Phase 5가 IMP-KIT-024 본체 구현과 **통합**되어 완료 ([06-integration-with-roadmap §3.4](../kit-feedback-archiving/06-integration-with-roadmap.md)).
+> **Status 갱신 (2026-04-22)**: stub → **superseded by IMP-AGENT-009**. 2.4.0+ 이월 대신 v2.3.1에서 본체 구현.
+
+본체 스펙: [kit-agent-improvements/IMP-AGENT-009](../kit-agent-improvements/IMP-AGENT-009-agent-telemetry.md)
+
+- 스키마: `src/claude/core/_schemas/agent-telemetry.schema.json` v1
+- 훅: `src/claude/core/hooks/agent-telemetry-emit.js`
+- 롤업: `src/claude/core/_utils/telemetry-rollup.js` (30일 이상 일별 파일 이관)
+- 리포트: `/agent-report` 커맨드 (`src/claude/core/commands/agent-report.md`)
+- SSOT 룰: `.claude/rules/agent-telemetry.md`
+
+**사유**: kit-feedback-archiving Phase 3 완료로 필요한 인프라(SubagentStop 훅, collector, aggregator)가 조기 확보됨. IMP-AGENT-009가 IMP-KIT-024 stub을 본체로 승격시켜 2.4.0+ 이월 대신 v2.3.1에서 완료.
+
+kit-feedback-archiving Phase 5는 IMP-AGENT-009와 **통합 완료**된 것으로 간주 ([06-integration-with-roadmap §3.4](../kit-feedback-archiving/06-integration-with-roadmap.md)).
 
 ---
 
@@ -114,7 +126,7 @@ kit-feedback-archiving Phase 5가 IMP-KIT-024 본체 구현과 **통합**되어 
 - 도메인별 수집 전략 (Phase 3.2)
 - Codex fallback artifact (Phase 4.1)
 - 월 단위 롤업 (Phase 4.2)
-- IMP-KIT-024 완전 구현 (Phase 5)
+- ~~IMP-KIT-024 완전 구현 (Phase 5)~~ → **v2.3.1 IMP-AGENT-009로 조기 승격**
 
 상세 일정: [kit-feedback-archiving/06-integration-with-roadmap §2](../kit-feedback-archiving/06-integration-with-roadmap.md)
 
