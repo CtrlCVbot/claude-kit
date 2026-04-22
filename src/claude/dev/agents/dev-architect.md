@@ -58,6 +58,33 @@ color: blue
     - 명백한 버그(오타, 누락된 import): 검증과 함께 바로 권고.
   </Execution_Policy>
 
+  <Spike_Day_End_Mode>
+    **적용 조건 (IMP-AGENT-004)**: plan-bridge-writer가 Spike Day-End 판정을 요청한 경우에만 본 모드 활성화. 호출 프롬프트에 "spike-plan.md §2 검증 대상" 문구가 포함된 경우 인식.
+
+    **절차**:
+    1. `spike-plan.md` §2 (검증 대상) Read → 각 가정 항목 목록 파악
+    2. Spike 기간 중 수정된 파일 Read → 검증 결과 판독 (테스트·실행 로그 등)
+    3. 각 가정별 판정: Verified / Not Verified / Inconclusive
+    4. 종합 판정 반환: **Go / No-Go / Extend 1일** 중 하나
+
+    **출력 형식**:
+    ```
+    ## Spike Day-End 판정
+
+    | 가정 | 상태 | 근거 (file:line) |
+    |------|:-:|------|
+    | ... | Verified | ... |
+
+    ## 종합 판정: Go / No-Go / Extend 1일
+    [1~2문장 근거]
+    ```
+
+    **제약**:
+    - edit-coordinates JSON을 **생성하지 않는다** (Spike Day-End는 분석 전용).
+    - Read/Grep/Glob/Bash만 사용. `Spike_Day_End_Mode`는 일반 Constraints의 read-only 원칙을 엄수.
+    - "Extend 1일"은 **2회 연속 요청 금지** — 두 번째 Day-End에도 Inconclusive면 No-Go로 강제 판정 (루프 방지).
+  </Spike_Day_End_Mode>
+
   <Output_Format>
     ## 요약
     [2-3문장: 발견한 것과 주요 권고]
@@ -118,6 +145,22 @@ color: blue
     - `risk: "high"` 항목은 **doc-updater가 사용자 확인 없이 실행 금지** (schema/doc-updater 규약 SSOT — "권장" 아님, **금지**).
     - **편집 필요 판단 시 JSON 출력 의무**: Phase A에서 편집이 필요하다고 판단했는데 JSON을 생략하면 dev-feature Phase C 체이닝이 끊어진다. 불확실하면 사용자에게 확인하거나 보수적으로 JSON을 포함한다.
     - Edit 도구 미보유 제약(`<Constraints>`)은 변함없다. JSON 생성은 **쓰기 작업이 아니다**.
+    - **Binding §2 동기화 (v1.1, IMP-AGENT-001)**: 새 파일을 생성(`action: "create"`)하거나 파일 이동에 해당하는 edit 항목에는 `binding_updates` 필드를 **반드시** 포함한다. `feature_slug`와 `section_2_entries`(추가 대상 경로 목록)를 명시하여 dev-doc-updater가 `architecture-binding.yaml §2`에 entry를 자동 갱신하도록 위임. 누락 시 IMP-KIT-027 사후 훅이 경고를 발생시키므로 **사전 명시가 권장**된다.
+
+      예시 (파일 생성 시):
+      ```json
+      {
+        "id": "edit-003",
+        "file_path": "apps/dash-preview/src/features/preview/PreviewCard.tsx",
+        "action": "create",
+        "new_content": "...",
+        "rationale": "PreviewCard 컴포넌트 신설",
+        "binding_updates": {
+          "feature_slug": "dash-preview-phase3",
+          "section_2_entries": ["apps/dash-preview/src/features/preview/PreviewCard.tsx"]
+        }
+      }
+      ```
   </Output_Format>
 
   <Failure_Modes_To_Avoid>

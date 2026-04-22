@@ -2,7 +2,7 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://claude-kit/dev/v1/edit-coordinates.schema.json",
   "title": "Edit Coordinates (Agent Chaining Contract)",
-  "description": "dev-architect(분석) → dev-doc-updater(편집) 체이닝에서 사용되는 편집 좌표 계약. architect는 편집 권한이 없으므로 이 JSON을 반환하고, doc-updater가 이를 입력받아 Edit/Write 도구로 실행한다. $id에 v1 suffix를 포함하여 향후 스키마 진화 시 버전 분기를 명확히 한다. 관련: IMP-KIT-001.",
+  "description": "dev-architect(분석) → dev-doc-updater(편집) 체이닝에서 사용되는 편집 좌표 계약. architect는 편집 권한이 없으므로 이 JSON을 반환하고, doc-updater가 이를 입력받아 Edit/Write 도구로 실행한다. $id에 v1 suffix를 포함하여 향후 스키마 진화 시 버전 분기를 명확히 한다. 관련: IMP-KIT-001, IMP-AGENT-001(v1.1 binding_updates 필드 추가).",
   "type": "object",
   "required": ["schema_version", "phase", "agent", "edits"],
   "properties": {
@@ -58,6 +58,22 @@
           "risk": {
             "enum": ["low", "medium", "high"],
             "description": "변경 위험도 (선택). **high는 사용자 확인 없이 실행 금지** (doc-updater 규약 — architect·doc-updater·본 스키마 공통 SSOT). low/medium은 자동 실행 허용."
+          },
+          "binding_updates": {
+            "type": "object",
+            "description": "architecture-binding.yaml §2(관련 파일 섹션) 동기화 대상 (v1.1+, IMP-AGENT-001). 새 파일 생성(action=create) 또는 파일 이동에 해당하는 edit에 포함. dev-doc-updater가 §2 entry를 자동 갱신하는 근거가 된다. 누락 시 IMP-KIT-027 훅이 사후 감지 경고를 발생.",
+            "properties": {
+              "feature_slug": {
+                "type": "string",
+                "description": "대상 Feature slug (예: dash-preview-phase3). architecture-binding.yaml 파일 경로 결정에 사용."
+              },
+              "section_2_entries": {
+                "type": "array",
+                "items": { "type": "string" },
+                "description": "§2에 추가/갱신할 파일 경로 entry 목록. 중복 entry는 doc-updater가 skip."
+              }
+            },
+            "required": ["feature_slug"]
           }
         },
         "allOf": [

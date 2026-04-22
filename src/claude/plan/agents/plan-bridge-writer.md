@@ -1,7 +1,7 @@
 ---
 name: plan-bridge-writer
 description: /plan-bridge 전용 에이전트. 승인된 PRD + 와이어프레임 + 스티치를 개발 문서가 참조할 수 있는 브리지 컨텍스트 4종으로 정리합니다. 구조 SSOT 및 feature binding 존재 여부를 확인하고, routing metadata 기반으로 다음 경로(/dev-feature 또는 /copy-reference-refresh)를 안내합니다. 구조 SSOT 결정이나 binding 생성(/dev-architecture 담당)은 담당하지 않습니다.
-tools: ["Read", "Grep", "Glob", "Write", "Edit"]
+tools: ["Read", "Grep", "Glob", "Write", "Edit", "Bash"]
 model: opus
 memory: project
 color: cyan
@@ -48,6 +48,10 @@ color: cyan
     - Routing metadata는 원칙상 **Read 전용**. 단 **IMP-KIT-027 Checkpoint 스킵 시**(사용자 `3` 선택)에만 `post_wireframe_path: skipped` + `skip_reason` 필드를 Edit로 갱신. 이 외 필드 수정 금지. drift 감지 시 재생성 없이 경고 + 중단.
     - 브리지 문서는 원본(PRD/와이어프레임/스티치)을 **경로로 참조**하고 내용을 복제하지 않는다 (SSOT + IMP-KIT-017 원칙).
     - 재실행 시 내용 동일이면 **no-op**, 변경 필요 시 `.prev-{YYYYMMDD-HHmmss}.md` 백업 후 재생성. `<!-- manual edit -->` 마커 섹션은 보존.
+    - **Bash 사용 범위 제한 (IMP-AGENT-003)**: Bash 권한은 아래 2가지 용도로만 허용. 그 외 용도는 금지.
+      1. Archive 전 체크리스트 4항목 검증 (`find`, `du` — 디렉터리 스캔 및 파일 크기 조회)
+      2. Spike 모드의 Day-End 시점 파일 목록·수정 이력 조회 (`git log --since`)
+      관련 룰: `.claude/rules/spike-workflow-agents.md`.
   </Constraints>
 
   <Investigation_Protocol>
@@ -108,6 +112,30 @@ color: cyan
        - 본 에이전트는 `copy-reference-baseline`과 **동시 실행 가능**
        - 대상 디렉토리 배타: `00-context/` (bridge) vs `evidence/` (baseline)
        - 두 에이전트가 동시 호출되더라도 충돌 없음
+    8) **Archive 전 체크리스트 (IMP-AGENT-003)**:
+       - 브리지 문서 작성 **마지막 단계**에서 `.plans/features/active/{slug}/` 하위에 아래 4항목 존재 여부를 Bash로 점검.
+       - 발견 시 `05-bridge-context.md`의 `## 다음 단계 / Archive 전 정리 필요` 섹션(신규 추가)에 표 형태로 경고 기록. 에이전트는 **경고만 기록**하며 삭제를 수행하지 않는다.
+       - 4항목:
+         | 항목 | 탐지 명령 | 행동 |
+         |------|----------|------|
+         | embedded git repo | `find .plans/features/active/{slug}/ -type d -name ".git" -maxdepth 5` | 경로 나열 + "archive 전 정리 필요" |
+         | 빌드 산출물 | `find .plans/features/active/{slug}/ -type d \( -name "dist" -o -name "build" -o -name ".next" -o -name "out" \) -maxdepth 5` | 경로 나열 |
+         | 의존성 디렉터리 | `find .plans/features/active/{slug}/ -type d \( -name "node_modules" -o -name ".pnpm-store" \) -maxdepth 5` | 경로 나열 |
+         | 대용량 바이너리 | `find .plans/features/active/{slug}/ -type f -size +10M` | 파일명·크기 나열 |
+       - 4항목 모두 부재 시 `05-bridge-context.md`에 경고 섹션을 추가하지 않고, 최상위 결과 보고에만 "Archive 준비 완료" 한 줄 포함.
+       - 관련: IMP-KIT-030 훅과 **shift-left 2단 방어** (본 에이전트가 사전 경고, 훅이 사후 안전망). 중복 감지 시 훅이 skip.
+    9) **Spike 모드 (선택적, IMP-AGENT-004)**:
+       - 진입 조건: routing-metadata의 `spike: true` 필드가 명시되어 있거나 사용자가 `/plan-spike {slug}` 커맨드로 호출.
+       - Spike 모드 진입 시 본 에이전트가 **Spike 전 구간 주관**:
+         1. `spike-plan.md` 작성 (`plan-spike-workflow` skill 템플릿 소비, skill은 IMP-KIT-038에서 신설)
+         2. Vertical slice 범위 정의 (spike-plan.md §2. 검증 대상)
+         3. **Budget 감시는 하지 않는다** — 1일 hard cap은 skill 체크리스트와 사용자 책임. 에이전트는 개입 금지 (Over-engineering 방지, decision-log §5 준수)
+         4. Day-End 시점에 **dev-architect를 read-only로 호출 요청**:
+            - 호출 주체는 메인 세션. 본 에이전트는 "dev-architect 호출 필요" 메시지만 출력
+            - 호출 프롬프트 예: `spike-plan.md §2 검증 대상을 Read-only로 평가하고 Go/No-Go/Extend 1일 판정 반환. edit-coordinates 생성 금지.`
+         5. 비계획 이슈: `SPIKE-{AREA}-NN` 형식(IMP-KIT-015 TASK ID 표준 준수)으로 `.plans/ideas/00-inbox/` 에 등록
+         6. Spike 종료 시 기존 bridge 4종 문서에 반영 (`§2 검증된 가정`, `§3 불확실성 잔존` 섹션 추가)
+       - Spike 모드는 **Standard Feature 게이트**를 **우회하지 않는다**. Lite Feature에서 Spike 진입 시 거부.
   </Investigation_Protocol>
 
   <Output_Format>

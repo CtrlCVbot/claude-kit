@@ -1,0 +1,96 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://claude-kit/core/v1/agent-telemetry.schema.json",
+  "title": "Agent Telemetry Event",
+  "description": "claude-kit 에이전트 호출·완료·실패 이벤트 스키마. IMP-KIT-024(stub) → IMP-AGENT-009(본체)에서 정의. 로그 위치: ~/.claude/logs/agent-telemetry.jsonl. 프롬프트·출력 내용은 저장 금지 (PII 보호). kit-feedback-archiving Phase 3 인프라 재사용.",
+  "type": "object",
+  "required": ["event_type", "agent_name", "timestamp", "session_id"],
+  "properties": {
+    "event_type": {
+      "enum": ["invoked", "completed", "failed", "timeout"],
+      "description": "이벤트 타입. invoked=호출 시작, completed=정상 완료, failed=예외 발생, timeout=시간 초과"
+    },
+    "agent_name": {
+      "type": "string",
+      "description": "에이전트 이름 (frontmatter name 필드). 예: dev-architect, plan-bridge-writer"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "이벤트 발생 시각 (ISO 8601)"
+    },
+    "session_id": {
+      "type": "string",
+      "description": "Claude Code 세션 식별자. 동일 세션 내 invoked ↔ completed/failed 매칭 키"
+    },
+    "invocation_id": {
+      "type": "string",
+      "description": "단일 호출 고유 ID (session_id 내). invoked 이벤트에서 생성되어 completed/failed 이벤트가 참조"
+    },
+    "duration_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "completed/failed/timeout 이벤트 전용. 호출 소요 시간 (밀리초)"
+    },
+    "input_bytes": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "invoked 이벤트 전용. 에이전트 프롬프트 입력 크기 (실 내용은 저장하지 않고 크기만 기록)"
+    },
+    "output_bytes": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "completed 이벤트 전용. 에이전트 출력 크기 (실 내용은 저장하지 않고 크기만 기록)"
+    },
+    "error_class": {
+      "type": "string",
+      "description": "failed/timeout 이벤트 전용. 오류 분류 (예: 'validation_error', 'tool_permission_denied', 'timeout'). 스택 트레이스 미포함."
+    },
+    "caller": {
+      "type": "object",
+      "description": "에이전트를 호출한 주체 정보",
+      "required": ["type"],
+      "properties": {
+        "type": {
+          "enum": ["command", "skill", "agent", "user"],
+          "description": "호출 주체 분류"
+        },
+        "name": {
+          "type": "string",
+          "description": "호출 주체 식별자 (커맨드명·스킬명·에이전트명·'main-session')"
+        }
+      }
+    },
+    "agent_metadata": {
+      "type": "object",
+      "description": "IMP-AGENT-008 frontmatter 확장 필드 snapshot (선택적). team_owner/release_stage 집계에 사용.",
+      "properties": {
+        "team_owner": { "enum": ["core", "dev", "plan", "copy", "community"] },
+        "release_stage": { "enum": ["experimental", "beta", "stable", "deprecated"] },
+        "schema_version": { "type": "string" }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "description": "에이전트별 자유 구조 메타데이터. PII 마스킹 책임은 에이전트 측."
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "event_type": { "const": "invoked" } } },
+      "then": { "required": ["invocation_id", "caller"] }
+    },
+    {
+      "if": { "properties": { "event_type": { "const": "completed" } } },
+      "then": { "required": ["invocation_id", "duration_ms"] }
+    },
+    {
+      "if": { "properties": { "event_type": { "const": "failed" } } },
+      "then": { "required": ["invocation_id", "duration_ms", "error_class"] }
+    },
+    {
+      "if": { "properties": { "event_type": { "const": "timeout" } } },
+      "then": { "required": ["invocation_id", "duration_ms"] }
+    }
+  ]
+}
