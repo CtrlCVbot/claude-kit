@@ -1,6 +1,6 @@
 {
   "_description": "IMP-KIT-010 — 개인정보 마스킹 규칙 SSOT. plan-wireframe-checklist.js의 applyPiiMasking()가 참조.",
-  "_spec": "docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-010-wireframe-checklist.md",
+  "_spec": "docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-010-wireframe-checklist.md",
   "schema_version": "1.0",
   "rules": [
     {

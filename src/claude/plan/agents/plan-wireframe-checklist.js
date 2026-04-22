@@ -8,7 +8,7 @@
  * Claude peer/Codex sibling: src/codex/plan/agents/plan-wireframe-checklist.js
  * PII 마스킹 규칙: src/claude/plan/_constants/pii-masking-rules.json
  * decision-log 템플릿: src/claude/plan/_templates/decision-log.template.md
- * 스펙: docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-010-wireframe-checklist.md
+ * 스펙: docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-010-wireframe-checklist.md
  */
 
 const REQUIRED_VIEWPORTS = ['1440', '1280', '1024', '768', '390'];

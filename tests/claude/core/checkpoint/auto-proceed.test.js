@@ -1,7 +1,7 @@
 /**
  * IMP-KIT-016 RED — Checkpoint 자동 진행 플래그 테스트
  *
- * 스펙: docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-016-checkpoint-auto-proceed.md
+ * 스펙: docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-016-checkpoint-auto-proceed.md
  * 지표 #6: Human Checkpoint 수 < 3회/세션
  */
 import { describe, it, expect } from 'vitest'

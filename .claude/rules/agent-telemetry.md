@@ -5,7 +5,7 @@
 **스키마**: `src/claude/core/_schemas/agent-telemetry.schema.json` (v1)
 **커맨드**: `src/claude/core/commands/agent-report.md`
 **훅** (미구현, 별도 세션 권장): `src/claude/core/hooks/agent-telemetry-emit.js`
-**스펙**: `docs/plan/kit-agent-improvements/IMP-AGENT-009-agent-telemetry.md`
+**스펙**: `docs/archive/kit-agent-improvements-v2.3.1/IMP-AGENT-009-agent-telemetry.md`
 
 ---
 

@@ -1,6 +1,6 @@
 /**
  * IMP-KIT-008 RED — plan-idea-screener 재판정 메모리 기록 테스트
- * 스펙: docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-008-screener-memory.md
+ * 스펙: docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-008-screener-memory.md
  */
 import { describe, it, expect } from 'vitest'
 import pkg from '../../../../src/claude/plan/agents/plan-idea-screener-rescoring.js'

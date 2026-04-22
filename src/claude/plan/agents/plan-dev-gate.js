@@ -7,7 +7,7 @@
  * validateDevGate()는 Phase B 진입 시점에 4항목 충족 검증.
  *
  * Claude peer/Codex sibling: src/codex/plan/agents/plan-dev-gate.js
- * 스펙: docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-013-dev-gate-draft-flag.md
+ * 스펙: docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-013-dev-gate-draft-flag.md
  */
 
 const DEV_GATE_ITEMS = [

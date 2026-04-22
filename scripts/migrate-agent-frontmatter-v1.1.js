@@ -10,7 +10,7 @@
  * - dependencies: 본문 grep으로 calls/called_by 자동 추출
  *
  * 실행: node scripts/migrate-agent-frontmatter-v1.1.js [--dry-run] [--verbose]
- * 설계: docs/plan/kit-agent-improvements/IMP-AGENT-008-frontmatter-extension.md
+ * 설계: docs/archive/kit-agent-improvements-v2.3.1/IMP-AGENT-008-frontmatter-extension.md
  */
 
 const { readFileSync, writeFileSync, readdirSync, statSync } = require('node:fs');

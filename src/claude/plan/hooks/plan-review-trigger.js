@@ -11,7 +11,7 @@
  * autoReview 설정 (~/.claude/settings.json의 "autoReview": false)으로 비활성화 가능.
  *
  * Codex fallback: src/codex/plan/hooks/plan-review-trigger.js (동일 로직)
- * 관련 스펙: docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-007-plan-review-auto-trigger.md
+ * 관련 스펙: docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-007-plan-review-auto-trigger.md
  *
  * chain-point: feedback-collector
  *   (kit-feedback-archiving Phase 3에서 본 훅 이후 feedback 수집 훅이 체이닝됨)

@@ -111,7 +111,7 @@ User: /plan-wireframe my-feature
 - 규칙: `src/claude/core/rules/interaction.md` ("Agent Delegation & Read Cache" 섹션)
 - 훅 스크립트: `src/claude/core/hooks/agent-completion-cache-invalidate.js`
 - setup 스크립트: `scripts/setup.js` (`buildHooksConfig`)
-- 백로그: `docs/plan/kit-2.2.0-roadmap/03-p0-detailed-specs/IMP-KIT-005-read-cache-retry.md`
+- 백로그: `docs/archive/kit-2.2.0-roadmap/03-p0-detailed-specs/IMP-KIT-005-read-cache-retry.md`
 
 ## 변경 이력
 

@@ -1,6 +1,6 @@
 /**
  * IMP-KIT-011 RED — edit-coordinates 스키마 거버넌스 테스트
- * 스펙: docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-011-architect-schema.md
+ * 스펙: docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-011-architect-schema.md
  */
 import { describe, it, expect } from 'vitest'
 import pkg from '../../../../src/claude/dev/_schemas/_router.js'

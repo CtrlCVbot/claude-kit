@@ -10,7 +10,7 @@
  *
  * 스키마: src/claude/core/_schemas/agent-telemetry.schema.json (v1)
  * SSOT: .claude/rules/agent-telemetry.md
- * 설계: docs/plan/kit-agent-improvements/IMP-AGENT-009-agent-telemetry.md
+ * 설계: docs/archive/kit-agent-improvements-v2.3.1/IMP-AGENT-009-agent-telemetry.md
  *
  * Claude peer/Codex sibling: src/codex/core/hooks/agent-telemetry-emit.js (미구현)
  */

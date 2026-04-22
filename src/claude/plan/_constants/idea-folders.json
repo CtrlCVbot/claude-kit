@@ -1,6 +1,6 @@
 {
   "_description": "IMP-KIT-009 — plan 도메인 idea 폴더 경로 SSOT. 스크리닝 파이프라인 이동 허용 범위.",
-  "_spec": "docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-009-screener-file-move.md",
+  "_spec": "docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-009-screener-file-move.md",
   "schema_version": "1.0",
   "basePath": ".plans/ideas",
   "folders": [

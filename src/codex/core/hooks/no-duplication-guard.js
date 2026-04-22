@@ -5,7 +5,7 @@
  * Claude peer: src/claude/core/hooks/no-duplication-guard.js (동일 로직)
  * 임계값: src/codex/core/_constants/duplication-threshold.json
  * 원칙: Codex는 AGENTS.md 관리. 공통 원칙은 Claude golden-principles.md §13 참조.
- * 스펙: docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-017-no-duplication-skill.md
+ * 스펙: docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-017-no-duplication-skill.md
  */
 
 const DEFAULT_THRESHOLD = 0.8;

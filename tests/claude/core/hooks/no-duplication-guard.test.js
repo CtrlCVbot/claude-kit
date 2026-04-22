@@ -1,7 +1,7 @@
 /**
  * IMP-KIT-017 RED — 문서 재복제 감지 테스트
  *
- * 스펙: docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-017-no-duplication-skill.md
+ * 스펙: docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-017-no-duplication-skill.md
  * 지표 #8: 재복제 감지 건수 = 0
  */
 import { describe, it, expect } from 'vitest'

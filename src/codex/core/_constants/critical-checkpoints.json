@@ -1,6 +1,6 @@
 {
   "_description": "IMP-KIT-016 — Critical Checkpoint 화이트리스트 (Codex sibling). Claude peer: src/claude/core/_constants/critical-checkpoints.json (동일 내용).",
-  "_spec": "docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-016-checkpoint-auto-proceed.md",
+  "_spec": "docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-016-checkpoint-auto-proceed.md",
   "schema_version": "1.0",
   "whitelist": [
     {

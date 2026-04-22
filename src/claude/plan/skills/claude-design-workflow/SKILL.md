@@ -148,4 +148,4 @@ design/stitch 어느 것도 실행하지 않은 상태에서 `/plan-bridge` 호�
 - 템플릿: `src/claude/plan/_templates/design-prompt-{wireframe,highfidelity}.template.md`
 - 매니페스트: `src/claude/plan/_templates/design-manifest.template.md`
 - 스키마: `src/claude/plan/_schemas/routing-metadata.schema.json`
-- 스펙: `docs/plan/kit-2.2.0-roadmap/03-p0-detailed-specs/IMP-KIT-027-plan-design-integration.md`
+- 스펙: `docs/archive/kit-2.2.0-roadmap/03-p0-detailed-specs/IMP-KIT-027-plan-design-integration.md`

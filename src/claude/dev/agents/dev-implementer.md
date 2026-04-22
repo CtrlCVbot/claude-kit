@@ -146,7 +146,7 @@ dependencies:
 
 ## 관련
 
-- 스펙: `docs/plan/kit-agent-improvements/IMP-AGENT-005-dev-implementation-agent.md`
+- 스펙: `docs/archive/kit-agent-improvements-v2.3.1/IMP-AGENT-005-dev-implementation-agent.md`
 - 입력 계약: `src/claude/plan/_schemas/handoff-contract.schema.json` (IMP-AGENT-007)
 - 호출 커맨드: `src/claude/dev/commands/dev-run.md`
 - TDD 가드: `src/claude/dev/hooks/dev-tdd-guard.js`

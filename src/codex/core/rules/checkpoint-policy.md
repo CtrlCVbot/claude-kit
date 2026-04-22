@@ -2,7 +2,7 @@
 
 > **결론**: 본 정책은 Codex runtime의 **Human Checkpoint** 처리 기준. Claude peer: `src/claude/core/rules/checkpoint-policy.md` (동일 원칙).
 
-**스펙 근거**: `docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-016-checkpoint-auto-proceed.md`
+**스펙 근거**: `docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-016-checkpoint-auto-proceed.md`
 **유틸 구현**: `src/codex/core/checkpoint/auto-proceed.js`
 **화이트리스트 SSOT**: `src/codex/core/_constants/critical-checkpoints.json`
 

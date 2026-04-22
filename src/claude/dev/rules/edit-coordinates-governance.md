@@ -4,7 +4,7 @@
 
 **스키마**: `src/claude/dev/_schemas/edit-coordinates.schema.json` (v1, Draft 2020-12)
 **라우터**: `src/claude/dev/_schemas/_router.js`
-**스펙**: `docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-011-architect-schema.md`
+**스펙**: `docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-011-architect-schema.md`
 
 ---
 

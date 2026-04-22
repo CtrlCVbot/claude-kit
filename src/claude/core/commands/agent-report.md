@@ -99,4 +99,4 @@ Filter: team=all
 - 룰: `.claude/rules/agent-telemetry.md`
 - 훅 (미구현, 별도 세션): `src/claude/core/hooks/agent-telemetry-emit.js`
 - 기반 인프라: kit-feedback-archiving Phase 3 (shipped)
-- 스펙: `docs/plan/kit-agent-improvements/IMP-AGENT-009-agent-telemetry.md`
+- 스펙: `docs/archive/kit-agent-improvements-v2.3.1/IMP-AGENT-009-agent-telemetry.md`

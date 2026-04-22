@@ -2,7 +2,7 @@
 
 > **결론**: IMP-AGENT-004. `/plan-spike {slug}` 커맨드 또는 routing-metadata의 `spike: true` 감지 시 **plan-bridge-writer(주관) + dev-architect(read-only 판정자)** 조합으로 Spike 워크플로우를 운영한다. 신설 에이전트 없이 기존 2개 에이전트의 역할 확장으로 구현한다 (decision-log §5 "Over-engineering 방지" 준수).
 
-**스펙**: `docs/plan/kit-agent-improvements/IMP-AGENT-004-spike-workflow-agents.md`
+**스펙**: `docs/archive/kit-agent-improvements-v2.3.1/IMP-AGENT-004-spike-workflow-agents.md`
 **상위 IMP**: IMP-KIT-038 (Spike 워크플로우 skill + command)
 **통합 IMP**: IMP-KIT-036 (1일 예산 hard cap — skill 레벨 귀속)
 **TASK ID 규칙**: IMP-KIT-015 (`SPIKE-{AREA}-NN` 형식)

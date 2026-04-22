@@ -2,7 +2,7 @@
 
 > **결론**: 본 정책은 claude-kit 전반의 **Human Checkpoint** 처리 기준. `autoProceedOnPass: true` 플래그가 활성이고 리뷰 결과가 PASS이면 Checkpoint 자동 통과. 단 Critical 화이트리스트 타입은 플래그 무시하고 항상 정지. (IMP-KIT-016)
 
-**스펙 근거**: `docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-016-checkpoint-auto-proceed.md`
+**스펙 근거**: `docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-016-checkpoint-auto-proceed.md`
 **유틸 구현**: `src/claude/core/checkpoint/auto-proceed.js`
 **화이트리스트 SSOT**: `src/claude/core/_constants/critical-checkpoints.json`
 

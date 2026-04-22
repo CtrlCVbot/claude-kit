@@ -3,7 +3,7 @@
  *
  * 스키마: src/claude/core/_schemas/agent-telemetry.schema.json (v1)
  * SSOT: .claude/rules/agent-telemetry.md
- * 설계: docs/plan/kit-agent-improvements/IMP-AGENT-009-agent-telemetry.md
+ * 설계: docs/archive/kit-agent-improvements-v2.3.1/IMP-AGENT-009-agent-telemetry.md
  */
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { mkdtempSync, rmSync, readFileSync, existsSync } from 'node:fs';

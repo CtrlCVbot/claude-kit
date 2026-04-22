@@ -1,6 +1,6 @@
 /**
  * IMP-AGENT-009 Phase 2 — telemetry-rollup 테스트
- * 설계: docs/plan/kit-agent-improvements/IMP-AGENT-009-agent-telemetry.md §향후 확장
+ * 설계: docs/archive/kit-agent-improvements-v2.3.1/IMP-AGENT-009-agent-telemetry.md §향후 확장
  */
 import { describe, it, expect, beforeEach, afterEach } from 'vitest';
 import { mkdtempSync, rmSync, writeFileSync, readFileSync, existsSync } from 'node:fs';

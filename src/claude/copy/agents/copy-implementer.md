@@ -147,7 +147,7 @@ dependencies:
 
 ## 관련
 
-- 스펙: `docs/plan/kit-agent-improvements/IMP-AGENT-006-copy-implementation-agent.md`
+- 스펙: `docs/archive/kit-agent-improvements-v2.3.1/IMP-AGENT-006-copy-implementation-agent.md`
 - 입력 계약: `src/claude/plan/_schemas/handoff-contract.schema.json` (IMP-AGENT-007)
 - 선행 커맨드: `/copy-plan-unit` (Execution Unit 정의)
 - 후행 에이전트: copy-qa-reviewer (QA 게이트)

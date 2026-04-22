@@ -55,5 +55,5 @@ Claude sibling: `src/claude/plan/skills/claude-design-workflow/SKILL.md` (전체
 - 템플릿: `src/codex/plan/_templates/design-prompt-{wireframe,highfidelity}.template.md`
 - 매니페스트: `src/codex/plan/_templates/design-manifest.template.md`
 - 스키마: `src/codex/plan/_schemas/routing-metadata.schema.json`
-- 스펙: `docs/plan/kit-2.2.0-roadmap/03-p0-detailed-specs/IMP-KIT-027-plan-design-integration.md`
+- 스펙: `docs/archive/kit-2.2.0-roadmap/03-p0-detailed-specs/IMP-KIT-027-plan-design-integration.md`
 - Claude sibling: `src/claude/plan/skills/claude-design-workflow/SKILL.md`

@@ -4,7 +4,7 @@
 
 **스키마**: `src/codex/dev/_schemas/edit-coordinates.schema.json`
 **라우터**: `src/codex/dev/_schemas/_router.js`
-**스펙**: `docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-011-architect-schema.md`
+**스펙**: `docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-011-architect-schema.md`
 
 ---
 

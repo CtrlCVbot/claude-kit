@@ -10,7 +10,7 @@
  *
  * Claude peer/Codex sibling: src/codex/plan/hooks/plan-idea-move-guard.js
  * 경로 상수: src/claude/plan/_constants/idea-folders.json
- * 스펙: docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-009-screener-file-move.md
+ * 스펙: docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-009-screener-file-move.md
  */
 
 const ALLOWED_FOLDERS = ['00-inbox', '10-screening', '20-approved', '30-on-hold'];

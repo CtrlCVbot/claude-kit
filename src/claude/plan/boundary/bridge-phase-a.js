@@ -8,7 +8,7 @@
  *
  * Claude peer/Codex sibling: src/codex/plan/boundary/bridge-phase-a.js
  * 책임 매트릭스 SSOT: src/claude/core/_constants/bridge-phase-a-matrix.json
- * 스펙: docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-012-bridge-phase-a-boundary.md
+ * 스펙: docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-012-bridge-phase-a-boundary.md
  */
 
 const BRIDGE_MARKER = {

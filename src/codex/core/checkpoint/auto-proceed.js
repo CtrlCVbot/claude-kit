@@ -4,7 +4,7 @@
  *
  * Claude peer: src/claude/core/checkpoint/auto-proceed.js (동일 로직)
  * 정책 문서: src/codex/core/rules/checkpoint-policy.md
- * 스펙: docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-016-checkpoint-auto-proceed.md
+ * 스펙: docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-016-checkpoint-auto-proceed.md
  */
 
 const path = require('path');

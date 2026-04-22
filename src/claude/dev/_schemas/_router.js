@@ -8,7 +8,7 @@
  *
  * Claude peer/Codex sibling: src/codex/dev/_schemas/_router.js
  * 거버넌스 문서: src/claude/dev/rules/edit-coordinates-governance.md
- * 스펙: docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-011-architect-schema.md
+ * 스펙: docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-011-architect-schema.md
  */
 
 const Ajv2020 = require('ajv/dist/2020');

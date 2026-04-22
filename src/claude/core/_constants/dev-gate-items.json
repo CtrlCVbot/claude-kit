@@ -1,6 +1,6 @@
 {
   "_description": "IMP-KIT-013 — Dev Gate 4항목 SSOT. plan-dev-gate.js의 DEV_GATE_ITEMS와 일치.",
-  "_spec": "docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-013-dev-gate-draft-flag.md",
+  "_spec": "docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-013-dev-gate-draft-flag.md",
   "schema_version": "1.0",
   "items": [
     { "key": "legacy-isolation",  "title": "Legacy 격리",               "relatedImpKit": "IMP-KIT-015" },

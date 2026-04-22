@@ -6,7 +6,7 @@
  * agent-telemetry-daily-YYYYMMDD.json 파일로 이관하고 원본에서 제거한다.
  *
  * 스크립트 실행: node src/claude/core/_utils/telemetry-rollup.js
- * 설계: docs/plan/kit-agent-improvements/IMP-AGENT-009-agent-telemetry.md §향후 확장
+ * 설계: docs/archive/kit-agent-improvements-v2.3.1/IMP-AGENT-009-agent-telemetry.md §향후 확장
  */
 
 const { existsSync, readFileSync, writeFileSync, mkdirSync } = require('node:fs');

@@ -1,6 +1,6 @@
 {
   "_description": "IMP-KIT-012 — Bridge vs Phase A 책임 매트릭스 SSOT.",
-  "_spec": "docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-012-bridge-phase-a-boundary.md",
+  "_spec": "docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-012-bridge-phase-a-boundary.md",
   "schema_version": "1.0",
   "matrix": {
     "feature-intent.md": {

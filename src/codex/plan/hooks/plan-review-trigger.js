@@ -7,7 +7,7 @@
  * 주의: Codex v1 hook runtime이 Stop 이벤트를 지원하는지 `src/claude/_meta/codex-portability.json`에서 확인.
  *       미지원 시 Skill fallback artifact로 전환 필요 (session-wrap-suggest 패턴 참조).
  *
- * 관련 스펙: docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-007-plan-review-auto-trigger.md
+ * 관련 스펙: docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-007-plan-review-auto-trigger.md
  * chain-point: feedback-collector (kit-feedback-archiving Phase 3)
  */
 

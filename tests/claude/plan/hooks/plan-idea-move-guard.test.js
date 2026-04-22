@@ -1,7 +1,7 @@
 /**
  * IMP-KIT-009 RED — plan-idea-screener 파일 이동 가드 테스트
  *
- * 스펙: docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-009-screener-file-move.md
+ * 스펙: docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-009-screener-file-move.md
  */
 import { describe, it, expect } from 'vitest'
 import pkg from '../../../../src/claude/plan/hooks/plan-idea-move-guard.js'

@@ -4,7 +4,7 @@
 
 **정규식 SSOT**: `src/claude/core/_constants/task-id-patterns.json`
 **유틸**: `src/claude/core/_utils/task-id.js`
-**스펙**: `docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-015-task-id-naming.md`
+**스펙**: `docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-015-task-id-naming.md`
 
 ---
 

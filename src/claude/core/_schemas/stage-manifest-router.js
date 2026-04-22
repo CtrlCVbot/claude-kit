@@ -8,7 +8,7 @@
  * 스키마: src/claude/core/_schemas/stage-manifest.schema.json
  * 소비자 등록부: src/claude/core/_registry/stage-manifest-consumers.json
  * 거버넌스 문서: src/claude/dev/rules/edit-coordinates-governance.md (공통 원칙)
- * 스펙: docs/plan/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-014-stage-manifest-schema-version.md
+ * 스펙: docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-014-stage-manifest-schema-version.md
  */
 
 const Ajv = require('ajv');

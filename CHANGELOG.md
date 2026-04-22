@@ -12,7 +12,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 ## [2.3.0] - 2026-04-21
 
-P1 백로그 **11건 전체 완료**. **프로세스 자동화 + 에이전트 메모리/권한 보완 + 경계·네이밍 정리** 3개 그룹으로 수동 개입 최소화·문서 SSOT 강화·Dev 착수 Gate 조기화 달성. D1/D2/D3 이해관계자 승인 완료 ([`stakeholder-approval.md`](docs/plan/kit-2.3.0-roadmap/_reviews/2026-04-21-stakeholder-approval.md)).
+P1 백로그 **11건 전체 완료**. **프로세스 자동화 + 에이전트 메모리/권한 보완 + 경계·네이밍 정리** 3개 그룹으로 수동 개입 최소화·문서 SSOT 강화·Dev 착수 Gate 조기화 달성. D1/D2/D3 이해관계자 승인 완료 ([`stakeholder-approval.md`](docs/archive/kit-2.3.0-roadmap/_reviews/2026-04-21-stakeholder-approval.md)).
 
 ### Added (P1 11건)
 
@@ -87,7 +87,7 @@ P1 백로그 **11건 전체 완료**. **프로세스 자동화 + 에이전트 �
 
 ### Added (문서)
 
-- `docs/plan/kit-2.3.0-roadmap/` 전체 문서 패키지 ([`c7915b1`](https://github.com/CtrlCVbot/claude-kit/commit/c7915b1))
+- `docs/archive/kit-2.3.0-roadmap/` 전체 문서 패키지 ([`c7915b1`](https://github.com/CtrlCVbot/claude-kit/commit/c7915b1))
   - 최상위 9 문서 (README, 00~08)
   - 상세 스펙 11건 (IMP-KIT-007~017)
   - `_reviews/` 리뷰 이력 (메인테이너 기술 리뷰·이슈 해소·이해관계자 승인·2단계 리뷰·IMP-KIT별 리뷰 11건·3단계 통합 리뷰)
@@ -219,7 +219,7 @@ dash-preview-phase3 세션 회고에서 도출된 **P0 블로커 6건**을 모�
 
 ### Added (문서 패키지)
 
-- `docs/plan/kit-2.2.0-roadmap/` — 2.2.0 로드맵 문서 패키지 (14개 문서, [`466665d`](https://github.com/CtrlCVbot/claude-kit/commit/466665d))
+- `docs/archive/kit-2.2.0-roadmap/` — 2.2.0 로드맵 문서 패키지 (14개 문서, [`466665d`](https://github.com/CtrlCVbot/claude-kit/commit/466665d))
   - Executive summary / 로드맵 / P0 6건 상세 스펙 / P1·P2 요약 / 검증 전략 / 릴리스 노트 / 회귀 시나리오
 - `docs/plan/kit-feedback-archiving/` — 파이프라인 피드백 자동 아카이빙 시스템 설계 (8개 문서, [`17cbf11`](https://github.com/CtrlCVbot/claude-kit/commit/17cbf11))
   - Phase 2 설계 완료, Phase 3~5 구현은 2.3.0+ 예정
