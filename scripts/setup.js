@@ -31,6 +31,8 @@ const { filterCodexHooks, getPortability } = require('./codex-hook-compat');
 const { renderQuickStart } = require('./quickstart-renderer');
 const { renderClaudeManagedSection } = require('./claude-md-renderer');
 const { mergeClaudeMd } = require('./claude-md-merger');
+const { renderAgentsManagedSection } = require('./agents-md-renderer');
+const { mergeAgentsMd } = require('./agents-md-merger');
 
 const SRC_BASE   = path.resolve(__dirname, '..', 'src');
 const SRC_CLAUDE = path.join(SRC_BASE, 'claude');
@@ -1202,19 +1204,33 @@ function emitCodex(projectRoot, activeDomains) {
     mergeMarketplace(projectRoot, substituteVars(marketplaceTemplate, vars));
   }
 
-  // 6. AGENTS.md — 기존 파일은 보존하고, 누락 시 fresh/update 모두 템플릿으로 복구
+  // 6. AGENTS.md — managed 섹션은 fresh/update 모두 재생성, 사용자 편집 영역은 보존 (T-TMPL-02)
   const agentsMdPath = path.join(projectRoot, 'AGENTS.md');
   let agentsMdStatus = 'preserved';
-  if (!fs.existsSync(agentsMdPath)) {
-    const template = readTemplate(templateDir, 'AGENTS.md.template');
-    if (template) {
-      const rendered = substituteVars(template, vars);
-      warnAgentsMdRuntimeIssues(collectAgentsMdRuntimeWarnings(rendered), agentsMdPath);
-      fs.writeFileSync(agentsMdPath, rendered);
+  const agentsTemplate = readTemplate(templateDir, 'AGENTS.md.template');
+  if (agentsTemplate) {
+    const agentsManagedBody = renderAgentsManagedSection({
+      activeDomains: activeDomains || [],
+      activeTargets: ['codex'],
+      vars
+    });
+
+    if (!fs.existsSync(agentsMdPath)) {
+      const wrapper = substituteVars(agentsTemplate, { ...vars, KIT_MANAGED_SECTION: agentsManagedBody });
+      warnAgentsMdRuntimeIssues(collectAgentsMdRuntimeWarnings(wrapper), agentsMdPath);
+      fs.writeFileSync(agentsMdPath, wrapper);
       agentsMdStatus = 'created';
     } else {
-      agentsMdStatus = 'missing template';
+      const existing = fs.readFileSync(agentsMdPath, 'utf8');
+      const next = mergeAgentsMd(existing, agentsManagedBody);
+      if (next !== existing) {
+        warnAgentsMdRuntimeIssues(collectAgentsMdRuntimeWarnings(next), agentsMdPath);
+        fs.writeFileSync(agentsMdPath, next);
+        agentsMdStatus = 'updated';
+      }
     }
+  } else {
+    agentsMdStatus = 'missing template';
   }
 
   // 합계 계산
