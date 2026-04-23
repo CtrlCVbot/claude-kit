@@ -1,18 +1,21 @@
 # Plan Pipeline
 
-> **Status**: Draft (P4, 2026-04-17)
+> **Status**: Updated 2026-04-23 (Phase A 피드백 반영)
 > **Source**: `src/claude/plan/commands/`, [../10-features/03-plan-domain.md](../10-features/03-plan-domain.md)
 > **Related**: [04-daily-workflow.md](04-daily-workflow.md)
 
 `plan` 도메인으로 **아이디어에서 개발 핸드오프까지** 진행하는 흐름입니다. `profile.json` 에 `"plan"` 포함 필요.
 
+v2.4.0 부터 **Epic/Feature/Task 3단 계층** (Opt-in) 이 추가되었고, v2.4.1 부터 IDEA 상태 변경이 3 곳에 자동 동기화됩니다.
+
 ## 파이프라인 한눈에
 
 ```
+(Opt-in) /plan-epic "Theme"     → .plans/epics/00-draft/EPIC-.../
 아이디어
-  ↓ /plan-idea
+  ↓ /plan-idea [--epic=EPIC-...]
 인박스 (.plans/ideas/00-inbox/)
-  ↓ /plan-screen (+ 사용자 승인 게이트)
+  ↓ /plan-screen (+ 사용자 승인 게이트 — Y/수정/N)
 스크리닝 통과
   ↓ /plan-draft
 1차 기획 (Lite | Standard 판정)
@@ -29,6 +32,8 @@ dev 도메인 → /dev-feature
   ↓ ... 구현 ...
   ↓ /plan-archive
 아카이브 + /plan-improve 회고
+
+(옵션) /plan-revise {artifact} "수정 지시"  → 이전 산출물 부분 수정 (T-REVP-01, v2.5.0)
 ```
 
 ## 1. 아이디어 수집 — `/plan-idea`
@@ -53,7 +58,21 @@ dev 도메인 → /dev-feature
 
 여기가 가장 중요한 지점입니다. **사용자의 명시적 승인 없이는 `/plan-draft` 이후로 넘어갈 수 없습니다**. `plan-doc-guard.js` 훅이 이를 강제합니다.
 
-승인 후 인박스에서 `.plans/ideas/10-screened/` 로 이동.
+**Checkpoint 응답 3 옵션** (v2.5.0, T-REVP-01):
+- **Y** — 승인, 다음 단계 진입
+- **수정** — 자연어 수정 지시 (예: "§A scope 재작성"). 메인이 `checkpoint-policy.md §8` 프로토콜로 에이전트 재호출
+- **N** — 거부 (이유 명시)
+
+승인 후 인박스에서 `.plans/ideas/10-screened/` 로 이동. IDEA frontmatter 의 `상태:` 가 `inbox → screened` 로 바뀌면 `plan-state-sync.js` hook 이 backlog.md 도 자동 갱신 (v2.4.1).
+
+### RICE Lane 가중 조정 (v2.4.1, T-RICE-01)
+
+Raw RICE 공식 판정이 Lite `Hold` 또는 Standard `Kill/Hold` 여도 아래 조건 중 하나 이상 충족 시 Go 승격 가능:
+
+- **Lite**: (1) 타 Feature 블로킹 해소 or (2) 규제·계약 마감 or (3) 이미 배포된 버그 or (4) 사용자 언급 ≥ 5
+- **Standard**: 위 4 조건 + (5) 전략 Theme 정렬 + (6) 매출 직접 영향 ≥ 10M/월 + (7) 의존성 허브
+
+상세: [`rice-lane-weighted-adjustment.md`](../../src/claude/plan/rules/rice-lane-weighted-adjustment.md).
 
 ## 3. 1차 기획 — `/plan-draft <IDEA-ID>`
 
@@ -153,18 +172,52 @@ plan 도메인에서 만든 문서를 **`/dev-feature` 입력 형태로 변환**
 
 | 단계 | 게이트 |
 |------|--------|
-| Screen → Draft | **사용자 명시적 승인 필수** |
+| Screen → Draft | **사용자 명시적 승인 필수** (Y/수정/N 3옵션, T-REVP-01) |
 | Draft → PRD | Lite/Standard 판정 결과 |
 | PRD → Wireframe | wireframe 은 design/stitch 의 선행 필수 (Standard 기준) |
 | Wireframe → [Design \| Stitch] | **둘 중 택일** — `post_wireframe_path` 에 `design` / `stitch` / `design+stitch` / `stitch+design` / `skipped` 기록 |
 | Design/Stitch 생략 → Bridge | `/plan-bridge` Checkpoint 에서 [1/2/3] 선택 — skip 시 `skip_reason` 필수 |
-| PRD → Bridge | plan-review 통과 권장 |
+| PRD → Bridge | plan-review 통과 권장 — **PCC 8 종** (기본 5 + copy 1 + Epic 3, T-PCC-01) |
 | Bridge → dev-feature | Feature Overview 필수 |
+| Epic `draft → planning` | `00-epic-brief.md` + `01-children-features.md` 존재 + 자식 IDEA ≥ 1 (T-EPMV-03) |
+| Epic `planning → active` | 자식 Feature 중 IDEA `상태: approved` ≥ 1 |
+| Epic `active → completed` | 모든 자식 Feature IDEA `상태: archived` |
 
-## 10. 예상 시간
+## 10. Epic 계층 활용 (Opt-in, v2.4.0)
+
+**언제 사용하나**:
+1. 3 개 이상 Feature 가 같은 제품 Theme
+2. 여러 Feature 에 걸친 cross-cutting 요구사항 (접근성·국제화·성능 예산)
+3. Feature 간 명시적 순서·의존성 관리 필요
+
+```bash
+# Epic 생성
+/plan-epic "OPTIC Landing Phase 4 — 피드백 반영"
+
+# 자식 IDEA 자동 연결
+/plan-idea "라이트 모드 추가" --epic=EPIC-20260422-001
+
+# 상태 전이 (게이트 자동 검증)
+/plan-epic advance EPIC-20260422-001 --to=planning
+
+# 집약 조회 (v2.5.0, T-SHOW-01)
+/plan-epic show EPIC-20260422-001               # Phase 진행률 + Feature 표 + 다음 Checkpoint
+/plan-epic show EPIC-... --verbose              # + 성공 지표 + 의존성 매트릭스
+
+# Phase 로드맵 자동 생성 (v2.5.0, T-TMPL-01)
+/plan-epic phase generate --phase=B --features=F2,F4
+```
+
+**금지**:
+- Feature 2 개 미만 → Over-engineering (Epic 생성 거부)
+- 한 Feature 가 여러 Epic 에 primary 연결 (1:1 원칙)
+- Epic 간 parent-child (4 단 계층 금지)
+
+## 11. 예상 시간
 
 | 단계 | 평균 |
 |------|------|
+| Epic 생성 (선택) | 5-10분 |
 | Idea | 1-2분 |
 | Screen | 3-5분 |
 | Draft | 5-10분 |
@@ -173,6 +226,7 @@ plan 도메인에서 만든 문서를 **`/dev-feature` 입력 형태로 변환**
 | Design (Claude Design 세션 포함) | 5-15분 |
 | Stitch | 10-20분 |
 | Bridge | 5-10분 |
+| Epic phase generate | 30초 (템플릿 기반, T-TMPL-01) |
 
 실제 구현 (dev 도메인) 은 기능 규모에 따라.
 

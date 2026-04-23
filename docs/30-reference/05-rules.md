@@ -5,7 +5,7 @@
 >
 > 이 파일은 **수기 편집 금지**. 재생성: `node scripts/docs-generate.js`
 
-전체 18개. 각 rule 문서의 h1 + 첫 blockquote 에서 추출.
+전체 19개. 각 rule 문서의 h1 + 첫 blockquote 에서 추출.
 
 ## copy 도메인
 
@@ -25,6 +25,7 @@
 | `Checkpoint 정책` | **결론**: 본 정책은 claude-kit 전반의 **Human Checkpoint** 처리 기준. `autoProceedOnPass: true` 플래그가 활성이고 리뷰 결과가 PASS이면 Checkpoint 자동 통과. 단 Critical 화이트리스트 타입은 플래그 무시하고 항상 정 | [src/claude/core/rules/checkpoint-policy.md](../../src/claude/core/rules/checkpoint-policy.md) |
 | `Coding Style` | — | [src/claude/core/rules/coding-style.md](../../src/claude/core/rules/coding-style.md) |
 | `Date & Time Calculation (CRITICAL)` | — | [src/claude/core/rules/date-calculation.md](../../src/claude/core/rules/date-calculation.md) |
+| `Dry-Run 모드 공통 규칙 (T-BKLG-02, Backlog)` | **결론**: claude-kit 주요 커맨드의 `--dry-run` 플래그 표준. 실제 파일 생성·변경 없이 "이렇게 실행될 것" 요약 출력. 신규 사용자 learning curve 완만 + 실험 비용 감소. T-BKLG-02 (Backlog, v2.6.0+ 승격 대기). | [src/claude/core/rules/dry-run-mode.md](../../src/claude/core/rules/dry-run-mode.md) |
 | `Golden Principles` | 12 core principles for writing clean, maintainable code. | [src/claude/core/rules/golden-principles.md](../../src/claude/core/rules/golden-principles.md) |
 | `Interaction Rules` | — | [src/claude/core/rules/interaction.md](../../src/claude/core/rules/interaction.md) |
 | `Security Guidelines` | — | [src/claude/core/rules/security.md](../../src/claude/core/rules/security.md) |

@@ -1,6 +1,6 @@
 # Architecture at a Glance
 
-> **Status**: Draft (P4, 2026-04-17)
+> **Status**: Updated 2026-04-23 (Phase A 피드백 반영)
 > **Source**: 저장소 구조, [../../scripts/setup.js](../../scripts/setup.js), [../../package.json](../../package.json)
 > **Related**: [02-core-concepts.md](02-core-concepts.md), [04-decision-log.md](04-decision-log.md)
 
@@ -38,6 +38,8 @@ claude-kit/
 │   ├── claude-md-merger.js            ← CLAUDE.md 병합
 │   ├── merge-settings.js              ← settings.json 병합
 │   └── generate-sync-report.js        ← sync 상태 보고서
+│   ※ 도메인 script 는 `src/claude/{domain}/scripts/` 에 위치
+│     예: `src/claude/plan/scripts/epic-advance-rewrite.js` (T-EPMV-01, v2.4.1)
 │
 ├── docs/
 │   ├── 00-overview/                   ← 정체성·개념

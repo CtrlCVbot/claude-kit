@@ -1,10 +1,10 @@
 # Decision Log
 
-> **Status**: Draft (P4, 2026-04-17) — 축약본. 원문은 아카이브 참조.
-> **Source**: [../archive/2026-04-17/codex-compatibility/](../archive/2026-04-17/codex-compatibility/), [../archive/2026-04-17/meta-tooling/](../archive/2026-04-17/meta-tooling/), [../archive/2026-04-17/codex-sync/](../archive/2026-04-17/codex-sync/), [../archive/2026-04-17/team-orchestration/](../archive/2026-04-17/team-orchestration/)
+> **Status**: Updated 2026-04-23 (Phase A 피드백 반영 — D9 추가)
+> **Source**: [../archive/2026-04-17/codex-compatibility/](../archive/2026-04-17/codex-compatibility/), [../archive/2026-04-17/meta-tooling/](../archive/2026-04-17/meta-tooling/), [../archive/2026-04-17/codex-sync/](../archive/2026-04-17/codex-sync/), [../archive/2026-04-17/team-orchestration/](../archive/2026-04-17/team-orchestration/), [../plan/kit-feedback/phase-a-improvement-20260423/](../plan/kit-feedback/phase-a-improvement-20260423/)
 > **Related**: [03-architecture-at-a-glance.md](03-architecture-at-a-glance.md)
 
-claude-kit 의 현재 구조를 이해하기 위해 알아둘 **주요 설계 결정 8가지** 를 축약했습니다. 원본 분석·토론·대안 비교는 각 항목의 아카이브 링크에서 볼 수 있습니다.
+claude-kit 의 현재 구조를 이해하기 위해 알아둘 **주요 설계 결정 9가지** 를 축약했습니다. 원본 분석·토론·대안 비교는 각 항목의 아카이브 링크에서 볼 수 있습니다.
 
 ## D1. 도메인 분리 (core / dev / plan / copy)
 
@@ -94,6 +94,41 @@ claude-kit 의 현재 구조를 이해하기 위해 알아둘 **주요 설계 �
 - 자동 생성 가능한 reference 는 generator 로 품질 고정
 
 **계획서**: [../plan/documentation-package-plan.md](../plan/documentation-package-plan.md)
+
+## D9. Phase A 피드백 반영 — Epic 계층 + IDEA SSOT + Race 방지 (2026-04-23)
+
+**상태**: ✅ 완료 (2026-04-23). 8 커밋 / 18 TASK 완주 (v2.4.1 8건 + v2.5.0 7건 + Backlog 3건). 최종 403/403 테스트 PASS.
+
+**결정**: claude-kit 을 실제 프로젝트 dry-run 에서 받은 피드백 18 TASK 로 개선. 파이프라인·계층·race 방지·표준화 전면 보강.
+
+**주요 구현**:
+
+| 영역 | 핵심 산출물 | 릴리스 |
+|------|------------|-------|
+| Epic advance | `scripts/epic-advance-rewrite.js` (13 테스트) + `git mv` fallback + 게이트 자동 검증 | v2.4.1 |
+| IDEA 상태 SSOT | `plan-state-sync.js` hook (49 테스트) + 3 곳 자동 동기 | v2.4.1 |
+| Read Cache Race | `_read-cache-state.js` (27 테스트) + 2 hook (`agent-completion-cache-invalidate`, `pre-tool-use-edit-reread`) | v2.4.1 |
+| Agent File Ownership | `agent-file-ownership.md` 매트릭스 | v2.4.1 |
+| RICE Lane 가중 | `rice-lane-weighted-adjustment.md` SSOT | v2.4.1 |
+| Writer 표준 | `writer-output-format.md` + 8 에이전트 주입 | v2.5.0 |
+| Bridge 경량화 | `<Lightweight_Principles>` + §7 상태 동기 표 | v2.5.0 |
+| PCC 확장 | PCC-07/08/09 (Epic binding / 상태 / 의존성) | v2.5.0 |
+| Phase 로드맵 템플릿 | `templates/phase-roadmap.md` + `/plan-epic phase generate` | v2.5.0 |
+| `/plan-epic show` 개선 | 집약 출력 (Phase 진행률 + Feature 표) | v2.5.0 |
+| Checkpoint 수정 요청 | `checkpoint-policy.md §8` + `/plan-revise` | v2.5.0 |
+| 변경 이력 hook | `_change-history-core.js` (20 테스트) + stub | Backlog |
+| Dry-run 공통 규칙 | `dry-run-mode.md` | Backlog |
+| 역기록 구조 | `templates/implementation-hints.md` §5-A/B/C | Backlog |
+
+**근거**:
+- 실제 프로젝트에서 Step 9 `/dev-feature` 진입까지의 14 노이즈 + 5 critical 이슈 발견
+- 수동 편집 4 회 → 1 회 감소 (SSOT + hook)
+- 에이전트 race 제거 (파일 소유권 매트릭스 + Read cache 재인증)
+- 기획 ↔ 실제 구현 괴리 추적 기반 마련
+
+**하위 호환**: 100%. 기존 flat 구조·커맨드는 그대로 동작. Epic/SSOT/PCC 확장은 모두 **Opt-in** 또는 환경변수 guard.
+
+**TASK 매트릭스**: [../plan/kit-feedback/phase-a-improvement-20260423/](../plan/kit-feedback/phase-a-improvement-20260423/)
 
 ## 결정 변경 절차
 

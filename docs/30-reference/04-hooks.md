@@ -5,7 +5,7 @@
 >
 > 이 파일은 **수기 편집 금지**. 재생성: `node scripts/docs-generate.js`
 
-전체 26개. 각 hook 파일 상단 JSDoc의 `Hook/Event/Action` 라인에서 추출.
+전체 28개. 각 hook 파일 상단 JSDoc의 `Hook/Event/Action` 라인에서 추출.
 
 ## copy 도메인
 
@@ -21,6 +21,7 @@
 
 | Hook | Event | Action | Source |
 |---|---|---|---|
+| `_change-history-core` | — | — | [src/claude/core/hooks/_change-history-core.js](../../src/claude/core/hooks/_change-history-core.js) |
 | `_read-cache-state` | — | — | [src/claude/core/hooks/_read-cache-state.js](../../src/claude/core/hooks/_read-cache-state.js) |
 | `agent-completion-cache-invalidate` | — | — | [src/claude/core/hooks/agent-completion-cache-invalidate.js](../../src/claude/core/hooks/agent-completion-cache-invalidate.js) |
 | `agent-telemetry-emit` | — | — | [src/claude/core/hooks/agent-telemetry-emit.js](../../src/claude/core/hooks/agent-telemetry-emit.js) |
@@ -30,6 +31,7 @@
 | `feedback-subagent-collector` | — | — | [src/claude/core/hooks/feedback-subagent-collector.js](../../src/claude/core/hooks/feedback-subagent-collector.js) |
 | `no-duplication-guard` | — | — | [src/claude/core/hooks/no-duplication-guard.js](../../src/claude/core/hooks/no-duplication-guard.js) |
 | `output-secret-filter` | — | — | [src/claude/core/hooks/output-secret-filter.js](../../src/claude/core/hooks/output-secret-filter.js) |
+| `post-edit-history` | — | — | [src/claude/core/hooks/post-edit-history.js](../../src/claude/core/hooks/post-edit-history.js) |
 | `pre-tool-use-edit-reread` | — | — | [src/claude/core/hooks/pre-tool-use-edit-reread.js](../../src/claude/core/hooks/pre-tool-use-edit-reread.js) |
 | `security-auto-trigger` | — | — | [src/claude/core/hooks/security-auto-trigger.js](../../src/claude/core/hooks/security-auto-trigger.js) |
 | `session-wrap-suggest` | — | — | [src/claude/core/hooks/session-wrap-suggest.js](../../src/claude/core/hooks/session-wrap-suggest.js) |

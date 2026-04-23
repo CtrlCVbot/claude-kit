@@ -1,27 +1,32 @@
 # plan Domain
 
-> **Status**: Draft (P4, 2026-04-17)
+> **Status**: Updated 2026-04-23 (Phase A 피드백 반영 완료)
 > **Source**: `src/claude/plan/`, [../30-reference/01-commands.md](../30-reference/01-commands.md), [../30-reference/02-agents.md](../30-reference/02-agents.md)
 > **Related**: [02-dev-domain.md](02-dev-domain.md), [../20-user-guide/05-plan-pipeline.md](../20-user-guide/05-plan-pipeline.md)
 
 `plan` 도메인은 **아이디어 수집 → 스크리닝 → 상세 기획 → 개발 브리지** 까지의 기획 파이프라인입니다. PRD 가 아직 없는 단계부터 시작합니다.
+
+v2.4.0 부터 **Epic/Feature/Task 3단 계층** 을 **Opt-in** 으로 제공합니다 ([plan-epic-hierarchy.md](../../src/claude/plan/rules/plan-epic-hierarchy.md)).
 
 `profile.json` 에서 `"domains": ["core", "dev", "plan"]` 로 opt-in.
 
 ## 파이프라인 단계
 
 ```
-아이디어  → /plan-idea        → .plans/ideas/00-inbox/{IDEA-ID}.md
-아이디어  → /plan-screen      → RICE 스크리닝 + ★ 승인 게이트 ★
-(승인)    → /plan-draft       → 1차 기획 (Lite/Standard 판정)
-Standard  → /plan-prd         → 상세 PRD (plan-prd-writer)
-(옵션)    → /plan-wireframe   → 와이어프레임 (구조 확정)
-           ├─ /plan-design    → Claude Design 2단계 프롬프트 (wireframe → high fidelity)
-           └─ /plan-stitch    → Stitch 기반 디자인 시안 통합
+Epic(opt) → /plan-epic         → .plans/epics/00-draft/EPIC-.../ (Opt-in, v2.4.0)
+아이디어  → /plan-idea          → .plans/ideas/00-inbox/{IDEA-ID}.md
+                                  (--epic=EPIC-... 로 자동 연결)
+아이디어  → /plan-screen        → RICE 스크리닝 + ★ 승인 게이트 ★
+(승인)    → /plan-draft         → 1차 기획 (Lite/Standard 판정)
+Standard  → /plan-prd           → 상세 PRD (plan-prd-writer)
+(옵션)    → /plan-wireframe     → 와이어프레임 (구조 확정)
+           ├─ /plan-design      → Claude Design 2단계 프롬프트 (wireframe → high fidelity)
+           └─ /plan-stitch      → Stitch 기반 디자인 시안 통합
              ※ design / stitch는 둘 중 택일. 미사용 시 /plan-bridge Checkpoint에서 skip.
- 완성     → /plan-bridge      → 개발 핸드오프 (dev 도메인으로)
- 완료     → /plan-archive     → 번들화 + 아카이빙
-           → /plan-improve    → 회고·개선 제안
+ 완성     → /plan-bridge        → 개발 핸드오프 (dev 도메인으로)
+ 완료     → /plan-archive       → 번들화 + 아카이빙
+           → /plan-improve      → 회고·개선 제안
+(선택)    → /plan-revise        → 이전 산출물에 수정 요청 반영 (T-REVP-01, v2.5.0)
 ```
 
 ## 승인 게이트
@@ -29,6 +34,18 @@ Standard  → /plan-prd         → 상세 PRD (plan-prd-writer)
 **가장 중요**: `/plan-screen` 이후 `/plan-draft` 로 넘어가려면 사용자의 **명시적 승인** 이 있어야 합니다. 자동 전진 금지.
 
 `plan-doc-guard.js` 훅 (PreToolUse) 이 계획 문서 무결성을 검증합니다.
+
+**Checkpoint 응답 표준**: Y/수정/N 3 옵션. "수정" 선택 시 `checkpoint-policy.md §8` 프로토콜로 재호출 (T-REVP-01).
+
+## IDEA 상태 SSOT (v2.4.1, T-FSTATE-01/02)
+
+IDEA frontmatter `상태:` 가 **Single Source of Truth** 입니다. 변경 시 `plan-state-sync.js` 훅이 3 곳 자동 동기화:
+
+1. `.plans/ideas/backlog.md` 행 상태 컬럼
+2. Epic `01-children-features.md` §1 F{N} 상태 필드
+3. Feature `08-epic-binding.md` §7 상태 동기 표
+
+상세: [plan-epic-hierarchy.md §5](../../src/claude/plan/rules/plan-epic-hierarchy.md).
 
 ## 커맨드 목록
 

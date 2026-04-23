@@ -5,7 +5,7 @@
 >
 > 이 파일은 **수기 편집 금지**. 재생성: `node scripts/docs-generate.js`
 
-전체 48개.
+전체 49개.
 
 ## copy 도메인
 
@@ -76,6 +76,7 @@
 | `/plan-improve` | 아카이브된 기능에 대한 개선요청을 등록하고 분석한다. | [src/claude/plan/commands/plan-improve.md](../../src/claude/plan/commands/plan-improve.md) |
 | `/plan-prd` | PRD 상세 작성. First-Pass 문서를 기반으로 10개 섹션의 상세 PRD를 생성합니다. 시나리오 C(충실도 교정)에서는 2-pass 모드를 지원합니다. | [src/claude/plan/commands/plan-prd.md](../../src/claude/plan/commands/plan-prd.md) |
 | `/plan-review` | 기획 산출물 리뷰. 아이디어, PRD, Wireframe, Feature Package의 품질을 검증합니다. | [src/claude/plan/commands/plan-review.md](../../src/claude/plan/commands/plan-review.md) |
+| `/plan-revise` | 이전 plan 산출물에 수정 요청을 반영한다. Checkpoint "수정" 선택 시의 표준 응답 프로토콜(`checkpoint-policy.md §8`) 을 커맨드로 패키지화한 것. **T-REVP-01 (Phase A 피드백 Step 5, v2.5. | [src/claude/plan/commands/plan-revise.md](../../src/claude/plan/commands/plan-revise.md) |
 | `/plan-screen` | IDEA-{YYYYMMDD}-{NNN} 스크리닝 실행. **RICE 또는 5축 가중** 프레임워크를 명시적으로 선택하여 Go/Hold/Kill 판정을 **제안**한 뒤, 사용자 **명시적 승인**을 거쳐 상태를 전환합니다. | [src/claude/plan/commands/plan-screen.md](../../src/claude/plan/commands/plan-screen.md) |
 | `/plan-stitch` | PRD + Wireframe 통합 검증. 기획 산출물을 통합하여 Feature Package 컨텍스트를 생성합니다. | [src/claude/plan/commands/plan-stitch.md](../../src/claude/plan/commands/plan-stitch.md) |
 | `/plan-wireframe` | 와이어프레임 생성. 승인된 PRD를 기반으로 ASCII + Mermaid 와이어프레임을 설계합니다. | [src/claude/plan/commands/plan-wireframe.md](../../src/claude/plan/commands/plan-wireframe.md) |

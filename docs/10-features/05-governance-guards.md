@@ -1,6 +1,6 @@
 # Governance Guards
 
-> **Status**: Draft (P4, 2026-04-17)
+> **Status**: Updated 2026-04-23 (Phase A 피드백 반영)
 > **Source**: `src/claude/{core,dev,plan,copy}/hooks/*.js`, [../30-reference/04-hooks.md](../30-reference/04-hooks.md)
 > **Related**: [01-core-domain.md](01-core-domain.md), [02-dev-domain.md](02-dev-domain.md), [03-plan-domain.md](03-plan-domain.md)
 
@@ -26,7 +26,7 @@ hook 은 JSON 입력을 stdin 으로 받고 stdout 으로 메시지를, exit cod
 
 ## 3. 전체 가드 테이블
 
-### 3.1 core 도메인 (5)
+### 3.1 core 도메인 (9, v2.4.1 확장)
 
 | Hook | Event | Action | 역할 |
 |------|-------|--------|------|
@@ -35,6 +35,10 @@ hook 은 JSON 입력을 stdin 으로 받고 stdout 으로 메시지를, exit cod
 | [`code-quality-reminder`](../../src/claude/core/hooks/code-quality-reminder.js) | PostToolUse | REMINDER | 파일 크기·중첩 등 품질 메트릭 경고 |
 | [`security-auto-trigger`](../../src/claude/core/hooks/security-auto-trigger.js) | PostToolUse | REMINDER | 보안 키워드 감지 시 `/security-review` 제안 |
 | [`session-wrap-suggest`](../../src/claude/core/hooks/session-wrap-suggest.js) | Stop | REMINDER | 세션 종료 시 `/session-wrap` 실행 제안 |
+| [`agent-completion-cache-invalidate`](../../src/claude/core/hooks/agent-completion-cache-invalidate.js) | SubagentStop | REMINDER | write-capable 에이전트 완료 시 메인 Read 재호출 경고 (T-RACE-02 연계) |
+| [`pre-tool-use-edit-reread`](../../src/claude/core/hooks/pre-tool-use-edit-reread.js) | PreToolUse (Edit\|Write\|NotebookEdit) | REMINDER | pending 에이전트 있을 때 파일별 타겟팅 Read 재호출 경고 (T-RACE-02, v2.4.1) |
+| [`post-edit-history`](../../src/claude/core/hooks/post-edit-history.js) | PostToolUse (Edit\|Write) | LOG (stub) | 변경 이력 자동 append (T-BKLG-01, `CLAUDE_ENABLE_POST_EDIT_HISTORY=1` 로만 활성) |
+| [`feedback-collector`](../../src/claude/core/hooks/feedback-collector.js) | Stop (matcher: 23 커맨드) | LOG | kit-feedback-archiving Phase 3 엔트리 수집 |
 
 ### 3.2 dev 도메인 (3)
 
@@ -44,11 +48,20 @@ hook 은 JSON 입력을 stdin 으로 받고 stdout 으로 메시지를, exit cod
 | [`dev-db-guard`](../../src/claude/dev/hooks/dev-db-guard.js) | PreToolUse (Bash) | **BLOCKING** | 위험한 DB 명령 (`DROP`, `TRUNCATE` 등) 차단 |
 | [`dev-feature-scope-guard`](../../src/claude/dev/hooks/dev-feature-scope-guard.js) | PreToolUse (Edit\|Write) | REMINDER | Feature Package 범위 밖 편집 경고 |
 
-### 3.3 plan 도메인 (1)
+### 3.3 plan 도메인 (4, v2.4.1 확장)
 
 | Hook | Event | Action | 역할 |
 |------|-------|--------|------|
 | [`plan-doc-guard`](../../src/claude/plan/hooks/plan-doc-guard.js) | PreToolUse (Edit\|Write) | **BLOCKING** | 기획 문서 무결성 검증, 승인 게이트 우회 차단 |
+| [`plan-idea-move-guard`](../../src/claude/plan/hooks/plan-idea-move-guard.js) | PreToolUse (Bash) | **BLOCKING** | IDEA 폴더 이동 화이트리스트 검증 (IMP-KIT-009) |
+| [`plan-review-trigger`](../../src/claude/plan/hooks/plan-review-trigger.js) | Stop | REMINDER | `/plan-review` 자동 후속 트리거 제안 (IMP-KIT-007) |
+| [`plan-epic-integrity`](../../src/claude/plan/hooks/plan-epic-integrity.js) | PostToolUse (Edit\|Write) | REMINDER (Phase 2 disable 기본) | Epic ↔ Feature binding cross-reference 검증 (v2.4.0, Phase 3 enable 예정) |
+| [`plan-state-sync`](../../src/claude/plan/hooks/plan-state-sync.js) | PostToolUse (Edit\|Write) | **WRITE** | IDEA frontmatter `상태:` 변경 시 backlog/Children/binding 3 곳 자동 동기 (T-FSTATE-01, v2.4.1). lockfile + rollback. `CLAUDE_DISABLE_PLAN_STATE_SYNC=1` 로 비활성. |
+
+**pure function 모듈** (hook 이 호출하는 순수 함수, 단위 테스트 대상):
+- [`_read-cache-state.js`](../../src/claude/core/hooks/_read-cache-state.js) — T-RACE-02 state 모듈 (27 테스트)
+- [`_plan-state-sync-core.js`](../../src/claude/plan/hooks/_plan-state-sync-core.js) — T-FSTATE-01 core (49 테스트)
+- [`_change-history-core.js`](../../src/claude/core/hooks/_change-history-core.js) — T-BKLG-01 core (20 테스트)
 
 ### 3.4 copy 도메인 (5)
 
