@@ -173,11 +173,20 @@ Feature:  pending → pending → approved
 ### 5-5. 상태 동기 주체 (SSOT 원칙)
 
 - **IDEA frontmatter** 가 **Single Source of Truth**
-- `plan-state-sync.js` hook (T-FSTATE-01) 이 3 곳 자동 갱신:
+- `plan-state-sync.js` hook (T-FSTATE-01, **구현 완료**) 이 3 곳 자동 갱신:
   - `.plans/ideas/backlog.md` 행의 상태 컬럼
   - `.plans/epics/*/EPIC-*/01-children-features.md` §1 F{N} 의 `**상태**` 필드
   - `.plans/features/active/{slug}/00-context/08-epic-binding.md` §7 상태 동기 표
 - `/dev-feature` 호출 시 Feature 상태만 `approved → active` 전이 (IDEA 상태는 그대로 `approved`)
+
+**구현 위치**:
+
+- Core 순수 함수: `src/claude/plan/hooks/_plan-state-sync-core.js` (parseFrontmatter / updateBacklogRow / updateChildrenFeatureState / appendBindingSyncRow / decideStateSync)
+- Hook entrypoint: `src/claude/plan/hooks/plan-state-sync.js` (PostToolUse Edit|Write 매처, lockfile + 순차 쓰기 + 실패 시 롤백)
+- Trigger 경로: `.plans/ideas/**/IDEA-*.md` 매칭 (Unix/Windows 경로 모두 지원)
+- 비활성화: 환경변수 `CLAUDE_DISABLE_PLAN_STATE_SYNC=1`
+- 로그: `~/.claude/logs/state-sync.jsonl` (synced / skipped / lock-failed / error 이벤트)
+- 테스트: 49 건 (core 32 + hook 12 + integration 5) — TDD 완주
 
 ### 5-6. 에이전트 책임
 
@@ -280,3 +289,4 @@ Epic 컬럼 추가 (null 허용). 기존 archived Feature 는 null 유지, `/pla
 | 2026-04-22 | 초안 — claude-kit v2.4.0 Phase 2 Step 1 (P2-C) Epic 계층 SSOT | Claude (메인테이너 역할) |
 | 2026-04-23 | §5 IDEA 상태 vs Feature 상태 (SSOT) 신설 — T-FSTATE-02 (N-13 대응). 기존 §5~§11 을 §6~§12 로 재번호. §11 관련 규칙에 agent-file-ownership, rice-lane-weighted-adjustment, plan-state-sync.js 추가. | Claude (메인테이너 역할) |
 | 2026-04-23 | §4-1 파일 이동 방법 (git mv vs mv, T-EPMV-02) + §4-2 상태 전이 게이트 조건 (T-EPMV-03) 신설. `/plan-epic advance` 내부 트랜잭션 단계 정의. | Claude (메인테이너 역할) |
+| 2026-04-23 | §5-5 `plan-state-sync.js` hook 구현 완료 표기 (T-FSTATE-01). Core 함수 경로·Trigger 경로·비활성화·로그·테스트 수(49) 명시. | Claude (메인테이너 역할) |

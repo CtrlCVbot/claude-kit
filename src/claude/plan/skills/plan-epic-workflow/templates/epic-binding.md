@@ -61,3 +61,18 @@ Epic 의 `04-decision-log.md` 에서 본 Feature 에 적용되는 결정을 나�
 | 날짜 | 내용 |
 |---|---|
 | {YYYY-MM-DD} | 초안 — EPIC-{NNN} 에 연결 |
+
+---
+
+## 7. 상태 동기 기록 (자동 갱신)
+
+> **자동 갱신 대상**. `plan-state-sync.js` hook (T-FSTATE-01) 이 IDEA frontmatter `상태:` 변경 감지 시 본 표 끝에 새 행을 append 한다. 수동 편집 **금지** (hook 이 idempotent 로 덮어쓴다).
+
+| 타임스탬프 | IDEA 상태 | Feature 상태 |
+|---|---|---|
+
+- **타임스탬프**: ISO 8601 UTC (`YYYY-MM-DDTHH:MM:SS.sssZ`)
+- **IDEA 상태**: `inbox` / `screened` / `approved` / `archived` 중 하나
+- **Feature 상태**: `pending` / `approved` / `active` / `archived` 중 하나 — IDEA 상태의 1:1 파생
+- 매핑 SSOT: `src/claude/plan/rules/plan-epic-hierarchy.md §5-3`
+- hook 비활성화: 환경변수 `CLAUDE_DISABLE_PLAN_STATE_SYNC=1`

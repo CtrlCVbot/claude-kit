@@ -540,7 +540,11 @@ function buildSettingsTemplate(activeDomains) {
 
 function buildHooksConfig(activeDomains) {
   const hooks = {
-    PreToolUse: [],
+    PreToolUse: [
+      // T-RACE-02 (Phase A 피드백 Step 4A): 에이전트 완료 후 메인 Edit 시
+      // "File has not been read yet" 에러 방지용 경고 훅 (non-blocking)
+      { matcher: 'Edit|Write|NotebookEdit', hooks: ['node .claude/hooks/pre-tool-use-edit-reread.js'] }
+    ],
     PostToolUse: [
       { matcher: 'Edit|Write', hooks: ['node .claude/hooks/edit-tracker.js'] },
       { matcher: 'Edit|Write', hooks: ['node .claude/hooks/code-quality-reminder.js'] },
@@ -578,6 +582,11 @@ function buildHooksConfig(activeDomains) {
       { matcher: 'Edit|Write', hooks: ['node .claude/hooks/plan-doc-guard.js'] },
       // IMP-KIT-009: IDEA 폴더 이동 화이트리스트 가드 (Bash matcher)
       { matcher: 'Bash', hooks: ['node .claude/hooks/plan-idea-move-guard.js'] }
+    );
+    // T-FSTATE-01 (Phase A 피드백 Step 4B): IDEA frontmatter `상태:` 변경 감지 →
+    // backlog / Epic Children §1 / binding §7 자동 동기 (비활성화: CLAUDE_DISABLE_PLAN_STATE_SYNC=1)
+    hooks.PostToolUse.push(
+      { matcher: 'Edit|Write', hooks: ['node .claude/hooks/plan-state-sync.js'] }
     );
     // IMP-KIT-007: /plan-review 자동 후속 트리거 (Stop 훅)
     hooks.Stop.push(
@@ -774,7 +783,7 @@ function buildCodexHooksJson(compatibleHooks, activeDomains) {
       }
     } else {
       // PostToolUse 훅
-      if (['edit-tracker.js', 'code-quality-reminder.js', 'security-auto-trigger.js', 'copy-evidence-reminder.js', 'copy-doc-drift-check.js', 'copy-variant-env-guard.js'].includes(hookFile)) {
+      if (['edit-tracker.js', 'code-quality-reminder.js', 'security-auto-trigger.js', 'copy-evidence-reminder.js', 'copy-doc-drift-check.js', 'copy-variant-env-guard.js', 'plan-state-sync.js'].includes(hookFile)) {
         postToolUse.push({ matcher: 'Edit|Write', hookFile });
       }
     }
