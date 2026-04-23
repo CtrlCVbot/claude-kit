@@ -8,13 +8,11 @@
 
 기존 프로젝트에 이미 `AGENTS.md`가 있으면 설치 과정에서 보존됩니다. 이 템플릿은 fresh install 또는 누락된 `AGENTS.md` 복구 시에만 사용됩니다.
 
-## 핵심 운영 원칙
+## 핵심 원칙 (요약)
 
-- 검증 증거 우선: 테스트, 빌드, lint, 타입 체크, 요구사항 체크리스트처럼 이번 세션에서 직접 확인한 결과 없이 완료를 주장하지 않습니다.
-- 작은 변경 우선: 요청 범위를 벗어난 정리, 리팩터링, 구조 변경은 별도 요청이 있을 때만 진행합니다.
-- 현재 구조 우선: `apps/`, `packages/` 같은 특정 구조를 가정하지 말고 현재 repository tree와 package 설정을 먼저 확인합니다.
-- 보안 기본선: 비밀값 하드코딩, 입력 검증 누락, 인증/권한 우회, 민감 정보가 새는 에러 메시지를 만들지 않습니다.
-- 명확한 보고: 무엇을 바꿨는지, 무엇을 검증했는지, 무엇이 남았는지를 짧고 구체적으로 보고합니다.
+증거 없이 완료 주장 금지. 작은 변경 범위 유지. 현재 프로젝트 구조 우선. 보안 기본선 준수. 무엇을 바꿨고 무엇을 검증했는지 명확히 보고.
+
+> 상세 원칙·반례·자기 합리화 방지 표는 `.claude/rules/golden-principles.md` 참조.
 
 ## 작업 절차
 
@@ -24,39 +22,31 @@
 4. 검증: 변경 성격에 맞는 가장 작은 검증부터 실행하고, 실패하면 원인과 다음 조치를 분리합니다.
 5. 보고: 실행한 검증 결과와 남은 리스크를 숨기지 않습니다.
 
-## 검증 기준
+## 검증 기준 (요약)
 
-완료 또는 성공을 말하려면 fresh verification evidence가 필요합니다.
+이번 세션에서 실행한 명령과 출력 없이는 완료를 주장할 수 없습니다. 테스트·빌드·lint·타입 체크의 exit code 또는 출력이 증거입니다. "probably", "seems", "should work" 같은 추측 표현으로 완료를 주장하지 않습니다.
 
-- 테스트 통과: 이번 세션에서 실행한 test command와 결과를 확인합니다.
-- 빌드 성공: build command의 exit code와 주요 출력을 확인합니다.
-- 버그 수정: 재현 경로 또는 regression test가 통과해야 합니다.
-- 문서 변경: 링크, 경로, 실제 생성물과의 불일치를 확인합니다.
-- 실행하지 못한 검증: 이유와 대체 확인 방법을 명시합니다.
+> Gate Function, Red-Green 루프, Agent Edit Race 상세는 `.claude/rules/verification.md` 참조.
 
-추측 표현인 "probably", "seems", "should work"만으로 완료를 주장하지 않습니다.
+## 코드 품질 기준 (요약)
 
-## 코드 품질 기준
+TDD 순서 우선 (실패 테스트 확인 → 구현 → 리팩터링). 불필요한 mutation 대신 명시적 새 값 생성. 함수·파일은 읽기 쉬운 단위 유지. 외부 입력은 경계에서 검증. 임시 debug·실험 코드는 최종 변경에 남기지 않습니다.
 
-- 가능하면 TDD 순서로 진행합니다: 실패 테스트 확인, 구현, 리팩터링.
-- 객체나 상태를 다룰 때는 불필요한 mutation보다 명시적인 새 값 생성을 우선합니다.
-- 함수와 파일은 읽기 쉬운 단위로 유지하고, 한 번에 여러 목적을 섞지 않습니다.
-- 외부 입력은 경계에서 검증하고, 에러는 조용히 무시하지 않습니다.
-- debug 출력, 임시 파일, 실험 코드는 최종 변경에 남기지 않습니다.
+> Code Quality Checklist 전체 항목과 예시는 `.claude/rules/coding-style.md` 참조.
 
-## 보안 기준
+## 보안 기준 (요약)
 
-- API key, token, password, private URL 같은 비밀값은 코드와 문서에 하드코딩하지 않습니다.
-- 비밀값은 환경 변수나 프로젝트가 채택한 secret manager를 통해 읽습니다.
-- 사용자 입력, query parameter, request body, file path는 신뢰하지 않고 검증합니다.
-- SQL injection, XSS, CSRF, authorization bypass, rate limit 누락 가능성을 확인합니다.
-- 사용자에게 노출되는 에러 메시지에 내부 경로, stack trace, secret hint가 섞이지 않게 합니다.
+비밀값은 환경 변수 사용 (하드코딩 금지). 사용자 입력·query parameter·request body·file path는 경계에서 검증. SQL injection / XSS / CSRF / 권한 우회 / rate limit 누락을 점검. 에러 메시지에 내부 경로나 stack trace 노출 금지.
+
+> Mandatory Security Checks 전체 + Secret Management 패턴은 `.claude/rules/security.md` 참조.
 
 ## 날짜와 시간
 
-날짜, 요일, 기간, D-day, 일정 계산은 머릿속으로 하지 않습니다. 현재 런타임에서 제공되는 날짜 도구나 language runtime의 날짜 라이브러리로 확인하고, 사용자에게는 가능한 한 절대 날짜를 함께 적습니다.
+날짜·요일·기간·D-day·일정 계산은 머릿속으로 하지 않습니다. language runtime 또는 system date 도구로 확인하고, 가능한 한 절대 날짜를 함께 적습니다.
 
 Today's date is {{DATE}}.
+
+> macOS/Linux `date` 명령과 Python `datetime` 권장 패턴은 `.claude/rules/date-calculation.md` 참조.
 
 ## Codex direct-use 자산
 
