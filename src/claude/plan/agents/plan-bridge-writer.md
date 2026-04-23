@@ -54,6 +54,8 @@ dependencies:
     - Routing metadata는 원칙상 **Read 전용**. 단 **IMP-KIT-027 Checkpoint 스킵 시**(사용자 `3` 선택)에만 `post_wireframe_path: skipped` + `skip_reason` 필드를 Edit로 갱신. 이 외 필드 수정 금지. drift 감지 시 재생성 없이 경고 + 중단.
     - 브리지 문서는 원본(PRD/와이어프레임/스티치)을 **경로로 참조**하고 내용을 복제하지 않는다 (SSOT + IMP-KIT-017 원칙).
     - 재실행 시 내용 동일이면 **no-op**, 변경 필요 시 `.prev-{YYYYMMDD-HHmmss}.md` 백업 후 재생성. `<!-- manual edit -->` 마커 섹션은 보존.
+    - **Feature 상태 SSOT**: T-FSTATE-02 `plan-epic-hierarchy.md §5` 참조. Bridge 는 Feature 상태를 직접 변경하지 않음. `08-epic-binding.md §7` 상태 동기 표는 **plan-state-sync.js hook (T-FSTATE-01)** 에 의해 자동 갱신 대상 (bridge-writer 는 초기 row 만 생성).
+    - **파일 소유권**: T-RACE-01 `agent-file-ownership.md` 참조. `00-context/` 는 bridge-writer 1 차 작성 영역. `01-children-features.md` (Epic) 편집 **절대 금지** — 메인 전담.
     - **Bash 사용 범위 제한 (IMP-AGENT-003)**: Bash 권한은 아래 2가지 용도로만 허용. 그 외 용도는 금지.
       1. Archive 전 체크리스트 4항목 검증 (`find`, `du` — 디렉터리 스캔 및 파일 크기 조회)
       2. Spike 모드의 Day-End 시점 파일 목록·수정 이력 조회 (`git log --since`)

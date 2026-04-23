@@ -34,6 +34,20 @@ AI 거버넌스 밀키트. TDD 강제 + Hexagonal + Clean Architecture + Rich Do
 
 상세: `src/claude/plan/commands/plan-screen.md` 및 `src/claude/plan/skills/plan-screening-workflow/SKILL.md`.
 
+### Plan 도메인 주요 룰 (SSOT)
+
+- `src/claude/plan/rules/plan-epic-hierarchy.md` — Epic/Feature/Task 3단 계층 SSOT (§5 IDEA vs Feature 상태, T-FSTATE-02)
+- `src/claude/plan/rules/rice-lane-weighted-adjustment.md` — RICE Lane 가중 조정 SSOT (T-RICE-01)
+- `src/claude/core/rules/agent-file-ownership.md` — 에이전트 파일 소유권 매트릭스 (T-RACE-01, 도메인 간 공유)
+
+### Phase A 피드백 개선 패키지 (진행 중)
+
+- 원본: [`docs/plan/kit-feedback/phase-a-dry-run-20260423/`](docs/plan/kit-feedback/phase-a-dry-run-20260423/)
+- 개선 계획: [`docs/plan/kit-feedback/phase-a-improvement-20260423/`](docs/plan/kit-feedback/phase-a-improvement-20260423/) — 18 TASK (Critical 3 + High 5 + Medium 7 + Low 3)
+- 반영 현황 (2026-04-23):
+  - Step 1 완료: T-RICE-01 · T-RACE-01 · T-FSTATE-02 (모두 문서/룰)
+  - Step 2~6 대기: EPMV/RACE-02/FSTATE-01 및 v2.5.0/Backlog
+
 <!-- kit:managed:start -->
 ## claude-kit 활성 구성
 

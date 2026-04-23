@@ -47,6 +47,9 @@ dependencies:
     - 프로젝트 컨텍스트(기술 스택, 아키텍처, 팀 역량)를 고려하여 기술적 실현성 평가
     - `.plans/ideas/` 디렉토리 내 파일만 수정
     - **상태는 `screened`까지만 전환** — `approved`/`rejected`/`on-hold`로의 전환 금지
+    - **IDEA 상태 SSOT**: T-FSTATE-02 `plan-epic-hierarchy.md §5` 참조. 본 에이전트는 `inbox → screened` 전이만 담당.
+    - **Lane 가중 조정 규칙 SSOT**: T-RICE-01 `rice-lane-weighted-adjustment.md` 참조. Raw Hold/Kill 에서 Lane 조건 충족 시 Go 승격 가능 — SCREENING §Lane 가중 조정 섹션에 체크리스트 기록 필수.
+    - **파일 소유권**: T-RACE-01 `agent-file-ownership.md` 참조. `01-children-features.md` 편집 금지 (메인 전담).
   </Constraints>
 
   <Investigation_Protocol>
@@ -66,6 +69,7 @@ dependencies:
        - Effort (person-months): 개발 공수 추정
        - RICE 총점 = (Reach × Impact × Confidence) / Effort
        - 판정 임계값: Go (≥ 권장 10.0, 프로젝트별 조정), Hold (2.0~10.0), Kill (< 2.0)
+       - **Lane 가중 조정 SSOT**: `src/claude/plan/rules/rice-lane-weighted-adjustment.md` (T-RICE-01) — Raw Hold/Kill 이어도 Lane 조건 충족 시 Go 승격 가능. 조정 조건·로그 요구 모두 본 룰 참조.
        - 출력 스키마: `src/claude/plan/_schemas/rice.schema.json`
 
        **B. 5축 가중 프레임워크**:
@@ -122,6 +126,26 @@ dependencies:
     - 프레임워크 임계값: RICE (Go ≥ 10.0 / Hold 2.0~10.0 / Kill < 2.0) · 5축 (Go 70+ / Hold 40-69 / Kill < 40)
     - 카테고리: {Lite|Standard}
     - 근거: {판정 이유 2-3문장}
+
+    ### Lane 가중 조정 (RICE 전용 — 필수 로그)
+
+    > **적용 조건**: RICE 프레임워크 + Raw 판정이 Go 미만(Hold 또는 Kill) 인 경우에만 기록. Raw Go 면 본 섹션 생략 가능.
+    > **SSOT**: `src/claude/plan/rules/rice-lane-weighted-adjustment.md`
+
+    **Lite Lane 승격 조건 (Raw Hold → Go)** — 4 조건 모두 충족 시 Go:
+    - [ ] Lane = Lite (`triggers_matched = []`)
+    - [ ] Effort ≤ 2 인·일
+    - [ ] Confidence ≥ 80%
+    - [ ] 선행 의존성 해소 효과 존재 (Epic 의존성 매트릭스 `→` 관계)
+
+    **Standard Lane 승격 조건 (Raw Kill/Hold 하단 → Go)** — 4 조건 모두 충족 시 Go:
+    - [ ] Lane = Standard (6 트리거 중 3+ 매칭)
+    - [ ] Impact ≥ 3 (큼 이상)
+    - [ ] Epic 필수 지표 직접 대응 (Single-충족 Feature)
+    - [ ] 의존성 허브 역할 (다수 Feature 가 본 Feature 기반)
+
+    **조정 후 판정**: {Go | Raw 유지}
+    **최종 권장 판정**: {Go | Hold | Kill}
 
     ### 리스크 분석
     - 기술적: {리스크}

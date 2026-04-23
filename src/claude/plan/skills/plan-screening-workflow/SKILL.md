@@ -44,6 +44,12 @@ description: >
 - Hold (2.0 ~ 10.0): 보류 제안
 - Kill (< 2.0): 폐기 제안
 
+**Lane 가중 조정** (Raw Hold/Kill → Go 승격 가능):
+SSOT: [`rice-lane-weighted-adjustment.md`](../../rules/rice-lane-weighted-adjustment.md) (T-RICE-01)
+- **Lite Lane**: Raw Hold 에서 4 조건(Lane=Lite · Effort ≤ 2 · Confidence ≥ 80% · 선행 의존성 해소) 모두 충족 시 Go 승격
+- **Standard Lane**: Raw Kill/Hold 하단에서 4 조건(Lane=Standard · Impact ≥ 3 · Epic 지표 단독 충족 · 의존성 허브) 모두 충족 시 Go 승격
+- plan-idea-screener 는 SCREENING 섹션에 조정 체크리스트 + 최종 권장 판정 **필수 기록**
+
 출력 스키마: `src/claude/plan/_schemas/rice.schema.json`
 
 ### 4B. 5축 가중 프레임워크

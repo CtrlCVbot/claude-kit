@@ -37,6 +37,8 @@ dependencies:
     - IDEA ID 형식: `IDEA-{YYYYMMDD}-{NNN}` (오늘 날짜 + 일별 순번)
     - 사용자의 원문을 왜곡하지 않고 구조화만 수행
     - 폴더 구조가 없으면 자동 생성 (`00-inbox/`, `10-screening/`, `20-approved/`, `90-archive/`)
+    - **IDEA frontmatter `상태:` 는 SSOT** — T-FSTATE-02 `plan-epic-hierarchy.md §5` 참조. 신규 IDEA 는 `상태: inbox` 로 생성.
+    - **파일 소유권** — T-RACE-01 `agent-file-ownership.md` 참조. `01-children-features.md` 편집 금지 (메인 전담). Epic Brief 는 `§7 자식 IDEA 링크` 만 갱신 가능.
   </Constraints>
 
   <Investigation_Protocol>

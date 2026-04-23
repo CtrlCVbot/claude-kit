@@ -60,7 +60,79 @@ draft → planning → active → completed → archived
 
 ---
 
-## 5. 금지 사항 (설계 원칙)
+## 5. IDEA 상태 vs Feature 상태 (SSOT)
+
+> **T-FSTATE-02 — N-13 대응**. "상태" 라는 용어가 IDEA 레벨(4 종)과 Feature 레벨(4 종) 두 차원에 존재. 혼동 방지를 위해 본 섹션을 SSOT 로 지정한다. §4 의 **Epic 상태**(5 종) 와는 독립된 차원이다.
+
+### 5-1. IDEA 상태 (IDEA frontmatter — SSOT)
+
+| 상태 | 의미 | Trigger |
+|:---:|---|---|
+| `inbox` | 등록만, 아직 평가 전 | `/plan-idea` (plan-idea-collector) |
+| `screened` | 스크리닝 완료, 사용자 판정 대기 | `/plan-screen` (plan-idea-screener) |
+| `approved` | 사용자 Go 승인, Feature 로 진행 | Critical checkpoint 사용자 Y 입력 |
+| `archived` | 완료 후 아카이브 | `/plan-archive {slug}` |
+
+**SSOT 위치**: IDEA 파일 frontmatter 의 `상태:` (또는 `status:`) 필드.
+
+### 5-2. Feature 상태 (Feature Package 레벨 — 파생, 자동 동기)
+
+| 상태 | 의미 | Trigger |
+|:---:|---|---|
+| `pending` | IDEA 등록 ~ 스크리닝 단계 | IDEA 상태 inbox/screened 시 자동 |
+| `approved` | IDEA approved 와 1:1 동기 | IDEA approved 전이와 동기 (plan-state-sync.js, T-FSTATE-01) |
+| `active` | 구현 진행 중 (TASK 생성 후) | `/dev-feature {path}` 호출 |
+| `archived` | 구현 완료 + 아카이브 | IDEA archived 전이와 동기 |
+
+Feature 상태는 **Feature Package** 레벨의 상태이며, `01-children-features.md` §1 F{N} 의 `**상태**` 필드와 `08-epic-binding.md` §7 에 반영.
+
+### 5-3. 교차 관계 (상태 매핑)
+
+| IDEA 상태 | Feature 상태 | 전이 시점 |
+|-----------|------------|---------|
+| inbox | pending | IDEA 등록 시 |
+| screened | pending (변화 없음) | 스크리닝 완료 시 (Feature 관점 미변경) |
+| approved | approved (1:1 동기) | 사용자 Go 승인 시 |
+| (approved) | **active** | `/dev-feature` 호출 시 (IDEA 는 approved 유지) |
+| archived | archived | `/plan-archive` 시 |
+
+Feature `active` 상태는 IDEA `approved` 하위 단계 — IDEA 가 여러 Feature 로 분해되는 경우는 **없음** (1:1 원칙).
+
+### 5-4. 상태 전이 다이어그램
+
+```
+IDEA:     inbox → screened → approved ──────────────→ archived
+                                ↓ (1:1 자동 동기)
+Feature:  pending → pending → approved
+                                ↓ (/dev-feature 호출)
+                              active
+                                ↓ (/plan-archive)
+                              archived
+```
+
+### 5-5. 상태 동기 주체 (SSOT 원칙)
+
+- **IDEA frontmatter** 가 **Single Source of Truth**
+- `plan-state-sync.js` hook (T-FSTATE-01) 이 3 곳 자동 갱신:
+  - `.plans/ideas/backlog.md` 행의 상태 컬럼
+  - `.plans/epics/*/EPIC-*/01-children-features.md` §1 F{N} 의 `**상태**` 필드
+  - `.plans/features/active/{slug}/00-context/08-epic-binding.md` §7 상태 동기 표
+- `/dev-feature` 호출 시 Feature 상태만 `approved → active` 전이 (IDEA 상태는 그대로 `approved`)
+
+### 5-6. 에이전트 책임
+
+| 에이전트 | 권한 |
+|---------|------|
+| `plan-idea-collector` | IDEA `inbox` 상태로 생성 |
+| `plan-idea-screener` | `inbox → screened` 전이 |
+| (메인 세션) | `screened → approved` (사용자 Critical checkpoint Y 입력 후) |
+| `plan-state-sync.js` | IDEA 상태 변경 감지 → 3 곳 자동 동기 |
+| `/dev-feature` | Feature 상태 `approved → active` (IDEA 상태 불변) |
+| `/plan-archive` | IDEA `approved → archived` + Feature `active → archived` |
+
+---
+
+## 6. 금지 사항 (설계 원칙)
 
 | 금지 | 사유 |
 |---|---|
@@ -72,7 +144,7 @@ draft → planning → active → completed → archived
 
 ---
 
-## 6. 권장 사항
+## 7. 권장 사항
 
 - **제품 라인 관리**: landing 의 OLP/DASH/DASH3 묶음 같은 제품 시리즈 → Epic 사용
 - **Cross-cutting 요구사항**: 접근성·국제화·성능 예산 등 여러 Feature 에 걸친 Theme → Epic 사용
@@ -81,7 +153,7 @@ draft → planning → active → completed → archived
 
 ---
 
-## 7. Children Feature 실행 순서
+## 8. Children Feature 실행 순서
 
 Epic 의 `01-children-features.md` 는 다음 구조를 포함:
 
@@ -94,7 +166,7 @@ Epic 의 `01-children-features.md` 는 다음 구조를 포함:
 
 ---
 
-## 8. Epic ↔ Feature Binding
+## 9. Epic ↔ Feature Binding
 
 Feature 가 Epic 에 속하면 다음 두 곳에 명시:
 
@@ -105,9 +177,9 @@ Feature 가 Epic 에 속하면 다음 두 곳에 명시:
 
 ---
 
-## 9. 인덱스 스키마 확장
+## 10. 인덱스 스키마 확장
 
-### 9-1. `.plans/ideas/backlog.md`
+### 10-1. `.plans/ideas/backlog.md`
 
 Epic 컬럼 추가 (null 허용):
 
@@ -118,11 +190,11 @@ Epic 컬럼 추가 (null 허용):
 - Epic 없음: `—` 또는 빈 셀
 - Epic 있음: `[EPIC-{YYYYMMDD}-{NNN}](../epics/{status}/EPIC-.../00-epic-brief.md)`
 
-### 9-2. `.plans/archive/index.md`
+### 10-2. `.plans/archive/index.md`
 
 Epic 컬럼 추가 (null 허용). 기존 archived Feature 는 null 유지, `/plan-epic-adopt` 로 소급 연결 가능 (Phase 3).
 
-### 9-3. `.plans/epics/index.md` (신규)
+### 10-3. `.plans/epics/index.md` (신규)
 
 ```markdown
 | ID | 제목 | 상태 | 기간 | 자식 Feature 수 | 파일 |
@@ -130,16 +202,20 @@ Epic 컬럼 추가 (null 허용). 기존 archived Feature 는 null 유지, `/pla
 
 ---
 
-## 10. 관련 규칙
+## 11. 관련 규칙
 
 - `task-id-naming.md` (IMP-KIT-015) — Task ID 네이밍
 - `edit-coordinates-governance.md` (IMP-KIT-011) — architecture-binding 동기화
 - `verification.md` — Agent Edit Race (Read Cache) 주의
+- `agent-file-ownership.md` (T-RACE-01) — 파일 소유권 매트릭스
+- `rice-lane-weighted-adjustment.md` (T-RICE-01) — RICE Lane 가중 조정 SSOT
+- `plan-state-sync.js` hook (T-FSTATE-01, 구현 예정) — IDEA/Feature 상태 자동 동기
 
 ---
 
-## 11. 변경 이력
+## 12. 변경 이력
 
 | 날짜 | 내용 | 작성자 |
 |---|---|---|
 | 2026-04-22 | 초안 — claude-kit v2.4.0 Phase 2 Step 1 (P2-C) Epic 계층 SSOT | Claude (메인테이너 역할) |
+| 2026-04-23 | §5 IDEA 상태 vs Feature 상태 (SSOT) 신설 — T-FSTATE-02 (N-13 대응). 기존 §5~§11 을 §6~§12 로 재번호. §11 관련 규칙에 agent-file-ownership, rice-lane-weighted-adjustment, plan-state-sync.js 추가. | Claude (메인테이너 역할) |

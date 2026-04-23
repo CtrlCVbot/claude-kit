@@ -145,6 +145,21 @@ WRONG:   Agent(write-capable) completes → Edit(file) → "File has not been re
 | `plan-draft-writer` | plan | (IMP-KIT-003, 2.2.0+ 예정) |
 | `plan-bridge-writer` | plan | (IMP-KIT-004, 2.2.0+ 예정) |
 
+### Agent File Ownership (T-RACE-01)
+
+에이전트 race 방지를 위해 파일 유형별 소유권 매트릭스를 SSOT 로 분리: **[`agent-file-ownership.md`](agent-file-ownership.md)** 참조.
+
+핵심 원칙:
+- **1 차 작성** 권한: 해당 파일을 처음 생성하는 주체 (한 파일당 1 주체)
+- **후속 갱신** 권한: 프롬프트에 명시된 필드만 수정
+- **메인 전담** 파일: 서브 에이전트 편집 금지 — 대표적으로 `.plans/epics/*/EPIC-*/01-children-features.md`
+
+**Checklist (에이전트 위임 전)**:
+
+- [ ] 위임하려는 작업의 파일이 매트릭스의 "메인 전담" 컬럼에 있는가? → 있으면 메인이 직접 Edit
+- [ ] 서브 에이전트 프롬프트에 `<File_Ownership>` 블록이 있거나 참조 링크가 명시됐는가?
+- [ ] 병렬 호출 에이전트 2+ 개가 동일 파일에 "1 차 작성/후속 갱신" 권한을 가지면 순차 실행 고려
+
 ## When to Apply
 
 **Always**, before:
