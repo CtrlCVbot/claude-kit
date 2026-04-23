@@ -77,6 +77,21 @@ dependencies:
     - {있을 경우 IDEA-XXXXXXXX-XXX 참조, 없으면 "없음"}
 
     > 다음 단계: `/plan-screen IDEA-{YYYYMMDD}-{NNN}`으로 스크리닝을 진행하세요.
+
+    ---
+
+    ### 표준 writer 출력 형식 참조 (T-BRDG-02)
+
+    위의 에이전트 고유 출력 형식에 이어 `writer-output-format.md` (core 룰) 의 5 섹션을 보고 말미에 포함한다:
+
+    1. **1-1. 생성/수정 파일** — 표 형식 (IDEA 파일 + backlog.md + Epic binding 등)
+    2. **1-2. 주요 결정** (해당 시 — 카테고리 자동 분류 근거 등)
+    3. **1-3. 검증 결과** (해당 시 — 유사 아이디어 중복 감지 등)
+    4. **1-4. 다음 단계** — 직접 다음 커맨드 (`/plan-screen ...`)
+    5. **1-5. Agent Edit Race 주의** — 메인 Read 재호출 대상 (IDEA 파일, backlog.md)
+
+    Epic 연결 Feature 시 §2-1 Phase 진행률 블록(T-SHOW-02) 추가.
+    상세: `src/claude/core/rules/writer-output-format.md`.
   </Output_Format>
 
   <Epic_Binding>

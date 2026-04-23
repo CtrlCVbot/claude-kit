@@ -116,6 +116,46 @@ P1 → P2 → P3 → [P4] → P5 → [P6] → P7 → Dev → [P8 Archive]
 - 대규모 변경 → P3 재진입
 - 근본적 재설계 → P1 새 Idea
 
+### 수정 요청 처리 패턴 (Checkpoint "수정" 선택, T-REVP-01)
+
+> **T-REVP-01 (v2.5.0)**: Checkpoint 도달 시 사용자가 "수정" 을 선택하면 `/plan-revise` 커맨드 또는 직접 재호출로 이전 산출물에 수정 반영. 이전 컨텍스트를 손실 없이 재실행.
+
+#### 사용 시점
+
+- Checkpoint 응답이 "Y" (승인) / "N" (거부) 가 아닌 "수정" 일 때
+- 산출물의 **부분 섹션** 만 수정하고 나머지는 보존해야 할 때
+- 사용자가 자연어로 "§A scope 재작성" 등 구체 지시 입력 시
+
+#### 방식 1: `/plan-revise` 커맨드
+
+```
+/plan-revise {artifact-path} "수정 지시"
+```
+
+- 에이전트 유형 자동 추론 후 재호출
+- 상세: [`/plan-revise` 커맨드](../../commands/plan-revise.md)
+
+#### 방식 2: 메인 세션 직접 재호출
+
+`checkpoint-policy.md §8-2` 의 JSON 프로토콜을 Task tool prompt 에 포함:
+
+```json
+{
+  "prev_artifact": "...",
+  "user_modification_request": "...",
+  "preserved_sections": [],
+  "revise_sections": []
+}
+```
+
+에이전트는 이전 산출물 Read → preserved 유지 → revise 섹션만 변경 → 변경 이력 기록.
+
+#### 제약
+
+- archive 파일 수정 금지 (원본 불변)
+- Critical checkpoint 는 `--force` 플래그만 override
+- Epic 전용 파일 (`01-children-features.md`) 은 메인 전담 (T-RACE-01)
+
 ## 상태 추적
 
 `.plans/stage-manifest.json`에 각 Feature의 파이프라인 진행 상태를 기록합니다.

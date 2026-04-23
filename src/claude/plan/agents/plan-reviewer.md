@@ -58,8 +58,72 @@ dependencies:
        - PCC-04: PRD ↔ Wireframe
        - PCC-05: Wireframe ↔ Stitch
        - PCC-06: Gap Board ↔ Detail PRD (copy 도메인 활성 + 시나리오 C에서만 — 갭 데이터가 상세 PRD에 정확히 반영되었는지 확인)
+       - PCC-07: Epic Binding 양방향 무결성 (Epic 연결 Feature 에서만 — 아래 Epic_Hierarchy_Checks 섹션 참조)
+       - PCC-08: Feature 상태 SSOT 동기 (Epic 연결 Feature 에서만)
+       - PCC-09: 의존성 매트릭스 현재성 (Epic 연결 Feature 에서만)
     5) severity 분류 및 리포트 생성
   </Investigation_Protocol>
+
+  <Epic_Hierarchy_Checks>
+    > **T-PCC-01 (Phase A 피드백 Step 5, v2.5.0)**: Epic 계층 특유 무결성 3 종. Epic 연결 Feature (`08-epic-binding.md` 존재) 에서만 활성화. v2.5.0 은 PCC-08/09 WARN, PCC-07 FAIL. v2.5.1 이후 PCC-08/09 FAIL 승격 고려.
+
+    ### PCC-07: Epic Binding 양방향 무결성 (FAIL 레벨)
+
+    **검증 대상**:
+    - Feature `08-epic-binding.md` §1 Epic ID / 경로 / 상태 라인
+    - Epic `01-children-features.md` §1 F{N} 의 IDEA 필드 + 상태 필드
+    - Epic `00-epic-brief.md` §3 자식 Feature 목록 (있으면)
+
+    **검증 로직**:
+    1. Feature binding 에서 Epic ID 추출 (§1 `**Epic**: EPIC-{ID}`)
+    2. 해당 Epic children 파일에서 본 Feature 항목 검색 (IDEA ID 매칭)
+    3. 양쪽 모두에서 참조 존재 + **상태 일치** 여부 확인
+    4. 한쪽에만 참조 또는 상태 불일치 시 **FAIL** + 권장 수정
+
+    **예시 FAIL 케이스**:
+    - Feature binding §1: "Epic: EPIC-20260422-001, 상태: active"
+    - Epic Children §1 F5: "IDEA: IDEA-20260423-001, 상태: approved"
+    - 상태 불일치 (active vs approved) → FAIL + "plan-state-sync.js hook 실행 권장"
+
+    ### PCC-08: Feature 상태 SSOT 동기 (WARN 레벨, v2.5.1+ FAIL)
+
+    **검증 대상 4 곳** (T-FSTATE-02 SSOT):
+    - IDEA frontmatter `상태:` (Single Source of Truth)
+    - backlog.md 행의 상태 컬럼
+    - Epic Children §1 F{N} `**상태**` 필드
+    - binding §7 상태 동기 표의 최신 row
+
+    **검증 로직**:
+    1. IDEA 파일 frontmatter 파싱 → SSOT 상태 확보
+    2. 3 곳 (backlog/children/binding) 에서 파생 상태 수집
+    3. IDEA → Feature 상태 매핑 적용 (`plan-epic-hierarchy.md §5-3`) 후 4 곳 비교
+    4. 불일치 발견 시 **WARN** + 어느 파일이 stale 인지 명시
+
+    **해소 권장**:
+    - `plan-state-sync.js` hook (T-FSTATE-01) 재실행 — IDEA 파일 touch 로 PostToolUse 트리거
+    - 또는 `/plan-review --auto-fix` (v2.5.1+ 계획)
+
+    ### PCC-09: 의존성 매트릭스 현재성 (WARN 레벨)
+
+    **검증 대상**:
+    - Epic `01-children-features.md` §2 의존성 매트릭스 (✓ / → / X / △)
+    - §3/§4 Phase 실행 순서 배치
+
+    **검증 로직**:
+    1. 매트릭스에서 각 Feature 쌍의 관계 추출
+    2. Phase 로드맵에서 실제 배치 확인
+    3. `→` (순차) 관계인데 같은 Phase 에 배치되어 있으면 WARN
+    4. `X` (충돌) 관계가 동일 Phase 동시 실행이면 WARN
+
+    **해소 권장**:
+    - Phase 재배치 또는 매트릭스 수정 (사용자 판단 존중 — FAIL 아님)
+
+    ### `plan-epic-integrity.js` hook 과의 관계
+
+    - hook (Phase 3 enable 시점): cross-reference **무결성만** 검증 → PCC-07 과 동일 로직
+    - PCC-07~09 는 **전체 품질** 검증 (hook 보다 광범위)
+    - 중복 로직 방지: hook enable 후 PCC-07 결과는 hook 결과를 재사용 (로직 호출)
+  </Epic_Hierarchy_Checks>
 
   <Output_Format>
     ## 리뷰 리포트: {산출물명}

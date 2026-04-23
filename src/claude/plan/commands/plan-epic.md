@@ -10,9 +10,12 @@ Epic 생성, 조회, 상태 전이. claude-kit v2.4.0 Hierarchical Plan Structur
 /plan-epic list                                     # Epic 목록 조회 (모든 상태)
 /plan-epic list --status=active                     # 상태 필터
 /plan-epic show EPIC-20260422-001                   # Epic 상세 조회
+/plan-epic show EPIC-... --verbose                  # 상세 출력 (+ 성공 지표 + 의존성 매트릭스, T-SHOW-01)
 /plan-epic advance EPIC-20260422-001 --to=planning  # 상태 전이 (draft → planning)
 /plan-epic advance EPIC-20260422-001 --to=active    # planning → active
 /plan-epic archive EPIC-20260422-001                # completed → archived
+/plan-epic phase generate --phase=B --features=F2,F4 # Phase 로드맵 자동 생성 (T-TMPL-01)
+/plan-epic phase generate --phase=C --features=F3 --overwrite  # 기존 Phase 덮어쓰기 (명시적 동의)
 ```
 
 ## Flags
@@ -35,10 +38,63 @@ Epic 생성, 조회, 상태 전이. claude-kit v2.4.0 Hierarchical Plan Structur
 6. **인덱스 등록**: `.plans/epics/index.md` 에 행 추가 (없으면 파일 신설)
 7. **출력**: Epic 디렉터리 경로 + 다음 단계 안내 (`/plan-idea --epic=EPIC-...` 또는 `/plan-epic-adopt`)
 
-### 조회 (`/plan-epic list` / `show`)
+### 조회 (`/plan-epic list` / `show`, T-SHOW-01 확장)
 
-- **list**: `.plans/epics/index.md` 읽기 → `--status` 필터링 → 포맷 테이블 출력
-- **show**: `index.md` 에서 Epic 경로 확인 → `00-epic-brief.md` + `01-children-features.md` 요약 출력 + 자식 Feature 진행률 집계
+> **T-SHOW-01 (v2.5.0)**: Phase A 드라이런에서 `show` 가 0 회 사용된 피드백 반영. 집약 출력으로 **매번 사용 가능한 상태 대시보드** 수준 제공.
+
+#### `list` 서브커맨드
+
+- `.plans/epics/index.md` 읽기 → `--status` 필터링 → 포맷 테이블 출력
+- **`--status=active` 확장**: 각 Epic 의 Phase 진행률 요약 포함 (Step X/Y 형식)
+- 기본 컬럼: ID / 제목 / 상태 / 기간 / 자식 Feature 수 / 다음 Checkpoint
+
+#### `show` 서브커맨드 (집약 출력)
+
+기본 출력 5 블록:
+
+```
+# Epic: {제목}
+- ID: {EPIC-ID}
+- 상태: {state}
+- 기간: {start} ~ {end} (M-Epic-1: ... / M-Epic-2: ... / M-Epic-3: ...)
+- Phase 진행률: A (기획 완료, {X}/{Y}) / B ({state}) / C ({state})
+
+## 자식 Feature ({count})
+
+| ID | 제목 | Phase | Lane | 상태 | TASK 진행 |
+|----|------|:---:|:---:|:---:|:---:|
+| F1 | ... | A | Standard | approved | 0/8 |
+| F2 | ... | B | Standard | pending | — |
+
+## 다음 Checkpoint
+
+- Phase A Step 9 `/dev-feature` 진입 (사용자 지시 대기)
+
+## 주요 링크
+
+- Epic Brief: .plans/epics/.../00-epic-brief.md
+- Children Features: .plans/epics/.../01-children-features.md
+- Active Features: .plans/features/active/{f1,f5}-.../
+```
+
+**집약 로직 상세**:
+
+| 값 | 데이터 출처 |
+|----|-----------|
+| Epic 상태 | `.plans/epics/index.md` 해당 행 |
+| Phase 진행률 | `01-children-features.md §4` Step 카운트 + 현재 Step 감지 |
+| Feature 상태 | IDEA frontmatter `상태:` (SSOT, `plan-state-sync.js` 사용) |
+| TASK 진행 | `.plans/features/active/{slug}/dev-tasks.md` 진행률 집계 (있으면) |
+| 다음 Checkpoint | §4 로드맵에서 현재 완료 Step 다음 Step 추출 |
+
+**`--verbose` 플래그**: 기본 출력 + Epic Brief §2 성공 지표 + §2 의존성 매트릭스 요약 추가.
+
+**Feature 상태 표시 규칙** (T-FSTATE-02 매핑):
+
+- `pending`: IDEA inbox/screened (Feature 작업 전)
+- `approved`: IDEA approved (구현 대기)
+- `active`: `/dev-feature` 호출 후 구현 진행 중
+- `archived`: IDEA archived
 
 ### 상태 전이 (`/plan-epic advance {ID} --to={state}`)
 
@@ -68,6 +124,36 @@ Epic 생성, 조회, 상태 전이. claude-kit v2.4.0 Hierarchical Plan Structur
 ### 아카이브 (`/plan-epic archive {ID}`)
 
 `active → completed → archived` 2단 전이를 한 번에 수행. 내부적으로 `advance --to=completed` 후 `advance --to=archived` 순차 실행. 모든 자식 Feature 가 `archived` 상태가 아니면 거부.
+
+### Phase 로드맵 생성 (`/plan-epic phase generate ...`, T-TMPL-01)
+
+> **T-TMPL-01 (v2.5.0)**: Phase A 9 단계 하드코딩 대체. Phase B/C 도 30 초 내 생성. 템플릿: [`plan-epic-workflow/templates/phase-roadmap.md`](../skills/plan-epic-workflow/templates/phase-roadmap.md).
+
+1. **파라미터 파싱**:
+   - `--phase={A|B|C|D|...}` — 생성 대상 Phase 식별자 (필수)
+   - `--features=F{N},F{M},...` — 해당 Phase 의 Feature 목록 (필수, 쉼표 구분)
+   - `--overwrite` — 기존 동일 Phase 섹션 덮어쓰기 허용 (선택)
+2. **Epic 검증**:
+   - 현재 cwd 또는 `--epic=EPIC-{ID}` 로 Epic 디렉터리 탐색
+   - `00-epic-brief.md` + `01-children-features.md` 존재 필수
+3. **Feature 메타 추출**: `01-children-features.md §1` 에서 F{N} → IDEA ID / 제목 / Lane / RICE / 범위 / 상태 확보
+4. **변수 치환**: `templates/phase-roadmap.md` 의 변수 필드 12 종 치환
+   - `{PHASE}` / `{EPIC_ID}` / `{FEATURES_LIST}` — 필수 (누락 시 HARD FAIL)
+   - 날짜 필드 (`{START}`, `{END}`) — Epic Brief §4 M-Epic 값 기반 자동 계산
+   - 배열 필드 (`{FEATURE[N]_*}`) — `--features` 파라미터 순서대로 0-indexed 전개
+5. **§4 안전 병합**:
+   - 기존 `01-children-features.md §4` 에 `### Phase {PHASE}` 헤더 **없으면** append
+   - **있으면** HARD FAIL + `--overwrite` 요구 메시지
+   - `--overwrite` 시 백업 (`01-children-features.prev-{YYYYMMDD-HHmmss}.md`) 후 덮어쓰기
+6. **Write + 보고**: 변경 파일 경로 + 백업 경로(있으면) + 다음 단계 안내 (`/plan-epic advance` or Phase 실행)
+
+**검증 명령** (예시):
+
+```bash
+/plan-epic phase generate --phase=B --features=F2,F4
+# → Feature 메타 추출 → 변수 치환 → §4 append → 보고
+# 출력: .plans/epics/20-active/EPIC-.../01-children-features.md (§4 Phase B append)
+```
 
 ## 게이트 (사용자 승인 필요)
 

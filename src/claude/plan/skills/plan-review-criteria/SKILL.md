@@ -1,7 +1,7 @@
 ---
 name: plan-review-criteria
 description: >
-  기획 산출물 리뷰 기준, 체크리스트, severity 분류, PCC 5종 검증 체크리스트. Use when: 기획 리뷰, 품질 검증, PCC 검증 시.
+  기획 산출물 리뷰 기준, 체크리스트, severity 분류, PCC 8종(기본 5 + copy 1 + Epic 3) 검증 체크리스트. Use when: 기획 리뷰, 품질 검증, PCC 검증 시.
 ---
 
 ## Overview
@@ -72,7 +72,9 @@ description: >
 | MEDIUM | 권고 — 개선하면 좋은 항목 | 판단에 따라 수정 |
 | LOW | 참고 — 사소한 개선 사항 | 기록만 |
 
-## PCC 5종 검증
+## PCC 8종 검증 (v2.5.0: Epic 계층 3종 추가 — T-PCC-01)
+
+### 기본 5종 (모든 Feature)
 
 | PCC | 검증 | 시점 | 비교 대상 | 항목 수 |
 |---|---|---|---|---|
@@ -81,6 +83,26 @@ description: >
 | PCC-03 | Feature ↔ PRD | /plan-prd 후 | 기획 범위가 PRD에 반영 | 5 |
 | PCC-04 | PRD ↔ Wireframe | /plan-wireframe 후 | PRD 화면에 와이어프레임 존재 | 4 |
 | PCC-05 | Wireframe ↔ Stitch | /plan-stitch 후 | 레이아웃이 디자인에 반영 | 3 |
+
+### 확장 (copy 도메인 활성 + 시나리오 C)
+
+| PCC | 검증 | 시점 | 비교 대상 | 심각도 |
+|---|---|---|---|:---:|
+| PCC-06 | Gap Board ↔ Detail PRD | /plan-prd 후 (시나리오 C) | 갭 데이터가 상세 PRD 반영 | ERROR |
+
+### Epic 계층 3종 (Epic 연결 Feature 만, v2.5.0 T-PCC-01)
+
+| PCC | 검증 | 시점 | 비교 대상 | v2.5.0 심각도 |
+|---|---|---|---|:---:|
+| PCC-07 | Epic Binding 양방향 무결성 | /plan-bridge 이후 | 08-epic-binding §1 ↔ Epic Children §1 F{N} | **FAIL** |
+| PCC-08 | Feature 상태 SSOT 동기 | /plan-review 시점 | IDEA frontmatter ↔ 3 파생처 (backlog/Children/binding §7) | WARN |
+| PCC-09 | 의존성 매트릭스 현재성 | /plan-review 시점 | Children §2 매트릭스 ↔ §3/§4 Phase 배치 | WARN |
+
+- **PCC-07**: Epic ID / Feature slug / 상태 cross-reference 확인. 불일치 시 FAIL + 권장 수정.
+- **PCC-08**: `plan-state-sync.js` hook (T-FSTATE-01) 와 동일 SSOT 사용. 4 곳 중 불일치 발견 시 hook 재실행 권장.
+- **PCC-09**: `→` (순차) 관계가 동일 Phase 에 있거나 `X` (충돌) 관계가 동시 실행이면 WARN. FAIL 아님 — 사용자 판단 존중.
+- v2.5.1 이후 PCC-08/09 FAIL 승격 고려.
+- `plan-epic-integrity.js` hook Phase 3 enable 시점에 PCC-07 로직과 중복 방지 (hook 결과 재사용).
 
 ### PCC 심각도
 

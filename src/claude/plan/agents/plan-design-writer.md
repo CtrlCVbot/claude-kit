@@ -145,6 +145,21 @@ dependencies:
     [1단계] Wireframe 프롬프트 → https://claude.ai/design → Wireframe 모드
     [2단계] High Fidelity 프롬프트 → 동일 세션 이어서 → High Fidelity 모드
     완료 후 URL 등록: `/plan-design {slug} --register <url>`
+
+    ---
+
+    ### 표준 writer 출력 형식 참조 (T-BRDG-02)
+
+    위의 2 단계 프롬프트 가이드에 이어 `writer-output-format.md` (core 룰) 의 5 섹션을 보고 말미에 포함한다:
+
+    1. **1-1. 생성/수정 파일** — prompt-01-wireframe.md / prompt-02-highfidelity.md / manifest.md
+    2. **1-2. 주요 결정** — Wireframe 우선 요소, High Fidelity 스타일 가이드 결정
+    3. **1-3. 검증 결과** — URL 등록 도메인 검증 PASS 여부
+    4. **1-4. 다음 단계** — `/plan-design {slug} --register <url>` 또는 `/plan-bridge {slug}`
+    5. **1-5. Agent Edit Race 주의** — 메인 Read 재호출 대상 (design 파일 3종)
+
+    Epic 연결 Feature 시 §2-1 Phase 진행률 블록(T-SHOW-02) 추가.
+    상세: `src/claude/core/rules/writer-output-format.md`.
   </Output_Format>
 
   <Tool_Usage>

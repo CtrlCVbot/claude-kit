@@ -97,7 +97,30 @@ draft → planning → active → completed → archived
 
 - `templates/epic-brief.md` — `00-epic-brief.md` 양식
 - `templates/children-features.md` — `01-children-features.md` 양식
-- `templates/epic-binding.md` — Feature 의 `08-epic-binding.md` 양식
+- `templates/epic-binding.md` — Feature 의 `08-epic-binding.md` 양식 (§7 상태 동기 표 자동 갱신 대상, T-FSTATE-01)
+- `templates/phase-roadmap.md` — Phase 로드맵 자동 생성 (T-TMPL-01, v2.5.0)
+
+### `/plan-epic phase generate` — Phase 로드맵 자동 생성 (T-TMPL-01)
+
+Phase A 9 단계 하드코딩 대체. Phase B/C 도 30 초 내 `01-children-features.md §4` 에 append.
+
+```
+/plan-epic phase generate --phase=B --features=F2,F4
+```
+
+- 템플릿: `templates/phase-roadmap.md` (12 변수 치환)
+- 안전 검증: 기존 Phase 섹션 존재 시 HARD FAIL + `--overwrite` 필수
+- 상세: [`/plan-epic` 커맨드 문서](../../../plan/commands/plan-epic.md#phase-로드맵-생성-plan-epic-phase-generate--t-tmpl-01)
+
+### Epic 정보 빠르게 확인 (`show` 권장)
+
+```
+/plan-epic show EPIC-20260422-001            # 집약 출력 (Phase 진행률 + Feature 표 + 다음 Checkpoint)
+/plan-epic show EPIC-... --verbose           # + 성공 지표 + 의존성 매트릭스
+/plan-epic list --status=active              # 현재 진행 중 Epic 일괄 조회 (각 Phase 진행률 포함)
+```
+
+Feature 상태는 IDEA frontmatter (SSOT, `plan-state-sync.js` 사용) 기반으로 실시간 표시. T-SHOW-01.
 
 ## Output Format
 

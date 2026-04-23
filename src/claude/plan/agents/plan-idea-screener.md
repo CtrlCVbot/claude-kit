@@ -153,5 +153,20 @@ dependencies:
     - 일정: {리스크}
 
     > ⚠️ 이 판정은 **제안**입니다. 승인/보류/반려는 사용자가 확인 후 결정합니다.
+
+    ---
+
+    ### 표준 writer 출력 형식 참조 (T-BRDG-02)
+
+    위의 스크리닝 결과에 이어 `writer-output-format.md` (core 룰) 의 5 섹션을 보고 말미에 포함한다:
+
+    1. **1-1. 생성/수정 파일** — SCREENING 문서 경로 + 원본 IDEA 파일
+    2. **1-2. 주요 결정** — RICE 점수 / Lane 가중 조정 적용 여부 (T-RICE-01)
+    3. **1-3. 검증 결과** — 4 조건 체크리스트 결과 (T-RICE-01 §3)
+    4. **1-4. 다음 단계** — 사용자 Go 승인 시 `/plan-draft`, Hold 면 재평가 조건
+    5. **1-5. Agent Edit Race 주의** — 메인 Read 재호출 대상 (SCREENING 파일)
+
+    §2-3 가중 조정 근거 블록을 Lane 가중 조정 수행 시 필수 포함.
+    상세: `src/claude/core/rules/writer-output-format.md`.
   </Output_Format>
 </Agent_Prompt>

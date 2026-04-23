@@ -49,8 +49,16 @@ AI 거버넌스 밀키트. TDD 강제 + Hexagonal + Clean Architecture + Rich Do
   - Step 2 완료: T-EPMV-02 · T-EPMV-03 (커맨드 정의 + §4-1/§4-2 신설)
   - Step 3 완료: T-EPMV-01 (`epic-advance-rewrite.js` + 13 테스트 PASS)
   - Step 4A 완료: T-RACE-02 (`_read-cache-state.js` + 2 훅 + 27 테스트 PASS)
-  - Step 4B 완료: T-FSTATE-01 (`_plan-state-sync-core.js` + `plan-state-sync.js` + 49 테스트 PASS, setup.js 등록) → **v2.4.1 8/8 완료**
-  - Step 5~6 대기: v2.5.0 (7 TASK) · Backlog (3 TASK)
+  - Step 4B 완료: T-FSTATE-01 (`_plan-state-sync-core.js` + `plan-state-sync.js` + 49 테스트 PASS) → **v2.4.1 8/8 완료**
+  - Step 5 완료: v2.5.0 7 TASK
+    - T-BRDG-02 (`writer-output-format.md` + 8 writer 에이전트 `<Output_Format>` 주입)
+    - T-BRDG-01 (plan-bridge-writer `<Lightweight_Principles>` 신설, 00-context 40%+ 감소 목표)
+    - T-PCC-01 (plan-reviewer PCC-07/08/09 + plan-review-criteria SKILL PCC 8 종 표)
+    - T-TMPL-01 (`templates/phase-roadmap.md` 신규 + `/plan-epic phase generate` 서브커맨드)
+    - T-SHOW-01 (`/plan-epic show` 집약 출력 + list `--status=active` 확장)
+    - T-SHOW-02 (`writer-output-format.md §2-1` Phase 진행률 블록 표준)
+    - T-REVP-01 (`checkpoint-policy.md §8` 수정 요청 표준 응답 + `/plan-revise` 커맨드 + plan-pipeline SKILL §수정 요청 처리)
+  - Step 6 대기: Backlog (3 TASK — T-BKLG-01/02/03)
 
 <!-- kit:managed:start -->
 ## claude-kit 활성 구성

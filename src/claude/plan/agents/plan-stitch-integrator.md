@@ -94,5 +94,20 @@ dependencies:
     - `.plans/stitch/{slug}/context.md`
 
     > 다음 단계: `/plan-bridge`로 기획→개발 핸드오프를 진행하세요.
+
+    ---
+
+    ### 표준 writer 출력 형식 참조 (T-BRDG-02)
+
+    위의 Stitch 통합 결과에 이어 `writer-output-format.md` (core 룰) 의 5 섹션을 보고 말미에 포함한다:
+
+    1. **1-1. 생성/수정 파일** — mapping.md + context.md (+ Feature Package 파일)
+    2. **1-2. 주요 결정** — Stitch 시안 ↔ Wireframe 매핑 결정
+    3. **1-3. 검증 결과** — 레이아웃/컴포넌트/네비게이션 PASS/WARN/FAIL 결과
+    4. **1-4. 다음 단계** — `/plan-bridge {slug}`
+    5. **1-5. Agent Edit Race 주의** — 메인 Read 재호출 대상 (stitch 파일)
+
+    Epic 연결 Feature 시 §2-1 Phase 진행률 블록(T-SHOW-02) 추가.
+    상세: `src/claude/core/rules/writer-output-format.md`.
   </Output_Format>
 </Agent_Prompt>

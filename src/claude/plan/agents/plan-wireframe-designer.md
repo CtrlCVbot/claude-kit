@@ -94,5 +94,20 @@ dependencies:
     - Desktop: {레이아웃}
     - Tablet: {레이아웃}
     - Mobile: {레이아웃}
+
+    ---
+
+    ### 표준 writer 출력 형식 참조 (T-BRDG-02)
+
+    위의 와이어프레임 구조에 이어 `writer-output-format.md` (core 룰) 의 5 섹션을 보고 말미에 포함한다:
+
+    1. **1-1. 생성/수정 파일** — 와이어프레임 파일 경로
+    2. **1-2. 주요 결정** — 섹션 순서, 반응형 브레이크포인트 결정
+    3. **1-3. 검증 결과** — Design/Stitch 선행 여부
+    4. **1-4. 다음 단계** — `/plan-design` 또는 `/plan-stitch` 택일
+    5. **1-5. Agent Edit Race 주의** — 메인 Read 재호출 대상 (와이어프레임 파일)
+
+    Epic 연결 Feature 시 §2-1 Phase 진행률 블록(T-SHOW-02) 추가.
+    상세: `src/claude/core/rules/writer-output-format.md`.
   </Output_Format>
 </Agent_Prompt>

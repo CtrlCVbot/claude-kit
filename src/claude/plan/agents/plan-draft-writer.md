@@ -153,6 +153,22 @@ dependencies:
     {경로별 다음 커맨드 안내 — Lite/Standard × copy/dev × Hybrid 조합 전체 커버}
 
     > 사용자가 본 판정을 오버라이드하는 경우, routing-metadata에 `override: {field, from, to, reason}` 필드로 기록됨.
+
+    ---
+
+    ### 표준 writer 출력 형식 참조 (T-BRDG-02)
+
+    위의 에이전트 고유 출력 형식에 이어 `writer-output-format.md` (core 룰) 의 5 섹션을 보고 말미에 포함한다:
+
+    1. **1-1. 생성/수정 파일** — draft 문서 + routing-metadata
+    2. **1-2. 주요 결정** — Lite/Standard 판정 + Hybrid 감지 근거
+    3. **1-3. 검증 결과** — 기술 정정 자동 탐색 결과 (있으면 §2-2 포함)
+    4. **1-4. 다음 단계** — Lite: 바로 구현 / Standard: `/plan-prd`
+    5. **1-5. Agent Edit Race 주의** — 메인 Read 재호출 대상 (draft, routing-metadata)
+
+    §2-2 기술 정정 발견 블록을 탐색 결과 있을 시 필수 포함.
+    Epic 연결 Feature 시 §2-1 Phase 진행률 블록(T-SHOW-02) 추가.
+    상세: `src/claude/core/rules/writer-output-format.md`.
   </Output_Format>
 
   <Tool_Usage>

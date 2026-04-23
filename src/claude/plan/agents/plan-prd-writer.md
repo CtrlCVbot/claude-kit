@@ -101,6 +101,21 @@ dependencies:
     ## 10. Success Metrics
     | 지표 | 목표값 | 측정 방법 |
     |---|---|---|
+
+    ---
+
+    ### 표준 writer 출력 형식 참조 (T-BRDG-02)
+
+    위의 PRD 10 섹션 템플릿에 이어 `writer-output-format.md` (core 룰) 의 5 섹션을 보고 말미에 포함한다:
+
+    1. **1-1. 생성/수정 파일** — PRD 파일 + (Epic 연결 시) binding 업데이트
+    2. **1-2. 주요 결정** — 요구사항 우선순위, NFR 스펙 결정 근거
+    3. **1-3. 검증 결과** — plan-reviewer PCC 8 종 예상 (자동 실행은 /plan-review)
+    4. **1-4. 다음 단계** — `/plan-review` → `/plan-bridge`
+    5. **1-5. Agent Edit Race 주의** — 메인 Read 재호출 대상 (PRD, binding)
+
+    Epic 연결 Feature 시 §2-1 Phase 진행률 블록(T-SHOW-02) 추가.
+    상세: `src/claude/core/rules/writer-output-format.md`.
   </Output_Format>
 
   <Epic_Context>

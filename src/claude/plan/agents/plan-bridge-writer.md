@@ -60,7 +60,64 @@ dependencies:
       1. Archive 전 체크리스트 4항목 검증 (`find`, `du` — 디렉터리 스캔 및 파일 크기 조회)
       2. Spike 모드의 Day-End 시점 파일 목록·수정 이력 조회 (`git log --since`)
       관련 룰: `.claude/rules/spike-workflow-agents.md`.
+    - **5 파일 작성 원칙 (경량화, T-BRDG-01)** — 아래 <Lightweight_Principles> 섹션 참조. golden #13 Document Non-Duplication 준수.
   </Constraints>
+
+  <Lightweight_Principles>
+    > **T-BRDG-01 (Phase A 피드백 Step 5, v2.5.0)**: 00-context/ 5 파일의 정보 중복을 제거하고 Feature Package 총 라인 수 **40% 이상 감소** 목표. golden-principles #13 Document Non-Duplication 준수.
+
+    ## 원칙 1. 원문 전문 인용 금지
+
+    IDEA/Draft/PRD 에 이미 존재하는 내용은 **인용하지 않는다**. 링크 + 1~2 문장 요약으로 대체. 인용 길이가 한 단락(3 문장)을 넘으면 golden #13 위반.
+
+    ## 원칙 2. 링크 형식
+
+    섹션 단위 직접 링크 사용:
+
+    ```
+    [IDEA §1 요약](../../../../ideas/00-inbox/IDEA-{ID}.md#1-제목)
+    [PRD §3 REQ-5 상세](../../../../prd/10-approved/{slug}-prd.md#3-요구사항)
+    [Epic Brief §2 지표](../../../../epics/{status}/EPIC-{ID}/00-epic-brief.md#2-성공-지표)
+    ```
+
+    ## 원칙 3. 각 파일 고유 정보만 담는다
+
+    | 파일 | 포함 (고유 정보) | 제외 (원본 인용) |
+    |------|----------------|----------------|
+    | `01-product-context.md` | Why 1~2 문장 + Epic 연결 요약 + 성공 지표 승계 링크 | PRD §1 전문, IDEA §1 전문 |
+    | `02-scope-boundaries.md` | What (범위) + 제외 항목 + 기술 정정 SSOT 지정 | PRD §2 scope 전체 인용 |
+    | `03-design-decisions.md` | How-decided (결정 결과 요약) + decision-log 링크 | 결정 배경 상세 재서술 |
+    | `04-implementation-hints.md` | How-to-implement (TASK 힌트) + PR 분할 예상 | PRD §8 Implementation notes 전체 |
+    | `08-epic-binding.md` | Epic 메타 + Epic 지표 ↔ PRD REQ/NFR/SM 매핑 표 + §7 상태 동기 표 | Epic Brief §2 전문 재인용 |
+
+    ## 원칙 4. 목표 라인 수
+
+    | 파일 | 경량화 전 | 경량화 후 목표 |
+    |------|---------:|-------------:|
+    | 01-product-context.md | ~150 | ~50 |
+    | 02-scope-boundaries.md | ~200 | ~80 |
+    | 03-design-decisions.md | ~120 | ~40 |
+    | 04-implementation-hints.md | ~180 | ~100 |
+    | 08-epic-binding.md | ~150 | ~80 |
+    | **합계** | **~800** | **~350 (55% ↓)** |
+
+    ## 원칙 5. dev-implementer 참조 가능성 유지
+
+    경량화해도 dev-implementer 가 TASK 실행 시 필요한 정보(구조 바인딩·PR 분할·파일 경로·AC)는 `04-implementation-hints.md` 에 **전문** 유지. 이 원칙은 성능 trade-off 가 아닌 "링크로 대체 가능한 것만 축약" 임을 명시한다.
+
+    ## 원칙 6. 기존 archived Feature Package 보호
+
+    강제 마이그레이션 **없음**. `.plans/archive/` 내 기존 Feature Package 는 원본 보존. 새 Feature Package 만 본 경량화 원칙 적용.
+
+    ## 체크리스트 (출력 전 자체 검증)
+
+    - [ ] 원본 인용 길이가 한 단락(3 문장) 이하인가?
+    - [ ] 섹션 링크를 사용했는가 (`#section-id` 포함)?
+    - [ ] 각 파일의 고유 정보만 남겼는가?
+    - [ ] 총 라인 수가 목표 범위 이하인가?
+    - [ ] dev-implementer 가 필요로 하는 정보는 유지되었는가?
+    - [ ] 기존 archive 파일을 수정하지 않았는가?
+  </Lightweight_Principles>
 
   <Investigation_Protocol>
     1) **입력 검증**:
@@ -190,6 +247,21 @@ dependencies:
     ### 병렬 실행
     - `copy-reference-baseline`과 동시 실행 가능 (디렉토리 배타: `00-context/` vs `evidence/`).
     - Hybrid dev Feature: `/dev-feature` + `/copy-reference-refresh --reference-only` 병행 권장.
+
+    ---
+
+    ### 표준 writer 출력 형식 참조 (T-BRDG-02)
+
+    위의 5 파일 작성 결과에 이어 `writer-output-format.md` (core 룰) 의 5 섹션을 보고 말미에 포함한다:
+
+    1. **1-1. 생성/수정 파일** — 00-context 5 파일 + (Epic 연결 시) 08-epic-binding
+    2. **1-2. 주요 결정** — 기술 정정 SSOT 배치, Lane·Hybrid 확정, PR 분할 전략
+    3. **1-3. 검증 결과** — PCC-01~05 예상 + (Epic 연결 시) PCC-07~09 (T-PCC-01)
+    4. **1-4. 다음 단계** — `/dev-feature {slug}` (dev) / `/copy-*` (copy) / 병행 (Hybrid)
+    5. **1-5. Agent Edit Race 주의** — 메인 Read 재호출 대상 (00-context/*.md 5 파일)
+
+    Epic 연결 Feature 시 §2-1 Phase 진행률 블록(T-SHOW-02) 추가.
+    상세: `src/claude/core/rules/writer-output-format.md`.
   </Output_Format>
 
   <Tool_Usage>
