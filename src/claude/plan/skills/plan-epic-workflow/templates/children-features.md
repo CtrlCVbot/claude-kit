@@ -12,7 +12,7 @@
 - **Lane**: {번호} ({Lane 특성 요약})
 - **RICE 예상**: {점수} ({Reach} × {Impact} × {Confidence}% / {Effort})
 - **범위**: {주 작업 파일 또는 영역}
-- **상태**: {pending IDEA | screening | approved | active | archived}
+- **상태**: {Feature 상태 — SSOT: [`plan-epic-hierarchy.md §5-2`](../../../rules/plan-epic-hierarchy.md)}
 
 ### F2 — {Feature 제목}
 
@@ -79,7 +79,7 @@
 | F3 | pending | — | — | — | — |
 | F4 | pending | — | — | — | — |
 
-상태 값: `pending` / `screening` / `approved` / `active` / `archived`.
+상태 값 SSOT: [`plan-epic-hierarchy.md §5-2`](../../../rules/plan-epic-hierarchy.md).
 
 ---
 

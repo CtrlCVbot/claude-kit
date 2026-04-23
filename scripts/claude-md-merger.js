@@ -51,7 +51,7 @@ function mergeClaudeMd(existing, managedBody) {
  * 파일 끝에만 있을 때 한 번 제거. 중간에 있으면 사용자 의도로 간주하여 건드리지 않는다.
  */
 function stripLegacyCurrentDate(content) {
-  const pattern = /\n+#\s*currentDate\s*\nToday's date is [^\n]*\.?\s*$/;
+  const pattern = /\n+#\s*(?:currentDate|Current Date)\s*\nToday's date is [^\n]*\.?\s*$/;
   return content.replace(pattern, '');
 }
 

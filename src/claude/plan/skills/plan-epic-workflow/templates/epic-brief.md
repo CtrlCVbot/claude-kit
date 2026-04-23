@@ -1,7 +1,7 @@
 # Epic: {제목}
 
 > **ID**: EPIC-{YYYYMMDD}-{NNN}
-> **상태**: draft | planning | active | completed | archived
+> **상태**: (SSOT: [`plan-epic-hierarchy.md §4`](../../../rules/plan-epic-hierarchy.md))
 > **기간**: {YYYY-MM-DD} ~ {YYYY-MM-DD} (예상)
 > **책임자**: {이름 / 팀}
 > **예상 RICE (가중합)**: {점수 — 자식 Feature RICE 평균 또는 합산 명시}
