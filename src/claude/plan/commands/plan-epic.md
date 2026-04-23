@@ -60,7 +60,7 @@ Epic 생성, 조회, 상태 전이. claude-kit v2.4.0 Hierarchical Plan Structur
      mv "$SRC_DIR" "$DST_DIR"
    fi
    ```
-5. **링크 재작성** (T-EPMV-01, 후속 Step): 모든 `.plans/**/*.md` 의 `/prev-state/EPIC-{ID}/` → `/new-state/EPIC-{ID}/` 치환
+5. **링크 재작성** (T-EPMV-01 구현 완료): `src/claude/plan/scripts/epic-advance-rewrite.js` 의 `rewriteEpicLinks({ rootDir, epicId, prevState, newState, dryRun })` 호출 → 모든 `.plans/**/*.md` 의 `/prev-state/EPIC-{ID}/` → `/new-state/EPIC-{ID}/` 치환. 반환값 `{ changedFiles, totalReplacements, dryRun }` 을 보고에 포함. `--dry-run` 플래그 지원.
 6. **인덱스 갱신**: `index.md` 의 상태 컬럼 업데이트
 7. **자식 Feature binding 갱신 (선택)**: 각 Feature 의 `08-epic-binding.md §1` Epic 상태 라인 업데이트
 8. **변경 보고**: 사용된 이동 방법 (`git mv` vs `mv`) + 게이트 검증 결과 + 변경 파일 수 출력
@@ -107,6 +107,6 @@ Epic 생성/전이 시 다음 시점에서 **사용자 명시적 승인** 필요
 
 ## 관련 피드백 TASK
 
-- **T-EPMV-01** (P0 Critical, v2.4.1 후속 Step): 자동 링크 재작성 스크립트 (`scripts/epic-advance-rewrite.js`)
+- **T-EPMV-01** (P0 Critical, v2.4.1 Step 3): **구현 완료** — `src/claude/plan/scripts/epic-advance-rewrite.js` + 13 테스트 PASS
 - **T-EPMV-02** (P0 Critical, v2.4.1 Step 2): **본 커맨드 반영** — git mv/mv fallback 자동 분기
 - **T-EPMV-03** (P0 Critical, v2.4.1 Step 2): **본 커맨드 반영** — advance 게이트 자동 검증

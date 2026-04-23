@@ -120,4 +120,4 @@ draft → planning → active → completed → archived
 
 - **T-EPMV-02** (v2.4.1): 파일 이동 fallback 분기 — `plan-epic-hierarchy.md §4-1` 반영 완료
 - **T-EPMV-03** (v2.4.1): advance 게이트 자동 검증 — `plan-epic-hierarchy.md §4-2` 반영 완료
-- **T-EPMV-01** (v2.4.1, 후속 Step): 자동 링크 재작성 스크립트 `scripts/epic-advance-rewrite.js` (미구현)
+- **T-EPMV-01** (v2.4.1 Step 3): **구현 완료** — `scripts/epic-advance-rewrite.js` (13 테스트 PASS) — advance 내부에서 `rewriteEpicLinks({...})` 호출
