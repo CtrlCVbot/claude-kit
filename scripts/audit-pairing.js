@@ -26,9 +26,25 @@ function checkPairingRegistry() {
 
   const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
   const validTypes = ['skill', 'agent', 'command', 'hook', 'rule'];
-  const validStatus = ['paired', 'codex-skip', 'codex-native-only'];
+  const validStatus = ['paired', 'codex-skip', 'codex-native-only', 'unpaired'];
+  const validSchemas = ['pairing-registry-v1', 'pairing-registry-v2'];
+  const validDomains = ['core', 'dev', 'plan', 'copy'];
+  const validPrimaryCodex = ['command', 'skill', 'agent', 'hook', 'fallback', 'none'];
+  const validTransitionState = ['command-primary', 'skill-primary', 'dual-output', 'command-wrapper', 'deprecated-command'];
+  const validDriftStatus = [null, 'content-drift', 'metadata-drift', 'generated-mismatch'];
+
+  if (!validSchemas.includes(registry.$schema)) {
+    findings.push({ type: 'S4-invalid-schema', level: 'FAIL', message: `invalid $schema "${registry.$schema}"` });
+  }
+
+  const seen = new Set();
 
   for (const entry of registry.entries) {
+    if (seen.has(entry.identity)) {
+      findings.push({ type: 'duplicate-identity', level: 'FAIL', message: `${entry.identity}: duplicate identity` });
+    }
+    seen.add(entry.identity);
+
     // S4: enum validation
     if (!validTypes.includes(entry.type)) {
       findings.push({ type: 'S4-invalid-type', level: 'FAIL', message: `${entry.identity}: invalid type "${entry.type}"` });
@@ -36,13 +52,37 @@ function checkPairingRegistry() {
     if (!validStatus.includes(entry.status)) {
       findings.push({ type: 'S4-invalid-status', level: 'FAIL', message: `${entry.identity}: invalid status "${entry.status}"` });
     }
+    if (!validDomains.includes(entry.domain)) {
+      findings.push({ type: 'S4-invalid-domain', level: 'FAIL', message: `${entry.identity}: invalid domain "${entry.domain}"` });
+    }
+
+    if (registry.$schema === 'pairing-registry-v2') {
+      if (!validPrimaryCodex.includes(entry.primaryCodex)) {
+        findings.push({ type: 'S4-invalid-primary-codex', level: 'FAIL', message: `${entry.identity}: invalid primaryCodex "${entry.primaryCodex}"` });
+      }
+      if (!validDriftStatus.includes(entry.driftStatus ?? null)) {
+        findings.push({ type: 'S4-invalid-drift-status', level: 'FAIL', message: `${entry.identity}: invalid driftStatus "${entry.driftStatus}"` });
+      }
+      if (entry.type === 'command') {
+        if (!validTransitionState.includes(entry.transitionState)) {
+          findings.push({ type: 'S4-invalid-transition-state', level: 'FAIL', message: `${entry.identity}: invalid transitionState "${entry.transitionState}"` });
+        }
+        if (entry.transitionState !== 'command-primary' && entry.primaryCodex === 'command') {
+          findings.push({ type: 'transition-primary-mismatch', level: 'WARN', message: `${entry.identity}: non-command-primary transition still has primaryCodex=command` });
+        }
+      }
+    }
 
     // Paired file existence
     if (entry.status === 'paired') {
-      if (entry.claude && !fs.existsSync(path.join(ROOT, entry.claude))) {
+      if (!entry.claude) {
+        findings.push({ type: 'paired-claude-missing', level: 'FAIL', message: `${entry.identity}: paired entry has no claude path` });
+      } else if (!fs.existsSync(path.join(ROOT, entry.claude))) {
         findings.push({ type: 'paired-claude-missing', level: 'FAIL', message: `${entry.identity}: claude file missing: ${entry.claude}` });
       }
-      if (entry.codex && !fs.existsSync(path.join(ROOT, entry.codex))) {
+      if (!entry.codex) {
+        findings.push({ type: 'paired-codex-missing', level: 'FAIL', message: `${entry.identity}: paired entry has no codex path` });
+      } else if (!fs.existsSync(path.join(ROOT, entry.codex))) {
         findings.push({ type: 'paired-codex-missing', level: 'FAIL', message: `${entry.identity}: codex file missing: ${entry.codex}` });
       }
     }

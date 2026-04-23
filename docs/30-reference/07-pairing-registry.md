@@ -14,123 +14,123 @@
 
 ## copy 도메인
 
-| Identity | Type | Status | Claude | Codex |
-|---|---|---|---|---|
-| `copy-fidelity` | agent | paired | `src/claude/copy/agents/copy-fidelity.md` | `src/codex/copy/agents/copy-fidelity.md` |
-| `copy-interaction-fidelity` | agent | paired | `src/claude/copy/agents/copy-interaction-fidelity.md` | `src/codex/copy/agents/copy-interaction-fidelity.md` |
-| `copy-qa-reviewer` | agent | paired | `src/claude/copy/agents/copy-qa-reviewer.md` | `src/codex/copy/agents/copy-qa-reviewer.md` |
-| `copy-reference-baseline` | agent | paired | `src/claude/copy/agents/copy-reference-baseline.md` | `src/codex/copy/agents/copy-reference-baseline.md` |
-| `copy-closeout` | command | paired | `src/claude/copy/commands/copy-closeout.md` | `src/codex/copy/commands/copy-closeout.md` |
-| `copy-gap-board` | command | paired | `src/claude/copy/commands/copy-gap-board.md` | `src/codex/copy/commands/copy-gap-board.md` |
-| `copy-interaction-review` | command | paired | `src/claude/copy/commands/copy-interaction-review.md` | `src/codex/copy/commands/copy-interaction-review.md` |
-| `copy-plan-unit` | command | paired | `src/claude/copy/commands/copy-plan-unit.md` | `src/codex/copy/commands/copy-plan-unit.md` |
-| `copy-reference-refresh` | command | paired | `src/claude/copy/commands/copy-reference-refresh.md` | `src/codex/copy/commands/copy-reference-refresh.md` |
-| `copy-verify` | command | paired | `src/claude/copy/commands/copy-verify.md` | `src/codex/copy/commands/copy-verify.md` |
-| `copy-visual-review` | command | paired | `src/claude/copy/commands/copy-visual-review.md` | `src/codex/copy/commands/copy-visual-review.md` |
-| `copy-doc-drift-check` | hook | unpaired | `src/claude/copy/hooks/copy-doc-drift-check.js` | — |
-| `copy-evidence-reminder` | hook | unpaired | `src/claude/copy/hooks/copy-evidence-reminder.js` | — |
-| `copy-gate-stop` | hook | unpaired | `src/claude/copy/hooks/copy-gate-stop.js` | — |
-| `copy-scope-guard` | hook | unpaired | `src/claude/copy/hooks/copy-scope-guard.js` | — |
-| `copy-variant-env-guard` | hook | unpaired | `src/claude/copy/hooks/copy-variant-env-guard.js` | — |
-| `copy-commands-rule` | rule | unpaired | `src/claude/copy/rules/copy-commands.md` | — |
-| `copy-evidence-rule` | rule | unpaired | `src/claude/copy/rules/copy-evidence.md` | — |
-| `copy-fidelity-rule` | rule | unpaired | `src/claude/copy/rules/copy-fidelity.md` | — |
-| `copy-gates-rule` | rule | unpaired | `src/claude/copy/rules/copy-gates.md` | — |
-| `copy-variant-rule` | rule | unpaired | `src/claude/copy/rules/copy-variant.md` | — |
-| `copy-closeout-workflow` | skill | paired | `src/claude/copy/skills/copy-closeout-workflow/SKILL.md` | `src/codex/copy/skills/copy-closeout-workflow/SKILL.md` |
-| `copy-evidence-management` | skill | paired | `src/claude/copy/skills/copy-evidence-management/SKILL.md` | `src/codex/copy/skills/copy-evidence-management/SKILL.md` |
-| `copy-gap-analysis` | skill | paired | `src/claude/copy/skills/copy-gap-analysis/SKILL.md` | `src/codex/copy/skills/copy-gap-analysis/SKILL.md` |
-| `copy-pipeline` | skill | paired | `src/claude/copy/skills/copy-pipeline/SKILL.md` | `src/codex/copy/skills/copy-pipeline/SKILL.md` |
-| `copy-qa-workflow` | skill | paired | `src/claude/copy/skills/copy-qa-workflow/SKILL.md` | `src/codex/copy/skills/copy-qa-workflow/SKILL.md` |
+| Identity | Type | Status | PrimaryCodex | Transition | Drift | Claude | Codex | CodexSkill |
+|---|---|---|---|---|---|---|---|---|
+| `copy-fidelity` | agent | paired | agent | — | — | `src/claude/copy/agents/copy-fidelity.md` | `src/codex/copy/agents/copy-fidelity.md` | — |
+| `copy-interaction-fidelity` | agent | paired | agent | — | — | `src/claude/copy/agents/copy-interaction-fidelity.md` | `src/codex/copy/agents/copy-interaction-fidelity.md` | — |
+| `copy-qa-reviewer` | agent | paired | agent | — | — | `src/claude/copy/agents/copy-qa-reviewer.md` | `src/codex/copy/agents/copy-qa-reviewer.md` | — |
+| `copy-reference-baseline` | agent | paired | agent | — | — | `src/claude/copy/agents/copy-reference-baseline.md` | `src/codex/copy/agents/copy-reference-baseline.md` | — |
+| `copy-closeout` | command | paired | command | command-primary | — | `src/claude/copy/commands/copy-closeout.md` | `src/codex/copy/commands/copy-closeout.md` | — |
+| `copy-gap-board` | command | paired | command | command-primary | — | `src/claude/copy/commands/copy-gap-board.md` | `src/codex/copy/commands/copy-gap-board.md` | — |
+| `copy-interaction-review` | command | paired | command | command-primary | — | `src/claude/copy/commands/copy-interaction-review.md` | `src/codex/copy/commands/copy-interaction-review.md` | — |
+| `copy-plan-unit` | command | paired | command | command-primary | — | `src/claude/copy/commands/copy-plan-unit.md` | `src/codex/copy/commands/copy-plan-unit.md` | — |
+| `copy-reference-refresh` | command | paired | command | command-primary | — | `src/claude/copy/commands/copy-reference-refresh.md` | `src/codex/copy/commands/copy-reference-refresh.md` | — |
+| `copy-verify` | command | paired | command | command-primary | — | `src/claude/copy/commands/copy-verify.md` | `src/codex/copy/commands/copy-verify.md` | — |
+| `copy-visual-review` | command | paired | command | command-primary | — | `src/claude/copy/commands/copy-visual-review.md` | `src/codex/copy/commands/copy-visual-review.md` | — |
+| `copy-doc-drift-check` | hook | unpaired | none | — | — | `src/claude/copy/hooks/copy-doc-drift-check.js` | — | — |
+| `copy-evidence-reminder` | hook | unpaired | none | — | — | `src/claude/copy/hooks/copy-evidence-reminder.js` | — | — |
+| `copy-gate-stop` | hook | unpaired | none | — | — | `src/claude/copy/hooks/copy-gate-stop.js` | — | — |
+| `copy-scope-guard` | hook | unpaired | none | — | — | `src/claude/copy/hooks/copy-scope-guard.js` | — | — |
+| `copy-variant-env-guard` | hook | unpaired | none | — | — | `src/claude/copy/hooks/copy-variant-env-guard.js` | — | — |
+| `copy-commands-rule` | rule | unpaired | none | — | — | `src/claude/copy/rules/copy-commands.md` | — | — |
+| `copy-evidence-rule` | rule | unpaired | none | — | — | `src/claude/copy/rules/copy-evidence.md` | — | — |
+| `copy-fidelity-rule` | rule | unpaired | none | — | — | `src/claude/copy/rules/copy-fidelity.md` | — | — |
+| `copy-gates-rule` | rule | unpaired | none | — | — | `src/claude/copy/rules/copy-gates.md` | — | — |
+| `copy-variant-rule` | rule | unpaired | none | — | — | `src/claude/copy/rules/copy-variant.md` | — | — |
+| `copy-closeout-workflow` | skill | paired | skill | — | — | `src/claude/copy/skills/copy-closeout-workflow/SKILL.md` | `src/codex/copy/skills/copy-closeout-workflow/SKILL.md` | — |
+| `copy-evidence-management` | skill | paired | skill | — | — | `src/claude/copy/skills/copy-evidence-management/SKILL.md` | `src/codex/copy/skills/copy-evidence-management/SKILL.md` | — |
+| `copy-gap-analysis` | skill | paired | skill | — | — | `src/claude/copy/skills/copy-gap-analysis/SKILL.md` | `src/codex/copy/skills/copy-gap-analysis/SKILL.md` | — |
+| `copy-pipeline` | skill | paired | skill | — | — | `src/claude/copy/skills/copy-pipeline/SKILL.md` | `src/codex/copy/skills/copy-pipeline/SKILL.md` | — |
+| `copy-qa-workflow` | skill | paired | skill | — | — | `src/claude/copy/skills/copy-qa-workflow/SKILL.md` | `src/codex/copy/skills/copy-qa-workflow/SKILL.md` | — |
 
 ## core 도메인
 
-| Identity | Type | Status | Claude | Codex |
-|---|---|---|---|---|
-| `code-quality-reminder` | hook | paired | `src/claude/core/hooks/code-quality-reminder.js` | `src/codex/core/hooks/code-quality-reminder.js` |
-| `edit-tracker` | hook | paired | `src/claude/core/hooks/edit-tracker.js` | `src/codex/core/hooks/edit-tracker.js` |
-| `output-secret-filter` | hook | paired | `src/claude/core/hooks/output-secret-filter.js` | `src/codex/core/hooks/output-secret-filter.js` |
-| `security-auto-trigger` | hook | paired | `src/claude/core/hooks/security-auto-trigger.js` | `src/codex/core/hooks/security-auto-trigger.js` |
-| `continuous-learning` | skill | paired | `src/claude/core/skills/continuous-learning/SKILL.md` | `src/codex/core/skills/continuous-learning/SKILL.md` |
-| `session-wrap` | skill | paired | `src/claude/core/skills/session-wrap/SKILL.md` | `src/codex/core/skills/session-wrap/SKILL.md` |
+| Identity | Type | Status | PrimaryCodex | Transition | Drift | Claude | Codex | CodexSkill |
+|---|---|---|---|---|---|---|---|---|
+| `code-quality-reminder` | hook | paired | hook | — | — | `src/claude/core/hooks/code-quality-reminder.js` | `src/codex/core/hooks/code-quality-reminder.js` | — |
+| `edit-tracker` | hook | paired | hook | — | — | `src/claude/core/hooks/edit-tracker.js` | `src/codex/core/hooks/edit-tracker.js` | — |
+| `output-secret-filter` | hook | paired | hook | — | — | `src/claude/core/hooks/output-secret-filter.js` | `src/codex/core/hooks/output-secret-filter.js` | — |
+| `security-auto-trigger` | hook | paired | hook | — | — | `src/claude/core/hooks/security-auto-trigger.js` | `src/codex/core/hooks/security-auto-trigger.js` | — |
+| `continuous-learning` | skill | paired | skill | — | — | `src/claude/core/skills/continuous-learning/SKILL.md` | `src/codex/core/skills/continuous-learning/SKILL.md` | — |
+| `session-wrap` | skill | paired | skill | — | — | `src/claude/core/skills/session-wrap/SKILL.md` | `src/codex/core/skills/session-wrap/SKILL.md` | — |
 
 ## dev 도메인
 
-| Identity | Type | Status | Claude | Codex |
-|---|---|---|---|---|
-| `dev-architect` | agent | paired | `src/claude/dev/agents/dev-architect.md` | `src/codex/dev/agents/dev-architect.md` |
-| `dev-code-reviewer` | agent | paired | `src/claude/dev/agents/dev-code-reviewer.md` | `src/codex/dev/agents/dev-code-reviewer.md` |
-| `dev-database-reviewer` | agent | paired | `src/claude/dev/agents/dev-database-reviewer.md` | `src/codex/dev/agents/dev-database-reviewer.md` |
-| `dev-doc-updater` | agent | paired | `src/claude/dev/agents/dev-doc-updater.md` | `src/codex/dev/agents/dev-doc-updater.md` |
-| `dev-security-reviewer` | agent | paired | `src/claude/dev/agents/dev-security-reviewer.md` | `src/codex/dev/agents/dev-security-reviewer.md` |
-| `dev-verify-agent` | agent | paired | `src/claude/dev/agents/dev-verify-agent.md` | `src/codex/dev/agents/dev-verify-agent.md` |
-| `dev-architecture` | command | paired | `src/claude/dev/commands/dev-architecture.md` | `src/codex/dev/commands/dev-architecture.md` |
-| `dev-build-fix` | command | paired | `src/claude/dev/commands/dev-build-fix.md` | `src/codex/dev/commands/dev-build-fix.md` |
-| `dev-checkpoint` | command | paired | `src/claude/dev/commands/dev-checkpoint.md` | `src/codex/dev/commands/dev-checkpoint.md` |
-| `dev-commit` | command | paired | `src/claude/dev/commands/dev-commit.md` | `src/codex/dev/commands/dev-commit.md` |
-| `dev-commit-push-pr` | command | paired | `src/claude/dev/commands/dev-commit-push-pr.md` | `src/codex/dev/commands/dev-commit-push-pr.md` |
-| `dev-continue` | command | paired | `src/claude/dev/commands/dev-continue.md` | `src/codex/dev/commands/dev-continue.md` |
-| `dev-explore` | command | paired | `src/claude/dev/commands/dev-explore.md` | `src/codex/dev/commands/dev-explore.md` |
-| `dev-feature` | command | paired | `src/claude/dev/commands/dev-feature.md` | `src/codex/dev/commands/dev-feature.md` |
-| `dev-handoff-verify` | command | paired | `src/claude/dev/commands/dev-handoff-verify.md` | `src/codex/dev/commands/dev-handoff-verify.md` |
-| `dev-learn` | command | paired | `src/claude/dev/commands/dev-learn.md` | `src/codex/dev/commands/dev-learn.md` |
-| `dev-plan` | command | paired | `src/claude/dev/commands/dev-plan.md` | `src/codex/dev/commands/dev-plan.md` |
-| `dev-refactor` | command | paired | `src/claude/dev/commands/dev-refactor.md` | `src/codex/dev/commands/dev-refactor.md` |
-| `dev-review` | command | paired | `src/claude/dev/commands/dev-review.md` | `src/codex/dev/commands/dev-review.md` |
-| `dev-run` | command | paired | `src/claude/dev/commands/dev-run.md` | `src/codex/dev/commands/dev-run.md` |
-| `dev-security-review` | command | paired | `src/claude/dev/commands/dev-security-review.md` | `src/codex/dev/commands/dev-security-review.md` |
-| `dev-sync` | command | paired | `src/claude/dev/commands/dev-sync.md` | `src/codex/dev/commands/dev-sync.md` |
-| `dev-sync-docs` | command | paired | `src/claude/dev/commands/dev-sync-docs.md` | `src/codex/dev/commands/dev-sync-docs.md` |
-| `dev-test-verify` | command | paired | `src/claude/dev/commands/dev-test-verify.md` | `src/codex/dev/commands/dev-test-verify.md` |
-| `dev-verify` | command | paired | `src/claude/dev/commands/dev-verify.md` | `src/codex/dev/commands/dev-verify.md` |
-| `dev-verify-all` | command | paired | `src/claude/dev/commands/dev-verify-all.md` | `src/codex/dev/commands/dev-verify-all.md` |
-| `dev-verify-fe` | command | paired | `src/claude/dev/commands/dev-verify-fe.md` | `src/codex/dev/commands/dev-verify-fe.md` |
-| `dev-db-guard` | hook | paired | `src/claude/dev/hooks/dev-db-guard.js` | `src/codex/dev/hooks/dev-db-guard.js` |
-| `dev-feature-scope-guard` | hook | paired | `src/claude/dev/hooks/dev-feature-scope-guard.js` | `src/codex/dev/hooks/dev-feature-scope-guard.js` |
-| `dev-tdd-guard` | hook | paired | `src/claude/dev/hooks/dev-tdd-guard.js` | `src/codex/dev/hooks/dev-tdd-guard.js` |
-| `dev-architecture-decision` | skill | paired | `src/claude/dev/skills/dev-architecture-decision/SKILL.md` | `src/codex/dev/skills/dev-architecture-decision/SKILL.md` |
-| `dev-domain-modeling` | skill | paired | `src/claude/dev/skills/dev-domain-modeling/SKILL.md` | `src/codex/dev/skills/dev-domain-modeling/SKILL.md` |
-| `dev-feature-module` | skill | paired | `src/claude/dev/skills/dev-feature-module/SKILL.md` | `src/codex/dev/skills/dev-feature-module/SKILL.md` |
-| `dev-feature-plan` | skill | paired | `src/claude/dev/skills/dev-feature-plan/SKILL.md` | `src/codex/dev/skills/dev-feature-plan/SKILL.md` |
-| `dev-frontend-patterns` | skill | paired | `src/claude/dev/skills/dev-frontend-patterns/SKILL.md` | `src/codex/dev/skills/dev-frontend-patterns/SKILL.md` |
-| `dev-layered-architecture` | skill | paired | `src/claude/dev/skills/dev-layered-architecture/SKILL.md` | `src/codex/dev/skills/dev-layered-architecture/SKILL.md` |
-| `dev-observability` | skill | paired | `src/claude/dev/skills/dev-observability/SKILL.md` | `src/codex/dev/skills/dev-observability/SKILL.md` |
-| `dev-refactoring` | skill | paired | `src/claude/dev/skills/dev-refactoring/SKILL.md` | `src/codex/dev/skills/dev-refactoring/SKILL.md` |
-| `dev-security-pipeline` | skill | paired | `src/claude/dev/skills/dev-security-pipeline/SKILL.md` | `src/codex/dev/skills/dev-security-pipeline/SKILL.md` |
-| `dev-tdd-workflow` | skill | paired | `src/claude/dev/skills/dev-tdd-workflow/SKILL.md` | `src/codex/dev/skills/dev-tdd-workflow/SKILL.md` |
-| `dev-testing-backend` | skill | paired | `src/claude/dev/skills/dev-testing-backend/SKILL.md` | `src/codex/dev/skills/dev-testing-backend/SKILL.md` |
-| `dev-testing-e2e` | skill | paired | `src/claude/dev/skills/dev-testing-e2e/SKILL.md` | `src/codex/dev/skills/dev-testing-e2e/SKILL.md` |
-| `dev-testing-frontend` | skill | paired | `src/claude/dev/skills/dev-testing-frontend/SKILL.md` | `src/codex/dev/skills/dev-testing-frontend/SKILL.md` |
-| `dev-verification-engine` | skill | paired | `src/claude/dev/skills/dev-verification-engine/SKILL.md` | `src/codex/dev/skills/dev-verification-engine/SKILL.md` |
-| `dev-workflow` | skill | paired | `src/claude/dev/skills/dev-workflow/SKILL.md` | `src/codex/dev/skills/dev-workflow/SKILL.md` |
+| Identity | Type | Status | PrimaryCodex | Transition | Drift | Claude | Codex | CodexSkill |
+|---|---|---|---|---|---|---|---|---|
+| `dev-architect` | agent | paired | agent | — | — | `src/claude/dev/agents/dev-architect.md` | `src/codex/dev/agents/dev-architect.md` | — |
+| `dev-code-reviewer` | agent | paired | agent | — | — | `src/claude/dev/agents/dev-code-reviewer.md` | `src/codex/dev/agents/dev-code-reviewer.md` | — |
+| `dev-database-reviewer` | agent | paired | agent | — | — | `src/claude/dev/agents/dev-database-reviewer.md` | `src/codex/dev/agents/dev-database-reviewer.md` | — |
+| `dev-doc-updater` | agent | paired | agent | — | — | `src/claude/dev/agents/dev-doc-updater.md` | `src/codex/dev/agents/dev-doc-updater.md` | — |
+| `dev-security-reviewer` | agent | paired | agent | — | — | `src/claude/dev/agents/dev-security-reviewer.md` | `src/codex/dev/agents/dev-security-reviewer.md` | — |
+| `dev-verify-agent` | agent | paired | agent | — | — | `src/claude/dev/agents/dev-verify-agent.md` | `src/codex/dev/agents/dev-verify-agent.md` | — |
+| `dev-architecture` | command | paired | command | command-primary | — | `src/claude/dev/commands/dev-architecture.md` | `src/codex/dev/commands/dev-architecture.md` | — |
+| `dev-build-fix` | command | paired | command | command-primary | — | `src/claude/dev/commands/dev-build-fix.md` | `src/codex/dev/commands/dev-build-fix.md` | — |
+| `dev-checkpoint` | command | paired | command | command-primary | — | `src/claude/dev/commands/dev-checkpoint.md` | `src/codex/dev/commands/dev-checkpoint.md` | — |
+| `dev-commit` | command | paired | command | command-primary | — | `src/claude/dev/commands/dev-commit.md` | `src/codex/dev/commands/dev-commit.md` | — |
+| `dev-commit-push-pr` | command | paired | command | command-primary | — | `src/claude/dev/commands/dev-commit-push-pr.md` | `src/codex/dev/commands/dev-commit-push-pr.md` | — |
+| `dev-continue` | command | paired | command | command-primary | — | `src/claude/dev/commands/dev-continue.md` | `src/codex/dev/commands/dev-continue.md` | — |
+| `dev-explore` | command | paired | command | command-primary | — | `src/claude/dev/commands/dev-explore.md` | `src/codex/dev/commands/dev-explore.md` | — |
+| `dev-feature` | command | paired | command | command-primary | — | `src/claude/dev/commands/dev-feature.md` | `src/codex/dev/commands/dev-feature.md` | — |
+| `dev-handoff-verify` | command | paired | command | command-primary | — | `src/claude/dev/commands/dev-handoff-verify.md` | `src/codex/dev/commands/dev-handoff-verify.md` | — |
+| `dev-learn` | command | paired | command | command-primary | — | `src/claude/dev/commands/dev-learn.md` | `src/codex/dev/commands/dev-learn.md` | — |
+| `dev-plan` | command | paired | command | command-primary | — | `src/claude/dev/commands/dev-plan.md` | `src/codex/dev/commands/dev-plan.md` | — |
+| `dev-refactor` | command | paired | command | command-primary | — | `src/claude/dev/commands/dev-refactor.md` | `src/codex/dev/commands/dev-refactor.md` | — |
+| `dev-review` | command | paired | command | command-primary | — | `src/claude/dev/commands/dev-review.md` | `src/codex/dev/commands/dev-review.md` | — |
+| `dev-run` | command | paired | command | command-primary | — | `src/claude/dev/commands/dev-run.md` | `src/codex/dev/commands/dev-run.md` | — |
+| `dev-security-review` | command | paired | command | command-primary | — | `src/claude/dev/commands/dev-security-review.md` | `src/codex/dev/commands/dev-security-review.md` | — |
+| `dev-sync` | command | paired | command | command-primary | — | `src/claude/dev/commands/dev-sync.md` | `src/codex/dev/commands/dev-sync.md` | — |
+| `dev-sync-docs` | command | paired | command | command-primary | — | `src/claude/dev/commands/dev-sync-docs.md` | `src/codex/dev/commands/dev-sync-docs.md` | — |
+| `dev-test-verify` | command | paired | command | command-primary | — | `src/claude/dev/commands/dev-test-verify.md` | `src/codex/dev/commands/dev-test-verify.md` | — |
+| `dev-verify` | command | paired | command | command-primary | — | `src/claude/dev/commands/dev-verify.md` | `src/codex/dev/commands/dev-verify.md` | — |
+| `dev-verify-all` | command | paired | command | command-primary | — | `src/claude/dev/commands/dev-verify-all.md` | `src/codex/dev/commands/dev-verify-all.md` | — |
+| `dev-verify-fe` | command | paired | command | command-primary | — | `src/claude/dev/commands/dev-verify-fe.md` | `src/codex/dev/commands/dev-verify-fe.md` | — |
+| `dev-db-guard` | hook | paired | hook | — | — | `src/claude/dev/hooks/dev-db-guard.js` | `src/codex/dev/hooks/dev-db-guard.js` | — |
+| `dev-feature-scope-guard` | hook | paired | hook | — | — | `src/claude/dev/hooks/dev-feature-scope-guard.js` | `src/codex/dev/hooks/dev-feature-scope-guard.js` | — |
+| `dev-tdd-guard` | hook | paired | hook | — | — | `src/claude/dev/hooks/dev-tdd-guard.js` | `src/codex/dev/hooks/dev-tdd-guard.js` | — |
+| `dev-architecture-decision` | skill | paired | skill | — | — | `src/claude/dev/skills/dev-architecture-decision/SKILL.md` | `src/codex/dev/skills/dev-architecture-decision/SKILL.md` | — |
+| `dev-domain-modeling` | skill | paired | skill | — | — | `src/claude/dev/skills/dev-domain-modeling/SKILL.md` | `src/codex/dev/skills/dev-domain-modeling/SKILL.md` | — |
+| `dev-feature-module` | skill | paired | skill | — | — | `src/claude/dev/skills/dev-feature-module/SKILL.md` | `src/codex/dev/skills/dev-feature-module/SKILL.md` | — |
+| `dev-feature-plan` | skill | paired | skill | — | — | `src/claude/dev/skills/dev-feature-plan/SKILL.md` | `src/codex/dev/skills/dev-feature-plan/SKILL.md` | — |
+| `dev-frontend-patterns` | skill | paired | skill | — | — | `src/claude/dev/skills/dev-frontend-patterns/SKILL.md` | `src/codex/dev/skills/dev-frontend-patterns/SKILL.md` | — |
+| `dev-layered-architecture` | skill | paired | skill | — | — | `src/claude/dev/skills/dev-layered-architecture/SKILL.md` | `src/codex/dev/skills/dev-layered-architecture/SKILL.md` | — |
+| `dev-observability` | skill | paired | skill | — | — | `src/claude/dev/skills/dev-observability/SKILL.md` | `src/codex/dev/skills/dev-observability/SKILL.md` | — |
+| `dev-refactoring` | skill | paired | skill | — | — | `src/claude/dev/skills/dev-refactoring/SKILL.md` | `src/codex/dev/skills/dev-refactoring/SKILL.md` | — |
+| `dev-security-pipeline` | skill | paired | skill | — | — | `src/claude/dev/skills/dev-security-pipeline/SKILL.md` | `src/codex/dev/skills/dev-security-pipeline/SKILL.md` | — |
+| `dev-tdd-workflow` | skill | paired | skill | — | — | `src/claude/dev/skills/dev-tdd-workflow/SKILL.md` | `src/codex/dev/skills/dev-tdd-workflow/SKILL.md` | — |
+| `dev-testing-backend` | skill | paired | skill | — | — | `src/claude/dev/skills/dev-testing-backend/SKILL.md` | `src/codex/dev/skills/dev-testing-backend/SKILL.md` | — |
+| `dev-testing-e2e` | skill | paired | skill | — | — | `src/claude/dev/skills/dev-testing-e2e/SKILL.md` | `src/codex/dev/skills/dev-testing-e2e/SKILL.md` | — |
+| `dev-testing-frontend` | skill | paired | skill | — | — | `src/claude/dev/skills/dev-testing-frontend/SKILL.md` | `src/codex/dev/skills/dev-testing-frontend/SKILL.md` | — |
+| `dev-verification-engine` | skill | paired | skill | — | — | `src/claude/dev/skills/dev-verification-engine/SKILL.md` | `src/codex/dev/skills/dev-verification-engine/SKILL.md` | — |
+| `dev-workflow` | skill | paired | skill | — | — | `src/claude/dev/skills/dev-workflow/SKILL.md` | `src/codex/dev/skills/dev-workflow/SKILL.md` | — |
 
 ## plan 도메인
 
-| Identity | Type | Status | Claude | Codex |
-|---|---|---|---|---|
-| `plan-idea-collector` | agent | paired | `src/claude/plan/agents/plan-idea-collector.md` | `src/codex/plan/agents/plan-idea-collector.md` |
-| `plan-idea-screener` | agent | paired | `src/claude/plan/agents/plan-idea-screener.md` | `src/codex/plan/agents/plan-idea-screener.md` |
-| `plan-prd-writer` | agent | paired | `src/claude/plan/agents/plan-prd-writer.md` | `src/codex/plan/agents/plan-prd-writer.md` |
-| `plan-reviewer` | agent | paired | `src/claude/plan/agents/plan-reviewer.md` | `src/codex/plan/agents/plan-reviewer.md` |
-| `plan-stitch-integrator` | agent | paired | `src/claude/plan/agents/plan-stitch-integrator.md` | `src/codex/plan/agents/plan-stitch-integrator.md` |
-| `plan-wireframe-designer` | agent | paired | `src/claude/plan/agents/plan-wireframe-designer.md` | `src/codex/plan/agents/plan-wireframe-designer.md` |
-| `plan-archive` | command | paired | `src/claude/plan/commands/plan-archive.md` | `src/codex/plan/commands/plan-archive.md` |
-| `plan-bridge` | command | paired | `src/claude/plan/commands/plan-bridge.md` | `src/codex/plan/commands/plan-bridge.md` |
-| `plan-draft` | command | paired | `src/claude/plan/commands/plan-draft.md` | `src/codex/plan/commands/plan-draft.md` |
-| `plan-idea` | command | paired | `src/claude/plan/commands/plan-idea.md` | `src/codex/plan/commands/plan-idea.md` |
-| `plan-improve` | command | paired | `src/claude/plan/commands/plan-improve.md` | `src/codex/plan/commands/plan-improve.md` |
-| `plan-prd` | command | paired | `src/claude/plan/commands/plan-prd.md` | `src/codex/plan/commands/plan-prd.md` |
-| `plan-review` | command | paired | `src/claude/plan/commands/plan-review.md` | `src/codex/plan/commands/plan-review.md` |
-| `plan-screen` | command | paired | `src/claude/plan/commands/plan-screen.md` | `src/codex/plan/commands/plan-screen.md` |
-| `plan-stitch` | command | paired | `src/claude/plan/commands/plan-stitch.md` | `src/codex/plan/commands/plan-stitch.md` |
-| `plan-wireframe` | command | paired | `src/claude/plan/commands/plan-wireframe.md` | `src/codex/plan/commands/plan-wireframe.md` |
-| `plan-doc-guard` | hook | paired | `src/claude/plan/hooks/plan-doc-guard.js` | `src/codex/plan/hooks/plan-doc-guard.js` |
-| `plan-archive-workflow` | skill | paired | `src/claude/plan/skills/plan-archive-workflow/SKILL.md` | `src/codex/plan/skills/plan-archive-workflow/SKILL.md` |
-| `plan-idea-management` | skill | paired | `src/claude/plan/skills/plan-idea-management/SKILL.md` | `src/codex/plan/skills/plan-idea-management/SKILL.md` |
-| `plan-pipeline` | skill | paired | `src/claude/plan/skills/plan-pipeline/SKILL.md` | `src/codex/plan/skills/plan-pipeline/SKILL.md` |
-| `plan-prd-authoring` | skill | paired | `src/claude/plan/skills/plan-prd-authoring/SKILL.md` | `src/codex/plan/skills/plan-prd-authoring/SKILL.md` |
-| `plan-review-criteria` | skill | paired | `src/claude/plan/skills/plan-review-criteria/SKILL.md` | `src/codex/plan/skills/plan-review-criteria/SKILL.md` |
-| `plan-screening-workflow` | skill | paired | `src/claude/plan/skills/plan-screening-workflow/SKILL.md` | `src/codex/plan/skills/plan-screening-workflow/SKILL.md` |
-| `plan-stitch-workflow` | skill | paired | `src/claude/plan/skills/plan-stitch-workflow/SKILL.md` | `src/codex/plan/skills/plan-stitch-workflow/SKILL.md` |
-| `plan-wireframe-design` | skill | paired | `src/claude/plan/skills/plan-wireframe-design/SKILL.md` | `src/codex/plan/skills/plan-wireframe-design/SKILL.md` |
+| Identity | Type | Status | PrimaryCodex | Transition | Drift | Claude | Codex | CodexSkill |
+|---|---|---|---|---|---|---|---|---|
+| `plan-idea-collector` | agent | paired | agent | — | — | `src/claude/plan/agents/plan-idea-collector.md` | `src/codex/plan/agents/plan-idea-collector.md` | — |
+| `plan-idea-screener` | agent | paired | agent | — | — | `src/claude/plan/agents/plan-idea-screener.md` | `src/codex/plan/agents/plan-idea-screener.md` | — |
+| `plan-prd-writer` | agent | paired | agent | — | — | `src/claude/plan/agents/plan-prd-writer.md` | `src/codex/plan/agents/plan-prd-writer.md` | — |
+| `plan-reviewer` | agent | paired | agent | — | — | `src/claude/plan/agents/plan-reviewer.md` | `src/codex/plan/agents/plan-reviewer.md` | — |
+| `plan-stitch-integrator` | agent | paired | agent | — | — | `src/claude/plan/agents/plan-stitch-integrator.md` | `src/codex/plan/agents/plan-stitch-integrator.md` | — |
+| `plan-wireframe-designer` | agent | paired | agent | — | — | `src/claude/plan/agents/plan-wireframe-designer.md` | `src/codex/plan/agents/plan-wireframe-designer.md` | — |
+| `plan-archive` | command | paired | command | command-primary | — | `src/claude/plan/commands/plan-archive.md` | `src/codex/plan/commands/plan-archive.md` | — |
+| `plan-bridge` | command | paired | command | command-primary | — | `src/claude/plan/commands/plan-bridge.md` | `src/codex/plan/commands/plan-bridge.md` | — |
+| `plan-draft` | command | paired | command | command-primary | — | `src/claude/plan/commands/plan-draft.md` | `src/codex/plan/commands/plan-draft.md` | — |
+| `plan-idea` | command | paired | command | command-primary | — | `src/claude/plan/commands/plan-idea.md` | `src/codex/plan/commands/plan-idea.md` | — |
+| `plan-improve` | command | paired | command | command-primary | — | `src/claude/plan/commands/plan-improve.md` | `src/codex/plan/commands/plan-improve.md` | — |
+| `plan-prd` | command | paired | command | command-primary | — | `src/claude/plan/commands/plan-prd.md` | `src/codex/plan/commands/plan-prd.md` | — |
+| `plan-review` | command | paired | command | command-primary | — | `src/claude/plan/commands/plan-review.md` | `src/codex/plan/commands/plan-review.md` | — |
+| `plan-screen` | command | paired | command | command-primary | — | `src/claude/plan/commands/plan-screen.md` | `src/codex/plan/commands/plan-screen.md` | — |
+| `plan-stitch` | command | paired | command | command-primary | — | `src/claude/plan/commands/plan-stitch.md` | `src/codex/plan/commands/plan-stitch.md` | — |
+| `plan-wireframe` | command | paired | command | command-primary | — | `src/claude/plan/commands/plan-wireframe.md` | `src/codex/plan/commands/plan-wireframe.md` | — |
+| `plan-doc-guard` | hook | paired | hook | — | — | `src/claude/plan/hooks/plan-doc-guard.js` | `src/codex/plan/hooks/plan-doc-guard.js` | — |
+| `plan-archive-workflow` | skill | paired | skill | — | — | `src/claude/plan/skills/plan-archive-workflow/SKILL.md` | `src/codex/plan/skills/plan-archive-workflow/SKILL.md` | — |
+| `plan-idea-management` | skill | paired | skill | — | — | `src/claude/plan/skills/plan-idea-management/SKILL.md` | `src/codex/plan/skills/plan-idea-management/SKILL.md` | — |
+| `plan-pipeline` | skill | paired | skill | — | — | `src/claude/plan/skills/plan-pipeline/SKILL.md` | `src/codex/plan/skills/plan-pipeline/SKILL.md` | — |
+| `plan-prd-authoring` | skill | paired | skill | — | — | `src/claude/plan/skills/plan-prd-authoring/SKILL.md` | `src/codex/plan/skills/plan-prd-authoring/SKILL.md` | — |
+| `plan-review-criteria` | skill | paired | skill | — | — | `src/claude/plan/skills/plan-review-criteria/SKILL.md` | `src/codex/plan/skills/plan-review-criteria/SKILL.md` | — |
+| `plan-screening-workflow` | skill | paired | skill | — | — | `src/claude/plan/skills/plan-screening-workflow/SKILL.md` | `src/codex/plan/skills/plan-screening-workflow/SKILL.md` | — |
+| `plan-stitch-workflow` | skill | paired | skill | — | — | `src/claude/plan/skills/plan-stitch-workflow/SKILL.md` | `src/codex/plan/skills/plan-stitch-workflow/SKILL.md` | — |
+| `plan-wireframe-design` | skill | paired | skill | — | — | `src/claude/plan/skills/plan-wireframe-design/SKILL.md` | `src/codex/plan/skills/plan-wireframe-design/SKILL.md` | — |
 

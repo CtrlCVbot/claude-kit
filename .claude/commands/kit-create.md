@@ -21,7 +21,7 @@ argument-hint: <type> <domain> <name> [--target claude|codex|both] [--skip-codex
 | 인자 | 설명 | 필수 | 허용 값 |
 |------|------|------|---------|
 | `type` | 컴포넌트 타입 | O | `skill`, `agent`, `command`, `hook`, `rule` |
-| `domain` | 대상 도메인 | O* | `core`, `dev`, `plan` |
+| `domain` | 대상 도메인 | O* | `core`, `dev`, `plan`, `copy` |
 | `name` | 이름 (kebab-case) | O | `/^[a-z][a-z0-9]*(-[a-z0-9]+)*$/` |
 
 *`rule` 타입은 항상 `core` 도메인이므로 생략 가능
@@ -46,7 +46,7 @@ argument-hint: <type> <domain> <name> [--target claude|codex|both] [--skip-codex
 | 타입 | 기본 --target | 근거 |
 |------|--------------|------|
 | agent | `both` | required codex sibling |
-| command | `both` | required codex sibling |
+| command | `both` | 기본 `command-primary`, skill 전환은 명시적 `dual-output` 후속 단계 |
 | skill | `claude` | optional codex sibling |
 | hook | `claude` | optional codex sibling |
 | rule | `claude` | claude-origin (AGENTS.md.template inline merge로 Codex와 sharing, paired-fallback) |
@@ -56,7 +56,7 @@ argument-hint: <type> <domain> <name> [--target claude|codex|both] [--skip-codex
 | 타입 | `--target claude` | `--target codex` | `--target both` | `--skip-codex` |
 |------|-------------------|-------------------|-----------------|----------------|
 | agent | WARN (required sibling) | 허용 | 기본값 | 허용 (reason 필수) |
-| command | WARN (required sibling) | 허용 | 기본값 | 허용 (reason 필수) |
+| command | WARN (transitionState 필요) | 허용 | 기본값 | 허용 (reason 필수) |
 | skill | 기본값 | 허용 | 허용 | 불필요 (optional) |
 | hook | 기본값 | 허용 | 허용 | 불필요 (optional) |
 | rule | 기본값 | **거부** (discrete Codex sibling 없음 — `AGENTS.md.template` inline merge로 sharing) | **거부** | 불필요 |
@@ -67,7 +67,7 @@ argument-hint: <type> <domain> <name> [--target claude|codex|both] [--skip-codex
 
 1. 인자에서 `type`, `domain`, `name`을 추출한다.
 2. `type`이 5개 허용 값(`skill`, `agent`, `command`, `hook`, `rule`) 중 하나인지 확인한다.
-3. `domain`이 3개 허용 값(`core`, `dev`, `plan`) 중 하나인지 확인한다. `rule`은 `core` 고정.
+3. `domain`이 4개 허용 값(`core`, `dev`, `plan`, `copy`) 중 하나인지 확인한다. `rule`은 `core` 고정이다. `kit`은 domain이 아니다.
 4. `name`이 kebab-case 정규식을 통과하는지 확인한다.
 5. `full_name` = `{domain}-{name}`으로 조합한다. (`rule`은 `name`만 사용, 도메인 접두사 없음)
 
@@ -172,6 +172,15 @@ argument-hint: <type> <domain> <name> [--target claude|codex|both] [--skip-codex
 
 15. 레지스트리를 저장한다.
 
+command entry를 추가할 때는 `pairing-registry-v2` 필드를 함께 기록한다.
+
+| 필드 | 기본값 |
+|------|--------|
+| `primaryCodex` | `command` |
+| `transitionState` | `command-primary` |
+| `codexSkill` | `null` |
+| `driftStatus` | `null` |
+
 ## Rules
 
 - kebab-case가 아닌 이름은 거부한다.
@@ -182,3 +191,4 @@ argument-hint: <type> <domain> <name> [--target claude|codex|both] [--skip-codex
 - agent/command를 `--target claude`로만 생성하면 "required codex sibling" 경고를 표시한다.
 - rule 타입은 `--target codex`를 거부한다 (discrete Codex sibling 없음 — `AGENTS.md.template` inline merge로 sharing).
 - hook `--stop`과 `--target codex` 조합 시 Codex Stop 지원 상태를 경고한다 (experimental).
+- `kit` domain과 `src/codex/kit/**`는 생성하지 않는다.

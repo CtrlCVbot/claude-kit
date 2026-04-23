@@ -14,6 +14,13 @@
 
 'use strict';
 
+const fs = require('fs');
+const path = require('path');
+
+const ROOT = path.resolve(__dirname, '..');
+const SRC_CODEX = path.join(ROOT, 'src', 'codex');
+const PORTABILITY_MANIFEST = path.join(ROOT, 'src', 'claude', '_meta', 'codex-portability.json');
+
 /**
  * Hook의 Codex portability 메타데이터.
  *
@@ -133,13 +140,55 @@ const EXCLUDED_HOOKS = Object.fromEntries(
     .map(([file, meta]) => [file, meta.reason])
 );
 
+let manifestCache = null;
+
+function readPortabilityManifest() {
+  if (manifestCache !== null) return manifestCache;
+  if (!fs.existsSync(PORTABILITY_MANIFEST)) {
+    manifestCache = [];
+    return manifestCache;
+  }
+
+  try {
+    const manifest = JSON.parse(fs.readFileSync(PORTABILITY_MANIFEST, 'utf8'));
+    manifestCache = Array.isArray(manifest.entries) ? manifest.entries : [];
+  } catch {
+    manifestCache = [];
+  }
+  return manifestCache;
+}
+
+function hookIdentity(hookFilename) {
+  return hookFilename.replace(/\.js$/, '');
+}
+
+function getManifestPortability(hookFilename) {
+  const identity = hookIdentity(hookFilename);
+  const entry = readPortabilityManifest().find(
+    item => item.type === 'hook' && item.identity === identity
+  );
+  if (!entry) return null;
+
+  return {
+    strategy: entry.strategy,
+    officialSurface: entry.officialSurface,
+    evidenceLevel: entry.evidenceLevel,
+    docConstraints: entry.docConstraints || [],
+    fallbackTarget: entry.fallbackTarget ?? null,
+    compatible: entry.strategy === 'paired-direct',
+    reason: entry.strategy === 'paired-direct' ? null : `${entry.strategy}: not emitted as direct Codex hook`,
+    claudeSource: entry.claudeSource || null,
+    codexSource: entry.codexSource || null,
+  };
+}
+
 /**
  * 훅 파일이 Codex setup.js 복사 대상인지 판정한다.
  * @param {string} hookFilename - 훅 파일명 (예: 'edit-tracker.js')
  * @returns {{ compatible: boolean, reason: string|null }}
  */
 function isCodexCompatible(hookFilename) {
-  const meta = HOOK_PORTABILITY[hookFilename];
+  const meta = getPortability(hookFilename);
   if (!meta) {
     return { compatible: true, reason: null };
   }
@@ -177,14 +226,71 @@ function filterCodexHooks(hookFiles) {
  * @returns {HookPortability|null}
  */
 function getPortability(hookFilename) {
-  return HOOK_PORTABILITY[hookFilename] || null;
+  const manifestMeta = getManifestPortability(hookFilename);
+  const runtimeMeta = HOOK_PORTABILITY[hookFilename];
+  if (manifestMeta && runtimeMeta) {
+    return { ...manifestMeta, ...runtimeMeta, codexSource: manifestMeta.codexSource, claudeSource: manifestMeta.claudeSource };
+  }
+  return runtimeMeta || manifestMeta || null;
+}
+
+function detectHookMetadataDrift() {
+  const findings = [];
+  for (const entry of readPortabilityManifest()) {
+    if (entry.type !== 'hook') continue;
+    const expectedSource = path.join(SRC_CODEX, entry.domain, 'hooks', `${entry.identity}.js`);
+    const expectedRel = path.relative(ROOT, expectedSource).split(path.sep).join('/');
+    const exists = fs.existsSync(expectedSource);
+
+    if (exists && entry.codexSource !== expectedRel) {
+      findings.push({
+        identity: entry.identity,
+        type: 'metadata-drift',
+        expected: expectedRel,
+        actual: entry.codexSource,
+        message: `${entry.identity}: Codex hook source exists but portability codexSource is stale`,
+      });
+    }
+
+    if (!exists && entry.codexSource) {
+      findings.push({
+        identity: entry.identity,
+        type: 'metadata-drift',
+        expected: null,
+        actual: entry.codexSource,
+        message: `${entry.identity}: portability codexSource points to a missing file`,
+      });
+    }
+  }
+  return findings;
+}
+
+function main() {
+  const findings = detectHookMetadataDrift();
+  if (findings.length === 0) {
+    console.log('[codex-hook-compat] PASS: no hook metadata drift detected.');
+    return;
+  }
+
+  console.log(`[codex-hook-compat] FAIL: ${findings.length} metadata drift item(s)`);
+  for (const finding of findings) {
+    console.log(`  - ${finding.message}`);
+    console.log(`    expected: ${finding.expected}`);
+    console.log(`    actual: ${finding.actual}`);
+  }
+  process.exit(1);
 }
 
 module.exports = {
   isCodexCompatible,
   filterCodexHooks,
   getPortability,
+  detectHookMetadataDrift,
   HOOK_PORTABILITY,
   // backward-compat (deprecated)
   EXCLUDED_HOOKS,
 };
+
+if (require.main === module) {
+  main();
+}

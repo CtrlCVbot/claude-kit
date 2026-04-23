@@ -25,11 +25,12 @@ argument-hint: '[component] [--type <type>] [--domain <domain>] [--target claude
 |------|------|--------|
 | `component-name` | 검증할 컴포넌트 이름 | 전체 |
 | `--type` | 타입 필터 (`skill`, `agent`, `command`, `hook`, `rule`) | 전체 |
-| `--domain` | 도메인 필터 (`core`, `dev`, `plan`) | 전체 |
+| `--domain` | 도메인 필터 (`core`, `dev`, `plan`, `copy`) | 전체 |
 | `--verbose` | 상세 출력 | 꺼짐 |
 | `--target` | 타깃 플랫폼 (`claude` / `codex`) | `claude` |
 
 주의: /kit-validate는 authoring source만 검증한다. `.codex/agents/*.toml` 등 runtime artifact는 대상 아님.
+주의: `kit`은 검증 domain이 아니다. `.claude/commands/kit-*`와 `.claude/skills/kit-*`는 maintenance toolchain이며 product source parity 대상에서 제외한다.
 
 ## Workflow
 
@@ -69,6 +70,8 @@ argument-hint: '[component] [--type <type>] [--domain <domain>] [--target claude
 - [ ] 파일명이 도메인 접두사 포함
 - [ ] 제목 존재 (`# /...`)
 - [ ] Workflow/Phase 섹션 존재
+- [ ] pairing-registry-v2 command entry는 `transitionState`, `primaryCodex`, `codexSkill`, `driftStatus` 필드가 유효
+- [ ] 기존 paired command는 명시 migration 전 `command-primary`로 보존
 
 #### hook 검증
 - [ ] shebang (`#!/usr/bin/env node`) 존재
@@ -112,3 +115,4 @@ argument-hint: '[component] [--type <type>] [--domain <domain>] [--target claude
 - 검증은 읽기 전용이다. 파일을 수정하지 않는다.
 - FAIL 항목이 있으면 총계에 "FAIL" 표시를 강조한다.
 - `--verbose` 시 PASS 항목도 모두 출력한다. 기본은 WARN + FAIL만.
+- `metadata-drift`는 persistent `status` 실패가 아니라 metadata 갱신 후보로 보고한다.

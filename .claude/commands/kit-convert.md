@@ -6,7 +6,7 @@ argument-hint: '[--name <name>] [--type <type>] [--domain <domain>] [--all] [--d
 
 # /kit-convert
 
-Claude 자산을 Codex 형식으로 변환하여 `src/codex/`에 생성하고 pairing-registry를 갱신한다.
+Claude 자산을 Codex 형식으로 변환하여 `src/codex/`에 생성하고 pairing-registry를 갱신한다. command는 항상 command-only로 변환하지 않고 `pairing-registry-v2`의 transition state를 따른다.
 
 > 참조: `.claude/skills/kit-converter/SKILL.md`
 
@@ -64,7 +64,7 @@ Claude 자산을 Codex 형식으로 변환하여 `src/codex/`에 생성하고 pa
 6. 타입별 변환 규칙을 적용한다 (`kit-converter/references/conversion-rules.md` 참조). codex-sync Phase 4 4-tier strategy를 `src/claude/_meta/codex-portability.json`에서 조회:
    - **Skill** (paired-direct): 내용 복사 + "Codex 참고 사항" 섹션 추가 + references/ 복사
    - **Agent** (paired-direct): XML Agent_Prompt → 헤딩 기반 변환 (agent-section-mapping.md 참조)
-   - **Command** (paired-direct): 슬래시 커맨드 → Entry Flow 변환
+   - **Command** (paired-direct): 기본값은 기존 Codex command를 보존하는 `command-primary`이다. skill 전환은 먼저 `dual-output`으로 생성하고 review 후 `skill-primary` 또는 `command-wrapper`로 이동한다.
    - **Hook** (paired-direct / paired-fallback): codex-portability.json strategy 분기:
      - paired-direct: setup.js T18으로 src/codex/ 우선, 없으면 src/claude/ JS 복사 + Codex 등록 주석
      - paired-fallback: fallbackTarget=skill이면 skill artifact 사용 (예: EX-001 session-wrap-suggest), 별도 hook 변환 안 함
@@ -78,6 +78,7 @@ Claude 자산을 Codex 형식으로 변환하여 `src/codex/`에 생성하고 pa
 10. 동기화 메타데이터를 기록한다 (초기 변환 및 `--force` 재변환 모두 적용):
     - `lastSyncedAt`: 현재 시각 (ISO 8601)
     - `contentHash`: Claude source 파일의 raw UTF-8 내용을 SHA-256 해싱 후 앞 8자 hex (`require('crypto').createHash('sha256').update(content,'utf8').digest('hex').slice(0,8)`)
+    - command entry: `transitionState`, `primaryCodex`, `codexSkill`, `driftStatus`
 
 ### Phase 5: 결과 출력
 
@@ -110,3 +111,5 @@ Claude 자산을 Codex 형식으로 변환하여 `src/codex/`에 생성하고 pa
 - review 난이도 파일에 `<!-- REVIEW NEEDED: {사유} -->` 마커.
 - 변환 후 git add 하지 않는다 (사용자 커밋).
 - 변환 중 단일 자산 실패 시 건너뛰고 다음 자산으로 진행 (중단하지 않음).
+- `.claude/commands/kit-*`, `.claude/agents/kit-sync-agent.md`, `.claude/skills/kit-*`는 product migration 대상이 아니다.
+- `src/codex/kit/**`와 `src/claude/kit/**`는 생성하지 않는다.

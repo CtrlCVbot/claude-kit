@@ -5,7 +5,7 @@
 >
 > 이 파일은 **수기 편집 금지**. 재생성: `node scripts/docs-generate.js`
 
-전체 14개. 각 rule 문서의 h1 + 첫 blockquote 에서 추출.
+전체 18개. 각 rule 문서의 h1 + 첫 blockquote 에서 추출.
 
 ## copy 도메인
 
@@ -21,6 +21,7 @@
 
 | Rule | Summary | Source |
 |---|---|---|
+| `Agent File Ownership Matrix` | **결론**: T-RACE-01. 병렬 에이전트 호출 시 파일 편집 race 방지. 파일 유형별 "1 차 작성 / 후속 갱신 / 메인 전담" 3 구분 SSOT. 각 에이전트 프롬프트는 본 룰을 참조하여 편집 범위를 제한한다. | [src/claude/core/rules/agent-file-ownership.md](../../src/claude/core/rules/agent-file-ownership.md) |
 | `Checkpoint 정책` | **결론**: 본 정책은 claude-kit 전반의 **Human Checkpoint** 처리 기준. `autoProceedOnPass: true` 플래그가 활성이고 리뷰 결과가 PASS이면 Checkpoint 자동 통과. 단 Critical 화이트리스트 타입은 플래그 무시하고 항상 정 | [src/claude/core/rules/checkpoint-policy.md](../../src/claude/core/rules/checkpoint-policy.md) |
 | `Coding Style` | — | [src/claude/core/rules/coding-style.md](../../src/claude/core/rules/coding-style.md) |
 | `Date & Time Calculation (CRITICAL)` | — | [src/claude/core/rules/date-calculation.md](../../src/claude/core/rules/date-calculation.md) |
@@ -29,10 +30,18 @@
 | `Security Guidelines` | — | [src/claude/core/rules/security.md](../../src/claude/core/rules/security.md) |
 | `TASK ID 네이밍 표준` | **결론**: IMP-KIT-015. claude-kit 전체에서 TASK ID는 **4패턴** 중 하나를 따른다. 정규식 SSOT + validateTaskId 유틸로 자동 검증. golden-principles #14 참조. | [src/claude/core/rules/task-id-naming.md](../../src/claude/core/rules/task-id-naming.md) |
 | `Verification Before Completion` | Extends Golden Principle #10: Evidence-Based Completion. | [src/claude/core/rules/verification.md](../../src/claude/core/rules/verification.md) |
+| `Writer Agent Output Format (SSOT)` | **결론**: writer 계 에이전트 공통 보고 형식 (T-BRDG-02, IMP-AGENT-012). reviewer 계(IMP-AGENT-002) 표준의 writer 버전. 필수 5 섹션 + 선택 섹션으로 구성하여 사용자 파싱 편의 향상과 핸드오프 일관성을 확보한다. | [src/claude/core/rules/writer-output-format.md](../../src/claude/core/rules/writer-output-format.md) |
 
 ## dev 도메인
 
 | Rule | Summary | Source |
 |---|---|---|
 | `edit-coordinates 스키마 거버넌스` | **결론**: dev-architect → dev-doc-updater 체이닝의 핵심 계약인 `edit-coordinates` JSON 스키마의 SemVer 규칙·검증 절차·변경 절차. IMP-KIT-011. ajv 런타임 검증을 표준화하여 "암묵적 해석"을 "명시적 검증"으로 승격. | [src/claude/dev/rules/edit-coordinates-governance.md](../../src/claude/dev/rules/edit-coordinates-governance.md) |
+
+## plan 도메인
+
+| Rule | Summary | Source |
+|---|---|---|
+| `Epic/Feature/Task 계층 규칙` | **결론**: claude-kit v2.4.0 Hierarchical Plan Structure. Epic(대) / Feature(중) / Task(소) 3단 parent-child 계층. **Opt-in** 도입으로 기존 flat 구조와 100% 호환. Over-engineering  | [src/claude/plan/rules/plan-epic-hierarchy.md](../../src/claude/plan/rules/plan-epic-hierarchy.md) |
+| `RICE Lane 가중 조정 규칙 (SSOT)` | **결론**: T-RICE-01. Raw RICE 공식 판정 대비 Lite/Standard Lane 승격 조건. `plan-idea-screener` 는 본 룰을 직접 참조하여 판정. 사용자 질문 "이 가중은 어디 근거?" 에 대한 답. | [src/claude/plan/rules/rice-lane-weighted-adjustment.md](../../src/claude/plan/rules/rice-lane-weighted-adjustment.md) |
 

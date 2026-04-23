@@ -5,7 +5,7 @@
 >
 > 이 파일은 **수기 편집 금지**. 재생성: `node scripts/docs-generate.js`
 
-전체 46개.
+전체 48개.
 
 ## copy 도메인
 
@@ -18,6 +18,12 @@
 | `/copy-reference-refresh` | 디자인 기준(reference baseline)을 캡처하고, evidence manifest를 생성하거나 갱신한다. | [src/claude/copy/commands/copy-reference-refresh.md](../../src/claude/copy/commands/copy-reference-refresh.md) |
 | `/copy-verify` | 구현 결과를 build, evidence, document 관점에서 종합 검증하고 QA 리포트를 생성한다. | [src/claude/copy/commands/copy-verify.md](../../src/claude/copy/commands/copy-verify.md) |
 | `/copy-visual-review` | 디자인 기준과 구현 사이의 시각적(visual) 갭을 분석하고, VF-* Gap Row를 생성한다. | [src/claude/copy/commands/copy-visual-review.md](../../src/claude/copy/commands/copy-visual-review.md) |
+
+## core 도메인
+
+| Command | Description | Source |
+|---|---|---|
+| `/agent-report` | 에이전트 호출 텔레메트리 집계 리포트 커맨드. | [src/claude/core/commands/agent-report.md](../../src/claude/core/commands/agent-report.md) |
 
 ## dev 도메인
 
@@ -51,7 +57,7 @@
 |---|---|---|
 | `/kit-analyze` | `src/claude/` 자산을 스캔하여 Codex 전환 준비 상태(auto/review/skip)를 분석한다. | [.claude/commands/kit-analyze.md](../../.claude/commands/kit-analyze.md) |
 | `/kit-audit` | 전체 컴포넌트를 대상으로 구조, 네이밍, 필드, 교차 참조 등 6개 카테고리 감사를 수행한다. | [.claude/commands/kit-audit.md](../../.claude/commands/kit-audit.md) |
-| `/kit-convert` | Claude 자산을 Codex 형식으로 변환하여 `src/codex/`에 생성하고 pairing-registry를 갱신한다. | [.claude/commands/kit-convert.md](../../.claude/commands/kit-convert.md) |
+| `/kit-convert` | Claude 자산을 Codex 형식으로 변환하여 `src/codex/`에 생성하고 pairing-registry를 갱신한다. command는 항상 command-only로 변환하지 않고 `pairing-registry-v2`의 transition st | [.claude/commands/kit-convert.md](../../.claude/commands/kit-convert.md) |
 | `/kit-create` | 새 claude-kit 컴포넌트를 표준 패턴에 맞게 생성한다. | [.claude/commands/kit-create.md](../../.claude/commands/kit-create.md) |
 | `/kit-list` | `src/claude/` (및 `src/codex/`) 소스 트리를 스캔하여 전체 컴포넌트 현황을 출력한다. | [.claude/commands/kit-list.md](../../.claude/commands/kit-list.md) |
 | `/kit-sync` | kit-sync-agent를 spawn하여 Claude 자산의 Codex 전환 동기화를 실행한다. | [.claude/commands/kit-sync.md](../../.claude/commands/kit-sync.md) |
@@ -65,6 +71,7 @@
 | `/plan-bridge` | 기획 산출물을 개발 파이프라인으로 넘기기 전에 브리지 컨텍스트와 개발 구조 게이트 상태를 확인한다. | [src/claude/plan/commands/plan-bridge.md](../../src/claude/plan/commands/plan-bridge.md) |
 | `/plan-design` | PRD + Wireframe을 통합하여 Claude Design용 **2단계 프롬프트**(wireframe → high fidelity)를 생성하고, 결과 URL을 등록한다. Hybrid dev Feature 또는 시각 자산이 필요한 copy Feat | [src/claude/plan/commands/plan-design.md](../../src/claude/plan/commands/plan-design.md) |
 | `/plan-draft` | 스크리닝 통과한 아이디어 기반 Feature Overview 1차 생성. Lite/Standard 판정 + 시나리오(A/B/C) + Feature 유형(copy/dev)을 동시 판정하여 파이프라인 경로가 결정됩니다. | [src/claude/plan/commands/plan-draft.md](../../src/claude/plan/commands/plan-draft.md) |
+| `/plan-epic` | Epic 생성, 조회, 상태 전이. claude-kit v2.4.0 Hierarchical Plan Structure 에서 Feature 상위 계층(Epic)을 관리한다. **Opt-in** — Epic 없이도 기존 flat 플로우 완전 호환. | [src/claude/plan/commands/plan-epic.md](../../src/claude/plan/commands/plan-epic.md) |
 | `/plan-idea` | 아이디어 등록, 조회, 관리. 사용자의 아이디어를 구조화하여 `.plans/ideas/00-inbox/IDEA-{YYYYMMDD}-{NNN}.md` 개별 파일로 등록합니다. | [src/claude/plan/commands/plan-idea.md](../../src/claude/plan/commands/plan-idea.md) |
 | `/plan-improve` | 아카이브된 기능에 대한 개선요청을 등록하고 분석한다. | [src/claude/plan/commands/plan-improve.md](../../src/claude/plan/commands/plan-improve.md) |
 | `/plan-prd` | PRD 상세 작성. First-Pass 문서를 기반으로 10개 섹션의 상세 PRD를 생성합니다. 시나리오 C(충실도 교정)에서는 2-pass 모드를 지원합니다. | [src/claude/plan/commands/plan-prd.md](../../src/claude/plan/commands/plan-prd.md) |

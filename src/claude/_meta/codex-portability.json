@@ -96,8 +96,8 @@
       ],
       "fallbackTarget": null,
       "claudeSource": "src/claude/core/hooks/code-quality-reminder.js",
-      "codexSource": null,
-      "confidence": "검증 필요 (공식 문서 확인 2026-04-15: Edit|Write matcher 미동작 on Codex)"
+      "codexSource": "src/codex/core/hooks/code-quality-reminder.js",
+      "confidence": "metadata aligned (Codex source exists; runtime matcher still 검증 필요)"
     },
     {
       "identity": "security-auto-trigger",
@@ -111,8 +111,8 @@
       ],
       "fallbackTarget": null,
       "claudeSource": "src/claude/core/hooks/security-auto-trigger.js",
-      "codexSource": null,
-      "confidence": "검증 필요 (공식 문서 확인 2026-04-15: Edit|Write matcher 미동작 on Codex)"
+      "codexSource": "src/codex/core/hooks/security-auto-trigger.js",
+      "confidence": "metadata aligned (Codex source exists; runtime matcher still 검증 필요)"
     },
     {
       "identity": "edit-tracker",
@@ -126,8 +126,8 @@
       ],
       "fallbackTarget": null,
       "claudeSource": "src/claude/core/hooks/edit-tracker.js",
-      "codexSource": null,
-      "confidence": "검증 필요 (공식 문서 확인 2026-04-15: Edit|Write matcher 미동작 on Codex)"
+      "codexSource": "src/codex/core/hooks/edit-tracker.js",
+      "confidence": "metadata aligned (Codex source exists; runtime matcher still 검증 필요)"
     },
     {
       "identity": "dev-db-guard",
@@ -141,8 +141,8 @@
       ],
       "fallbackTarget": null,
       "claudeSource": "src/claude/dev/hooks/dev-db-guard.js",
-      "codexSource": null,
-      "confidence": "확정 (Phase 4 — Bash 매처가 공식 범위)"
+      "codexSource": "src/codex/dev/hooks/dev-db-guard.js",
+      "confidence": "metadata aligned (Codex source exists; Bash matcher 공식 범위)"
     },
     {
       "identity": "dev-tdd-guard",
@@ -156,8 +156,8 @@
       ],
       "fallbackTarget": null,
       "claudeSource": "src/claude/dev/hooks/dev-tdd-guard.js",
-      "codexSource": null,
-      "confidence": "검증 필요 (공식 문서 확인 2026-04-15: Edit|Write matcher 미동작 on Codex)"
+      "codexSource": "src/codex/dev/hooks/dev-tdd-guard.js",
+      "confidence": "metadata aligned (Codex source exists; runtime matcher still 검증 필요)"
     },
     {
       "identity": "dev-feature-scope-guard",
@@ -171,8 +171,8 @@
       ],
       "fallbackTarget": null,
       "claudeSource": "src/claude/dev/hooks/dev-feature-scope-guard.js",
-      "codexSource": null,
-      "confidence": "검증 필요 (공식 문서 확인 2026-04-15: Edit|Write matcher 미동작 on Codex)"
+      "codexSource": "src/codex/dev/hooks/dev-feature-scope-guard.js",
+      "confidence": "metadata aligned (Codex source exists; runtime matcher still 검증 필요)"
     },
     {
       "identity": "plan-doc-guard",
@@ -186,8 +186,8 @@
       ],
       "fallbackTarget": null,
       "claudeSource": "src/claude/plan/hooks/plan-doc-guard.js",
-      "codexSource": null,
-      "confidence": "검증 필요 (공식 문서 확인 2026-04-15: Edit|Write matcher 미동작 on Codex)"
+      "codexSource": "src/codex/plan/hooks/plan-doc-guard.js",
+      "confidence": "metadata aligned (Codex source exists; runtime matcher still 검증 필요)"
     },
     {
       "identity": "security-no-hardcoded-secrets",

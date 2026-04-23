@@ -7,14 +7,14 @@ description: |
 
 # kit-converter
 
-기존 `src/claude/` 자산을 `src/codex/` 대응 자산으로 변환한다. authoring source 변환이며, runtime artifact(.toml, hooks.json) 생성은 setup/emitter 단계에서 처리한다.
+기존 `src/claude/` 자산을 `src/codex/` 대응 자산으로 변환한다. authoring source 변환이며, runtime artifact(.toml, hooks.json) 생성은 setup/emitter 단계에서 처리한다. `kit-*` maintenance toolchain 자체는 product asset이 아니므로 `src/codex/kit/**`로 변환하지 않는다.
 
 ## 변환 결정 매트릭스
 
 | Claude 타입 | Codex 결과 | Codex 경로 | 상태 |
 |-------------|-----------|-----------|------|
 | agent | heading-based .md | `src/codex/{domain}/agents/{identity}.md` | required sibling |
-| command | Entry Flow .md | `src/codex/{domain}/commands/{identity}.md` | required sibling |
+| command | target selection | `src/codex/{domain}/commands/{identity}.md` 또는 `src/codex/{domain}/skills/{identity}/SKILL.md` | transition-state 기반 |
 | skill | portable .md | `src/codex/{domain}/skills/{identity}/SKILL.md` | optional sibling |
 | hook | .js + 등록 주석 | `src/codex/{domain}/hooks/{identity}.js` | optional sibling |
 | rule | N/A | None | paired-fallback (AGENTS.md.template inline merge — discrete sibling 없음, exception-registry status=resolved로 추적) |
@@ -44,10 +44,23 @@ description: |
 1. Claude 소스 파일 읽기
 2. skip-registry 확인 → 등록된 identity면 건너뛰기
 3. 타입 판별 + 난이도 분류
-4. 타입별 변환 규칙 적용 (`references/conversion-rules.md`)
-5. Codex 경로에 파일 생성
-6. pairing-registry.json 갱신
-7. 결과 리포트
+4. command는 먼저 `command-primary`, `dual-output`, `skill-primary`, `command-wrapper`, `deprecated-command` 중 target state를 판정한다.
+5. 타입별 변환 규칙 적용 (`references/conversion-rules.md`)
+6. Codex 경로에 파일 생성
+7. pairing-registry.json 갱신
+8. 결과 리포트
+
+## command target selection
+
+| 상태 | 처리 |
+|------|------|
+| `command-primary` | 기존 `src/codex/**/commands/*.md`를 유지한다. 기존 paired command의 기본값이다. |
+| `dual-output` | 기존 command path를 보존하고 linked skill source를 추가한다. |
+| `skill-primary` | review 승인 후 skill을 primary로 두고 command output 제거 또는 보존 정책을 명시한다. |
+| `command-wrapper` | command는 얇은 wrapper로 유지하고 실제 workflow는 skill로 이동한다. |
+| `deprecated-command` | 호환성 공지 또는 removal note가 있을 때만 사용한다. |
+
+command를 skill로 전환할 때 기존 paired command를 즉시 missing/drift로 판정하면 안 된다. `pairing-registry-v2`의 `transitionState`, `primaryCodex`, `codexSkill`, `driftStatus`를 먼저 갱신한다.
 
 ## 참조
 

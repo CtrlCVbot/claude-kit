@@ -25,6 +25,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const { mergeSettings } = require('./merge-settings');
 const { filterCodexHooks, getPortability } = require('./codex-hook-compat');
 const { renderQuickStart } = require('./quickstart-renderer');
@@ -38,6 +39,7 @@ const TEMPLATES  = path.join(SRC_BASE, 'templates');
 
 const COMPONENT_DIRS = ['agents', 'commands', 'skills', 'hooks', 'rules'];
 const CODEX_COMPONENT_DIRS = ['agents', 'commands', 'skills'];
+const VALID_DOMAINS = ['core', 'dev', 'plan', 'copy'];
 
 // codex-sync cross-phase review CC2: --dry-run 플래그 (T18 검증 등 dynamic verification)
 const DRY_RUN = process.argv.includes('--dry-run');
@@ -85,6 +87,19 @@ function printDryRunSummary(projectRoot, activeDomains, activeTargets) {
     }
   }
 
+  const directUsePreview = previewCodexDirectUse(projectRoot, activeDomains);
+  console.log('\n=== Codex direct-use output preview ===\n');
+  console.log(`repo-local skills: ${directUsePreview.skills} → .agents/skills/**`);
+  console.log(`repo-local agents: ${directUsePreview.agents} → .codex/agents/*.toml`);
+  if (directUsePreview.conflicts.length > 0) {
+    console.log(`conflicts (${directUsePreview.conflicts.length}):`);
+    for (const conflict of directUsePreview.conflicts) {
+      console.log(`  - ${conflict.path}: ${conflict.reason} (${conflict.source})`);
+    }
+  } else {
+    console.log('conflicts: 0');
+  }
+
   console.log('\n[DRY-RUN] 완료. --dry-run 제거 시 실제 설치.');
 }
 
@@ -117,11 +132,11 @@ function main() {
 
     // --- Codex emitter ---
     if (activeTargets.includes('codex')) {
-      const { counts, byDomain, skipped, agentsMdStatus } = emitCodex(projectRoot, activeDomains);
+      const { counts, byDomain, skipped, agentsMdStatus, directUse } = emitCodex(projectRoot, activeDomains);
       allCounts.codex = counts;
       allByDomain.codex = byDomain;
       codexSkipped.push(...skipped);
-      outputStatuses.codex = { agentsMdStatus };
+      outputStatuses.codex = { agentsMdStatus, directUse };
     }
 
     processQuickStartTemplate(projectRoot, activeDomains, activeTargets);
@@ -180,6 +195,8 @@ function resolveActiveDomains(projectRoot) {
       // profile.json 파싱 실패 시 기본값 사용
     }
   }
+
+  domains = domains.filter(domain => VALID_DOMAINS.includes(domain));
 
   if (!domains.includes('core')) {
     domains.unshift('core');
@@ -287,6 +304,387 @@ function copyDirRecursive(src, dest) {
       copyDirRecursive(srcEntry, destEntry);
     } else {
       fs.copyFileSync(srcEntry, destEntry);
+    }
+  }
+}
+
+function toPosix(filePath) {
+  return filePath.split(path.sep).join('/');
+}
+
+function relativeToRoot(filePath) {
+  return toPosix(path.relative(path.resolve(__dirname, '..'), filePath));
+}
+
+function relativeToProject(projectRoot, filePath) {
+  return toPosix(path.relative(projectRoot, filePath));
+}
+
+function normalizeManagedBody(content) {
+  return content.endsWith('\n') ? content : `${content}\n`;
+}
+
+function hashContent(content) {
+  const hash = crypto.createHash('sha256');
+  if (Buffer.isBuffer(content)) {
+    hash.update(content);
+  } else {
+    hash.update(String(content), 'utf8');
+  }
+  return hash.digest('hex');
+}
+
+function hashFile(filePath) {
+  return hashContent(fs.readFileSync(filePath));
+}
+
+function sourceTextHash(content) {
+  return hashContent(normalizeManagedBody(content));
+}
+
+function findFrontmatterEnd(content) {
+  const match = content.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/);
+  return match ? match[0].length : 0;
+}
+
+function parseManagedContent(content) {
+  const html = content.match(/^<!-- kit:managed source=(.*?) hash=([a-f0-9]+) -->\r?\n?/);
+  if (html) {
+    return {
+      style: 'html',
+      source: html[1],
+      hash: html[2],
+      body: content.slice(html[0].length),
+    };
+  }
+
+  const frontmatterEnd = findFrontmatterEnd(content);
+  if (frontmatterEnd > 0) {
+    const frontmatter = content.slice(0, frontmatterEnd);
+    const rest = content.slice(frontmatterEnd);
+    const afterFrontmatter = rest.match(/^<!-- kit:managed source=(.*?) hash=([a-f0-9]+) -->\r?\n?/);
+    if (afterFrontmatter) {
+      return {
+        style: 'html',
+        source: afterFrontmatter[1],
+        hash: afterFrontmatter[2],
+        body: frontmatter + rest.slice(afterFrontmatter[0].length),
+      };
+    }
+  }
+
+  const hash = content.match(/^# kit:managed source=(.*?) hash=([a-f0-9]+)\r?\n?/);
+  if (hash) {
+    return {
+      style: 'hash',
+      source: hash[1],
+      hash: hash[2],
+      body: content.slice(hash[0].length),
+    };
+  }
+
+  return null;
+}
+
+function renderManagedContent(sourceRel, body, style = 'html') {
+  const normalized = normalizeManagedBody(body);
+  const hash = hashContent(normalized);
+  const marker = style === 'hash'
+    ? `# kit:managed source=${sourceRel} hash=${hash}\n`
+    : `<!-- kit:managed source=${sourceRel} hash=${hash} -->\n`;
+
+  if (style === 'html') {
+    const frontmatterEnd = findFrontmatterEnd(normalized);
+    if (frontmatterEnd > 0) {
+      return normalized.slice(0, frontmatterEnd) + marker + normalized.slice(frontmatterEnd);
+    }
+  }
+
+  return marker + normalized;
+}
+
+function isManagedContentClean(content) {
+  const parsed = parseManagedContent(content);
+  if (!parsed) return false;
+  return hashContent(normalizeManagedBody(parsed.body)) === parsed.hash;
+}
+
+function recordDirectUseOutput(state, record) {
+  if (!state || !state.manifest) return;
+  state.manifest.push(record);
+}
+
+function recordManagedConflict(projectRoot, destPath, sourceRel, state, reason, options = {}) {
+  const relDest = relativeToProject(projectRoot, destPath);
+  const conflict = {
+    path: relDest,
+    source: sourceRel,
+    reason,
+    recommendedAction: 'preserve user file and review manually',
+  };
+  if (options.sourceHash) conflict.sourceHash = options.sourceHash;
+  state.conflicts.push(conflict);
+  recordDirectUseOutput(state, {
+    path: relDest,
+    kind: options.kind || 'direct-use',
+    source: sourceRel,
+    sourceHash: options.sourceHash || null,
+    outputHash: fs.existsSync(destPath) ? hashFile(destPath) : null,
+    status: 'conflict',
+    reason,
+  });
+}
+
+function writeManagedTextFile(projectRoot, destPath, sourceRel, body, state, style = 'html', options = {}) {
+  const relDest = relativeToProject(projectRoot, destPath);
+  const outputHash = sourceTextHash(body);
+  const sourceHash = options.sourceHash || outputHash;
+  const kind = options.kind || 'direct-use';
+
+  if (fs.existsSync(destPath)) {
+    const existing = fs.readFileSync(destPath, 'utf8');
+    const parsed = parseManagedContent(existing);
+    if (!parsed) {
+      recordManagedConflict(projectRoot, destPath, sourceRel, state, 'managed marker missing', { kind, sourceHash });
+      return false;
+    }
+    if (!isManagedContentClean(existing)) {
+      recordManagedConflict(projectRoot, destPath, sourceRel, state, 'managed output was edited after generation', { kind, sourceHash });
+      return false;
+    }
+  }
+
+  fs.mkdirSync(path.dirname(destPath), { recursive: true });
+  fs.writeFileSync(destPath, renderManagedContent(sourceRel, body, style));
+  state.generated.push(relDest);
+  recordDirectUseOutput(state, {
+    path: relDest,
+    kind,
+    source: sourceRel,
+    sourceHash,
+    outputHash,
+    status: 'generated',
+  });
+  return true;
+}
+
+function canUseManagedTextMarker(filePath) {
+  return ['.md', '.mdx'].includes(path.extname(filePath).toLowerCase());
+}
+
+function copyManagedExactFile(projectRoot, sourcePath, destPath, sourceRel, state, kind) {
+  const relDest = relativeToProject(projectRoot, destPath);
+  const sourceHash = hashFile(sourcePath);
+
+  if (fs.existsSync(destPath)) {
+    const outputHash = hashFile(destPath);
+    if (outputHash !== sourceHash) {
+      recordManagedConflict(projectRoot, destPath, sourceRel, state, 'managed support file differs from source', {
+        kind,
+        sourceHash,
+      });
+      return false;
+    }
+
+    state.preserved.push(relDest);
+    recordDirectUseOutput(state, {
+      path: relDest,
+      kind,
+      source: sourceRel,
+      sourceHash,
+      outputHash,
+      status: 'preserved',
+    });
+    return false;
+  }
+
+  fs.mkdirSync(path.dirname(destPath), { recursive: true });
+  fs.copyFileSync(sourcePath, destPath);
+  state.generated.push(relDest);
+  recordDirectUseOutput(state, {
+    path: relDest,
+    kind,
+    source: sourceRel,
+    sourceHash,
+    outputHash: sourceHash,
+    status: 'generated',
+  });
+  return true;
+}
+
+function copyManagedSkillSupportFiles(src, dest, projectRoot, state) {
+  if (!fs.existsSync(src)) return;
+  fs.mkdirSync(dest, { recursive: true });
+
+  for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
+    const srcEntry = path.join(src, entry.name);
+    const destEntry = path.join(dest, entry.name);
+
+    if (entry.isDirectory()) {
+      copyManagedSkillSupportFiles(srcEntry, destEntry, projectRoot, state);
+      continue;
+    }
+
+    if (entry.name === 'SKILL.md') continue;
+
+    const sourceRel = relativeToRoot(srcEntry);
+    if (canUseManagedTextMarker(srcEntry)) {
+      const body = fs.readFileSync(srcEntry, 'utf8');
+      writeManagedTextFile(projectRoot, destEntry, sourceRel, body, state, 'html', {
+        kind: 'skill-support',
+        sourceHash: sourceTextHash(body),
+      });
+    } else {
+      copyManagedExactFile(projectRoot, srcEntry, destEntry, sourceRel, state, 'skill-support');
+    }
+  }
+}
+
+function stripCodexGeneratedHeaderComments(source) {
+  return source
+    .replace(/^(?:<!-- kit-convert generated:.*?-->\r?\n)+/, '')
+    .replace(/^(?:<!-- REVIEW NEEDED:.*?-->\r?\n)+/, '')
+    .trimStart();
+}
+
+function buildCodexSkillOutput(sourcePath) {
+  return normalizeManagedBody(stripCodexGeneratedHeaderComments(fs.readFileSync(sourcePath, 'utf8')).trimEnd());
+}
+
+function copyCodexSkillDirectory(sourceDir, destDir) {
+  copyDirRecursive(sourceDir, destDir);
+  const sourceSkill = path.join(sourceDir, 'SKILL.md');
+  const destSkill = path.join(destDir, 'SKILL.md');
+  if (fs.existsSync(sourceSkill)) {
+    fs.writeFileSync(destSkill, buildCodexSkillOutput(sourceSkill));
+  }
+}
+
+function listCodexComponentEntries(domain, category) {
+  const entries = new Map();
+  addComponentEntries(entries, path.join(SRC_CODEX, domain, category), category, SRC_CODEX, domain);
+  return [...entries.values()].sort((a, b) => a.identity.localeCompare(b.identity));
+}
+
+function addComponentEntries(merged, sourceDir, category, root, domain) {
+  if (!fs.existsSync(sourceDir)) return;
+
+  if (category === 'skills') {
+    for (const entry of fs.readdirSync(sourceDir, { withFileTypes: true })) {
+      if (!entry.isDirectory()) continue;
+      const skillMd = path.join(sourceDir, entry.name, 'SKILL.md');
+      if (!fs.existsSync(skillMd)) continue;
+      merged.set(entry.name, {
+        domain,
+        category,
+        identity: entry.name,
+        sourceRoot: root,
+        sourceDir: path.join(sourceDir, entry.name),
+        sourcePath: skillMd,
+        sourceRel: relativeToRoot(skillMd),
+      });
+    }
+    return;
+  }
+
+  for (const file of fs.readdirSync(sourceDir)) {
+    if (!file.endsWith('.md')) continue;
+    const identity = path.basename(file, '.md');
+    const sourcePath = path.join(sourceDir, file);
+    merged.set(identity, {
+      domain,
+      category,
+      identity,
+      sourceRoot: root,
+      sourceDir,
+      sourcePath,
+      sourceRel: relativeToRoot(sourcePath),
+    });
+  }
+}
+
+function collectCodexDirectUseSources(activeDomains) {
+  const skills = [];
+  const agents = [];
+
+  for (const domain of activeDomains) {
+    skills.push(...listCodexComponentEntries(domain, 'skills'));
+    agents.push(...listCodexComponentEntries(domain, 'agents'));
+  }
+
+  return { skills, agents };
+}
+
+function previewCodexDirectUse(projectRoot, activeDomains) {
+  const { skills, agents } = collectCodexDirectUseSources(activeDomains);
+  const conflicts = [];
+
+  for (const skill of skills) {
+    const dest = path.join(projectRoot, '.agents', 'skills', skill.identity, 'SKILL.md');
+    collectManagedPreviewConflict(projectRoot, dest, skill.sourceRel, conflicts);
+    collectManagedSkillSupportPreviewConflicts(projectRoot, skill.sourceDir, path.join(projectRoot, '.agents', 'skills', skill.identity), conflicts);
+  }
+
+  for (const agent of agents) {
+    const dest = path.join(projectRoot, '.codex', 'agents', `${agent.identity}.toml`);
+    collectManagedPreviewConflict(projectRoot, dest, agent.sourceRel, conflicts);
+  }
+
+  return {
+    skills: skills.length,
+    agents: agents.length,
+    conflicts,
+  };
+}
+
+function collectManagedPreviewConflict(projectRoot, destPath, sourceRel, conflicts) {
+  if (!fs.existsSync(destPath)) return;
+  const existing = fs.readFileSync(destPath, 'utf8');
+  const parsed = parseManagedContent(existing);
+  if (!parsed) {
+    conflicts.push({
+      path: relativeToProject(projectRoot, destPath),
+      source: sourceRel,
+      reason: 'managed marker missing',
+    });
+    return;
+  }
+  if (!isManagedContentClean(existing)) {
+    conflicts.push({
+      path: relativeToProject(projectRoot, destPath),
+      source: sourceRel,
+      reason: 'managed output was edited after generation',
+    });
+  }
+}
+
+function collectManagedSkillSupportPreviewConflicts(projectRoot, src, dest, conflicts) {
+  if (!fs.existsSync(src)) return;
+
+  for (const entry of fs.readdirSync(src, { withFileTypes: true })) {
+    const srcEntry = path.join(src, entry.name);
+    const destEntry = path.join(dest, entry.name);
+
+    if (entry.isDirectory()) {
+      collectManagedSkillSupportPreviewConflicts(projectRoot, srcEntry, destEntry, conflicts);
+      continue;
+    }
+
+    if (entry.name === 'SKILL.md') continue;
+    if (!fs.existsSync(destEntry)) continue;
+
+    const sourceRel = relativeToRoot(srcEntry);
+    if (canUseManagedTextMarker(srcEntry)) {
+      collectManagedPreviewConflict(projectRoot, destEntry, sourceRel, conflicts);
+      continue;
+    }
+
+    if (hashFile(destEntry) !== hashFile(srcEntry)) {
+      conflicts.push({
+        path: relativeToProject(projectRoot, destEntry),
+        source: sourceRel,
+        reason: 'managed support file differs from source',
+      });
     }
   }
 }
@@ -630,39 +1028,47 @@ function emitCodex(projectRoot, activeDomains) {
   const pluginRoot = path.join(projectRoot, 'plugins', 'claude-kit');
   const templateDir = TEMPLATES;
   const vars = resolveVariables(projectRoot);
+  const directUseState = { generated: [], preserved: [], conflicts: [], manifest: [] };
+  // Direct Codex surfaces are emitted only from src/codex. Claude fallback is
+  // not enabled until an explicit exception/approval path exists.
+  const byDomain = {};
 
   // 1. 디렉토리 생성
   for (const dir of CODEX_COMPONENT_DIRS) {
-    fs.mkdirSync(path.join(pluginRoot, dir), { recursive: true });
+    const generatedDir = path.join(pluginRoot, dir);
+    fs.rmSync(generatedDir, { recursive: true, force: true });
+    fs.mkdirSync(generatedDir, { recursive: true });
   }
   fs.mkdirSync(path.join(pluginRoot, '.codex-plugin'), { recursive: true });
+  fs.mkdirSync(path.join(projectRoot, '.agents', 'skills'), { recursive: true });
+  fs.mkdirSync(path.join(projectRoot, '.codex', 'agents'), { recursive: true });
 
   // 2. 자산 복사 (skills, commands, agents만 — hooks, rules 제외)
-  const byDomain = {};
   for (const domain of activeDomains) {
     byDomain[domain] = {};
     byDomain[domain].hooks = 0;
-    const srcDomainDir = path.join(SRC_CLAUDE, domain);
-
-    if (!fs.existsSync(srcDomainDir)) {
-      for (const cat of CODEX_COMPONENT_DIRS) {
-        byDomain[domain][cat] = 0;
-      }
-      continue;
-    }
 
     for (const category of CODEX_COMPONENT_DIRS) {
-      const srcPath = path.join(srcDomainDir, category);
-      if (!fs.existsSync(srcPath)) {
+      const entries = listCodexComponentEntries(domain, category);
+      if (entries.length === 0) {
         byDomain[domain][category] = 0;
         continue;
       }
 
       const destPath = path.join(pluginRoot, category);
-      copyDirRecursive(srcPath, destPath);
-      byDomain[domain][category] = countFiles(srcPath, category);
+      for (const entry of entries) {
+        if (category === 'skills') {
+          copyCodexSkillDirectory(entry.sourceDir, path.join(destPath, entry.identity));
+        } else {
+          fs.mkdirSync(destPath, { recursive: true });
+          fs.copyFileSync(entry.sourcePath, path.join(destPath, path.basename(entry.sourcePath)));
+        }
+      }
+      byDomain[domain][category] = entries.length;
     }
   }
+
+  emitCodexDirectUse(projectRoot, activeDomains, directUseState);
 
   // 3. hooks.json 생성 + 호환 hook JS 파일 복사
   // T18 (codex-sync Phase 4): paired-direct hook은 src/codex/ 우선 소스로 사용
@@ -749,7 +1155,83 @@ function emitCodex(projectRoot, activeDomains) {
   }
   counts.hooks = compatible.length;
 
-  return { counts, byDomain, skipped, agentsMdStatus };
+  return { counts, byDomain, skipped, agentsMdStatus, directUse: directUseState };
+}
+
+function emitCodexDirectUse(projectRoot, activeDomains, state) {
+  const { skills, agents } = collectCodexDirectUseSources(activeDomains);
+
+  for (const skill of skills) {
+    const destDir = path.join(projectRoot, '.agents', 'skills', skill.identity);
+    const destSkill = path.join(destDir, 'SKILL.md');
+    const body = buildCodexSkillOutput(skill.sourcePath);
+    const wrote = writeManagedTextFile(projectRoot, destSkill, skill.sourceRel, body, state, 'html', {
+      kind: 'skill',
+      sourceHash: hashFile(skill.sourcePath),
+    });
+    if (wrote) {
+      copyManagedSkillSupportFiles(skill.sourceDir, destDir, projectRoot, state);
+    }
+  }
+
+  for (const agent of agents) {
+    const destAgent = path.join(projectRoot, '.codex', 'agents', `${agent.identity}.toml`);
+    const sourceHash = hashFile(agent.sourcePath);
+    const body = buildCodexAgentToml(agent.sourcePath, agent.identity);
+    writeManagedTextFile(projectRoot, destAgent, agent.sourceRel, body, state, 'hash', {
+      kind: 'agent',
+      sourceHash,
+    });
+  }
+}
+
+function buildCodexAgentToml(sourcePath, identity) {
+  const source = fs.readFileSync(sourcePath, 'utf8');
+  const cleaned = stripCodexGeneratedHeaderComments(source).trim();
+  const name = identity.replace(/-/g, '_');
+  const description = extractAgentDescription(cleaned, identity);
+  const instructions = extractAgentInstructions(cleaned);
+  const lines = [
+    `name = ${tomlString(name)}`,
+    `description = ${tomlString(description)}`,
+  ];
+
+  if (isReadOnlyAgent(cleaned)) {
+    lines.push('sandbox_mode = "read-only"');
+  }
+
+  lines.push(`developer_instructions = ${tomlMultilineString(instructions)}`);
+  return `${lines.join('\n')}\n`;
+}
+
+function extractAgentDescription(markdown, identity) {
+  const afterHeading = markdown.replace(new RegExp(`^#\\s+${escapeRegExp(identity)}\\s*\\r?\\n?`), '').trim();
+  const sectionIndex = afterHeading.search(/\r?\n##\s+/);
+  const lead = sectionIndex >= 0 ? afterHeading.slice(0, sectionIndex).trim() : afterHeading;
+  const firstParagraph = lead.split(/\r?\n\s*\r?\n/).map(s => s.trim()).find(Boolean);
+  return firstParagraph || `${identity} custom agent.`;
+}
+
+function extractAgentInstructions(markdown) {
+  return markdown
+    .replace(/^#\s+.+\r?\n?/, '')
+    .trim() || markdown.trim();
+}
+
+function isReadOnlyAgent(markdown) {
+  return /읽기 전용|read-only|Write\s+또는\s+Edit\s+도구를\s+절대\s+사용하지\s+않음/i.test(markdown);
+}
+
+function tomlString(value) {
+  return JSON.stringify(String(value));
+}
+
+function tomlMultilineString(value) {
+  return `"""\n${String(value).replace(/"""/g, '\\"\\"\\"')}\n"""`;
+}
+
+function escapeRegExp(str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 function collectHookFiles(activeDomains) {
@@ -904,14 +1386,23 @@ function writeMetadata(projectRoot, mode, allCounts, allByDomain, activeDomains,
 
   // Codex 출력 정보
   if (activeTargets.includes('codex')) {
+    const directUse = outputStatuses.codex && outputStatuses.codex.directUse
+      ? outputStatuses.codex.directUse
+      : { generated: [], preserved: [], conflicts: [], manifest: [] };
     updated.outputs.codex = {
       root: 'plugins/claude-kit',
       generated: [
         'AGENTS.md',
+        '.agents/skills/**',
+        '.codex/agents/*.toml',
         'plugins/claude-kit/.codex-plugin/plugin.json',
         '.agents/plugins/marketplace.json',
         'plugins/claude-kit/hooks.json'
-      ]
+      ],
+      directUseGenerated: directUse.generated,
+      directUsePreserved: directUse.preserved,
+      directUseConflicts: directUse.conflicts,
+      directUseManifest: directUse.manifest || []
     };
   }
 
@@ -965,7 +1456,7 @@ function printResult(mode, allCounts, activeDomains, activeTargets, outputStatus
   for (const target of activeTargets) {
     const counts = allCounts[target] || {};
     const total = Object.values(counts).reduce((a, b) => a + b, 0);
-    const targetLabel = target === 'claude' ? 'Claude (.claude/)' : 'Codex (plugins/claude-kit/)';
+    const targetLabel = target === 'claude' ? 'Claude (.claude/)' : 'Codex (plugins/claude-kit + direct-use)';
 
     console.log(`\nclaude-kit v${version} ${verb} [${targetLabel}]`);
     console.log(`  ${counts.agents || 0} agents, ${counts.commands || 0} commands, ${counts.skills || 0} skills, ${counts.hooks || 0} hooks, ${counts.rules || 0} rules`);
@@ -973,6 +1464,8 @@ function printResult(mode, allCounts, activeDomains, activeTargets, outputStatus
 
     if (target === 'codex' && outputStatuses.codex) {
       console.log(`  AGENTS.md: ${outputStatuses.codex.agentsMdStatus}`);
+      const directUse = outputStatuses.codex.directUse || { generated: [], conflicts: [] };
+      console.log(`  direct-use generated: ${directUse.generated.length}, conflicts: ${directUse.conflicts.length}`);
     }
   }
 

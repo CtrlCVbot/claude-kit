@@ -106,9 +106,9 @@ ${exceptions.entries.map(e => `| ${e.id} | ${e.component} | ${e.type || '-'} | $
 
 ## 6. Pairing Registry
 
-| Identity | Type | Status | Claude | Codex |
-|----------|------|--------|--------|-------|
-${pairing ? pairing.entries.map(e => `| ${e.identity} | ${e.type} | ${e.status} | ${e.claude || '-'} | ${e.codex || '-'} |`).join('\n') : '(없음)'}
+| Identity | Type | Status | PrimaryCodex | Transition | Drift | Claude | Codex | CodexSkill |
+|----------|------|--------|--------------|------------|-------|--------|-------|------------|
+${pairing ? pairing.entries.map(e => `| ${e.identity} | ${e.type} | ${e.status} | ${e.primaryCodex || '-'} | ${e.transitionState || '-'} | ${e.driftStatus || '-'} | ${e.claude || '-'} | ${e.codex || '-'} | ${e.codexSkill || '-'} |`).join('\n') : '(없음)'}
 
 ## 7. 최근 codex-sync Commits
 

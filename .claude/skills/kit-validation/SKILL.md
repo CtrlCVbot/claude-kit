@@ -36,7 +36,7 @@ description: |
 |---|--------|------|-----------|
 | 10 | schema-exception-registry.md | `src/exception-registry.json` | $schema, entries, 필수 필드, id 형식, status enum (active/resolved/expired/revoked), Phase 1 SSOT 필드 (strategy/officialSurface/evidenceLevel/docConstraints/fallbackTarget), 조건부 무결성 (paired-direct sibling 존재, paired-fallback fallbackTarget 필수, hooks platform 제약), Phase 2 artifact 무결성 (paired-fallback resolved + agents_md → AGENTS.md.template h3 존재 검증), Phase 3 hook fallback artifact 무결성 (paired-fallback resolved + skill fallbackTarget → src/claude/{domain}/skills/{component}/SKILL.md 존재 검증), policy-review-pending INFO |
 | 11 | schema-codex-portability.md | `src/claude/_meta/codex-portability.json` | $schema=codex-portability-v1, vocabulary 4 enum 일치, 15 entries 필드 (identity/type/strategy/officialSurface/evidenceLevel/fallbackTarget), exception-registry cross-check, codexSource 파일 존재 (paired-direct), Phase 5 신규 (codex-sync cross-phase review CC5) |
-| 12 | schema-pairing-registry.md | `src/pairing-registry.json` | $schema=pairing-registry-v1, entries type/status/domain enum, paired sibling 파일 존재, codex-skip reason 필수, codex-native-only claude=null, codex-sync Phase 4 vocabulary mapping cross-check, Phase 5 신규 (codex-sync cross-phase review CC5) |
+| 12 | schema-pairing-registry.md | `src/pairing-registry.json` | $schema=pairing-registry-v1/v2, entries type/status/domain enum, v2 transitionState/primaryCodex/driftStatus 검증, paired sibling 파일 존재, codex-skip reason 필수, codex-native-only claude=null, codex-sync vocabulary mapping cross-check |
 
 ## 검증 수준
 

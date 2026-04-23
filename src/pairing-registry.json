@@ -1,6 +1,6 @@
 {
-  "$schema": "pairing-registry-v1",
-  "description": "Claude/Codex 자산 페어링 상태 추적. /kit-create가 자동 갱신, /kit-audit C7이 검증.",
+  "$schema": "pairing-registry-v2",
+  "description": "Claude/Codex asset pairing registry. /kit-create updates it and /kit-audit C7 validates it. v2 separates command transition metadata and drift metadata from persistent status.",
   "entries": [
     {
       "identity": "output-secret-filter",
@@ -10,7 +10,9 @@
       "reason": null,
       "claude": "src/claude/core/hooks/output-secret-filter.js",
       "codex": "src/codex/core/hooks/output-secret-filter.js",
-      "createdAt": "2026-04-10T00:00:00.000Z"
+      "createdAt": "2026-04-10T00:00:00.000Z",
+      "primaryCodex": "hook",
+      "driftStatus": null
     },
     {
       "identity": "continuous-learning",
@@ -20,7 +22,9 @@
       "reason": null,
       "claude": "src/claude/core/skills/continuous-learning/SKILL.md",
       "codex": "src/codex/core/skills/continuous-learning/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "session-wrap",
@@ -30,7 +34,9 @@
       "reason": null,
       "claude": "src/claude/core/skills/session-wrap/SKILL.md",
       "codex": "src/codex/core/skills/session-wrap/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "dev-domain-modeling",
@@ -40,7 +46,9 @@
       "reason": null,
       "claude": "src/claude/dev/skills/dev-domain-modeling/SKILL.md",
       "codex": "src/codex/dev/skills/dev-domain-modeling/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "dev-observability",
@@ -50,7 +58,9 @@
       "reason": null,
       "claude": "src/claude/dev/skills/dev-observability/SKILL.md",
       "codex": "src/codex/dev/skills/dev-observability/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "dev-refactoring",
@@ -60,7 +70,9 @@
       "reason": null,
       "claude": "src/claude/dev/skills/dev-refactoring/SKILL.md",
       "codex": "src/codex/dev/skills/dev-refactoring/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "dev-security-pipeline",
@@ -70,7 +82,9 @@
       "reason": null,
       "claude": "src/claude/dev/skills/dev-security-pipeline/SKILL.md",
       "codex": "src/codex/dev/skills/dev-security-pipeline/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "dev-tdd-workflow",
@@ -80,7 +94,9 @@
       "reason": null,
       "claude": "src/claude/dev/skills/dev-tdd-workflow/SKILL.md",
       "codex": "src/codex/dev/skills/dev-tdd-workflow/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "dev-testing-backend",
@@ -90,7 +106,9 @@
       "reason": null,
       "claude": "src/claude/dev/skills/dev-testing-backend/SKILL.md",
       "codex": "src/codex/dev/skills/dev-testing-backend/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "dev-testing-e2e",
@@ -100,7 +118,9 @@
       "reason": null,
       "claude": "src/claude/dev/skills/dev-testing-e2e/SKILL.md",
       "codex": "src/codex/dev/skills/dev-testing-e2e/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "dev-testing-frontend",
@@ -110,7 +130,9 @@
       "reason": null,
       "claude": "src/claude/dev/skills/dev-testing-frontend/SKILL.md",
       "codex": "src/codex/dev/skills/dev-testing-frontend/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "dev-verification-engine",
@@ -120,7 +142,9 @@
       "reason": null,
       "claude": "src/claude/dev/skills/dev-verification-engine/SKILL.md",
       "codex": "src/codex/dev/skills/dev-verification-engine/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "dev-architecture-decision",
@@ -130,7 +154,9 @@
       "reason": null,
       "claude": "src/claude/dev/skills/dev-architecture-decision/SKILL.md",
       "codex": "src/codex/dev/skills/dev-architecture-decision/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "dev-feature-module",
@@ -140,7 +166,9 @@
       "reason": null,
       "claude": "src/claude/dev/skills/dev-feature-module/SKILL.md",
       "codex": "src/codex/dev/skills/dev-feature-module/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "dev-feature-plan",
@@ -150,7 +178,9 @@
       "reason": null,
       "claude": "src/claude/dev/skills/dev-feature-plan/SKILL.md",
       "codex": "src/codex/dev/skills/dev-feature-plan/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "dev-layered-architecture",
@@ -160,7 +190,9 @@
       "reason": null,
       "claude": "src/claude/dev/skills/dev-layered-architecture/SKILL.md",
       "codex": "src/codex/dev/skills/dev-layered-architecture/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "dev-workflow",
@@ -170,7 +202,9 @@
       "reason": null,
       "claude": "src/claude/dev/skills/dev-workflow/SKILL.md",
       "codex": "src/codex/dev/skills/dev-workflow/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "dev-frontend-patterns",
@@ -180,7 +214,9 @@
       "reason": null,
       "claude": "src/claude/dev/skills/dev-frontend-patterns/SKILL.md",
       "codex": "src/codex/dev/skills/dev-frontend-patterns/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "plan-prd-authoring",
@@ -190,7 +226,9 @@
       "reason": null,
       "claude": "src/claude/plan/skills/plan-prd-authoring/SKILL.md",
       "codex": "src/codex/plan/skills/plan-prd-authoring/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "plan-wireframe-design",
@@ -200,7 +238,9 @@
       "reason": null,
       "claude": "src/claude/plan/skills/plan-wireframe-design/SKILL.md",
       "codex": "src/codex/plan/skills/plan-wireframe-design/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "plan-stitch-workflow",
@@ -210,7 +250,9 @@
       "reason": null,
       "claude": "src/claude/plan/skills/plan-stitch-workflow/SKILL.md",
       "codex": "src/codex/plan/skills/plan-stitch-workflow/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "plan-review-criteria",
@@ -220,7 +262,9 @@
       "reason": null,
       "claude": "src/claude/plan/skills/plan-review-criteria/SKILL.md",
       "codex": "src/codex/plan/skills/plan-review-criteria/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "plan-archive-workflow",
@@ -230,7 +274,9 @@
       "reason": null,
       "claude": "src/claude/plan/skills/plan-archive-workflow/SKILL.md",
       "codex": "src/codex/plan/skills/plan-archive-workflow/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "plan-idea-management",
@@ -240,7 +286,9 @@
       "reason": null,
       "claude": "src/claude/plan/skills/plan-idea-management/SKILL.md",
       "codex": "src/codex/plan/skills/plan-idea-management/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "plan-screening-workflow",
@@ -250,7 +298,9 @@
       "reason": null,
       "claude": "src/claude/plan/skills/plan-screening-workflow/SKILL.md",
       "codex": "src/codex/plan/skills/plan-screening-workflow/SKILL.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "plan-pipeline",
@@ -262,7 +312,9 @@
       "codex": "src/codex/plan/skills/plan-pipeline/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "dc7908a8"
+      "contentHash": "dc7908a8",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "dev-architect",
@@ -272,7 +324,9 @@
       "reason": null,
       "claude": "src/claude/dev/agents/dev-architect.md",
       "codex": "src/codex/dev/agents/dev-architect.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "agent",
+      "driftStatus": null
     },
     {
       "identity": "dev-code-reviewer",
@@ -282,7 +336,9 @@
       "reason": null,
       "claude": "src/claude/dev/agents/dev-code-reviewer.md",
       "codex": "src/codex/dev/agents/dev-code-reviewer.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "agent",
+      "driftStatus": null
     },
     {
       "identity": "dev-database-reviewer",
@@ -292,7 +348,9 @@
       "reason": null,
       "claude": "src/claude/dev/agents/dev-database-reviewer.md",
       "codex": "src/codex/dev/agents/dev-database-reviewer.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "agent",
+      "driftStatus": null
     },
     {
       "identity": "dev-doc-updater",
@@ -302,7 +360,9 @@
       "reason": null,
       "claude": "src/claude/dev/agents/dev-doc-updater.md",
       "codex": "src/codex/dev/agents/dev-doc-updater.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "agent",
+      "driftStatus": null
     },
     {
       "identity": "dev-security-reviewer",
@@ -312,7 +372,9 @@
       "reason": null,
       "claude": "src/claude/dev/agents/dev-security-reviewer.md",
       "codex": "src/codex/dev/agents/dev-security-reviewer.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "agent",
+      "driftStatus": null
     },
     {
       "identity": "dev-verify-agent",
@@ -324,7 +386,9 @@
       "codex": "src/codex/dev/agents/dev-verify-agent.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "206d3ca9"
+      "contentHash": "206d3ca9",
+      "primaryCodex": "agent",
+      "driftStatus": null
     },
     {
       "identity": "plan-prd-writer",
@@ -336,7 +400,9 @@
       "codex": "src/codex/plan/agents/plan-prd-writer.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "9d881adf"
+      "contentHash": "9d881adf",
+      "primaryCodex": "agent",
+      "driftStatus": null
     },
     {
       "identity": "plan-wireframe-designer",
@@ -346,7 +412,9 @@
       "reason": null,
       "claude": "src/claude/plan/agents/plan-wireframe-designer.md",
       "codex": "src/codex/plan/agents/plan-wireframe-designer.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "agent",
+      "driftStatus": null
     },
     {
       "identity": "plan-stitch-integrator",
@@ -356,7 +424,9 @@
       "reason": null,
       "claude": "src/claude/plan/agents/plan-stitch-integrator.md",
       "codex": "src/codex/plan/agents/plan-stitch-integrator.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "agent",
+      "driftStatus": null
     },
     {
       "identity": "plan-reviewer",
@@ -368,7 +438,9 @@
       "codex": "src/codex/plan/agents/plan-reviewer.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "b44b5b88"
+      "contentHash": "b44b5b88",
+      "primaryCodex": "agent",
+      "driftStatus": null
     },
     {
       "identity": "plan-idea-collector",
@@ -380,7 +452,9 @@
       "codex": "src/codex/plan/agents/plan-idea-collector.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "45ba543c"
+      "contentHash": "45ba543c",
+      "primaryCodex": "agent",
+      "driftStatus": null
     },
     {
       "identity": "plan-idea-screener",
@@ -390,7 +464,9 @@
       "reason": null,
       "claude": "src/claude/plan/agents/plan-idea-screener.md",
       "codex": "src/codex/plan/agents/plan-idea-screener.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "agent",
+      "driftStatus": null
     },
     {
       "identity": "dev-build-fix",
@@ -400,7 +476,11 @@
       "reason": null,
       "claude": "src/claude/dev/commands/dev-build-fix.md",
       "codex": "src/codex/dev/commands/dev-build-fix.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "dev-checkpoint",
@@ -410,7 +490,11 @@
       "reason": null,
       "claude": "src/claude/dev/commands/dev-checkpoint.md",
       "codex": "src/codex/dev/commands/dev-checkpoint.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "dev-commit-push-pr",
@@ -420,7 +504,11 @@
       "reason": null,
       "claude": "src/claude/dev/commands/dev-commit-push-pr.md",
       "codex": "src/codex/dev/commands/dev-commit-push-pr.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "dev-commit",
@@ -430,7 +518,11 @@
       "reason": null,
       "claude": "src/claude/dev/commands/dev-commit.md",
       "codex": "src/codex/dev/commands/dev-commit.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "dev-continue",
@@ -440,7 +532,11 @@
       "reason": null,
       "claude": "src/claude/dev/commands/dev-continue.md",
       "codex": "src/codex/dev/commands/dev-continue.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "dev-explore",
@@ -450,7 +546,11 @@
       "reason": null,
       "claude": "src/claude/dev/commands/dev-explore.md",
       "codex": "src/codex/dev/commands/dev-explore.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "dev-handoff-verify",
@@ -462,7 +562,11 @@
       "codex": "src/codex/dev/commands/dev-handoff-verify.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "8ac1bb5c"
+      "contentHash": "8ac1bb5c",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "dev-learn",
@@ -472,7 +576,11 @@
       "reason": null,
       "claude": "src/claude/dev/commands/dev-learn.md",
       "codex": "src/codex/dev/commands/dev-learn.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "dev-plan",
@@ -482,7 +590,11 @@
       "reason": null,
       "claude": "src/claude/dev/commands/dev-plan.md",
       "codex": "src/codex/dev/commands/dev-plan.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "dev-refactor",
@@ -492,7 +604,11 @@
       "reason": null,
       "claude": "src/claude/dev/commands/dev-refactor.md",
       "codex": "src/codex/dev/commands/dev-refactor.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "dev-review",
@@ -502,7 +618,11 @@
       "reason": null,
       "claude": "src/claude/dev/commands/dev-review.md",
       "codex": "src/codex/dev/commands/dev-review.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "dev-security-review",
@@ -512,7 +632,11 @@
       "reason": null,
       "claude": "src/claude/dev/commands/dev-security-review.md",
       "codex": "src/codex/dev/commands/dev-security-review.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "dev-sync-docs",
@@ -522,7 +646,11 @@
       "reason": null,
       "claude": "src/claude/dev/commands/dev-sync-docs.md",
       "codex": "src/codex/dev/commands/dev-sync-docs.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "dev-sync",
@@ -532,7 +660,11 @@
       "reason": null,
       "claude": "src/claude/dev/commands/dev-sync.md",
       "codex": "src/codex/dev/commands/dev-sync.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "dev-test-verify",
@@ -542,7 +674,11 @@
       "reason": null,
       "claude": "src/claude/dev/commands/dev-test-verify.md",
       "codex": "src/codex/dev/commands/dev-test-verify.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "dev-verify-all",
@@ -552,7 +688,11 @@
       "reason": null,
       "claude": "src/claude/dev/commands/dev-verify-all.md",
       "codex": "src/codex/dev/commands/dev-verify-all.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "dev-verify-fe",
@@ -562,7 +702,11 @@
       "reason": null,
       "claude": "src/claude/dev/commands/dev-verify-fe.md",
       "codex": "src/codex/dev/commands/dev-verify-fe.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "dev-architecture",
@@ -572,7 +716,11 @@
       "reason": null,
       "claude": "src/claude/dev/commands/dev-architecture.md",
       "codex": "src/codex/dev/commands/dev-architecture.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "dev-feature",
@@ -584,7 +732,11 @@
       "codex": "src/codex/dev/commands/dev-feature.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "1dc13cce"
+      "contentHash": "1dc13cce",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "dev-run",
@@ -596,7 +748,11 @@
       "codex": "src/codex/dev/commands/dev-run.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "a3540365"
+      "contentHash": "a3540365",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "dev-verify",
@@ -606,7 +762,11 @@
       "reason": null,
       "claude": "src/claude/dev/commands/dev-verify.md",
       "codex": "src/codex/dev/commands/dev-verify.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "plan-prd",
@@ -618,7 +778,11 @@
       "codex": "src/codex/plan/commands/plan-prd.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "1f8b66d3"
+      "contentHash": "1f8b66d3",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "plan-wireframe",
@@ -628,7 +792,11 @@
       "reason": null,
       "claude": "src/claude/plan/commands/plan-wireframe.md",
       "codex": "src/codex/plan/commands/plan-wireframe.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "plan-stitch",
@@ -638,7 +806,11 @@
       "reason": null,
       "claude": "src/claude/plan/commands/plan-stitch.md",
       "codex": "src/codex/plan/commands/plan-stitch.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "plan-idea",
@@ -648,7 +820,11 @@
       "reason": null,
       "claude": "src/claude/plan/commands/plan-idea.md",
       "codex": "src/codex/plan/commands/plan-idea.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "plan-screen",
@@ -660,7 +836,11 @@
       "codex": "src/codex/plan/commands/plan-screen.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "1a1e995c"
+      "contentHash": "1a1e995c",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "plan-archive",
@@ -670,7 +850,11 @@
       "reason": null,
       "claude": "src/claude/plan/commands/plan-archive.md",
       "codex": "src/codex/plan/commands/plan-archive.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "plan-improve",
@@ -680,7 +864,11 @@
       "reason": null,
       "claude": "src/claude/plan/commands/plan-improve.md",
       "codex": "src/codex/plan/commands/plan-improve.md",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "plan-draft",
@@ -692,7 +880,11 @@
       "codex": "src/codex/plan/commands/plan-draft.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "de6dd741"
+      "contentHash": "de6dd741",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "plan-review",
@@ -704,7 +896,11 @@
       "codex": "src/codex/plan/commands/plan-review.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "7d36fd31"
+      "contentHash": "7d36fd31",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "plan-bridge",
@@ -716,7 +912,11 @@
       "codex": "src/codex/plan/commands/plan-bridge.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "f98aaa89"
+      "contentHash": "f98aaa89",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "edit-tracker",
@@ -726,7 +926,9 @@
       "reason": null,
       "claude": "src/claude/core/hooks/edit-tracker.js",
       "codex": "src/codex/core/hooks/edit-tracker.js",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "hook",
+      "driftStatus": null
     },
     {
       "identity": "code-quality-reminder",
@@ -736,7 +938,9 @@
       "reason": null,
       "claude": "src/claude/core/hooks/code-quality-reminder.js",
       "codex": "src/codex/core/hooks/code-quality-reminder.js",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "hook",
+      "driftStatus": null
     },
     {
       "identity": "security-auto-trigger",
@@ -746,7 +950,9 @@
       "reason": null,
       "claude": "src/claude/core/hooks/security-auto-trigger.js",
       "codex": "src/codex/core/hooks/security-auto-trigger.js",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "hook",
+      "driftStatus": null
     },
     {
       "identity": "dev-db-guard",
@@ -756,7 +962,9 @@
       "reason": null,
       "claude": "src/claude/dev/hooks/dev-db-guard.js",
       "codex": "src/codex/dev/hooks/dev-db-guard.js",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "hook",
+      "driftStatus": null
     },
     {
       "identity": "dev-tdd-guard",
@@ -768,7 +976,9 @@
       "codex": "src/codex/dev/hooks/dev-tdd-guard.js",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "5fb44fdb"
+      "contentHash": "5fb44fdb",
+      "primaryCodex": "hook",
+      "driftStatus": null
     },
     {
       "identity": "dev-feature-scope-guard",
@@ -778,7 +988,9 @@
       "reason": null,
       "claude": "src/claude/dev/hooks/dev-feature-scope-guard.js",
       "codex": "src/codex/dev/hooks/dev-feature-scope-guard.js",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "hook",
+      "driftStatus": null
     },
     {
       "identity": "plan-doc-guard",
@@ -788,7 +1000,9 @@
       "reason": null,
       "claude": "src/claude/plan/hooks/plan-doc-guard.js",
       "codex": "src/codex/plan/hooks/plan-doc-guard.js",
-      "createdAt": "2026-04-16T00:22:26.273Z"
+      "createdAt": "2026-04-16T00:22:26.273Z",
+      "primaryCodex": "hook",
+      "driftStatus": null
     },
     {
       "identity": "copy-fidelity",
@@ -800,7 +1014,9 @@
       "codex": "src/codex/copy/agents/copy-fidelity.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "d16e5f07"
+      "contentHash": "d16e5f07",
+      "primaryCodex": "agent",
+      "driftStatus": null
     },
     {
       "identity": "copy-interaction-fidelity",
@@ -812,7 +1028,9 @@
       "codex": "src/codex/copy/agents/copy-interaction-fidelity.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "bd072bb5"
+      "contentHash": "bd072bb5",
+      "primaryCodex": "agent",
+      "driftStatus": null
     },
     {
       "identity": "copy-reference-baseline",
@@ -824,7 +1042,9 @@
       "codex": "src/codex/copy/agents/copy-reference-baseline.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "e80e49e5"
+      "contentHash": "e80e49e5",
+      "primaryCodex": "agent",
+      "driftStatus": null
     },
     {
       "identity": "copy-qa-reviewer",
@@ -836,7 +1056,9 @@
       "codex": "src/codex/copy/agents/copy-qa-reviewer.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "b8c55413"
+      "contentHash": "b8c55413",
+      "primaryCodex": "agent",
+      "driftStatus": null
     },
     {
       "identity": "copy-reference-refresh",
@@ -848,7 +1070,11 @@
       "codex": "src/codex/copy/commands/copy-reference-refresh.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "b63b3511"
+      "contentHash": "b63b3511",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "copy-visual-review",
@@ -860,7 +1086,11 @@
       "codex": "src/codex/copy/commands/copy-visual-review.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "46a40f01"
+      "contentHash": "46a40f01",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "copy-interaction-review",
@@ -872,7 +1102,11 @@
       "codex": "src/codex/copy/commands/copy-interaction-review.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "3d65c426"
+      "contentHash": "3d65c426",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "copy-gap-board",
@@ -884,7 +1118,11 @@
       "codex": "src/codex/copy/commands/copy-gap-board.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "c6dbdc86"
+      "contentHash": "c6dbdc86",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "copy-plan-unit",
@@ -896,7 +1134,11 @@
       "codex": "src/codex/copy/commands/copy-plan-unit.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "c28d9181"
+      "contentHash": "c28d9181",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "copy-verify",
@@ -908,7 +1150,11 @@
       "codex": "src/codex/copy/commands/copy-verify.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "6c270b46"
+      "contentHash": "6c270b46",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "copy-closeout",
@@ -920,7 +1166,11 @@
       "codex": "src/codex/copy/commands/copy-closeout.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "98f8dd7e"
+      "contentHash": "98f8dd7e",
+      "primaryCodex": "command",
+      "driftStatus": null,
+      "transitionState": "command-primary",
+      "codexSkill": null
     },
     {
       "identity": "copy-evidence-reminder",
@@ -930,7 +1180,9 @@
       "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
       "claude": "src/claude/copy/hooks/copy-evidence-reminder.js",
       "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "primaryCodex": "none",
+      "driftStatus": null
     },
     {
       "identity": "copy-doc-drift-check",
@@ -940,7 +1192,9 @@
       "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
       "claude": "src/claude/copy/hooks/copy-doc-drift-check.js",
       "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "primaryCodex": "none",
+      "driftStatus": null
     },
     {
       "identity": "copy-scope-guard",
@@ -950,7 +1204,9 @@
       "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
       "claude": "src/claude/copy/hooks/copy-scope-guard.js",
       "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "primaryCodex": "none",
+      "driftStatus": null
     },
     {
       "identity": "copy-variant-env-guard",
@@ -960,7 +1216,9 @@
       "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
       "claude": "src/claude/copy/hooks/copy-variant-env-guard.js",
       "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "primaryCodex": "none",
+      "driftStatus": null
     },
     {
       "identity": "copy-gate-stop",
@@ -970,7 +1228,9 @@
       "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
       "claude": "src/claude/copy/hooks/copy-gate-stop.js",
       "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "primaryCodex": "none",
+      "driftStatus": null
     },
     {
       "identity": "copy-fidelity-rule",
@@ -980,7 +1240,9 @@
       "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
       "claude": "src/claude/copy/rules/copy-fidelity.md",
       "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "primaryCodex": "none",
+      "driftStatus": null
     },
     {
       "identity": "copy-evidence-rule",
@@ -990,7 +1252,9 @@
       "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
       "claude": "src/claude/copy/rules/copy-evidence.md",
       "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "primaryCodex": "none",
+      "driftStatus": null
     },
     {
       "identity": "copy-gates-rule",
@@ -1000,7 +1264,9 @@
       "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
       "claude": "src/claude/copy/rules/copy-gates.md",
       "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "primaryCodex": "none",
+      "driftStatus": null
     },
     {
       "identity": "copy-commands-rule",
@@ -1010,7 +1276,9 @@
       "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
       "claude": "src/claude/copy/rules/copy-commands.md",
       "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "primaryCodex": "none",
+      "driftStatus": null
     },
     {
       "identity": "copy-variant-rule",
@@ -1020,7 +1288,9 @@
       "reason": "copy 도메인 신규 컴포넌트. Codex 전환 전.",
       "claude": "src/claude/copy/rules/copy-variant.md",
       "codex": null,
-      "createdAt": "2026-04-16T12:00:00.000Z"
+      "createdAt": "2026-04-16T12:00:00.000Z",
+      "primaryCodex": "none",
+      "driftStatus": null
     },
     {
       "identity": "copy-pipeline",
@@ -1032,7 +1302,9 @@
       "codex": "src/codex/copy/skills/copy-pipeline/SKILL.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "165989fe"
+      "contentHash": "165989fe",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "copy-evidence-management",
@@ -1044,7 +1316,9 @@
       "codex": "src/codex/copy/skills/copy-evidence-management/SKILL.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "8a679a11"
+      "contentHash": "8a679a11",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "copy-gap-analysis",
@@ -1056,7 +1330,9 @@
       "codex": "src/codex/copy/skills/copy-gap-analysis/SKILL.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "1731c161"
+      "contentHash": "1731c161",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "copy-qa-workflow",
@@ -1068,7 +1344,9 @@
       "codex": "src/codex/copy/skills/copy-qa-workflow/SKILL.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "b5ec47a4"
+      "contentHash": "b5ec47a4",
+      "primaryCodex": "skill",
+      "driftStatus": null
     },
     {
       "identity": "copy-closeout-workflow",
@@ -1080,7 +1358,9 @@
       "codex": "src/codex/copy/skills/copy-closeout-workflow/SKILL.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
       "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "58c78e5c"
+      "contentHash": "58c78e5c",
+      "primaryCodex": "skill",
+      "driftStatus": null
     }
   ]
 }

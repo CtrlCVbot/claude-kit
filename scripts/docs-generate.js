@@ -381,11 +381,12 @@ function genPairing() {
   }, {});
   for (const domain of Object.keys(byDomain).sort()) {
     out += `## ${domain} 도메인\n\n`;
-    out += `| Identity | Type | Status | Claude | Codex |\n|---|---|---|---|---|\n`;
+    out += `| Identity | Type | Status | PrimaryCodex | Transition | Drift | Claude | Codex | CodexSkill |\n|---|---|---|---|---|---|---|---|---|\n`;
     for (const e of byDomain[domain]) {
       const claude = e.claude ? `\`${toPosix(e.claude)}\`` : '—';
       const codex = e.codex ? `\`${toPosix(e.codex)}\`` : '—';
-      out += `| \`${e.identity}\` | ${e.type} | ${e.status} | ${claude} | ${codex} |\n`;
+      const codexSkill = e.codexSkill ? `\`${toPosix(e.codexSkill)}\`` : '—';
+      out += `| \`${e.identity}\` | ${e.type} | ${e.status} | ${e.primaryCodex || '—'} | ${e.transitionState || '—'} | ${e.driftStatus || '—'} | ${claude} | ${codex} | ${codexSkill} |\n`;
     }
     out += '\n';
   }

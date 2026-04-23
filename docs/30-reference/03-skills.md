@@ -5,25 +5,25 @@
 >
 > 이 파일은 **수기 편집 금지**. 재생성: `node scripts/docs-generate.js`
 
-전체 36개.
+전체 37개.
 
 ## copy 도메인
 
 | Skill | Description | Source |
 |---|---|---|
-| `copy-closeout-workflow` | — | [src/claude/copy/skills/copy-closeout-workflow/SKILL.md](../../src/claude/copy/skills/copy-closeout-workflow/SKILL.md) |
-| `copy-evidence-management` | — | [src/claude/copy/skills/copy-evidence-management/SKILL.md](../../src/claude/copy/skills/copy-evidence-management/SKILL.md) |
-| `copy-gap-analysis` | — | [src/claude/copy/skills/copy-gap-analysis/SKILL.md](../../src/claude/copy/skills/copy-gap-analysis/SKILL.md) |
-| `copy-pipeline` | — | [src/claude/copy/skills/copy-pipeline/SKILL.md](../../src/claude/copy/skills/copy-pipeline/SKILL.md) |
-| `copy-qa-workflow` | — | [src/claude/copy/skills/copy-qa-workflow/SKILL.md](../../src/claude/copy/skills/copy-qa-workflow/SKILL.md) |
+| `copy-closeout-workflow` | copy Feature closeout 프로세스 가이드 | [src/claude/copy/skills/copy-closeout-workflow/SKILL.md](../../src/claude/copy/skills/copy-closeout-workflow/SKILL.md) |
+| `copy-evidence-management` | evidence 수집, manifest 관리, 페어링 검증 가이드 | [src/claude/copy/skills/copy-evidence-management/SKILL.md](../../src/claude/copy/skills/copy-evidence-management/SKILL.md) |
+| `copy-gap-analysis` | visual/interaction 갭 분석 워크플로우 가이드 | [src/claude/copy/skills/copy-gap-analysis/SKILL.md](../../src/claude/copy/skills/copy-gap-analysis/SKILL.md) |
+| `copy-pipeline` | 전체 copy 충실도 파이프라인 워크플로우 가이드 | [src/claude/copy/skills/copy-pipeline/SKILL.md](../../src/claude/copy/skills/copy-pipeline/SKILL.md) |
+| `copy-qa-workflow` | QA 검증 파이프라인 워크플로우 가이드 | [src/claude/copy/skills/copy-qa-workflow/SKILL.md](../../src/claude/copy/skills/copy-qa-workflow/SKILL.md) |
 
 ## core 도메인
 
 | Skill | Description | Source |
 |---|---|---|
 | `agent-completion-cache-invalidate` | 서브에이전트 완료 후 메인 세션이 같은 파일을 Edit할 때 "File has not been read yet" 에러를 방지하는 Read 캐시 재인증 가이드. Codex runtime이 SubagentStop 훅을 지원하지 않는 환경에서 동일 의도를 보존하는 runtime-indepen | [src/claude/core/skills/agent-completion-cache-invalidate/SKILL.md](../../src/claude/core/skills/agent-completion-cache-invalidate/SKILL.md) |
-| `continuous-learning` | — | [src/claude/core/skills/continuous-learning/SKILL.md](../../src/claude/core/skills/continuous-learning/SKILL.md) |
-| `session-wrap` | — | [src/claude/core/skills/session-wrap/SKILL.md](../../src/claude/core/skills/session-wrap/SKILL.md) |
+| `continuous-learning-v2` | Instinct-based learning system that observes sessions via hooks, creates atomic instincts with confidence scoring, and evolves them into skills/commands/agents. | [src/claude/core/skills/continuous-learning/SKILL.md](../../src/claude/core/skills/continuous-learning/SKILL.md) |
+| `session-wrap` | | | [src/claude/core/skills/session-wrap/SKILL.md](../../src/claude/core/skills/session-wrap/SKILL.md) |
 | `session-wrap-suggest` | | | [src/claude/core/skills/session-wrap-suggest/SKILL.md](../../src/claude/core/skills/session-wrap-suggest/SKILL.md) |
 
 ## dev 도메인
@@ -50,21 +50,22 @@
 
 | Skill | Description | Source |
 |---|---|---|
-| `kit-converter` | — | [.claude/skills/kit-converter/SKILL.md](../../.claude/skills/kit-converter/SKILL.md) |
-| `kit-scaffolding` | — | [.claude/skills/kit-scaffolding/SKILL.md](../../.claude/skills/kit-scaffolding/SKILL.md) |
-| `kit-validation` | — | [.claude/skills/kit-validation/SKILL.md](../../.claude/skills/kit-validation/SKILL.md) |
+| `kit-converter` | | | [.claude/skills/kit-converter/SKILL.md](../../.claude/skills/kit-converter/SKILL.md) |
+| `kit-scaffolding` | | | [.claude/skills/kit-scaffolding/SKILL.md](../../.claude/skills/kit-scaffolding/SKILL.md) |
+| `kit-validation` | | | [.claude/skills/kit-validation/SKILL.md](../../.claude/skills/kit-validation/SKILL.md) |
 
 ## plan 도메인
 
 | Skill | Description | Source |
 |---|---|---|
 | `claude-design-workflow` | > | [src/claude/plan/skills/claude-design-workflow/SKILL.md](../../src/claude/plan/skills/claude-design-workflow/SKILL.md) |
-| `plan-archive-workflow` | — | [src/claude/plan/skills/plan-archive-workflow/SKILL.md](../../src/claude/plan/skills/plan-archive-workflow/SKILL.md) |
-| `plan-idea-management` | — | [src/claude/plan/skills/plan-idea-management/SKILL.md](../../src/claude/plan/skills/plan-idea-management/SKILL.md) |
-| `plan-pipeline` | — | [src/claude/plan/skills/plan-pipeline/SKILL.md](../../src/claude/plan/skills/plan-pipeline/SKILL.md) |
+| `plan-archive-workflow` | > | [src/claude/plan/skills/plan-archive-workflow/SKILL.md](../../src/claude/plan/skills/plan-archive-workflow/SKILL.md) |
+| `plan-epic-workflow` | > | [src/claude/plan/skills/plan-epic-workflow/SKILL.md](../../src/claude/plan/skills/plan-epic-workflow/SKILL.md) |
+| `plan-idea-management` | > | [src/claude/plan/skills/plan-idea-management/SKILL.md](../../src/claude/plan/skills/plan-idea-management/SKILL.md) |
+| `plan-pipeline` | > | [src/claude/plan/skills/plan-pipeline/SKILL.md](../../src/claude/plan/skills/plan-pipeline/SKILL.md) |
 | `plan-prd-authoring` | > | [src/claude/plan/skills/plan-prd-authoring/SKILL.md](../../src/claude/plan/skills/plan-prd-authoring/SKILL.md) |
 | `plan-review-criteria` | > | [src/claude/plan/skills/plan-review-criteria/SKILL.md](../../src/claude/plan/skills/plan-review-criteria/SKILL.md) |
-| `plan-screening-workflow` | — | [src/claude/plan/skills/plan-screening-workflow/SKILL.md](../../src/claude/plan/skills/plan-screening-workflow/SKILL.md) |
+| `plan-screening-workflow` | > | [src/claude/plan/skills/plan-screening-workflow/SKILL.md](../../src/claude/plan/skills/plan-screening-workflow/SKILL.md) |
 | `plan-stitch-workflow` | > | [src/claude/plan/skills/plan-stitch-workflow/SKILL.md](../../src/claude/plan/skills/plan-stitch-workflow/SKILL.md) |
 | `plan-wireframe-design` | > | [src/claude/plan/skills/plan-wireframe-design/SKILL.md](../../src/claude/plan/skills/plan-wireframe-design/SKILL.md) |
 
