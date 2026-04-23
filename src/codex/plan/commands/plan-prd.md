@@ -1,4 +1,4 @@
-<!-- kit-convert generated: 2026-04-17 -->
+<!-- kit-convert generated: 2026-04-23 -->
 <!-- REVIEW NEEDED: complex command -->
 # plan-prd — Codex Entry Flow
 

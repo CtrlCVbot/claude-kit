@@ -1,4 +1,4 @@
-<!-- kit-convert generated: 2026-04-20 -->
+<!-- kit-convert generated: 2026-04-23 -->
 # plan-draft — Codex Entry Flow
 
 ## Overview
