@@ -19,7 +19,8 @@ Epic 생성, 조회, 상태 전이. claude-kit v2.4.0 Hierarchical Plan Structur
 
 - `--status={draft|planning|active|completed|archived}` — list 필터 또는 advance 목표 상태
 - `--to={state}` — advance 서브커맨드의 목표 상태 (draft 에서 순방향만 허용)
-- `--force` — 게이트 위반 시 강제 전이 (경고 출력, 기본 금지)
+- `--force` — 게이트 위반 시 강제 전이 (T-EPMV-03: Critical checkpoint 경고 + 사용자 Y 필수 + `~/.claude/logs/checkpoints.jsonl` 로그 기록)
+- `--dry-run` — 파일 변경 없이 "이렇게 실행될 것" 요약 출력 (T-EPMV-01 후속 Step 에서 구현)
 
 ## Workflow
 
@@ -41,15 +42,28 @@ Epic 생성, 조회, 상태 전이. claude-kit v2.4.0 Hierarchical Plan Structur
 
 ### 상태 전이 (`/plan-epic advance {ID} --to={state}`)
 
-1. **게이트 검증**: `plan-epic-workflow` skill 의 §게이트 표 확인
-   - `draft → planning`: `00-epic-brief.md` + `01-children-features.md` 존재 + 자식 IDEA 최소 1건
-   - `planning → active`: 자식 Feature 중 최소 1건 `approved` 이상
-   - `active → completed`: 모든 자식 Feature `archived`
+내부 단계는 **1 커맨드 트랜잭션** 으로 수행 (T-EPMV-02 + T-EPMV-03 통합).
+
+1. **현재 상태 조회**: `.plans/epics/index.md` 에서 Epic 행의 상태 컬럼 읽기
+2. **전이 허용 여부 검증**: `draft → planning → active → completed → archived` 순방향만 허용 (역방향 차단)
+3. **게이트 자동 검증** (T-EPMV-03): `plan-epic-hierarchy.md §4-2` 참조
+   - `draft → planning`: `00-epic-brief.md` + `01-children-features.md` 존재 + 자식 IDEA(`Epic: EPIC-{ID}` frontmatter) ≥ 1
+   - `planning → active`: 자식 Feature 중 IDEA 상태 `approved` ≥ 1
+   - `active → completed`: 모든 자식 Feature IDEA 상태 `archived`
    - `completed → archived`: 인덱스 갱신 준비
-2. **파일 이동**: `git mv .plans/epics/{current_status}/EPIC-.../ .plans/epics/{new_status}/EPIC-.../`
-3. **인덱스 갱신**: `index.md` 의 상태 컬럼 업데이트
-4. **자식 Feature binding 갱신 (선택)**: 각 Feature 의 `08-epic-binding.md` 의 Epic 상태 라인 업데이트
-5. **게이트 위반 시**: `--force` 없으면 **HARD FAIL** + 미충족 조건 명시
+   - **미충족 시**: HARD FAIL + 구체 사유 + `--force` 안내 (Critical checkpoint 경고 + 로그 기록)
+4. **파일 이동** (T-EPMV-02): tracked 여부 자동 감지 후 `git mv` / `mv` 분기
+   ```bash
+   if git ls-files "$SRC_DIR" 2>/dev/null | grep -q .; then
+     git mv "$SRC_DIR" "$DST_DIR" || mv "$SRC_DIR" "$DST_DIR"
+   else
+     mv "$SRC_DIR" "$DST_DIR"
+   fi
+   ```
+5. **링크 재작성** (T-EPMV-01, 후속 Step): 모든 `.plans/**/*.md` 의 `/prev-state/EPIC-{ID}/` → `/new-state/EPIC-{ID}/` 치환
+6. **인덱스 갱신**: `index.md` 의 상태 컬럼 업데이트
+7. **자식 Feature binding 갱신 (선택)**: 각 Feature 의 `08-epic-binding.md §1` Epic 상태 라인 업데이트
+8. **변경 보고**: 사용된 이동 방법 (`git mv` vs `mv`) + 게이트 검증 결과 + 변경 파일 수 출력
 
 ### 아카이브 (`/plan-epic archive {ID}`)
 
@@ -84,8 +98,15 @@ Epic 생성/전이 시 다음 시점에서 **사용자 명시적 승인** 필요
 
 ## 관련 자산
 
-- **Rule**: [`plan-epic-hierarchy.md`](../rules/plan-epic-hierarchy.md) — SSOT
+- **Rule**: [`plan-epic-hierarchy.md`](../rules/plan-epic-hierarchy.md) — SSOT (§4-1 파일 이동 방법, §4-2 상태 전이 게이트 조건, §5 IDEA/Feature 상태)
+- **Rule**: [`agent-file-ownership.md`](../../core/rules/agent-file-ownership.md) — Epic 파일 편집 권한 (T-RACE-01)
 - **Skill**: [`plan-epic-workflow`](../skills/plan-epic-workflow/SKILL.md) — 라이프사이클 정의
 - **Hook**: [`plan-epic-integrity.js`](../hooks/plan-epic-integrity.js) — binding cross-reference (Phase 2 disable 기본)
 - **Command**: `/plan-idea --epic={ID}` — 자식 IDEA 자동 연결
 - **Command (Phase 3)**: `/plan-epic-adopt` — 기존 Feature 소급 연결
+
+## 관련 피드백 TASK
+
+- **T-EPMV-01** (P0 Critical, v2.4.1 후속 Step): 자동 링크 재작성 스크립트 (`scripts/epic-advance-rewrite.js`)
+- **T-EPMV-02** (P0 Critical, v2.4.1 Step 2): **본 커맨드 반영** — git mv/mv fallback 자동 분기
+- **T-EPMV-03** (P0 Critical, v2.4.1 Step 2): **본 커맨드 반영** — advance 게이트 자동 검증

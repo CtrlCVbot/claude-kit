@@ -61,14 +61,27 @@ draft → planning → active → completed → archived
 | `04-decision-log.md` | 선택 | Epic 레벨 결정 (Feature 간 공통) |
 | `06-poc-observations.md` | PoC 전용 | Phase 1 PoC 시 관찰 기록 |
 
-## 게이트 (상태 전이 전 검증)
+## 게이트 (상태 전이 전 자동 검증)
 
-| 전이 | 필수 조건 |
-|---|---|
-| draft → planning | `00-epic-brief.md` + `01-children-features.md` 존재, 자식 IDEA 최소 1건 등록 |
-| planning → active | 자식 Feature 중 최소 1건 `approved` 이상 상태 |
-| active → completed | 모든 자식 Feature `archived` 상태 |
-| completed → archived | `/plan-epic archive` 커맨드 + 인덱스 갱신 |
+`/plan-epic advance` 커맨드가 자동 검증 (**T-EPMV-03**). 미충족 시 HARD FAIL + `--force` 옵션 안내.
+
+| 전이 | 필수 조건 | 검증 방식 |
+|---|---|---|
+| draft → planning | `00-epic-brief.md` + `01-children-features.md` 존재, 자식 IDEA 최소 1건 등록 | 파일 존재 확인 + `.plans/ideas/**/IDEA-*.md` 의 frontmatter `Epic: EPIC-{ID}` grep |
+| planning → active | 자식 Feature 중 최소 1건 IDEA 상태 `approved` | IDEA frontmatter `상태: approved` + Epic 연결 cross-check |
+| active → completed | 모든 자식 Feature IDEA 상태 `archived` | 자식 전체 cross-check |
+| completed → archived | `/plan-epic archive` 커맨드 + 인덱스 갱신 | 내부 절차 |
+
+상세 검증 명령은 `plan-epic-hierarchy.md §4-2` 참조.
+
+## 파일 이동 방법 (상태 전이 시)
+
+`/plan-epic advance` 내부에서 **tracked 여부 자동 감지 후 `git mv` / `mv` 분기** (**T-EPMV-02**):
+
+- **tracked 상태**: `git mv` (이력 보존)
+- **untracked 상태**: `mv` (`.plans/` 커밋 전이거나 `.gitignore` 포함 시)
+
+상세 로직은 `plan-epic-hierarchy.md §4-1` 참조.
 
 ## Anti-patterns (절대 금지)
 
@@ -95,8 +108,16 @@ draft → planning → active → completed → archived
 
 ## 관련 자산
 
-- **Rule**: `plan-epic-hierarchy.md` (SSOT, 계층 정의 + 금지 사항)
-- **Command**: `/plan-epic` (create/list/show/advance/archive)
+- **Rule**: `plan-epic-hierarchy.md` (SSOT, 계층 정의 + §4-1 파일 이동 + §4-2 게이트 조건 + §5 IDEA/Feature 상태 + §6 금지 사항)
+- **Rule**: `agent-file-ownership.md` (T-RACE-01, Epic 파일 편집 권한)
+- **Command**: `/plan-epic` (create/list/show/advance/archive) — advance 는 게이트 자동 검증 + fallback 이동 통합
 - **Command**: `/plan-idea --epic={ID}` (Epic 에 자동 연결)
 - **Hook**: `plan-epic-integrity.js` (binding cross-reference, Phase 2 disable 기본)
+- **Hook (예정)**: `plan-state-sync.js` (T-FSTATE-01, IDEA 상태 변경 시 3 곳 자동 동기)
 - **Skill 참조**: `plan-idea-management` (epic 필드 처리 규칙)
+
+## 관련 피드백 TASK
+
+- **T-EPMV-02** (v2.4.1): 파일 이동 fallback 분기 — `plan-epic-hierarchy.md §4-1` 반영 완료
+- **T-EPMV-03** (v2.4.1): advance 게이트 자동 검증 — `plan-epic-hierarchy.md §4-2` 반영 완료
+- **T-EPMV-01** (v2.4.1, 후속 Step): 자동 링크 재작성 스크립트 `scripts/epic-advance-rewrite.js` (미구현)

@@ -45,8 +45,9 @@ AI 거버넌스 밀키트. TDD 강제 + Hexagonal + Clean Architecture + Rich Do
 - 원본: [`docs/plan/kit-feedback/phase-a-dry-run-20260423/`](docs/plan/kit-feedback/phase-a-dry-run-20260423/)
 - 개선 계획: [`docs/plan/kit-feedback/phase-a-improvement-20260423/`](docs/plan/kit-feedback/phase-a-improvement-20260423/) — 18 TASK (Critical 3 + High 5 + Medium 7 + Low 3)
 - 반영 현황 (2026-04-23):
-  - Step 1 완료: T-RICE-01 · T-RACE-01 · T-FSTATE-02 (모두 문서/룰)
-  - Step 2~6 대기: EPMV/RACE-02/FSTATE-01 및 v2.5.0/Backlog
+  - Step 1 완료: T-RICE-01 · T-RACE-01 · T-FSTATE-02 (문서/룰)
+  - Step 2 완료: T-EPMV-02 · T-EPMV-03 (커맨드 정의 + §4-1/§4-2 신설)
+  - Step 3~6 대기: T-EPMV-01 (스크립트) · T-RACE-02/T-FSTATE-01 (훅) · v2.5.0 · Backlog
 
 <!-- kit:managed:start -->
 ## claude-kit 활성 구성

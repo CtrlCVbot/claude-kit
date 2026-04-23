@@ -58,6 +58,66 @@ draft → planning → active → completed → archived
 | completed | 모든 자식 Feature completed (archive 직전) | `.plans/epics/30-completed/` |
 | archived | 번들화 + 인덱스 등록 완료 | `.plans/epics/90-archive/` |
 
+### 4-1. 파일 이동 방법 (git mv vs mv)
+
+> **T-EPMV-02 — N-09 대응**. `/plan-epic advance` 실행 시 Epic 디렉터리 이동의 tracked/untracked 분기.
+
+#### 기본: `git mv`
+
+Epic 파일이 git tracked 상태이면 `git mv` 사용 (이력 보존).
+
+```bash
+git mv .plans/epics/{prev-state}/EPIC-{ID}/ .plans/epics/{new-state}/EPIC-{ID}/
+```
+
+#### Fallback: 일반 `mv`
+
+`git mv` 실패 시 (`fatal: source directory is empty` 등) 일반 `mv` 로 이동.
+
+- **발생 조건**: `.plans/` 가 아직 커밋 전이거나 `.gitignore` 에 포함된 경우
+- **대응**: `git ls-files` 로 tracked 여부 확인 후 자동 분기
+- **주의**: 일반 `mv` 는 git 이력 추적 단절 — 이후 커밋 시 delete+add 로 인식
+
+#### 자동 분기 로직 (`/plan-epic advance` 내부)
+
+```bash
+# tracked 여부 확인
+if git ls-files "$SRC_DIR" 2>/dev/null | grep -q .; then
+  git mv "$SRC_DIR" "$DST_DIR" || mv "$SRC_DIR" "$DST_DIR"   # git mv 실패 시 2차 fallback
+else
+  mv "$SRC_DIR" "$DST_DIR"
+fi
+```
+
+advance 보고는 사용된 이동 방법을 명시 (예: `이동 방법: mv (tracked 전)` 또는 `git mv (이력 보존)`).
+
+### 4-2. 상태 전이 게이트 조건 (자동 검증)
+
+> **T-EPMV-03 — N-07 대응**. `/plan-epic advance` 가 자동 검증하는 게이트 조건. 미충족 시 HARD FAIL + `--force` 옵션 안내.
+
+| 전이 | 게이트 조건 | 검증 명령 |
+|------|-----------|---------|
+| `draft → planning` | `00-epic-brief.md` + `01-children-features.md` 존재 + 자식 IDEA frontmatter `Epic: EPIC-{ID}` 파일 ≥ 1 | `grep -l "Epic: EPIC-{ID}" .plans/ideas/**/IDEA-*.md \| wc -l ≥ 1` |
+| `planning → active` | 자식 Feature 중 IDEA frontmatter `상태: approved` 인 파일 ≥ 1 | `grep -l "상태: approved" .plans/ideas/**/IDEA-*.md (+ Epic 연결 조건) \| wc -l ≥ 1` |
+| `active → completed` | 모든 자식 Feature 가 archived 상태 (IDEA frontmatter `상태: archived`) | 자식 목록 전체 check |
+| `completed → archived` | 인덱스 갱신 + archive 디렉터리 생성 준비 | 내부 절차 |
+
+#### 미충족 시 에러 메시지 포맷
+
+```
+ERROR: 게이트 미충족 — {전이 방향}
+조건: {구체 조건}
+현재: {관측된 값}
+SUGGEST: {권장 다음 커맨드}
+USE --force TO OVERRIDE (Critical checkpoint 로그 기록)
+```
+
+#### `--force` 사용 시
+
+- Critical checkpoint 타입 (`critical-checkpoints.json` 참조) → `autoProceedOnPass` 무관 항상 사용자 경고 표시
+- 사용자 명시 Y 입력 후에만 진행
+- 로그: `~/.claude/logs/checkpoints.jsonl` 에 `{type: "critical-force", gate_condition: "..."}` 기록
+
 ---
 
 ## 5. IDEA 상태 vs Feature 상태 (SSOT)
@@ -219,3 +279,4 @@ Epic 컬럼 추가 (null 허용). 기존 archived Feature 는 null 유지, `/pla
 |---|---|---|
 | 2026-04-22 | 초안 — claude-kit v2.4.0 Phase 2 Step 1 (P2-C) Epic 계층 SSOT | Claude (메인테이너 역할) |
 | 2026-04-23 | §5 IDEA 상태 vs Feature 상태 (SSOT) 신설 — T-FSTATE-02 (N-13 대응). 기존 §5~§11 을 §6~§12 로 재번호. §11 관련 규칙에 agent-file-ownership, rice-lane-weighted-adjustment, plan-state-sync.js 추가. | Claude (메인테이너 역할) |
+| 2026-04-23 | §4-1 파일 이동 방법 (git mv vs mv, T-EPMV-02) + §4-2 상태 전이 게이트 조건 (T-EPMV-03) 신설. `/plan-epic advance` 내부 트랜잭션 단계 정의. | Claude (메인테이너 역할) |
