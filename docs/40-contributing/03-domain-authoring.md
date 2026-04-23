@@ -2,7 +2,7 @@
 
 > **Status**: Draft (P4, 2026-04-17)
 > **Source**: `src/claude/{core,dev,plan,copy}/`, [../../scripts/setup.js](../../scripts/setup.js)
-> **Related**: [02-adding-a-component.md](02-adding-a-component.md)
+> **Related**: [02-adding-a-component.md](02-adding-a-component.md), [`template-governance.md`](../../src/claude/core/rules/template-governance.md) (3 Location 관계 + 도메인 블록 추가 절차)
 
 기존 `core/dev/plan/copy` 외에 **새 도메인** 을 claude-kit 에 추가하는 절차입니다. 단일 자산 추가는 [02-adding-a-component.md](02-adding-a-component.md).
 

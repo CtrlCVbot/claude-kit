@@ -2,7 +2,7 @@
 
 > **Status**: Draft (P4, 2026-04-17)
 > **Source**: [`/kit-create`](../../.claude/commands/kit-create.md), [`/kit-validate`](../../.claude/commands/kit-validate.md), `.claude/skills/kit-scaffolding/`
-> **Related**: [03-domain-authoring.md](03-domain-authoring.md), [05-quality-gates.md](05-quality-gates.md)
+> **Related**: [03-domain-authoring.md](03-domain-authoring.md), [05-quality-gates.md](05-quality-gates.md), [`template-governance.md`](../../src/claude/core/rules/template-governance.md) (3 Location SSOT + 네이밍 + 결정 트리)
 
 새 **커맨드 / 에이전트 / 스킬 / 훅 / 규칙** 을 기존 도메인에 추가하는 절차입니다. 새 도메인 자체를 만드는 경우는 [03-domain-authoring.md](03-domain-authoring.md) 참조.
 
