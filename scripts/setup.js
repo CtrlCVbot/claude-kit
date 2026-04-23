@@ -40,6 +40,20 @@ const TEMPLATES  = path.join(SRC_BASE, 'templates');
 const COMPONENT_DIRS = ['agents', 'commands', 'skills', 'hooks', 'rules'];
 const CODEX_COMPONENT_DIRS = ['agents', 'commands', 'skills'];
 const VALID_DOMAINS = ['core', 'dev', 'plan', 'copy'];
+const AGENTS_MD_RUNTIME_FORBIDDEN = [
+  {
+    label: 'claude-kit source path',
+    pattern: /\bsrc\/(?:claude|codex)\/[^\s)`"']*/g
+  },
+  {
+    label: 'nonexistent runtime guidance path',
+    pattern: /\bdocs\/codex-guidance\/[^\s)`"']*/g
+  },
+  {
+    label: 'maintainer sync metadata',
+    pattern: /\b(?:codex-sync Phase|medium merge artifact|codex-portability\.json)\b/g
+  }
+];
 
 // codex-sync cross-phase review CC2: --dry-run 플래그 (T18 검증 등 dynamic verification)
 const DRY_RUN = process.argv.includes('--dry-run');
@@ -98,6 +112,19 @@ function printDryRunSummary(projectRoot, activeDomains, activeTargets) {
     }
   } else {
     console.log('conflicts: 0');
+  }
+
+  const agentsPreview = previewAgentsMdRuntimeLint(projectRoot);
+  console.log('\n=== AGENTS.md runtime guidance lint ===\n');
+  if (agentsPreview.status !== 'ok') {
+    console.log(`status: ${agentsPreview.status}`);
+  } else if (agentsPreview.warnings.length === 0) {
+    console.log('status: ok');
+  } else {
+    console.log(`warnings: ${agentsPreview.warnings.length}`);
+    for (const warning of agentsPreview.warnings) {
+      console.log(`  - line ${warning.line}: ${warning.label} (${warning.match})`);
+    }
   }
 
   console.log('\n[DRY-RUN] 완료. --dry-run 제거 시 실제 설치.');
@@ -231,7 +258,7 @@ function resolveVariables(projectRoot) {
   const pkgPath = path.join(projectRoot, 'package.json');
   if (fs.existsSync(pkgPath)) {
     try {
-      const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+      const pkg = readJsonSafe(pkgPath);
       projectName = pkg.name || projectName;
       projectDescription = pkg.description || projectDescription;
     } catch {
@@ -281,6 +308,49 @@ function substituteVars(content, vars) {
     result = result.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
   }
   return result;
+}
+
+function collectAgentsMdRuntimeWarnings(content) {
+  const warnings = [];
+  const lines = content.split(/\r?\n/);
+
+  for (let i = 0; i < lines.length; i++) {
+    for (const check of AGENTS_MD_RUNTIME_FORBIDDEN) {
+      check.pattern.lastIndex = 0;
+      const matches = lines[i].matchAll(check.pattern);
+      for (const match of matches) {
+        warnings.push({
+          line: i + 1,
+          label: check.label,
+          match: match[0]
+        });
+      }
+    }
+  }
+
+  return warnings;
+}
+
+function previewAgentsMdRuntimeLint(projectRoot) {
+  const template = readTemplate(TEMPLATES, 'AGENTS.md.template');
+  if (!template) {
+    return { status: 'missing template', warnings: [] };
+  }
+
+  const rendered = substituteVars(template, resolveVariables(projectRoot));
+  return {
+    status: 'ok',
+    warnings: collectAgentsMdRuntimeWarnings(rendered)
+  };
+}
+
+function warnAgentsMdRuntimeIssues(warnings, targetPath) {
+  if (warnings.length === 0) return;
+
+  console.warn(`[WARN] ${targetPath} contains runtime guidance issues:`);
+  for (const warning of warnings) {
+    console.warn(`  - line ${warning.line}: ${warning.label} (${warning.match})`);
+  }
 }
 
 function readJsonSafe(filePath) {
@@ -1138,7 +1208,9 @@ function emitCodex(projectRoot, activeDomains) {
   if (!fs.existsSync(agentsMdPath)) {
     const template = readTemplate(templateDir, 'AGENTS.md.template');
     if (template) {
-      fs.writeFileSync(agentsMdPath, substituteVars(template, vars));
+      const rendered = substituteVars(template, vars);
+      warnAgentsMdRuntimeIssues(collectAgentsMdRuntimeWarnings(rendered), agentsMdPath);
+      fs.writeFileSync(agentsMdPath, rendered);
       agentsMdStatus = 'created';
     } else {
       agentsMdStatus = 'missing template';

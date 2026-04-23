@@ -27,13 +27,17 @@ pnpm install   # postinstall 재실행
 | 산출물 | 용도 |
 |--------|------|
 | `.claude/` | Claude Code 런타임 |
-| `plugins/claude-kit/` | Codex 런타임 (repo-local plugin) |
+| `.agents/skills/**` | Codex repo-local skills |
+| `.codex/agents/*.toml` | Codex custom agents |
+| `plugins/claude-kit/` | Codex plugin packaging output |
 | `CLAUDE.md` | Claude 컨텍스트 |
 | `AGENTS.md` | Codex 컨텍스트 |
 | `.agents/plugins/marketplace.json` | Codex plugin 등록 |
 | `plugins/claude-kit/hooks.json` | Codex 호환 훅 매니페스트 |
 
 두 런타임은 **독립적** 으로 생성되며 서로 덮어쓰지 않습니다.
+
+`AGENTS.md` 는 설치 프로젝트 기준 runtime guidance 입니다. `claude-kit` 저장소 내부 source 경로를 링크하지 않고, Codex 에서 바로 확인해야 하는 운영 기준만 inline 으로 담습니다.
 
 ## 3. Codex CLI 준비
 
@@ -85,17 +89,17 @@ Codex 는 플러그인 네임스페이스 prefix 가 필요합니다. `AGENTS.md
 - `pairing-registry.json` 에 entry 자동 추가
 - CI 에서 `node scripts/audit-pairing.js` 정기 실행 권장
 
-### 6.2 수동 동기화
+### 6.2 소비자 프로젝트에서의 동기화 확인
 
-```
-/kit-sync
+소비자 프로젝트에서는 `kit-sync` 를 runtime 기능처럼 실행하지 않습니다. 설치된 출력이 최신인지 확인하려면 패키지를 업데이트하거나 `postinstall` 을 다시 실행한 뒤, 생성 결과를 확인합니다.
+
+```bash
+pnpm update claude-kit
+# 또는 필요 시
+node node_modules/claude-kit/scripts/setup.js --dry-run
 ```
 
-`kit-sync-agent` 서브에이전트가:
-1. Claude-only 자산 스캔
-2. Codex 포팅 가능성 판정 (exception-registry 참조)
-3. `src/codex/` 에 대응 자산 생성
-4. pairing-registry 갱신
+`kit-sync-agent` 와 `kit-*` maintenance toolchain 은 `claude-kit` 저장소 안에서 source parity 를 관리하는 용도입니다. Claude-only 자산 스캔, Codex 포팅 가능성 판정, `src/codex/` source 갱신, pairing-registry 갱신은 maintainers 작업으로 다룹니다.
 
 ### 6.3 감사
 
@@ -129,9 +133,10 @@ pnpm update claude-kit
 ```
 
 - Claude 쪽: `.claude/settings.json` 커스텀 보존, kit 관리 키 갱신
-- Codex 쪽: `plugin.json`, `marketplace.json`, `hooks.json` **재생성** (사용자 커스텀 보존 없음)
+- Codex plugin 쪽: `plugin.json`, `marketplace.json`, `hooks.json` **재생성** (사용자 커스텀 보존 없음)
+- Codex direct-use 쪽: `.agents/skills/**`, `.codex/agents/*.toml` 은 managed marker/source hash 기준으로 갱신 또는 보존/conflict 처리
 
-Codex 쪽의 커스텀은 `AGENTS.md` 내 `<!-- kit:managed -->` 블록 바깥 영역에만 두세요.
+기존 `AGENTS.md` 는 보존됩니다. fresh install 로 생성되는 `AGENTS.md` 는 설치 프로젝트 기준 안내만 포함하고, 내부 source 링크나 maintainer sync metadata 를 포함하지 않아야 합니다.
 
 ## 9. 트러블슈팅
 

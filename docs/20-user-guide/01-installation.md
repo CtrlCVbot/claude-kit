@@ -38,6 +38,8 @@ pnpm add -D github:CtrlCVbot/claude-kit
 | Quick Start | `CLAUDE-KIT-QUICKSTART.md` | 설치 직후 첫 진입점 |
 | Claude runtime | `.claude/` | 에이전트·커맨드·스킬·훅·규칙 |
 | Codex runtime | `plugins/claude-kit/` | Codex 타깃 활성 시만 생성 |
+| Codex repo-local skills | `.agents/skills/**` | 설치 프로젝트에서 바로 호출 가능한 Codex skills |
+| Codex custom agents | `.codex/agents/*.toml` | 설치 프로젝트에서 바로 사용할 Codex agents |
 | Codex registry | `.agents/plugins/marketplace.json` | Codex 플러그인 등록 |
 | Claude context | `CLAUDE.md` | Claude 런타임 컨텍스트 |
 | Codex context | `AGENTS.md` | Codex 런타임 컨텍스트 |
@@ -53,7 +55,7 @@ Claude + Codex 동시 설치 시 `.claude/` 와 `plugins/claude-kit/` 은 **서�
 | commands | Full |
 | agents | Full |
 | hooks | Partial — Codex 호환 훅만 `hooks/` + `hooks.json` 생성 |
-| rules | Partial — 별도 디렉터리 대신 `AGENTS.md` 에 흡수 |
+| rules | Partial — 별도 rules 파일 자동 생성 없이 `AGENTS.md` 의 runtime guidance 로 보존 |
 | MCP | v1 제외 |
 
 자세한 매핑 규칙: [Multi-Target](../10-features/04-multi-target.md) (P4 예정).
@@ -66,7 +68,7 @@ Claude + Codex 동시 설치 시 `.claude/` 와 `plugins/claude-kit/` 은 **서�
 1. profile.json → domains, targets 파싱
 2. 타깃별 자산 복사
    ├── claude → .claude/
-   └── codex  → plugins/claude-kit/
+   └── codex  → .agents/skills/, .codex/agents/, plugins/claude-kit/
 3. 타깃별 생성물 업데이트
    ├── claude → CLAUDE.md, .claude/settings.json
    └── codex  → AGENTS.md, plugin.json, marketplace.json, hooks.json
@@ -82,7 +84,8 @@ Claude + Codex 동시 설치 시 `.claude/` 와 `plugins/claude-kit/` 은 **서�
 - [ ] `.claude/commands/` 에 `/dev-*`, `/plan-*` 등 슬래시 커맨드가 있는가 (활성 도메인에 따라)
 - [ ] `.claude-kit-meta.json` 에 `version`, `domains`, `targets` 가 기록됐는가
 - [ ] `.claude/settings.json` 의 `hooks` 가 활성 도메인에 맞게 구성됐는가
-- [ ] (Codex 타깃 활성 시) `plugins/claude-kit/` 존재 + `AGENTS.md` 갱신됨
+- [ ] (Codex 타깃 활성 시) `plugins/claude-kit/`, `.agents/skills/`, `.codex/agents/` 존재 + `AGENTS.md` 생성 또는 보존 상태 확인
+- [ ] fresh install 의 `AGENTS.md` 에 설치 프로젝트에 존재하지 않는 claude-kit authoring source 경로가 링크로 노출되지 않는가
 
 ## 5. 업데이트
 
@@ -99,8 +102,11 @@ pnpm update claude-kit
 | 기존 `AGENTS.md` | 없으면 템플릿으로 복구 |
 | `.claude/settings.json` 의 사용자 커스텀 키 | kit 관리 키 병합 |
 | `plugin.json`, `marketplace.json`, `hooks.json` (Codex) | **매번 재생성** |
+| 사용자 수정 `.agents/skills/**`, `.codex/agents/**` | managed marker/source hash 기준으로 보존 또는 conflict report |
 
 공식 갱신 경로는 `pnpm update claude-kit` → `postinstall` → `scripts/setup.js`. `kit-sync` 는 이 저장소의 공식 로컬 npm script 가 아니므로 별도 wrapper 나 글로벌 alias 를 쓰는 경우에도 최종 기준은 `setup.js` 출력과 `.claude-kit-meta.json` 입니다.
+
+`AGENTS.md` 는 설치 프로젝트 기준 runtime guidance 입니다. `claude-kit` 내부 authoring source 경로를 사용자-facing 링크로 노출하지 않으며, Codex rules policy 파일은 v1 설치에서 자동 생성하지 않습니다.
 
 ## 6. 제거
 

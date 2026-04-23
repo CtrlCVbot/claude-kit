@@ -56,9 +56,12 @@ postinstall
       ├── claude-md-renderer.js
       │   └── (templates/claude-md/ 블록 조합)
       ├── claude-md-merger.js
+      ├── (Codex 타깃) AGENTS.md runtime guidance lint
       ├── (Codex 타깃) codex-hook-compat.js
       └── quickstart-renderer.js  (CLAUDE-KIT-QUICKSTART.md 생성)
 ```
+
+Codex 타깃에서 `setup.js --dry-run` 은 `AGENTS.md.template` 렌더링 결과에 설치 프로젝트에서 깨질 수 있는 authoring source 경로, 존재하지 않는 guidance 경로, maintainer sync metadata 가 남아 있는지 preview 합니다. 실제 설치 시에도 새 `AGENTS.md` 를 생성하기 전에 같은 warning 을 출력합니다.
 
 ## 6. package.json 스크립트 연결
 
