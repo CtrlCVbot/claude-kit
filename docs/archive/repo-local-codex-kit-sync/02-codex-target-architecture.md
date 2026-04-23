@@ -1,6 +1,6 @@
 # Codex source-to-output 목표 아키텍처
 
-> **Status**: Draft plan (`docs/plan`, 2026-04-23)
+> **Status**: Archived draft plan (`docs/archive`, moved from `docs/plan`, 2026-04-23)
 > **공식 문서 기준 확인일**: 2026-04-23
 
 목표 아키텍처는 "repo-local output을 직접 작성"하거나 "설치된 프로젝트 안에서 sync를 실행"하는 것이 아닙니다. `claude-kit` 저장소에서 `src/claude/**`와 `src/codex/**` source parity를 만들고, package 설치 시 emitter가 이를 소비자 프로젝트의 Codex output으로 변환하는 구조입니다.
@@ -61,7 +61,7 @@ direct-use output은 "설치된 소비자 프로젝트에서 바로 쓰는 표�
 | `src/claude/**/commands/*.md` | `src/codex/**/skills/*/SKILL.md` 또는 `src/codex/**/commands/*.md` | `.agents/skills/**` 우선 |
 | `src/claude/**/skills/**/SKILL.md` | `src/codex/**/skills/**/SKILL.md` | `.agents/skills/**` |
 | `src/claude/**/agents/*.md` | `src/codex/**/agents/*.md` 또는 `.toml` emit source | `.codex/agents/*.toml` |
-| `src/claude/**/rules/*.md` | template/index/docs fallback | `AGENTS.md` + guidance docs |
+| `src/claude/**/rules/*.md` | `AGENTS.md.template` inline guidance, future runtime-visible docs only after output contract | `AGENTS.md` |
 | `src/claude/**/hooks/*.js` | `src/codex/**/hooks/*.js` 또는 fallback artifact | `.codex/hooks.json` candidate, skill checks |
 | `.claude/agent-memory/**` | checked-in references/docs | skill references/docs |
 
@@ -71,9 +71,9 @@ direct-use output은 "설치된 소비자 프로젝트에서 바로 쓰는 표�
 
 목표:
 
-- `AGENTS.md`에는 rule 본문 전체가 아니라 routing index와 사용 조건을 둡니다.
-- 상세 rule은 source docs 또는 generated guidance docs로 둡니다.
-- Codex가 필요한 상황에만 skill/reference/docs를 읽게 합니다.
+- `AGENTS.md`에는 rule 본문 전체가 아니라 inline 사용 조건과 짧은 판단 기준을 둡니다.
+- 설치 프로젝트에서 접근할 수 없는 `src/claude/**`, `src/codex/**`, 존재하지 않는 guidance docs 링크는 두지 않습니다.
+- Codex가 필요한 상황에만 설치된 skill/reference를 읽게 합니다.
 
 ## 6. 설치 시 목표 동작
 

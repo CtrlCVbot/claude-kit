@@ -1,8 +1,10 @@
 # Source parity 기반 Codex Kit Sync 계획 패키지
 
-> **Status**: Draft plan (`docs/plan`, 2026-04-23)
+> **Status**: Archived draft plan (`docs/archive`, moved from `docs/plan`, 2026-04-23)
 > **공식 문서 기준 확인일**: 2026-04-23
 > **범위**: 구현 전 계획 문서. 실제 source, emitter, generated output은 변경하지 않는다.
+
+이 패키지는 현재 archive에 있으므로 최신 구현 상태와 active plan을 함께 대조해야 합니다. 특히 `pairing-registry-v2`와 strict `src/codex` direct-use/plugin emitter는 이미 구현된 상태로 취급합니다.
 
 이 패키지의 목적은 단순히 plugin을 우회해 repo-local Codex skill을 만드는 것이 아닙니다. 목적은 `claude-kit` 저장소 안에서 Claude Code 에이전트 기능을 기준으로 만든 source asset을 Codex agent/skill 기능에도 맞게 동기화하고, 설치 시 그 Codex 산출물이 소비자 프로젝트에 반영되도록 emitter 계약을 정리하는 것입니다.
 

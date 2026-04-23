@@ -1,6 +1,6 @@
 # Commands source parity와 Codex skills 전환 전략
 
-> **Status**: Draft plan (`docs/plan`, 2026-04-23)
+> **Status**: Archived draft plan (`docs/archive`, moved from `docs/plan`, 2026-04-23)
 > **공식 문서 기준 확인일**: 2026-04-23
 
 이 문서의 핵심은 `.claude/commands` runtime 파일을 `.agents/skills`로 복사하는 것이 아닙니다. `src/claude/**/commands/*.md`의 의도를 분석해 `src/codex/**/skills/**/SKILL.md` 또는 `src/codex/**/commands/*.md` 중 알맞은 Codex source asset으로 매칭하는 것입니다.
@@ -55,7 +55,7 @@
 | `.claude/commands/kit-convert.md` | 변환 target이 command path 중심 | preview/report에 `targetKind`, `codexCommand`, `codexSkill`, `transitionState` 표시 |
 | `.claude/commands/kit-create.md` | command는 `both` required sibling 기본값 | workflow command는 skill scaffold를 우선하고, command는 wrapper/compat 필요 시만 생성 |
 | `.claude/commands/kit-validate.md` | command/skill을 별도 schema로만 검증 | 같은 workflow의 command+skill 중복을 `dual-output` 또는 `command-wrapper` 상태로 검증 |
-| `.claude/skills/kit-validation/references/schema-pairing-registry.md` | `paired`/`codex-skip` 중심 v1 schema | command transition field와 linked `codexSkill`을 허용하는 migration schema |
+| `.claude/skills/kit-validation/references/schema-pairing-registry.md` | `pairing-registry-v2` schema 적용됨 | command transition field와 linked `codexSkill`을 audit/report가 일관되게 해석하는지 검증 |
 
 이 gate가 통과되기 전에는 `kit-sync-agent`가 기존 `.claude` toolchain을 자동 변환 엔진으로 실행하면 안 됩니다. 이 상태에서는 analyze/report만 허용하고, product source 생성은 보류합니다. gate를 통과해도 `kit-*` toolchain 자체를 `src/codex/kit/**`으로 생성하지 않습니다.
 

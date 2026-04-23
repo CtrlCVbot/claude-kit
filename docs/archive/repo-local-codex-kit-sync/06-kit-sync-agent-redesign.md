@@ -1,6 +1,6 @@
 # kit-analyze / kit-sync / kit-sync-agent 재정의
 
-> **Status**: Draft plan (`docs/plan`, 2026-04-23)
+> **Status**: Archived draft plan (`docs/archive`, moved from `docs/plan`, 2026-04-23)
 > **공식 문서 기준 확인일**: 2026-04-23
 
 `kit-sync-agent`의 목적은 plugin output을 고치는 것이 아니며, 소비자 프로젝트에 설치되어 sync를 실행하는 것도 아닙니다. 목적은 이 `claude-kit` 저장소 안에서 `src/claude/**`와 `src/codex/**`의 source parity를 유지하고, 설치 시 Codex direct-use output과 plugin output이 같은 source에서 생성되도록 보장하는 것입니다.
@@ -148,7 +148,7 @@ kit-sync-agent
 | `.claude/commands/kit-convert.md` | preview와 result에 `targetKind`, `codexCommand`, `codexSkill`, `transitionState`를 표시 |
 | `.claude/commands/kit-create.md` | command 생성 기본값을 "항상 Codex command sibling"에서 "workflow command는 skill 우선, command는 wrapper/compat 필요 시"로 변경 |
 | `.claude/commands/kit-validate.md` | `skill-primary`, `dual-output`, `command-wrapper`를 schema 검증 대상으로 포함 |
-| `.claude/skills/kit-validation/references/schema-pairing-registry.md` | `pairing-registry-v2` 또는 호환 migration schema로 `codexSkill`, `primaryCodex`, `transitionState`, `driftStatus`를 검증 |
+| `.claude/skills/kit-validation/references/schema-pairing-registry.md` | 이미 적용된 `pairing-registry-v2` schema 기준으로 `codexSkill`, `primaryCodex`, `transitionState`, `driftStatus`를 검증 |
 
 alignment가 끝나기 전 `kit-sync-agent`는 자동 product source 생성을 하면 안 됩니다. 이 경우 report에는 `maintenance alignment: needs-alignment`를 표시하고, 생성 후보만 제안합니다.
 

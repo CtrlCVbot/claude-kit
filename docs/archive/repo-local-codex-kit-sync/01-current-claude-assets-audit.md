@@ -1,6 +1,6 @@
 # 현재 source asset과 runtime output 분석
 
-> **Status**: Draft plan (`docs/plan`, 2026-04-23)
+> **Status**: Archived draft plan (`docs/archive`, moved from `docs/plan`, 2026-04-23)
 > **공식 문서 기준 확인일**: 2026-04-23
 
 이 분석의 기준은 runtime `.claude/**`가 아니라 source asset입니다. `.claude/**`, `plugins/claude-kit/**`, `AGENTS.md`는 설치 결과 또는 generated output일 수 있으므로, source parity 판단은 `src/claude/**`, `src/codex/**`, `src/templates/**`, registries, scripts를 먼저 봅니다.

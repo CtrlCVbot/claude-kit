@@ -1,6 +1,6 @@
 # Installation output contract
 
-> **Status**: Draft plan (`docs/plan`, 2026-04-23)
+> **Status**: Archived draft plan (`docs/archive`, moved from `docs/plan`, 2026-04-23)
 > **공식 문서 기준 확인일**: 2026-04-23
 
 이 문서는 `claude-kit`가 소비자 프로젝트에 설치될 때 Codex target이 active이면 생성되어야 하는 output 계약입니다. 핵심은 plugin output과 direct-use output을 분리하되, 둘 다 같은 `src/codex/**` source에서 파생되게 하는 것입니다. 설치된 소비자 프로젝트 안에서 `kit-sync`를 실행하는 계약이 아닙니다.
@@ -53,12 +53,14 @@ Codex target active 시 설치는 다음 output을 생성해야 합니다.
 
 `scripts/setup.js` 또는 후속 emitter는 다음 정책을 가져야 합니다.
 
-1. Codex source는 `src/codex/**`를 우선 읽는다.
-2. `src/codex/**`가 없고 fallback이 승인된 경우에만 `src/claude/**`를 사용한다.
+1. direct-use/plugin skills, agents, commands의 Codex source는 v1에서 `src/codex/**`만 읽는다.
+2. direct-use/plugin skills, agents, commands에 `src/claude/**` fallback을 사용하지 않는다.
 3. direct-use output과 plugin output을 별도 함수로 생성한다.
 4. generated output을 다시 source로 읽지 않는다.
 5. update install에서는 사용자 소유 파일을 보존한다.
 6. `--dry-run`은 direct-use output과 plugin output을 모두 preview한다.
+
+fallback 허용 범위는 hooks compatibility, fallback docs, analysis metadata처럼 직접 사용자-facing Codex skill/agent/command를 생성하지 않는 영역으로 제한합니다. `src/claude/**`를 direct-use/plugin output source로 다시 허용하면 Claude-only asset이 소비자 프로젝트의 Codex surface로 노출될 수 있으므로 실패로 봅니다.
 
 ## 5. 생성 함수 후보
 
@@ -66,10 +68,12 @@ Codex target active 시 설치는 다음 output을 생성해야 합니다.
 |------|------|
 | `emitCodexDirectUse(projectRoot, activeDomains)` | `.agents/skills`, `.codex/agents`, `AGENTS.md` 생성 |
 | `emitCodexPlugin(projectRoot, activeDomains)` | `plugins/claude-kit/**`, marketplace 생성 |
-| `resolveCodexSource(domain, type, identity)` | `src/codex` 우선, 승인 fallback 처리 |
+| `listCodexComponentEntries(domain, type)` | direct-use/plugin component를 `src/codex`에서만 수집 |
 | `buildCodexAgentToml(sourceAgent)` | Codex custom agent toml 생성 |
 | `buildCodexSkillOutput(sourceSkill)` | repo-local skill output 생성 |
 | `previewCodexOutputs()` | dry-run summary |
+
+`resolveCodexSource(..., fallback)` 형태의 helper가 필요해도 direct-use/plugin skills, agents, commands에는 사용하지 않습니다. hook fallback 또는 compatibility report 전용 helper로만 분리합니다.
 
 ## 6. Codex agent TOML 생성 스키마
 
@@ -125,7 +129,8 @@ Codex target active 시 설치는 다음 output을 생성해야 합니다.
 | update install with existing `AGENTS.md` | existing `AGENTS.md` 보존, status reported |
 | update install with user-edited `.agents/skills/*` | 덮어쓰기 금지, conflict report |
 | update install with user-edited `.codex/agents/*` | 덮어쓰기 금지, conflict report |
-| missing Codex source | fallback 승인 없으면 analyze/sync 경고 |
+| missing Codex source for direct-use/plugin component | fallback 없이 analyze/sync 경고. output 미생성 |
+| missing Codex hook source with approved compatibility fallback | portability metadata 기반 fallback docs/skills 또는 warning |
 | hooks disabled environment | `.codex/hooks.json` 자동 의존 금지, fallback docs/skills 생성 |
 | plugin disabled future mode | direct-use output은 계속 생성 |
 

@@ -1,6 +1,6 @@
 # Hooks source parity와 portability 전략
 
-> **Status**: Draft plan (`docs/plan`, 2026-04-23)
+> **Status**: Archived draft plan (`docs/archive`, moved from `docs/plan`, 2026-04-23)
 > **공식 문서 기준 확인일**: 2026-04-23
 
 hooks는 `src/claude/**/hooks/*.js`와 `src/codex/**/hooks/*.js`의 direct parity 여부를 판단해야 합니다. 단, Codex hooks는 공식 문서상 experimental이고 Windows support가 disabled이므로, direct parity와 runtime activation은 분리해서 판단합니다.

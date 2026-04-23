@@ -1,6 +1,6 @@
 # Source parity 구현 로드맵
 
-> **Status**: Draft plan (`docs/plan`, 2026-04-23)
+> **Status**: Archived draft plan (`docs/archive`, moved from `docs/plan`, 2026-04-23)
 > **공식 문서 기준 확인일**: 2026-04-23
 
 이 로드맵은 `claude-kit` 저장소에서 source parity를 먼저 맞추고, 그 다음 설치 output을 확장하는 순서입니다. repo-local output을 손으로 만드는 우회 작업도, 설치된 소비자 프로젝트 안에서 sync를 실행하는 작업도 아닙니다. `src/claude` ↔ `src/codex` 매칭과 emitter 개선이 중심입니다.
@@ -30,7 +30,7 @@
 - commands → Codex skills/commands 기준 확정
 - skills → Codex skills direct 기준 확정
 - agents → Codex agent source와 `.toml` output 기준 확정
-- rules → AGENTS template/docs fallback 기준 확정
+- rules → `AGENTS.md.template` inline guidance 기준 확정. runtime-visible docs는 별도 output contract 전까지 보류
 - hooks → direct/fallback/review 기준 확정
 - agent-memory → skill references/docs 기준 확정
 - kit maintenance toolchain 경계 확정: `.claude/agents/kit-sync-agent.md`, `.claude/skills/kit-converter/**`, `.claude/skills/kit-scaffolding/**`, `.claude/skills/kit-validation/**`, `.claude/commands/kit-*.md`는 repo-maintenance 도구이며 `src/codex/kit/**` target이 아님
@@ -40,16 +40,16 @@
 
 - [08-source-parity-contract.md](08-source-parity-contract.md)와 registry 상태가 충돌하지 않음
 
-## P1.5. Maintenance toolchain alignment와 registry migration
+## P1.5. Maintenance toolchain alignment와 registry v2 안정화
 
-목표: 기존 `.claude` kit maintenance toolchain이 새 source parity 계약과 같은 언어를 쓰도록 먼저 맞춥니다. 이 단계는 toolchain 자체를 Codex product asset으로 변환하지 않습니다.
+목표: 기존 `.claude` kit maintenance toolchain이 새 source parity 계약과 같은 언어를 쓰도록 먼저 맞춥니다. `pairing-registry-v2`는 이미 적용된 상태로 보고, 이 단계는 v2 재도입이 아니라 audit/report/validation 안정화로 다룹니다. 이 단계는 toolchain 자체를 Codex product asset으로 변환하지 않습니다.
 
 작업:
 
 - `.claude/skills/kit-converter/SKILL.md`의 command mapping을 command-only에서 command/skill target selection으로 변경하는 계획 확정
 - `.claude/commands/kit-convert.md`, `.claude/commands/kit-create.md`, `.claude/commands/kit-validate.md`의 command target 정책 갱신 범위 확정
-- `.claude/skills/kit-validation/references/schema-pairing-registry.md`를 `pairing-registry-v2` migration 대상으로 정의
-- 기존 `command, paired` entries를 `transitionState: command-primary`, `primaryCodex: command`, `codexSkill: null`로 마이그레이션하는 규칙 확정
+- `.claude/skills/kit-validation/references/schema-pairing-registry.md`와 `src/pairing-registry.json`의 v2 field가 일치하는지 확인
+- 기존 `command, paired` entries가 `transitionState: command-primary`, `primaryCodex: command`, `codexSkill: null` 규칙을 따르는지 검증
 - `metadata-drift`, `generated-mismatch`, `content-drift`는 registry `status`가 아니라 `driftStatus` 또는 analyze report status로 분리
 - `.claude/commands/kit-*`와 `.claude/agents/kit-sync-agent.md`는 migration 대상 product command/agent에서 제외
 - `src/codex/kit/**` 생성 금지
@@ -91,7 +91,7 @@
 
 - missing Codex source 생성
 - drift Codex source 갱신
-- rules fallback template/docs 갱신
+- rules fallback은 `AGENTS.md.template` inline guidance를 갱신. runtime-visible docs 생성은 별도 계약 전까지 보류
 - hooks direct/fallback/review 처리
 - registries 갱신
 - portability metadata drift 갱신
@@ -176,7 +176,7 @@
 
 | 리스크 | 심각도 | 대응 |
 |------|------|------|
-| 현재 emitter가 `SRC_CLAUDE`를 읽음 | high | P5에서 `src/codex` source 기준으로 emitter 재정렬 |
+| direct-use/plugin emitter가 `SRC_CLAUDE` fallback을 다시 읽게 됨 | high | P5에서 strict `src/codex` source 기준을 회귀 방지 검증 |
 | hooks runtime parity 불확실 | high | source parity와 runtime activation 분리 |
 | `AGENTS.md` 직접 수정 유혹 | medium | template-first 정책 |
 | command→skill 중복 | medium | `kit-analyze`가 target type 중복 탐지 |

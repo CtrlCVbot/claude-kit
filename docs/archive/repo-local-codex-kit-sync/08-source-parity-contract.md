@@ -1,6 +1,6 @@
 # Source parity contract
 
-> **Status**: Draft plan (`docs/plan`, 2026-04-23)
+> **Status**: Archived draft plan (`docs/archive`, moved from `docs/plan`, 2026-04-23)
 > **공식 문서 기준 확인일**: 2026-04-23
 
 이 문서는 `src/claude/**`와 `src/codex/**`의 asset type별 매칭 계약입니다. `kit-analyze`, `kit-sync`, `kit-sync-agent`, `scripts/setup.js`는 이 저장소 안에서 이 계약을 기준으로 동작해야 합니다. 설치된 소비자 프로젝트 안에서 sync를 실행하는 계약이 아닙니다.
@@ -23,7 +23,7 @@
 | command | `src/claude/<domain>/commands/<name>.md` | `src/codex/<domain>/skills/<name>/SKILL.md` 우선, 필요 시 `src/codex/<domain>/commands/<name>.md` | `.agents/skills/**`, plugin command |
 | agent | `src/claude/<domain>/agents/<name>.md` | `src/codex/<domain>/agents/<name>.md` 또는 toml emitter source | `.codex/agents/*.toml`, plugin agent |
 | hook | `src/claude/<domain>/hooks/<name>.js` | `src/codex/<domain>/hooks/<name>.js` 또는 fallback skill/docs | hook output 또는 fallback docs |
-| rule | `src/claude/<domain>/rules/<name>.md` | `src/templates/AGENTS.md.template` + guidance docs, 일부 rules policy candidate | `AGENTS.md`, guidance docs |
+| rule | `src/claude/<domain>/rules/<name>.md` | `src/templates/AGENTS.md.template` inline guidance, 일부 rules policy candidate | `AGENTS.md` |
 | agent-memory | `.claude/agent-memory/<agent>/*.md` 또는 source 후보 | skill references/docs | `.agents/skills/**/references` |
 
 ## 3. kit maintenance toolchain boundary
@@ -83,9 +83,9 @@ command transition은 registry `status`를 대체하지 않습니다. `status`�
 | `codex-native-only` | Codex source exists without Claude source |
 | `unpaired` | source exists but pairing decision has not been made |
 
-## 6. registry migration contract
+## 6. registry v2 contract
 
-The next implementation phase should introduce `pairing-registry-v2` before command-to-skill migration writes new fields. v2 remains backward-compatible with the current v1 relationship fields but adds explicit command transition metadata.
+`pairing-registry-v2`는 이미 `src/pairing-registry.json`과 validation schema에 적용되어 있습니다. 이 archived plan의 후속 해석은 "v2를 새로 도입"이 아니라 "v2 필드가 audit/report/install 판단에서 일관되게 쓰이도록 안정화"입니다. v2는 기존 relationship field를 유지하면서 command transition metadata를 추가합니다.
 
 | Field | Type | Applies to | Meaning |
 |------|------|------------|---------|
@@ -95,14 +95,14 @@ The next implementation phase should introduce `pairing-registry-v2` before comm
 | `transitionState` | command transition enum or null | command | `command-primary`, `skill-primary`, `dual-output`, `command-wrapper`, `deprecated-command` |
 | `driftStatus` | null / `content-drift` / `metadata-drift` / `generated-mismatch` | all | Last known non-pairing drift state from analyze |
 
-Migration rules:
+Current and migration rules:
 
-- Existing `type=command`, `status=paired` entries become `transitionState: "command-primary"`, `primaryCodex: "command"`, `codexSkill: null`.
+- Existing `type=command`, `status=paired` entries should remain or be normalized as `transitionState: "command-primary"`, `primaryCodex: "command"`, `codexSkill: null`.
 - When a command is first converted to a skill, keep the existing `codex` command path and add `codexSkill`, `transitionState: "dual-output"`, `primaryCodex: "skill"` only after review.
 - When a command is reduced to a wrapper, keep `codex` as wrapper path and set `transitionState: "command-wrapper"`.
 - When command output is removed, set `transitionState: "skill-primary"`, keep `codexSkill`, and require a removal note or compatibility issue.
 - `metadata-drift` updates portability/registry metadata first. It must not trigger source regeneration by itself.
-- `audit-pairing`, `audit-drift`, docs generation, and validation scripts must be updated before v2 fields are written, so unknown fields do not create false failures.
+- `audit-pairing`, `audit-drift`, docs generation, and validation scripts must treat v2 fields as known fields and must not recreate a separate v1/v2 migration plan.
 
 `src/pairing-registry.json` should track asset identity, type, domain, persistent registry status, Claude path, Codex path, and optional linked Codex skill path. `src/exception-registry.json` should track intentional fallback, blocked, or review decisions. `src/claude/_meta/codex-portability.json` should explain official surface, evidence level, constraints, and fallback target.
 
