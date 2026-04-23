@@ -98,8 +98,8 @@ draft → planning → active → completed → archived
 - `templates/epic-brief.md` — `00-epic-brief.md` 양식
 - `templates/children-features.md` — `01-children-features.md` 양식
 - `templates/epic-binding.md` — Feature 의 `08-epic-binding.md` 양식 (§7 상태 동기 표 자동 갱신 대상, T-FSTATE-01)
-- `templates/phase-roadmap.md` — Phase 로드맵 자동 생성 (T-TMPL-01, v2.5.0)
-- `templates/implementation-hints.md` — §5-A 기획 힌트 + §5-B 실제 역기록 + §5-C 괴리 분석 (T-BKLG-03, **Backlog** — 구조 정의만, v2.6.0+ 활성화)
+- `templates/phase-roadmap.md` (사용법) + `templates/phase-roadmap.template.md` (순수 본문) — Phase 로드맵 자동 생성 (T-TMPL-01, v2.5.0; T-TMPL-05 분리)
+- `templates/implementation-hints.md` (사용법) + `templates/implementation-hints.template.md` (순수 본문) — §5-A 기획 힌트 + §5-B 실제 역기록 + §5-C 괴리 분석 (T-BKLG-03, **Backlog** — 구조 정의만, v2.6.0+ 활성화; T-TMPL-05 분리)
 
 ### `/plan-epic phase generate` — Phase 로드맵 자동 생성 (T-TMPL-01)
 
@@ -109,7 +109,7 @@ Phase A 9 단계 하드코딩 대체. Phase B/C 도 30 초 내 `01-children-feat
 /plan-epic phase generate --phase=B --features=F2,F4
 ```
 
-- 템플릿: `templates/phase-roadmap.md` (12 변수 치환)
+- 템플릿 본문: `templates/phase-roadmap.template.md` (12 변수 치환) · 사용법: `templates/phase-roadmap.md`
 - 안전 검증: 기존 Phase 섹션 존재 시 HARD FAIL + `--overwrite` 필수
 - 상세: [`/plan-epic` 커맨드 문서](../../../plan/commands/plan-epic.md#phase-로드맵-생성-plan-epic-phase-generate--t-tmpl-01)
 
