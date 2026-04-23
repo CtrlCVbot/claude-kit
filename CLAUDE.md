@@ -48,7 +48,8 @@ AI 거버넌스 밀키트. TDD 강제 + Hexagonal + Clean Architecture + Rich Do
   - Step 1 완료: T-RICE-01 · T-RACE-01 · T-FSTATE-02 (문서/룰)
   - Step 2 완료: T-EPMV-02 · T-EPMV-03 (커맨드 정의 + §4-1/§4-2 신설)
   - Step 3 완료: T-EPMV-01 (`epic-advance-rewrite.js` + 13 테스트 PASS)
-  - Step 4~6 대기: T-RACE-02/T-FSTATE-01 (훅) · v2.5.0 · Backlog
+  - Step 4A 완료: T-RACE-02 (`_read-cache-state.js` + 2 훅 + 27 테스트 PASS)
+  - Step 4B~6 대기: T-FSTATE-01 (훅) · v2.5.0 · Backlog
 
 <!-- kit:managed:start -->
 ## claude-kit 활성 구성

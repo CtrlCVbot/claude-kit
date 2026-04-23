@@ -112,6 +112,18 @@ WRONG:   Agent(write-capable) completes → Edit(file) → "File has not been re
 - [ ] 겹치면 **Edit 전 Read를 반드시 재호출** (캐시 재인증)
 - [ ] `agent-completion-cache-invalidate` 훅 경고 메시지가 떴다면 무시하지 말 것
 
+**자동 보조 장치 (T-RACE-02)**:
+
+write-capable 에이전트 완료 시 `agent-completion-cache-invalidate` 훅이 다음을 수행:
+
+1. **`.claude/state/pending-reread.json` 에 구조화 기록** (session + agent + timestamp)
+2. SubagentStop 시 기존 systemMessage 경고 유지 (dedup)
+3. 메인이 Edit/Write 호출 시 `pre-tool-use-edit-reread` 훅이 pending 상태를 조회하여 **파일 경로 타겟팅 경고** 발행 (파일별 세션당 1 회 dedup 후 pending clear)
+
+이 장치는 **경고 강화** 역할이며 자동 Read 호출은 수행하지 않는다 (Claude Code hook 제약). 메인 에이전트는 여전히 책임지고 Read 재호출을 수행해야 한다. hook 실패 시 기존 플로우 유지 (fail-open).
+
+**Read-only 에이전트 목록 SSOT**: `src/claude/core/hooks/_read-cache-state.js` 의 `READ_ONLY_AGENTS` 상수 (agent-completion-cache-invalidate 와 pre-tool-use-edit-reread 가 공유).
+
 **에이전트 분류 원천**: 각 에이전트 파일(`src/claude/**/agents/*.md`)의 `tools:` 필드가 SSOT. Write/Edit 보유 시 write-capable. Role 서술이 아닌 **능력 기반** 분류.
 
 **Read-only 에이전트** (Read 재호출 불필요):

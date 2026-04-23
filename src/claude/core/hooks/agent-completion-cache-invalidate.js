@@ -42,21 +42,32 @@
 const fs = require('fs');
 const path = require('path');
 const os = require('os');
+const state = require('./_read-cache-state.js');
 
-const READ_ONLY_AGENTS = new Set([
-  'dev-architect',
-  'dev-code-reviewer',
-  'plan-reviewer',
-  'copy-fidelity',
-  'copy-interaction-fidelity',
-  'copy-qa-reviewer',
-  'Explore',
-  'Plan',
-]);
+// SSOT: _read-cache-state.js 의 READ_ONLY_AGENTS 사용 (T-RACE-02 통합)
+const { isReadOnlyAgent } = state;
 
-function isReadOnlyAgent(name) {
-  if (!name) return false;
-  return READ_ONLY_AGENTS.has(name);
+// T-RACE-02: pending-reread.json state file 경로
+const STATE_FILE = path.join(process.cwd(), '.claude', 'state', 'pending-reread.json');
+
+function loadState() {
+  try {
+    if (!fs.existsSync(STATE_FILE)) return state.createState();
+    const raw = fs.readFileSync(STATE_FILE, 'utf8');
+    return state.deserialize(raw);
+  } catch {
+    return state.createState();  // fail-open
+  }
+}
+
+function saveState(newState) {
+  try {
+    const dir = path.dirname(STATE_FILE);
+    if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(STATE_FILE, state.serialize(newState), 'utf8');
+  } catch {
+    // fail-open — 상태 파일 기록 실패는 세션을 차단하지 않음
+  }
 }
 
 function main() {
@@ -83,6 +94,17 @@ function main() {
         process.exit(0);
       }
 
+      // T-RACE-02: pending-reread.json 에 구조화 기록 (pre-tool-use-edit-reread 에서 조회)
+      if (sessionId) {
+        const timestamp = new Date().toISOString();
+        const next = state.appendPendingAgent(loadState(), {
+          agent: subagentType,
+          sessionId,
+          timestamp,
+        });
+        saveState(next);
+      }
+
       // Dedup: same session + same agent_type → 1회만 경고
       if (sessionId) {
         const markerFile = path.join(
@@ -104,7 +126,8 @@ function main() {
         systemMessage:
           `[Read Cache] 서브에이전트 "${subagentType}" 완료. ` +
           `에이전트가 수정했을 가능성이 있는 파일을 메인이 편집할 경우 ` +
-          `Edit 전 Read를 재호출하십시오 — "File has not been read yet" 에러 방지.`,
+          `Edit 전 Read를 재호출하십시오 — "File has not been read yet" 에러 방지. ` +
+          `(T-RACE-02: pending-reread.json 기록)`,
       };
 
       process.stdout.write(JSON.stringify(response));
