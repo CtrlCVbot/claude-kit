@@ -58,7 +58,11 @@ AI 거버넌스 밀키트. TDD 강제 + Hexagonal + Clean Architecture + Rich Do
     - T-SHOW-01 (`/plan-epic show` 집약 출력 + list `--status=active` 확장)
     - T-SHOW-02 (`writer-output-format.md §2-1` Phase 진행률 블록 표준)
     - T-REVP-01 (`checkpoint-policy.md §8` 수정 요청 표준 응답 + `/plan-revise` 커맨드 + plan-pipeline SKILL §수정 요청 처리)
-  - Step 6 대기: Backlog (3 TASK — T-BKLG-01/02/03)
+  - Step 6 완료: Backlog 3 TASK (v2.6.0+ 승격 대비 선행 구현)
+    - T-BKLG-01 (`_change-history-core.js` + 20 테스트 PASS + `post-edit-history.js` stub, `CLAUDE_ENABLE_POST_EDIT_HISTORY=1` 로 활성)
+    - T-BKLG-02 (`dry-run-mode.md` 공통 규칙 + `/plan-epic` / `/plan-idea` `--dry-run` 플래그 정의)
+    - T-BKLG-03 (`templates/implementation-hints.md` §5-A/B/C 구조 + `agent-file-ownership.md` 확장)
+  - **Phase A 피드백 패키지 18/18 반영 완료** 🎉
 
 <!-- kit:managed:start -->
 ## claude-kit 활성 구성

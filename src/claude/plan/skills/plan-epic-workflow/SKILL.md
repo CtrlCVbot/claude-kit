@@ -99,6 +99,7 @@ draft → planning → active → completed → archived
 - `templates/children-features.md` — `01-children-features.md` 양식
 - `templates/epic-binding.md` — Feature 의 `08-epic-binding.md` 양식 (§7 상태 동기 표 자동 갱신 대상, T-FSTATE-01)
 - `templates/phase-roadmap.md` — Phase 로드맵 자동 생성 (T-TMPL-01, v2.5.0)
+- `templates/implementation-hints.md` — §5-A 기획 힌트 + §5-B 실제 역기록 + §5-C 괴리 분석 (T-BKLG-03, **Backlog** — 구조 정의만, v2.6.0+ 활성화)
 
 ### `/plan-epic phase generate` — Phase 로드맵 자동 생성 (T-TMPL-01)
 

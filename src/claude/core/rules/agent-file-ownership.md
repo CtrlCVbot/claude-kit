@@ -27,7 +27,9 @@
 | `.plans/features/active/{slug}/00-context/01-product-context.md` | plan-bridge-writer | — | — |
 | `.plans/features/active/{slug}/00-context/02-scope-boundaries.md` | plan-bridge-writer | — | — |
 | `.plans/features/active/{slug}/00-context/03-design-decisions.md` | plan-bridge-writer | — | — |
-| `.plans/features/active/{slug}/00-context/04-implementation-hints.md` | plan-bridge-writer | `/dev-feature` (T-BKLG-03 활성화 시 역기록) | — |
+| `.plans/features/active/{slug}/00-context/04-implementation-hints.md` §1~§4 + §5-A | plan-bridge-writer | — (read-only after initial write) | — |
+| `.plans/features/active/{slug}/00-context/04-implementation-hints.md §5-B` (T-BKLG-03, Backlog) | dev-implementer / `/dev-feature` | dev-implementer (`/dev-run` 시 actual_hours) | — |
+| `.plans/features/active/{slug}/00-context/04-implementation-hints.md §5-C` (T-BKLG-03, Backlog) | `/plan-archive` | — (final snapshot) | — |
 | `.plans/features/active/{slug}/00-context/08-epic-binding.md` | plan-bridge-writer | **plan-state-sync.js (§7 상태 표)** | 메인 (§1 Epic 상태 라인) |
 | `.plans/features/active/{slug}/dev-tasks.md` | `/dev-feature` | dev-implementer | — |
 
@@ -118,3 +120,4 @@
 | 날짜 | 내용 | 작성자 |
 |------|------|--------|
 | 2026-04-23 | 초안 — T-RACE-01 SSOT 확립 (N-02 대응) | Claude (메인테이너 역할) |
+| 2026-04-23 | §1-1 `04-implementation-hints.md` §5-A/§5-B/§5-C 소유권 행 추가 — T-BKLG-03 (Backlog) | Claude (메인테이너 역할) |

@@ -23,7 +23,10 @@ Epic 생성, 조회, 상태 전이. claude-kit v2.4.0 Hierarchical Plan Structur
 - `--status={draft|planning|active|completed|archived}` — list 필터 또는 advance 목표 상태
 - `--to={state}` — advance 서브커맨드의 목표 상태 (draft 에서 순방향만 허용)
 - `--force` — 게이트 위반 시 강제 전이 (T-EPMV-03: Critical checkpoint 경고 + 사용자 Y 필수 + `~/.claude/logs/checkpoints.jsonl` 로그 기록)
-- `--dry-run` — 파일 변경 없이 "이렇게 실행될 것" 요약 출력 (T-EPMV-01 후속 Step 에서 구현)
+- `--dry-run` — 파일 변경 없이 "이렇게 실행될 것" 요약 출력
+  - `advance` 서브커맨드: **구현 완료** (T-EPMV-01 `rewriteEpicLinks({ dryRun: true })`)
+  - `create` / `archive` / `phase generate`: **문서 정의 완료** (T-BKLG-02, v2.6.0+ 로직 구현)
+  - 공통 규칙: [`dry-run-mode.md`](../../core/rules/dry-run-mode.md)
 
 ## Workflow
 
