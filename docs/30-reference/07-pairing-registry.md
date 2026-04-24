@@ -5,12 +5,12 @@
 >
 > 이 파일은 **수기 편집 금지**. 재생성: `node scripts/docs-generate.js`
 
-전체 125 entries. Claude ↔ Codex 자산 페어링 상태.
+전체 126 entries. Claude ↔ Codex 자산 페어링 상태.
 
 ## Status 요약
 
 - **codex-skip**: 6
-- **paired**: 114
+- **paired**: 115
 - **unpaired**: 5
 
 ## copy 도메인
@@ -61,6 +61,7 @@
 | `agent-file-ownership` | rule | paired | fallback | — | — | `src/claude/core/rules/agent-file-ownership.md` | `src/codex/core/rules/agent-file-ownership.md` | — |
 | `checkpoint-policy` | rule | paired | fallback | — | — | `src/claude/core/rules/checkpoint-policy.md` | `src/codex/core/rules/checkpoint-policy.md` | — |
 | `dry-run-mode` | rule | paired | fallback | — | — | `src/claude/core/rules/dry-run-mode.md` | `src/codex/core/rules/dry-run-mode.md` | — |
+| `git-workflow-v2` | rule | paired | fallback | — | — | `src/claude/core/rules/git-workflow-v2.md` | `src/codex/core/rules/git-workflow-v2.md` | — |
 | `security-no-hardcoded-secrets` | rule | codex-skip | none | — | — | `src/claude/core/rules/security.md` | — | — |
 | `task-id-naming` | rule | paired | fallback | — | — | `src/claude/core/rules/task-id-naming.md` | `src/codex/core/rules/task-id-naming.md` | — |
 | `writer-output-format` | rule | paired | fallback | — | — | `src/claude/core/rules/writer-output-format.md` | `src/codex/core/rules/writer-output-format.md` | — |

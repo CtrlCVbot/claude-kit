@@ -99,7 +99,7 @@ D-04 결정: **통합 비용 > 유지 비용**.
 
 ## 5. 새 템플릿 추가 결정 트리
 
-```
+```text
 신규 템플릿이 필요하다
        ↓
 [Q1] 이 템플릿은 언제 소비되는가?
@@ -196,7 +196,7 @@ D-04 결정: **통합 비용 > 유지 비용**.
    - Location C: `kit-scaffolding/SKILL.md` 템플릿 목록 표에 엔트리
 5. **중복 검증**: §6 기준 Jaccard 측정
 6. **문서 반영**:
-   - [`docs/40-contributing/02-adding-a-component.md`](../../../../docs/40-contributing/02-adding-a-component.md) 역참조 (해당 시)
+   - [`docs/guide/claude-code/03-authoring-and-release.md`](../../../../docs/guide/claude-code/03-authoring-and-release.md) 역참조 (해당 시)
    - 본 룰 §1~§5 테이블 갱신
 7. **`/kit-validate`** 실행 (Location C 신규 시)
 8. **회귀 테스트**: Location A 신규 시 `setup.js --dry-run` 비교
@@ -208,7 +208,7 @@ D-04 결정: **통합 비용 > 유지 비용**.
 - **룰**: [`golden-principles.md §13`](./golden-principles.md) Non-Duplication, [`task-id-naming.md`](./task-id-naming.md) TASK ID 규칙, [`verification.md`](./verification.md) Iron Law
 - **소비자 스크립트**: `scripts/setup.js`, `scripts/claude-md-renderer.js`, `scripts/quickstart-renderer.js`
 - **소비 커맨드**: `/plan-epic` (Location B), `/kit-create` (Location C)
-- **기여 가이드**: [`docs/40-contributing/02-adding-a-component.md`](../../../../docs/40-contributing/02-adding-a-component.md), [`docs/40-contributing/03-domain-authoring.md`](../../../../docs/40-contributing/03-domain-authoring.md)
+- **기여/유지보수 가이드**: [`docs/guide/claude-code/03-authoring-and-release.md`](../../../../docs/guide/claude-code/03-authoring-and-release.md), [`docs/guide/sync/02-maintenance-workflow.md`](../../../../docs/guide/sync/02-maintenance-workflow.md)
 
 ---
 

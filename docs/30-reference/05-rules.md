@@ -5,7 +5,7 @@
 >
 > 이 파일은 **수기 편집 금지**. 재생성: `node scripts/docs-generate.js`
 
-전체 20개. 각 rule 문서의 h1 + 첫 blockquote 에서 추출.
+전체 21개. 각 rule 문서의 h1 + 첫 blockquote 에서 추출.
 
 ## copy 도메인
 
@@ -26,6 +26,7 @@
 | `Coding Style` | — | [src/claude/core/rules/coding-style.md](../../src/claude/core/rules/coding-style.md) |
 | `Date & Time Calculation (CRITICAL)` | — | [src/claude/core/rules/date-calculation.md](../../src/claude/core/rules/date-calculation.md) |
 | `Dry-Run 모드 공통 규칙 (T-BKLG-02, Backlog)` | **결론**: claude-kit 주요 커맨드의 `--dry-run` 플래그 표준. 실제 파일 생성·변경 없이 "이렇게 실행될 것" 요약 출력. 신규 사용자 learning curve 완만 + 실험 비용 감소. T-BKLG-02 (Backlog, v2.6.0+ 승격 대기). | [src/claude/core/rules/dry-run-mode.md](../../src/claude/core/rules/dry-run-mode.md) |
+| `Git 워크플로우` | — | [src/claude/core/rules/git-workflow-v2.md](../../src/claude/core/rules/git-workflow-v2.md) |
 | `Golden Principles` | 12 core principles for writing clean, maintainable code. | [src/claude/core/rules/golden-principles.md](../../src/claude/core/rules/golden-principles.md) |
 | `Interaction Rules` | — | [src/claude/core/rules/interaction.md](../../src/claude/core/rules/interaction.md) |
 | `Security Guidelines` | — | [src/claude/core/rules/security.md](../../src/claude/core/rules/security.md) |

@@ -19,7 +19,7 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const REF_DIR = path.join(ROOT, 'docs', '30-reference');
-const CONTRIBUTING_DIR = path.join(ROOT, 'docs', '40-contributing');
+const SYNC_GUIDE_DIR = path.join(ROOT, 'docs', 'guide', 'sync');
 const SRC_CLAUDE = path.join(ROOT, 'src', 'claude');
 const CLAUDE_RUNTIME = path.join(ROOT, '.claude');
 const PAIRING_PATH = path.join(ROOT, 'src', 'pairing-registry.json');
@@ -315,31 +315,31 @@ function genKitMaintenanceReference() {
     'Kit Maintenance Reference',
     '`.claude/commands/kit-*.md`, `.claude/agents/kit-*.md`, `.claude/skills/kit-*/SKILL.md`'
   );
-  out += '> Maintainer-only. 이 문서는 설치 프로젝트 runtime reference가 아니라 `claude-kit` 저장소 유지보수용 `kit-*` toolchain 카탈로그다. 사용자용 흐름은 `docs/20-user-guide/06-codex-dual-use.md`, 유지보수 기준은 `docs/40-contributing/06-codex-sync-maintenance.md`를 먼저 본다.\n\n';
+  out += '> Maintainer-only. 이 문서는 설치 프로젝트 runtime reference가 아니라 `claude-kit` 저장소 유지보수용 `kit-*` toolchain 카탈로그다. 사용자용 흐름은 `docs/guide/codex/01-codex-dual-use.md`, 유지보수 기준은 `docs/guide/sync/02-maintenance-workflow.md`를 먼저 본다.\n\n';
   out += `전체 ${total}개.\n\n`;
 
   out += '## Commands\n\n';
   out += '| Command | Description | Source |\n|---|---|---|\n';
   for (const r of commands) {
-    out += `| \`${r.name}\` | ${r.desc || '—'} | [${r.source}](../../${r.source}) |\n`;
+    out += `| \`${r.name}\` | ${r.desc || '—'} | [${r.source}](../../../${r.source}) |\n`;
   }
   out += '\n';
 
   out += '## Agents\n\n';
   out += '| Agent | Description | Model | Source |\n|---|---|---|---|\n';
   for (const r of agents) {
-    out += `| \`${r.name}\` | ${r.desc || '—'} | ${r.model || '—'} | [${r.source}](../../${r.source}) |\n`;
+    out += `| \`${r.name}\` | ${r.desc || '—'} | ${r.model || '—'} | [${r.source}](../../../${r.source}) |\n`;
   }
   out += '\n';
 
   out += '## Skills\n\n';
   out += '| Skill | Description | Source |\n|---|---|---|\n';
   for (const r of skills) {
-    out += `| \`${r.name}\` | ${r.desc || '—'} | [${r.source}](../../${r.source}) |\n`;
+    out += `| \`${r.name}\` | ${r.desc || '—'} | [${r.source}](../../../${r.source}) |\n`;
   }
   out += '\n';
 
-  return out;
+  return out.replace(/\s+$/u, '\n');
 }
 
 function genHooks() {
@@ -477,7 +477,7 @@ function main() {
     { dir: REF_DIR, out: '04-hooks.md', fn: genHooks },
     { dir: REF_DIR, out: '05-rules.md', fn: genRules },
     { dir: REF_DIR, out: '07-pairing-registry.md', fn: genPairing },
-    { dir: CONTRIBUTING_DIR, out: '07-kit-maintenance-reference.md', fn: genKitMaintenanceReference },
+    { dir: SYNC_GUIDE_DIR, out: '04-kit-maintenance-reference.md', fn: genKitMaintenanceReference },
   ];
 
   let drift = false;

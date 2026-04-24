@@ -11,7 +11,7 @@ pnpm add -D github:CtrlCVbot/claude-kit
 
 `postinstall`이 `profile.json`을 읽어 활성 `domains`와 `targets`에 맞는 컴포넌트를 설치한다. 기본값은 `domains: ["core", "dev"]`, `targets: ["claude"]`다.
 
-설치가 끝나면 프로젝트 루트에 `CLAUDE-KIT-QUICKSTART.md`가 생성된다. 이 문서는 설치 직후 사용자가 바로 열어볼 **self-contained 온보딩 문서**이며, 핵심 시작 절차는 이 문서 안에서 끝나도록 유지한다. 저장소 내부 상세 reference 는 [docs/](docs/README.md) 패키지에 있다.
+설치가 끝나면 프로젝트 루트에 `CLAUDE-KIT-QUICKSTART.md`가 생성된다. 이 문서는 설치 직후 사용자가 바로 열어볼 **self-contained 온보딩 문서**이며, 핵심 시작 절차는 이 문서 안에서 끝나도록 유지한다. 저장소 내부 상세 guide와 reference는 [docs/guide/](docs/guide/README.md) 패키지에 있다.
 
 ## 도메인 선택
 
@@ -78,7 +78,7 @@ Codex v1 지원 범위는 다음과 같다.
 - `rules`: Partial. 별도 디렉토리 복사 대신 `AGENTS.md`에 핵심 규칙 흡수
 - `mcp`: Excluded. 인증 및 transport 설계가 필요해 v1 범위에서 제외
 
-자산 매핑 규칙과 skip 정책은 [docs/10-features/04-multi-target.md](docs/10-features/04-multi-target.md)를 기준으로 본다. Codex hook의 공식 지원/검증 필요/skip 분류는 `src/claude/_meta/codex-portability.json`과 `scripts/codex-hook-compat.js`가 기준이다. 현재 Codex에서는 `Edit|Write` matcher 기반 hook이 제한될 수 있으며, `session-wrap-suggest.js`는 Claude session state 의존성 때문에 의도적으로 plugin hook에서 제외하고 skill fallback으로 다룬다.
+자산 매핑 규칙과 skip 정책은 [docs/guide/mapping/01-claude-to-codex-surface-matrix.md](docs/guide/mapping/01-claude-to-codex-surface-matrix.md)를 기준으로 본다. Codex hook의 공식 지원/검증 필요/skip 분류는 `src/claude/_meta/codex-portability.json`과 `scripts/codex-hook-compat.js`가 기준이다. 현재 Codex에서는 `Edit|Write` matcher 기반 hook이 제한될 수 있으며, `session-wrap-suggest.js`는 Claude session state 의존성 때문에 의도적으로 plugin hook에서 제외하고 skill fallback으로 다룬다.
 
 ## postinstall 동작
 
@@ -92,7 +92,7 @@ Codex v1 지원 범위는 다음과 같다.
 4. 루트 Quick Start 문서 `CLAUDE-KIT-QUICKSTART.md`를 생성 또는 갱신한다.
 5. `.claude-kit-meta.json`에 설치 메타데이터를 기록한다.
 
-> **Note**: `pnpm add` 결과가 `Already up to date`로 끝나고 `.claude/`가 생성되지 않는다면, pnpm이 의존성 변경 없음으로 판단해 `postinstall`을 건너뛴 상황이다. `pnpm rebuild claude-kit` 로 재실행하거나 `node node_modules/claude-kit/scripts/setup.js` 를 수동 실행한다. 자세한 사례는 [docs/20-user-guide/07-troubleshooting.md](docs/20-user-guide/07-troubleshooting.md) 참조.
+> **Note**: `pnpm add` 결과가 `Already up to date`로 끝나고 `.claude/`가 생성되지 않는다면, pnpm이 의존성 변경 없음으로 판단해 `postinstall`을 건너뛴 상황이다. `pnpm rebuild claude-kit` 로 재실행하거나 `node node_modules/claude-kit/scripts/setup.js` 를 수동 실행한다. 자세한 사례는 [docs/guide/shared/04-troubleshooting.md](docs/guide/shared/04-troubleshooting.md) 참조.
 
 ## 업데이트
 
@@ -106,11 +106,11 @@ pnpm update claude-kit
 
 ## 저장소 문서
 
-- [docs/README.md](docs/README.md): 문서 패키지 진입점 (5개 섹션 구조)
-- [docs/00-overview/01-what-is-claude-kit.md](docs/00-overview/01-what-is-claude-kit.md): 프로젝트 정체성과 가치
-- [docs/20-user-guide/01-installation.md](docs/20-user-guide/01-installation.md): 설치·설정·업데이트 가이드
-- [docs/10-features/04-multi-target.md](docs/10-features/04-multi-target.md): Claude + Codex 멀티타깃 운영
-- [docs/archive/2026-04-17/](docs/archive/2026-04-17/): 이전 설계 이력 (codex-compatibility, codex-sync, team-orchestration 등)
+- [docs/guide/README.md](docs/guide/README.md): 문서 패키지 진입점 (guide + reference + archive + plan)
+- [docs/guide/shared/00-overview.md](docs/guide/shared/00-overview.md): 공용 개념과 기본 사용 흐름
+- [docs/guide/shared/02-installation-and-configuration.md](docs/guide/shared/02-installation-and-configuration.md): 설치, 설정, 업데이트 가이드
+- [docs/guide/mapping/01-claude-to-codex-surface-matrix.md](docs/guide/mapping/01-claude-to-codex-surface-matrix.md): Claude/Codex surface 매핑
+- [docs/archive/2026-04-17/](docs/archive/2026-04-17/): 이전 guide lineage 기록
 
 ## License
 
