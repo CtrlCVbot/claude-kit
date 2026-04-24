@@ -4,8 +4,8 @@
     "description": "AI 거버넌스 밀키트. TDD 강제 + Hexagonal + Clean Architecture + Rich Domain Model. Claude + Codex 멀티타겟.",
     "type": "monorepo"
   },
-  "domains": ["core", "dev"],
-  "targets": ["claude"],
+  "domains": ["core", "dev", "plan", "copy"],
+  "targets": ["claude", "codex"],
   "monorepo": {
     "packageManager": "npm",
     "framework": "turborepo"
