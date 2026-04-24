@@ -6,13 +6,20 @@
 
 `scripts/` 아래의 Node.js 유틸리티 인덱스입니다. 각 스크립트의 권위적 설명은 **파일 상단 JSDoc** 에 있습니다 — 이 문서는 탐색용 요약입니다.
 
+주의:
+
+- 이 문서는 현재 manual reference입니다.
+- `node scripts/docs-generate.js --check` 대상이 아니므로, 설치 동작이나 문서 생성 동작이 바뀌면 수동 리뷰가 필요합니다.
+
 ## 1. 설치·빌드
 
 | 스크립트 | 호출 | 역할 |
 |---------|------|------|
-| [`setup.js`](../../scripts/setup.js) | `postinstall` (자동) | claude-kit 전체 설치 엔트리. `profile.json` 기반 자산 복사 + 컨텍스트 갱신 |
+| [`setup.js`](../../scripts/setup.js) | `postinstall` (자동) | claude-kit 전체 설치 엔트리. `profile.json` 기반으로 `.claude/`, `plugins/claude-kit/`, `.agents/skills/`, `.codex/agents/`, `AGENTS.md`, marketplace metadata를 정리 |
 | [`claude-md-renderer.js`](../../scripts/claude-md-renderer.js) | `setup.js` 내부 | `CLAUDE.md` 의 kit-managed 섹션을 도메인 블록 조합으로 렌더링 |
 | [`claude-md-merger.js`](../../scripts/claude-md-merger.js) | `setup.js` 내부 | 기존 `CLAUDE.md` 에 kit-managed 블록 병합 (마커 기반) |
+| [`agents-md-renderer.js`](../../scripts/agents-md-renderer.js) | `setup.js` 내부 | `AGENTS.md` managed section을 렌더링 |
+| [`agents-md-merger.js`](../../scripts/agents-md-merger.js) | `setup.js` 내부 | 기존 `AGENTS.md` 를 managed section merge 방식으로 갱신 |
 | [`merge-settings.js`](../../scripts/merge-settings.js) | `setup.js` 내부 | 템플릿 `settings.json` 을 사용자 `.claude/settings.json` 에 병합 (커스텀 보존) |
 | [`quickstart-renderer.js`](../../scripts/quickstart-renderer.js) | `setup.js` 내부 | 설치본 `CLAUDE-KIT-QUICKSTART.md` 를 도메인/타깃 조합으로 조립 |
 
@@ -20,12 +27,24 @@
 
 | 스크립트 | npm script | 역할 |
 |---------|-----------|------|
-| [`docs-generate.js`](../../scripts/docs-generate.js) | `generate:docs`, `check:docs` | `docs/30-reference/*.md` 자동 생성 (commands, agents, skills, hooks, rules, pairing) |
+| [`docs-generate.js`](../../scripts/docs-generate.js) | `generate:docs`, `check:docs` | shared reference(`docs/30-reference/01-05`, `07`)와 maintainer reference(`docs/40-contributing/07-kit-maintenance-reference.md`) 생성 및 검증 |
 | [`generate-sync-report.js`](../../scripts/generate-sync-report.js) | 수동 | codex-sync 상태 보고서 (markdown) 생성 — portability/exception/pairing 기준 |
 
 ### --check 모드 규약
 
-`docs-generate.js --check` 는 **현재 파일과 생성 결과가 다르면 exit 1**. CI 파이프라인에서 drift 감지용.
+`docs-generate.js --check` 는 **현재 파일과 생성 결과가 다르면 exit 1**. CI 파이프라인에서 drift 감지용입니다.
+
+다만 현재 범위는 아래 자동 생성 세트에 한정됩니다.
+
+- `01-commands.md`
+- `02-agents.md`
+- `03-skills.md`
+- `04-hooks.md`
+- `05-rules.md`
+- `07-pairing-registry.md`
+- `../40-contributing/07-kit-maintenance-reference.md`
+
+즉, `06-settings.md`와 `08-cli-scripts.md`는 별도 수동 리뷰가 필요합니다.
 
 ```bash
 pnpm check:docs

@@ -6,6 +6,11 @@
 
 `.claude/settings.json` 은 **Claude Code 가 런타임에 읽는 설정** 입니다. claude-kit 은 `profile.json` 을 근거로 이 파일을 **동적 생성·병합** 합니다. 이 문서는 스키마와 생성 메커니즘을 설명합니다.
 
+주의:
+
+- 이 문서는 현재 manual reference입니다.
+- `node scripts/docs-generate.js --check` 대상이 아니므로, 설치 동작이나 설정 merge를 바꾸면 수동 리뷰가 필요합니다.
+
 ## 1. 파일 위치
 
 | 파일 | 역할 | Git |
@@ -14,6 +19,12 @@
 | `.claude/settings.local.json` | 사용자 전용 설정 (개인) | **gitignore 권장** |
 
 두 파일은 Claude Code 에 의해 자동 병합됩니다. 같은 키가 있으면 `settings.local.json` 이 우선.
+
+Codex 경계:
+
+- Codex는 `.claude/settings.json`을 runtime 설정 파일로 사용하지 않습니다.
+- Codex 쪽 runtime 연결점은 주로 `plugins/claude-kit/hooks.json`, `plugins/claude-kit/.codex-plugin/plugin.json`, `AGENTS.md`입니다.
+- 따라서 이 문서는 Claude runtime 설정 reference로 읽고, Codex sync 관점의 전체 설치 동작은 [../40-contributing/06-codex-sync-maintenance.md](../40-contributing/06-codex-sync-maintenance.md)와 [08-cli-scripts.md](08-cli-scripts.md)를 함께 보는 편이 안전합니다.
 
 ## 2. 스키마 개요
 
