@@ -1,4 +1,5 @@
 {
+  "_note": "plan/copy 도메인 활성화: domains 배열에 추가 후 pnpm install 재실행. Codex 타깃 활성화: targets 배열에 \"codex\" 추가. 기본값은 Opt-in 원칙 (plan-epic-hierarchy.md §3) 준수하여 최소 구성 유지.",
   "project": {
     "name": "{{PROJECT_NAME}}",
     "description": "{{PROJECT_DESCRIPTION}}",
