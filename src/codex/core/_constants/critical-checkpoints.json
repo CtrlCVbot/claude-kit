@@ -1,0 +1,27 @@
+{
+  "_description": "IMP-KIT-016 — Critical Checkpoint 화이트리스트. 이 목록에 포함된 type은 --auto-proceed-on-pass 플래그를 무시하고 항상 정지하여 사용자 확인을 요구한다.",
+  "_spec": "docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-016-checkpoint-auto-proceed.md",
+  "schema_version": "1.0",
+  "whitelist": [
+    {
+      "type": "destructive",
+      "description": "파일 이동·삭제, 데이터 손실 가능성 있는 작업 (mv, rm, drop table 등)",
+      "examples": ["git reset --hard", "rm -rf", "DROP TABLE"]
+    },
+    {
+      "type": "external-api-call",
+      "description": "외부 시스템에 영향을 주는 호출 (/plan-bridge 중 Codex sibling 동기화, 원격 서비스 호출 등)",
+      "examples": ["GitHub API write", "원격 저장소 push", "Codex plugin install"]
+    },
+    {
+      "type": "breaking-change",
+      "description": "Breaking Change 배포 직전 확인 (릴리스 버전, 스키마 변경 등)",
+      "examples": ["major version bump", "BC-2.3.0-01/02 적용"]
+    },
+    {
+      "type": "initial-approval-gate",
+      "description": "사용자 최초 승인 게이트 (플랜 도메인: /plan-screen 승인, D1/D2/D3 이해관계자 승인 등)",
+      "examples": ["/plan-screen 승인 분기", "릴리스 이해관계자 sign-off"]
+    }
+  ]
+}

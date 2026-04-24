@@ -13,7 +13,9 @@
       "createdAt": "2026-04-10T00:00:00.000Z",
       "primaryCodex": "hook",
       "driftStatus": null,
-      "exceptionId": "EX-002"
+      "exceptionId": "EX-002",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "055c1f12"
     },
     {
       "identity": "continuous-learning",
@@ -25,7 +27,9 @@
       "codex": "src/codex/core/skills/continuous-learning/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "9ebfac49"
     },
     {
       "identity": "session-wrap",
@@ -37,7 +41,9 @@
       "codex": "src/codex/core/skills/session-wrap/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "b3668fb7"
     },
     {
       "identity": "dev-domain-modeling",
@@ -49,7 +55,9 @@
       "codex": "src/codex/dev/skills/dev-domain-modeling/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "d3668cc5"
     },
     {
       "identity": "dev-observability",
@@ -61,7 +69,9 @@
       "codex": "src/codex/dev/skills/dev-observability/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "39d11dd6"
     },
     {
       "identity": "dev-refactoring",
@@ -73,7 +83,9 @@
       "codex": "src/codex/dev/skills/dev-refactoring/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "859e145b"
     },
     {
       "identity": "dev-security-pipeline",
@@ -85,7 +97,9 @@
       "codex": "src/codex/dev/skills/dev-security-pipeline/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "db16a38c"
     },
     {
       "identity": "dev-tdd-workflow",
@@ -97,7 +111,9 @@
       "codex": "src/codex/dev/skills/dev-tdd-workflow/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "9fef5079"
     },
     {
       "identity": "dev-testing-backend",
@@ -109,7 +125,9 @@
       "codex": "src/codex/dev/skills/dev-testing-backend/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "e26cc040"
     },
     {
       "identity": "dev-testing-e2e",
@@ -121,7 +139,9 @@
       "codex": "src/codex/dev/skills/dev-testing-e2e/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "d8326d24"
     },
     {
       "identity": "dev-testing-frontend",
@@ -133,7 +153,9 @@
       "codex": "src/codex/dev/skills/dev-testing-frontend/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "aebe1e29"
     },
     {
       "identity": "dev-verification-engine",
@@ -145,7 +167,9 @@
       "codex": "src/codex/dev/skills/dev-verification-engine/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "39ef8053"
     },
     {
       "identity": "dev-architecture-decision",
@@ -157,7 +181,9 @@
       "codex": "src/codex/dev/skills/dev-architecture-decision/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "369aebda"
     },
     {
       "identity": "dev-feature-module",
@@ -169,7 +195,9 @@
       "codex": "src/codex/dev/skills/dev-feature-module/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "67428a48"
     },
     {
       "identity": "dev-feature-plan",
@@ -181,7 +209,9 @@
       "codex": "src/codex/dev/skills/dev-feature-plan/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "160c561d"
     },
     {
       "identity": "dev-layered-architecture",
@@ -193,7 +223,9 @@
       "codex": "src/codex/dev/skills/dev-layered-architecture/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "3e4ab7e5"
     },
     {
       "identity": "dev-workflow",
@@ -205,7 +237,9 @@
       "codex": "src/codex/dev/skills/dev-workflow/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "cda3617d"
     },
     {
       "identity": "dev-frontend-patterns",
@@ -217,7 +251,9 @@
       "codex": "src/codex/dev/skills/dev-frontend-patterns/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "77d7c463"
     },
     {
       "identity": "plan-prd-authoring",
@@ -229,7 +265,9 @@
       "codex": "src/codex/plan/skills/plan-prd-authoring/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "84bbb789"
     },
     {
       "identity": "plan-wireframe-design",
@@ -241,7 +279,9 @@
       "codex": "src/codex/plan/skills/plan-wireframe-design/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "5958450b"
     },
     {
       "identity": "plan-stitch-workflow",
@@ -253,7 +293,9 @@
       "codex": "src/codex/plan/skills/plan-stitch-workflow/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "f19889ff"
     },
     {
       "identity": "plan-review-criteria",
@@ -264,8 +306,8 @@
       "claude": "src/claude/plan/skills/plan-review-criteria/SKILL.md",
       "codex": "src/codex/plan/skills/plan-review-criteria/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "resync-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "4f83e770",
       "primaryCodex": "skill",
       "driftStatus": null
     },
@@ -279,7 +321,9 @@
       "codex": "src/codex/plan/skills/plan-archive-workflow/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "d235e50e"
     },
     {
       "identity": "plan-idea-management",
@@ -291,7 +335,9 @@
       "codex": "src/codex/plan/skills/plan-idea-management/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "27ec8491"
     },
     {
       "identity": "plan-screening-workflow",
@@ -303,7 +349,9 @@
       "codex": "src/codex/plan/skills/plan-screening-workflow/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "skill",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "03e7de2c"
     },
     {
       "identity": "plan-pipeline",
@@ -314,8 +362,8 @@
       "claude": "src/claude/plan/skills/plan-pipeline/SKILL.md",
       "codex": "src/codex/plan/skills/plan-pipeline/SKILL.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "dc7908a8",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "2b6afbd6",
       "primaryCodex": "skill",
       "driftStatus": null
     },
@@ -329,7 +377,9 @@
       "codex": "src/codex/dev/agents/dev-architect.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "agent",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "5b6dea7f"
     },
     {
       "identity": "dev-code-reviewer",
@@ -341,7 +391,9 @@
       "codex": "src/codex/dev/agents/dev-code-reviewer.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "agent",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "d36ef023"
     },
     {
       "identity": "dev-database-reviewer",
@@ -353,7 +405,9 @@
       "codex": "src/codex/dev/agents/dev-database-reviewer.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "agent",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "eef90ef0"
     },
     {
       "identity": "dev-doc-updater",
@@ -365,7 +419,9 @@
       "codex": "src/codex/dev/agents/dev-doc-updater.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "agent",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "348e1113"
     },
     {
       "identity": "dev-security-reviewer",
@@ -377,7 +433,9 @@
       "codex": "src/codex/dev/agents/dev-security-reviewer.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "agent",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "a5a592eb"
     },
     {
       "identity": "dev-verify-agent",
@@ -388,8 +446,8 @@
       "claude": "src/claude/dev/agents/dev-verify-agent.md",
       "codex": "src/codex/dev/agents/dev-verify-agent.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "206d3ca9",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "2e8a5d40",
       "primaryCodex": "agent",
       "driftStatus": null
     },
@@ -402,8 +460,8 @@
       "claude": "src/claude/plan/agents/plan-prd-writer.md",
       "codex": "src/codex/plan/agents/plan-prd-writer.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "resync-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "882ba4c5",
       "primaryCodex": "agent",
       "driftStatus": null
     },
@@ -417,7 +475,9 @@
       "codex": "src/codex/plan/agents/plan-wireframe-designer.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "agent",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "f87c86a9"
     },
     {
       "identity": "plan-stitch-integrator",
@@ -428,8 +488,8 @@
       "claude": "src/claude/plan/agents/plan-stitch-integrator.md",
       "codex": "src/codex/plan/agents/plan-stitch-integrator.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "resync-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "7ca415ad",
       "primaryCodex": "agent",
       "driftStatus": null
     },
@@ -442,8 +502,8 @@
       "claude": "src/claude/plan/agents/plan-reviewer.md",
       "codex": "src/codex/plan/agents/plan-reviewer.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "b44b5b88",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "9a6d8879",
       "primaryCodex": "agent",
       "driftStatus": null
     },
@@ -456,8 +516,8 @@
       "claude": "src/claude/plan/agents/plan-idea-collector.md",
       "codex": "src/codex/plan/agents/plan-idea-collector.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "45ba543c",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "a8eac39f",
       "primaryCodex": "agent",
       "driftStatus": null
     },
@@ -471,7 +531,9 @@
       "codex": "src/codex/plan/agents/plan-idea-screener.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "agent",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "ad374bb4"
     },
     {
       "identity": "dev-build-fix",
@@ -485,7 +547,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "a3533f9c"
     },
     {
       "identity": "dev-checkpoint",
@@ -499,7 +563,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "90d9f04b"
     },
     {
       "identity": "dev-commit-push-pr",
@@ -513,7 +579,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "deed2ed5"
     },
     {
       "identity": "dev-commit",
@@ -527,7 +595,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "de17e497"
     },
     {
       "identity": "dev-continue",
@@ -541,7 +611,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "c5b55e8c"
     },
     {
       "identity": "dev-explore",
@@ -555,7 +627,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "b3117441"
     },
     {
       "identity": "dev-handoff-verify",
@@ -566,8 +640,8 @@
       "claude": "src/claude/dev/commands/dev-handoff-verify.md",
       "codex": "src/codex/dev/commands/dev-handoff-verify.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "8ac1bb5c",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "469daa9f",
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
@@ -585,7 +659,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "a37f7415"
     },
     {
       "identity": "dev-plan",
@@ -599,7 +675,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "f56d6b9b"
     },
     {
       "identity": "dev-refactor",
@@ -613,7 +691,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "b46ea8f5"
     },
     {
       "identity": "dev-review",
@@ -627,7 +707,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "0b46f6f5"
     },
     {
       "identity": "dev-security-review",
@@ -641,7 +723,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "89d9959f"
     },
     {
       "identity": "dev-sync-docs",
@@ -655,7 +739,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "06e2b0ef"
     },
     {
       "identity": "dev-sync",
@@ -669,7 +755,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "4ed8df67"
     },
     {
       "identity": "dev-test-verify",
@@ -683,7 +771,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "14195d16"
     },
     {
       "identity": "dev-verify-all",
@@ -697,7 +787,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "c4dd97ca"
     },
     {
       "identity": "dev-verify-fe",
@@ -711,7 +803,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "9aee7d6e"
     },
     {
       "identity": "dev-architecture",
@@ -725,7 +819,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "2a636b00"
     },
     {
       "identity": "dev-feature",
@@ -736,8 +832,8 @@
       "claude": "src/claude/dev/commands/dev-feature.md",
       "codex": "src/codex/dev/commands/dev-feature.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "1dc13cce",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "71a59fea",
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
@@ -752,8 +848,8 @@
       "claude": "src/claude/dev/commands/dev-run.md",
       "codex": "src/codex/dev/commands/dev-run.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "a3540365",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "60c02d33",
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
@@ -771,7 +867,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "09da522b"
     },
     {
       "identity": "plan-prd",
@@ -782,8 +880,8 @@
       "claude": "src/claude/plan/commands/plan-prd.md",
       "codex": "src/codex/plan/commands/plan-prd.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "resync-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "1f8b66d3",
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
@@ -801,7 +899,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "132e8763"
     },
     {
       "identity": "plan-stitch",
@@ -815,7 +915,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "6e115458"
     },
     {
       "identity": "plan-idea",
@@ -829,7 +931,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "9168ca75"
     },
     {
       "identity": "plan-screen",
@@ -840,8 +944,8 @@
       "claude": "src/claude/plan/commands/plan-screen.md",
       "codex": "src/codex/plan/commands/plan-screen.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "1a1e995c",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "fe2e0bad",
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
@@ -859,7 +963,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "a89a6f98"
     },
     {
       "identity": "plan-improve",
@@ -873,7 +979,9 @@
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
-      "codexSkill": null
+      "codexSkill": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "bcdde39e"
     },
     {
       "identity": "plan-draft",
@@ -884,8 +992,8 @@
       "claude": "src/claude/plan/commands/plan-draft.md",
       "codex": "src/codex/plan/commands/plan-draft.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "resync-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "d3879dae",
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
@@ -900,7 +1008,7 @@
       "claude": "src/claude/plan/commands/plan-review.md",
       "codex": "src/codex/plan/commands/plan-review.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
       "contentHash": "7d36fd31",
       "primaryCodex": "command",
       "driftStatus": null,
@@ -916,8 +1024,8 @@
       "claude": "src/claude/plan/commands/plan-bridge.md",
       "codex": "src/codex/plan/commands/plan-bridge.md",
       "createdAt": "2026-04-16T00:22:26.273Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "resync-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "8b4fe53f",
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
@@ -933,7 +1041,9 @@
       "codex": "src/codex/core/hooks/edit-tracker.js",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "hook",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "91cf0388"
     },
     {
       "identity": "code-quality-reminder",
@@ -945,7 +1055,9 @@
       "codex": "src/codex/core/hooks/code-quality-reminder.js",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "hook",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "dad40436"
     },
     {
       "identity": "security-auto-trigger",
@@ -957,7 +1069,9 @@
       "codex": "src/codex/core/hooks/security-auto-trigger.js",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "hook",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "90de6e08"
     },
     {
       "identity": "dev-db-guard",
@@ -969,7 +1083,9 @@
       "codex": "src/codex/dev/hooks/dev-db-guard.js",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "hook",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "993f96f4"
     },
     {
       "identity": "dev-tdd-guard",
@@ -980,7 +1096,7 @@
       "claude": "src/claude/dev/hooks/dev-tdd-guard.js",
       "codex": "src/codex/dev/hooks/dev-tdd-guard.js",
       "createdAt": "2026-04-16T00:22:26.273Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
       "contentHash": "5fb44fdb",
       "primaryCodex": "hook",
       "driftStatus": null
@@ -995,7 +1111,9 @@
       "codex": "src/codex/dev/hooks/dev-feature-scope-guard.js",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "hook",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "ac116f15"
     },
     {
       "identity": "plan-doc-guard",
@@ -1007,7 +1125,9 @@
       "codex": "src/codex/plan/hooks/plan-doc-guard.js",
       "createdAt": "2026-04-16T00:22:26.273Z",
       "primaryCodex": "hook",
-      "driftStatus": null
+      "driftStatus": null,
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "9220939b"
     },
     {
       "identity": "copy-fidelity",
@@ -1018,8 +1138,8 @@
       "claude": "src/claude/copy/agents/copy-fidelity.md",
       "codex": "src/codex/copy/agents/copy-fidelity.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "d16e5f07",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "c8c5d6b3",
       "primaryCodex": "agent",
       "driftStatus": null
     },
@@ -1032,8 +1152,8 @@
       "claude": "src/claude/copy/agents/copy-interaction-fidelity.md",
       "codex": "src/codex/copy/agents/copy-interaction-fidelity.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "bd072bb5",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "6b92304f",
       "primaryCodex": "agent",
       "driftStatus": null
     },
@@ -1046,8 +1166,8 @@
       "claude": "src/claude/copy/agents/copy-reference-baseline.md",
       "codex": "src/codex/copy/agents/copy-reference-baseline.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "e80e49e5",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "2541ca3d",
       "primaryCodex": "agent",
       "driftStatus": null
     },
@@ -1060,8 +1180,8 @@
       "claude": "src/claude/copy/agents/copy-qa-reviewer.md",
       "codex": "src/codex/copy/agents/copy-qa-reviewer.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "b8c55413",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "4af71c65",
       "primaryCodex": "agent",
       "driftStatus": null
     },
@@ -1074,8 +1194,8 @@
       "claude": "src/claude/copy/commands/copy-reference-refresh.md",
       "codex": "src/codex/copy/commands/copy-reference-refresh.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "b63b3511",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "d82dcd37",
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
@@ -1090,8 +1210,8 @@
       "claude": "src/claude/copy/commands/copy-visual-review.md",
       "codex": "src/codex/copy/commands/copy-visual-review.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "46a40f01",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "bd82ff59",
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
@@ -1106,8 +1226,8 @@
       "claude": "src/claude/copy/commands/copy-interaction-review.md",
       "codex": "src/codex/copy/commands/copy-interaction-review.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "3d65c426",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "a2dd95ad",
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
@@ -1122,8 +1242,8 @@
       "claude": "src/claude/copy/commands/copy-gap-board.md",
       "codex": "src/codex/copy/commands/copy-gap-board.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
-      "contentHash": "c6dbdc86",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "bc91c86b",
       "primaryCodex": "command",
       "driftStatus": null,
       "transitionState": "command-primary",
@@ -1138,7 +1258,7 @@
       "claude": "src/claude/copy/commands/copy-plan-unit.md",
       "codex": "src/codex/copy/commands/copy-plan-unit.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
       "contentHash": "c28d9181",
       "primaryCodex": "command",
       "driftStatus": null,
@@ -1154,7 +1274,7 @@
       "claude": "src/claude/copy/commands/copy-verify.md",
       "codex": "src/codex/copy/commands/copy-verify.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
       "contentHash": "6c270b46",
       "primaryCodex": "command",
       "driftStatus": null,
@@ -1170,7 +1290,7 @@
       "claude": "src/claude/copy/commands/copy-closeout.md",
       "codex": "src/codex/copy/commands/copy-closeout.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
       "contentHash": "98f8dd7e",
       "primaryCodex": "command",
       "driftStatus": null,
@@ -1311,7 +1431,7 @@
       "claude": "src/claude/copy/skills/copy-pipeline/SKILL.md",
       "codex": "src/codex/copy/skills/copy-pipeline/SKILL.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
       "contentHash": "165989fe",
       "primaryCodex": "skill",
       "driftStatus": null
@@ -1325,7 +1445,7 @@
       "claude": "src/claude/copy/skills/copy-evidence-management/SKILL.md",
       "codex": "src/codex/copy/skills/copy-evidence-management/SKILL.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
       "contentHash": "8a679a11",
       "primaryCodex": "skill",
       "driftStatus": null
@@ -1339,7 +1459,7 @@
       "claude": "src/claude/copy/skills/copy-gap-analysis/SKILL.md",
       "codex": "src/codex/copy/skills/copy-gap-analysis/SKILL.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
       "contentHash": "1731c161",
       "primaryCodex": "skill",
       "driftStatus": null
@@ -1353,7 +1473,7 @@
       "claude": "src/claude/copy/skills/copy-qa-workflow/SKILL.md",
       "codex": "src/codex/copy/skills/copy-qa-workflow/SKILL.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
       "contentHash": "b5ec47a4",
       "primaryCodex": "skill",
       "driftStatus": null
@@ -1367,7 +1487,7 @@
       "claude": "src/claude/copy/skills/copy-closeout-workflow/SKILL.md",
       "codex": "src/codex/copy/skills/copy-closeout-workflow/SKILL.md",
       "createdAt": "2026-04-16T12:00:00.000Z",
-      "lastSyncedAt": "2026-04-17T00:00:00.000Z",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
       "contentHash": "58c78e5c",
       "primaryCodex": "skill",
       "driftStatus": null
@@ -1381,8 +1501,8 @@
       "claude": "src/claude/plan/agents/plan-bridge-writer.md",
       "codex": "src/codex/plan/agents/plan-bridge-writer.md",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "register-only-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "726f3f89",
       "primaryCodex": "agent",
       "driftStatus": null
     },
@@ -1395,8 +1515,8 @@
       "claude": "src/claude/plan/agents/plan-design-writer.md",
       "codex": "src/codex/plan/agents/plan-design-writer.md",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "register-only-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "876824c7",
       "primaryCodex": "agent",
       "driftStatus": null
     },
@@ -1409,8 +1529,8 @@
       "claude": "src/claude/plan/agents/plan-draft-writer.md",
       "codex": "src/codex/plan/agents/plan-draft-writer.md",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "register-only-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "165c81b9",
       "primaryCodex": "agent",
       "driftStatus": null
     },
@@ -1423,8 +1543,8 @@
       "claude": "src/claude/plan/commands/plan-design.md",
       "codex": "src/codex/plan/commands/plan-design.md",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "register-only-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "e3eaf479",
       "primaryCodex": "command",
       "transitionState": "command-primary",
       "driftStatus": null
@@ -1438,8 +1558,8 @@
       "claude": "src/claude/dev/rules/edit-coordinates-governance.md",
       "codex": "src/codex/dev/rules/edit-coordinates-governance.md",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "register-only-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "4e65ad4c",
       "primaryCodex": "fallback",
       "driftStatus": null
     },
@@ -1452,8 +1572,8 @@
       "claude": "src/claude/plan/hooks/plan-idea-move-guard.js",
       "codex": "src/codex/plan/hooks/plan-idea-move-guard.js",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "register-only-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "567ca36d",
       "primaryCodex": "hook",
       "driftStatus": null
     },
@@ -1466,8 +1586,8 @@
       "claude": "src/claude/plan/hooks/plan-review-trigger.js",
       "codex": "src/codex/plan/hooks/plan-review-trigger.js",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "register-only-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "2a11809e",
       "primaryCodex": "hook",
       "driftStatus": null
     },
@@ -1480,8 +1600,8 @@
       "claude": "src/claude/plan/skills/claude-design-workflow/SKILL.md",
       "codex": "src/codex/plan/skills/claude-design-workflow/SKILL.md",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "register-only-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "d8fc24bd",
       "primaryCodex": "skill",
       "driftStatus": null
     },
@@ -1494,8 +1614,8 @@
       "claude": "src/claude/core/rules/checkpoint-policy.md",
       "codex": "src/codex/core/rules/checkpoint-policy.md",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "register-only-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "d4964c6b",
       "primaryCodex": "fallback",
       "driftStatus": null
     },
@@ -1508,8 +1628,8 @@
       "claude": "src/claude/core/rules/task-id-naming.md",
       "codex": "src/codex/core/rules/task-id-naming.md",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "register-only-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "4b138962",
       "primaryCodex": "fallback",
       "driftStatus": null
     },
@@ -1535,8 +1655,8 @@
       "claude": "src/claude/core/hooks/no-duplication-guard.js",
       "codex": "src/codex/core/hooks/no-duplication-guard.js",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "convert-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "3bf7d8e9",
       "primaryCodex": "hook",
       "driftStatus": null
     },
@@ -1549,8 +1669,8 @@
       "claude": "src/claude/core/hooks/pre-tool-use-edit-reread.js",
       "codex": "src/codex/core/hooks/pre-tool-use-edit-reread.js",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "convert-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "c4348d24",
       "primaryCodex": "hook",
       "driftStatus": null
     },
@@ -1563,8 +1683,8 @@
       "claude": "src/claude/core/hooks/post-edit-history.js",
       "codex": "src/codex/core/hooks/post-edit-history.js",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "convert-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "7c58212a",
       "primaryCodex": "hook",
       "driftStatus": null
     },
@@ -1577,8 +1697,8 @@
       "claude": "src/claude/core/hooks/feedback-collector.js",
       "codex": "src/codex/core/hooks/feedback-collector.js",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "register-only-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "a44fb822",
       "primaryCodex": "hook",
       "driftStatus": null
     },
@@ -1591,8 +1711,8 @@
       "claude": "src/claude/core/hooks/feedback-subagent-collector.js",
       "codex": "src/codex/core/hooks/feedback-subagent-collector.js",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "register-only-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "d521e610",
       "primaryCodex": "hook",
       "driftStatus": null
     },
@@ -1605,8 +1725,8 @@
       "claude": "src/claude/core/rules/dry-run-mode.md",
       "codex": "src/codex/core/rules/dry-run-mode.md",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "convert-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "b17f0ec0",
       "primaryCodex": "fallback",
       "driftStatus": null
     },
@@ -1619,8 +1739,8 @@
       "claude": "src/claude/core/rules/writer-output-format.md",
       "codex": "src/codex/core/rules/writer-output-format.md",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "convert-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "f0be01bd",
       "primaryCodex": "fallback",
       "driftStatus": null
     },
@@ -1633,8 +1753,8 @@
       "claude": "src/claude/core/rules/agent-file-ownership.md",
       "codex": "src/codex/core/rules/agent-file-ownership.md",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "convert-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "6a1d89ae",
       "primaryCodex": "fallback",
       "driftStatus": null
     },
@@ -1647,8 +1767,8 @@
       "claude": "src/claude/core/commands/agent-report.md",
       "codex": "src/codex/core/commands/agent-report.md",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "convert-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "755c24c8",
       "primaryCodex": "command",
       "transitionState": "command-primary",
       "driftStatus": null
@@ -1662,8 +1782,8 @@
       "claude": "src/claude/plan/rules/plan-epic-hierarchy.md",
       "codex": "src/codex/plan/rules/plan-epic-hierarchy.md",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "convert-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "814c5ade",
       "primaryCodex": "fallback",
       "driftStatus": null
     },
@@ -1676,8 +1796,8 @@
       "claude": "src/claude/plan/rules/rice-lane-weighted-adjustment.md",
       "codex": "src/codex/plan/rules/rice-lane-weighted-adjustment.md",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "convert-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "c6d9efb2",
       "primaryCodex": "fallback",
       "driftStatus": null
     },
@@ -1690,8 +1810,8 @@
       "claude": "src/claude/dev/agents/dev-implementer.md",
       "codex": "src/codex/dev/agents/dev-implementer.md",
       "createdAt": "2026-04-23T00:00:00.000Z",
-      "lastSyncedAt": "2026-04-23T00:00:00.000Z",
-      "contentHash": "convert-2026-04-23",
+      "lastSyncedAt": "2026-04-24T01:47:44.210Z",
+      "contentHash": "cea54a8f",
       "primaryCodex": "agent",
       "driftStatus": null
     }

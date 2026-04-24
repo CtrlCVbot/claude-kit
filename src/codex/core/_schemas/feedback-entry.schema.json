@@ -1,0 +1,125 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://claude-kit/core/v1/feedback-entry.schema.json",
+  "title": "Feedback Entry",
+  "description": "kit-feedback-archiving Phase 3 — 파이프라인 피드백 엔트리 스키마 v1.0. 설계: docs/plan/kit-feedback-archiving/02-feedback-schema.md",
+  "type": "object",
+  "required": ["schema_version", "entry_id", "runtime", "command", "domain", "session", "usage"],
+  "additionalProperties": true,
+  "properties": {
+    "schema_version": { "type": "string", "pattern": "^1\\.\\d+$" },
+    "entry_id": { "type": "string", "pattern": "^\\d{8}-\\d{6}-.+$" },
+    "runtime": { "type": "string", "enum": ["claude", "codex", "other"] },
+    "command": { "type": "string", "pattern": "^/.+" },
+    "domain": { "type": "string", "enum": ["plan", "copy", "dev", "core"] },
+    "session": {
+      "type": "object",
+      "required": ["session_id", "started_at", "ended_at", "duration_seconds"],
+      "properties": {
+        "session_id": { "type": "string" },
+        "started_at": { "type": "string" },
+        "ended_at": { "type": "string" },
+        "duration_seconds": { "type": "number", "minimum": 0 },
+        "user": { "type": "string" }
+      }
+    },
+    "context": {
+      "type": "object",
+      "properties": {
+        "project_root": { "type": "string" },
+        "feature_slug": { "type": "string" },
+        "scenario": { "type": "string", "enum": ["A", "B", "C"] },
+        "feature_type": { "type": "string", "enum": ["copy", "dev", "hybrid"] },
+        "cwd_relative": { "type": "string" },
+        "git_branch": { "type": "string" },
+        "git_sha_short": { "type": "string" }
+      }
+    },
+    "usage": {
+      "type": "object",
+      "properties": {
+        "agents_invoked": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["name"],
+            "properties": {
+              "name": { "type": "string" },
+              "calls": { "type": "number", "minimum": 0 },
+              "status": { "type": "string", "enum": ["success", "incomplete", "failure"] }
+            }
+          }
+        },
+        "skills_loaded": { "type": "array", "items": { "type": "string" } },
+        "tools_used": {
+          "type": "object",
+          "additionalProperties": { "type": "number", "minimum": 0 }
+        },
+        "manual_edits_count": { "type": "number", "minimum": 0 },
+        "human_checkpoints": { "type": "number", "minimum": 0 },
+        "reruns": { "type": "number", "minimum": 0 },
+        "parallel_executions": { "type": "number", "minimum": 0 }
+      }
+    },
+    "issues_observed": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "severity"],
+        "properties": {
+          "id": { "type": "string" },
+          "type": {
+            "type": "string",
+            "enum": [
+              "permission_mismatch", "framework_drift", "cache_error", "missing_agent",
+              "undefined_mode", "checkpoint_imbalance", "duplication", "trust_only",
+              "truncation_ignored", "other"
+            ]
+          },
+          "severity": { "type": "string", "enum": ["P0", "P1", "P2"] },
+          "description": { "type": "string" },
+          "evidence": { "type": "object" },
+          "related_imp_kit_id": { "type": "string" }
+        }
+      }
+    },
+    "agent_capability_gaps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["agent", "gap_type"],
+        "properties": {
+          "agent": { "type": "string" },
+          "gap_type": { "type": "string", "enum": ["tool_permission", "memory", "schema", "role_clarity"] },
+          "observed_behavior": { "type": "string" },
+          "expected_behavior": { "type": "string" },
+          "suggested_improvement_ref": { "type": "string" }
+        }
+      }
+    },
+    "suggestions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["text"],
+        "properties": {
+          "text": { "type": "string" },
+          "affects": { "type": "array", "items": { "type": "string" } },
+          "estimated_effort": { "type": "string", "enum": ["S", "M", "L"] },
+          "confidence": { "type": "string", "enum": ["high", "medium", "low"] },
+          "related_imp_kit_id": { "type": "string" }
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "collector_version": { "type": "string" },
+        "collection_method": { "type": "string", "enum": ["heuristic", "llm", "manual"] },
+        "deep_analysis_used": { "type": "boolean" },
+        "redactions_applied": { "type": "array", "items": { "type": "string" } },
+        "warnings": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

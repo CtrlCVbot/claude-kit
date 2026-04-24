@@ -1,0 +1,31 @@
+{
+  "_description": "IMP-KIT-014 — stage-manifest.json 소비자 등록부. 스키마 변경 시 소비자 영향 자동 검증.",
+  "_spec": "docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-014-stage-manifest-schema-version.md",
+  "schema_version_required": ">=1.0",
+  "consumers": [
+    {
+      "id": "dev-feature-phase-a",
+      "type": "command",
+      "path": "src/claude/dev/commands/dev-feature.md",
+      "reads": ["stages"]
+    },
+    {
+      "id": "plan-bridge-writer",
+      "type": "agent",
+      "path": "src/claude/plan/agents/plan-bridge-writer.md",
+      "reads": ["stages", "entryPoint"]
+    },
+    {
+      "id": "plan-draft-writer",
+      "type": "agent",
+      "path": "src/claude/plan/agents/plan-draft-writer.md",
+      "reads": ["slug", "stages"]
+    },
+    {
+      "id": "plan-pipeline-skill",
+      "type": "skill",
+      "path": "src/claude/plan/skills/plan-pipeline/SKILL.md",
+      "reads": ["schema_version", "stages", "blueprintSource"]
+    }
+  ]
+}

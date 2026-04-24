@@ -1,0 +1,91 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://claude-kit/plan/v1/routing-metadata.schema.json",
+  "title": "Plan Routing Metadata",
+  "description": "Feature 파이프라인의 경로 결정/추적 메타데이터. plan-draft-writer가 초기 생성, plan-bridge-writer가 검증(Read-only), plan-design/plan-stitch가 post_wireframe_path 필드 갱신. 관련: IMP-KIT-003/IMP-KIT-004/IMP-KIT-006/IMP-KIT-027.",
+  "type": "object",
+  "required": ["schema_version", "category", "feature_type"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^1\\.\\d+$",
+      "description": "스키마 버전 (1.x만 지원). 본 스키마는 $id에 v1 suffix 포함."
+    },
+    "category": {
+      "enum": ["Lite", "Standard"],
+      "description": "Feature 규모 판정 (6개 트리거 중 ≥1건 매칭 시 Standard)"
+    },
+    "scenario": {
+      "enum": ["A", "B", "C", null],
+      "description": "copy 도메인 시나리오. copy 비활성 프로젝트는 null (PCC-04 valid). A=Greenfield, B=Partial, C=Fidelity Correction"
+    },
+    "feature_type": {
+      "enum": ["copy", "dev"],
+      "description": "Feature 유형. copy=원본 대응 시각/인터랙션 차이 닫기, dev=그 외 (백엔드/데이터 등)"
+    },
+    "hybrid": {
+      "type": "boolean",
+      "default": false,
+      "description": "dev Feature + 레퍼런스 캡처 필요 시그널 감지 시 true. IMP-KIT-006 Hybrid 모드 활성 기준."
+    },
+    "triggers_matched": {
+      "type": "array",
+      "items": { "type": "integer", "minimum": 1, "maximum": 6 },
+      "description": "Standard 판정 시 매칭된 6개 트리거 번호 배열 (복수 매칭 추적)"
+    },
+    "entryPoint": {
+      "type": "string",
+      "description": "진입 경로 식별자. 예: 'P3-blueprint-fast-track' (blueprint-import 태그인 경우)"
+    },
+    "blueprintSource": {
+      "type": "string",
+      "description": "Blueprint feature plan 경로 (blueprint-import IDEA인 경우). 불변 계약: blueprint는 source spec, dev-feature 직접 입력 불가."
+    },
+    "override": {
+      "type": "object",
+      "description": "Human Checkpoint에서 사용자가 에이전트 판정을 override한 경우 감사 기록",
+      "required": ["field", "from", "to"],
+      "properties": {
+        "field": { "type": "string", "description": "오버라이드된 필드 이름 (category/scenario/feature_type/hybrid 등)" },
+        "from": { "description": "에이전트 원 판정 값" },
+        "to": { "description": "사용자 최종 값" },
+        "reason": { "type": "string", "description": "오버라이드 이유 (선택)" }
+      }
+    },
+    "post_wireframe_path": {
+      "enum": ["design", "stitch", "design+stitch", "stitch+design", "skipped", null],
+      "default": null,
+      "description": "wireframe 이후 단계 선택 추적 (IMP-KIT-027). null=미선택, design/stitch=택일, design+stitch/stitch+design=순차 실행(--force-sequential), skipped=bridge Checkpoint에서 건너뛰기 선택."
+    },
+    "sequential_reason": {
+      "type": "string",
+      "description": "post_wireframe_path가 design+stitch 또는 stitch+design인 경우 --force-sequential과 함께 필수. 감사 추적 용도."
+    },
+    "skip_reason": {
+      "type": "string",
+      "description": "post_wireframe_path가 'skipped'인 경우 사용자가 입력한 이유 (bridge Checkpoint). 필수."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "post_wireframe_path": { "enum": ["design+stitch", "stitch+design"] }
+        }
+      },
+      "then": {
+        "required": ["sequential_reason"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "post_wireframe_path": { "const": "skipped" }
+        }
+      },
+      "then": {
+        "required": ["skip_reason"]
+      }
+    }
+  ]
+}
