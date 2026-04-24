@@ -42,20 +42,12 @@ const TEMPLATES  = path.join(SRC_BASE, 'templates');
 const COMPONENT_DIRS = ['agents', 'commands', 'skills', 'hooks', 'rules'];
 const CODEX_COMPONENT_DIRS = ['agents', 'commands', 'skills'];
 const VALID_DOMAINS = ['core', 'dev', 'plan', 'copy'];
-const AGENTS_MD_RUNTIME_FORBIDDEN = [
-  {
-    label: 'claude-kit source path',
-    pattern: /\bsrc\/(?:claude|codex)\/[^\s)`"']*/g
-  },
-  {
-    label: 'nonexistent runtime guidance path',
-    pattern: /\bdocs\/codex-guidance\/[^\s)`"']*/g
-  },
-  {
-    label: 'maintainer sync metadata',
-    pattern: /\b(?:codex-sync Phase|medium merge artifact|codex-portability\.json)\b/g
-  }
-];
+// T-TMPL-15: constants 분리 — SSOT 는 src/claude/core/_constants/agents-md-forbidden.json
+const AGENTS_MD_FORBIDDEN_CONFIG = require('../src/claude/core/_constants/agents-md-forbidden.json');
+const AGENTS_MD_RUNTIME_FORBIDDEN = AGENTS_MD_FORBIDDEN_CONFIG.patterns.map((p) => ({
+  label: p.label,
+  pattern: new RegExp(p.pattern, p.flags || 'g')
+}));
 
 // codex-sync cross-phase review CC2: --dry-run 플래그 (T18 검증 등 dynamic verification)
 const DRY_RUN = process.argv.includes('--dry-run');

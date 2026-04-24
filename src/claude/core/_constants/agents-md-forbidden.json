@@ -1,0 +1,26 @@
+{
+  "_description": "AGENTS.md runtime guidance 에 허용되지 않는 패턴 목록. setup.js collectAgentsMdRuntimeWarnings 가 이 목록을 기반으로 fresh/update 시 runtime lint 를 수행한다. 각 pattern 은 문자열로 저장되며 런타임에 new RegExp(pattern, flags) 로 복원된다.",
+  "_spec": "src/claude/core/rules/template-governance.md §6-1",
+  "_task": "T-TMPL-15 (v2.5.0)",
+  "schema_version": "1.0",
+  "patterns": [
+    {
+      "label": "claude-kit source path",
+      "pattern": "\\bsrc/(?:claude|codex)/[^\\s)`\"']*",
+      "flags": "g",
+      "rationale": "installer 내부 경로는 runtime 에서 해석 불가. 소비자 프로젝트 관점에서 의미 없음."
+    },
+    {
+      "label": "nonexistent runtime guidance path",
+      "pattern": "\\bdocs/codex-guidance/[^\\s)`\"']*",
+      "flags": "g",
+      "rationale": "docs/codex-guidance 는 historical 경로로 현재 존재하지 않음. dead link 방지."
+    },
+    {
+      "label": "maintainer sync metadata",
+      "pattern": "\\b(?:codex-sync Phase|medium merge artifact|codex-portability\\.json)\\b",
+      "flags": "g",
+      "rationale": "claude-kit 메인테이너가 쓰는 용어. 소비자 프로젝트 AGENTS.md 에 노출되면 혼란."
+    }
+  ]
+}
