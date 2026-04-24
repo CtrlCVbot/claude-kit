@@ -1638,7 +1638,7 @@
       "type": "rule",
       "domain": "core",
       "status": "codex-skip",
-      "reason": "EX-009 active: Codex Rules exec-policy 전환 후보, pre-commit regex 자동 감지 — security.md의 partial section",
+      "reason": "EX-009 resolved via agents-guidance fallback block (`src/templates/agents-md/55-security-no-hardcoded-secrets.md`). Discrete Codex rule file는 현재 emitter에서 생성하지 않음.",
       "claude": "src/claude/core/rules/security.md",
       "codex": null,
       "createdAt": "2026-04-23T00:00:00.000Z",

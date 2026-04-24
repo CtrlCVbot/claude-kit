@@ -193,22 +193,24 @@
       "identity": "security-no-hardcoded-secrets",
       "type": "rule",
       "domain": "core",
-      "strategy": "paired-direct",
-      "officialSurface": "rules",
+      "strategy": "paired-fallback",
+      "officialSurface": "agents_md",
       "officialBasis": [
+        "https://developers.openai.com/codex/guides/agents-md",
         "https://developers.openai.com/codex/rules"
       ],
-      "evidenceLevel": "추정",
+      "evidenceLevel": "우회 가능",
       "docConstraints": [
-        "Codex Rules format: allow/prompt/forbidden policy",
-        "hardcoded secret detection via regex is well-established pattern",
-        "actual Codex Rules file format requires official documentation verification"
+        "current setup.js flow does not emit Codex rules policy files",
+        "AGENTS.md is the official instruction surface for guidance-style runtime rules",
+        "dedicated block keeps hardcoded-secret prohibition explicit until a direct rules path is implemented"
       ],
-      "fallbackTarget": null,
+      "fallbackTarget": "agents-guidance",
+      "fallbackArtifact": "src/templates/agents-md/55-security-no-hardcoded-secrets.md",
       "exceptionId": "EX-009",
       "claudeSource": "src/claude/core/rules/security.md (partial: 'No hardcoded secrets' section)",
       "codexSource": null,
-      "confidence": "추정 (cross-phase implementation — EX-007 split)"
+      "confidence": "구조 정렬 완료 (follow-up: dedicated AGENTS block)"
     },
     {
       "identity": "coding-style",
@@ -226,7 +228,7 @@
         "AGENTS.md is the official instruction surface"
       ],
       "fallbackTarget": "agents-guidance",
-      "fallbackArtifact": "src/templates/AGENTS.md.template ### coding-style",
+      "fallbackArtifact": "src/templates/agents-md/40-coding-style.md",
       "exceptionId": "EX-003",
       "claudeSource": "src/claude/core/rules/coding-style.md",
       "codexSource": null,
@@ -247,7 +249,7 @@
         "AGENTS.md is the official instruction surface"
       ],
       "fallbackTarget": "agents-guidance",
-      "fallbackArtifact": "src/templates/AGENTS.md.template ### date-calculation",
+      "fallbackArtifact": "src/templates/agents-md/90-date-calculation.md",
       "exceptionId": "EX-004",
       "claudeSource": "src/claude/core/rules/date-calculation.md",
       "codexSource": null,
@@ -268,7 +270,7 @@
         "AGENTS.md is the official instruction surface"
       ],
       "fallbackTarget": "agents-guidance",
-      "fallbackArtifact": "src/templates/AGENTS.md.template ### golden-principles",
+      "fallbackArtifact": "src/templates/agents-md/10-golden-principles.md",
       "exceptionId": "EX-005",
       "claudeSource": "src/claude/core/rules/golden-principles.md",
       "codexSource": null,
@@ -289,7 +291,7 @@
         "AGENTS.md is the official instruction surface"
       ],
       "fallbackTarget": "agents-guidance",
-      "fallbackArtifact": "src/templates/AGENTS.md.template ### interaction",
+      "fallbackArtifact": "src/templates/agents-md/60-interaction.md",
       "exceptionId": "EX-006",
       "claudeSource": "src/claude/core/rules/interaction.md",
       "codexSource": null,
@@ -313,7 +315,7 @@
         "policy-review-pending: Phase 3 review identified hardcoded-secrets and rate-limit as exec-policy candidates; split deferred to Phase 4+"
       ],
       "fallbackTarget": "agents-guidance",
-      "fallbackArtifact": "src/templates/AGENTS.md.template ### security",
+      "fallbackArtifact": "src/templates/agents-md/50-security.md",
       "exceptionId": "EX-007",
       "claudeSource": "src/claude/core/rules/security.md",
       "codexSource": null,
@@ -334,7 +336,7 @@
         "AGENTS.md is the official instruction surface"
       ],
       "fallbackTarget": "agents-guidance",
-      "fallbackArtifact": "src/templates/AGENTS.md.template ### verification",
+      "fallbackArtifact": "src/templates/agents-md/30-verification.md",
       "exceptionId": "EX-008",
       "claudeSource": "src/claude/core/rules/verification.md",
       "codexSource": null,

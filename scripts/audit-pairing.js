@@ -147,17 +147,20 @@ function checkSkillArtifacts() {
     }
   }
 
-  // S2: AGENTS.md.template h3 sections
-  const templatePath = path.join(ROOT, 'src/templates/AGENTS.md.template');
-  if (fs.existsSync(templatePath)) {
-    const content = fs.readFileSync(templatePath, 'utf8');
-    const h3s = (content.match(/^### .+$/gm) || []).map(s => s.replace('### ', ''));
-    const expectedRules = ['verification', 'security', 'golden-principles', 'coding-style', 'interaction', 'date-calculation'];
+  // S2: managed fallback block existence
+  const expectedArtifacts = [
+    ['golden-principles', 'src/templates/agents-md/10-golden-principles.md'],
+    ['verification', 'src/templates/agents-md/30-verification.md'],
+    ['coding-style', 'src/templates/agents-md/40-coding-style.md'],
+    ['security', 'src/templates/agents-md/50-security.md'],
+    ['security-no-hardcoded-secrets', 'src/templates/agents-md/55-security-no-hardcoded-secrets.md'],
+    ['interaction', 'src/templates/agents-md/60-interaction.md'],
+    ['date-calculation', 'src/templates/agents-md/90-date-calculation.md']
+  ];
 
-    for (const rule of expectedRules) {
-      if (!h3s.includes(rule)) {
-        findings.push({ type: 'S2-template-section-missing', level: 'FAIL', message: `AGENTS.md.template missing ### ${rule} section` });
-      }
+  for (const [rule, artifact] of expectedArtifacts) {
+    if (!fs.existsSync(path.join(ROOT, artifact))) {
+      findings.push({ type: 'S2-managed-block-missing', level: 'FAIL', message: `managed fallback block missing for ${rule}: ${artifact}` });
     }
   }
 

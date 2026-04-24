@@ -1524,6 +1524,7 @@ function resolvePreservedFiles(projectRoot, activeTargets, initialFiles, outputS
 
 function printResult(mode, allCounts, activeDomains, activeTargets, outputStatuses = {}) {
   const version = resolveVersion();
+  const activeTargetsLabel = activeTargets.length > 0 ? activeTargets.join(', ') : '(none)';
   const verb = mode === 'fresh' ? '설치 완료' : '업데이트 완료';
 
   for (const target of activeTargets) {
@@ -1540,6 +1541,12 @@ function printResult(mode, allCounts, activeDomains, activeTargets, outputStatus
       const directUse = outputStatuses.codex.directUse || { generated: [], conflicts: [] };
       console.log(`  direct-use generated: ${directUse.generated.length}, conflicts: ${directUse.conflicts.length}`);
     }
+  }
+
+  if (!activeTargets.includes('codex')) {
+    console.log(`  Codex target inactive: current targets = ${activeTargetsLabel}`);
+    console.log('  skipped Codex outputs: AGENTS.md, .agents/**, .codex/**, plugins/claude-kit/**');
+    console.log('  To enable Codex output, add "codex" to profile.json targets and rerun install/rebuild.');
   }
 
   console.log('  Quick Start: CLAUDE-KIT-QUICKSTART.md');

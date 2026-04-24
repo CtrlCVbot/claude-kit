@@ -19,9 +19,15 @@ const BLOCKS_DIR = path.resolve(__dirname, '..', 'src', 'templates', 'agents-md'
 
 const CORE_BLOCKS = [
   '00-preamble.md',
-  '10-runtime-principles.md',
+  '10-golden-principles.md',
+  '20-workflow.md',
+  '30-verification.md',
+  '40-coding-style.md',
+  '50-security.md',
+  '55-security-no-hardcoded-secrets.md',
+  '60-interaction.md',
   '80-codex-runtime.md',
-  '90-currentdate.md'
+  '90-date-calculation.md'
 ];
 
 function renderAgentsManagedSection({ activeDomains, activeTargets, vars }) {
