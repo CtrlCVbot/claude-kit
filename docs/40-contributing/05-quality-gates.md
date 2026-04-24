@@ -25,7 +25,21 @@ pnpm check:docs
 # = node scripts/docs-generate.js --check
 ```
 
-`docs/30-reference/*.md` 6개 (01-commands, 02-agents, 03-skills, 04-hooks, 05-rules, 07-pairing-registry) 가 현재 `src/claude/` + `.claude/` 상태와 일치하는지 검증.
+자동 생성 세트 7개가 현재 source 상태와 일치하는지 검증합니다.
+
+- `docs/30-reference/01-commands.md`
+- `docs/30-reference/02-agents.md`
+- `docs/30-reference/03-skills.md`
+- `docs/30-reference/04-hooks.md`
+- `docs/30-reference/05-rules.md`
+- `docs/30-reference/07-pairing-registry.md`
+- `docs/40-contributing/07-kit-maintenance-reference.md`
+
+주의:
+
+- [`06-settings.md`](../30-reference/06-settings.md)와 [`08-cli-scripts.md`](../30-reference/08-cli-scripts.md)는 현재 manual reference입니다.
+- 따라서 `pnpm check:docs` 통과만으로 `30-reference` 전체 최신성이 보장되지는 않습니다.
+- Codex sync나 설치 동작을 건드렸다면 `06-settings.md`, `08-cli-scripts.md` 수동 리뷰를 같이 수행하는 편이 안전합니다.
 
 재동기화:
 ```bash
