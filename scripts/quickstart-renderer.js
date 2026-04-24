@@ -13,11 +13,11 @@ const CORE_BLOCKS = [
   '03-pipeline-chooser.md',
   '04-plan-flow.md',
   '05-dev-flow.md',
-  '05b-copy-flow.md',
-  '06-target-diff.md',
-  '07-first-actions.md',
-  '08-reconfig.md',
-  '09-mini-glossary.md'
+  '06-copy-flow.md',
+  '07-target-diff.md',
+  '08-first-actions.md',
+  '09-reconfig.md',
+  '10-mini-glossary.md'
 ];
 
 function renderQuickStart({ variant, activeDomains, activeTargets, version }) {
@@ -27,7 +27,7 @@ function renderQuickStart({ variant, activeDomains, activeTargets, version }) {
 
   const context = buildContext({ variant, activeDomains, activeTargets, version });
   const content = CORE_BLOCKS.map(name => renderBlock(name, context)).join('\n\n');
-  const appendix = variant === 'repo' ? renderBlock('10-repo-appendix.md', context) : '';
+  const appendix = variant === 'repo' ? renderBlock('11-repo-appendix.md', context) : '';
 
   return renderWrapper({
     VARIANT_NOTE: context.VARIANT_NOTE,
