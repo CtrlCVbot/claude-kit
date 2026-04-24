@@ -1,155 +1,127 @@
 # Codex Dual Use
 
-> **Status**: Draft (P4, 2026-04-17)
-> **Source**: [../10-features/04-multi-target.md](../10-features/04-multi-target.md), [../archive/2026-04-17/codex-sync/sync-report-2026-04-15-final.md](../archive/2026-04-17/codex-sync/sync-report-2026-04-15-final.md)
-> **Related**: [02-configuration.md](02-configuration.md)
+> **Status**: Draft (P5, 2026-04-24)
+> **Source**: [../10-features/04-multi-target.md](../10-features/04-multi-target.md), [../../scripts/setup.js](../../scripts/setup.js)
+> **Related**: [01-installation.md](01-installation.md), [02-configuration.md](02-configuration.md), [../40-contributing/06-codex-sync-maintenance.md](../40-contributing/06-codex-sync-maintenance.md)
 
-Claude Code 와 Codex CLI 를 **동시에 사용** 하며 같은 자산을 공유하는 운영 가이드입니다. 개념 레벨 이해는 [../10-features/04-multi-target.md](../10-features/04-multi-target.md) 먼저 읽으세요.
+Claude와 Codex를 같은 프로젝트에서 함께 쓰는 방법을 설명합니다. 이 문서는 설치 프로젝트 사용자 기준의 가이드이며, `kit-sync` 같은 maintainer toolchain 운용법은 다루지 않습니다.
 
-## 1. 듀얼 활성
+## 1. 활성화
+
+`profile.json`에서 두 target을 함께 켭니다.
 
 ```json
-// profile.json
 {
   "domains": ["core", "dev"],
   "targets": ["claude", "codex"]
 }
 ```
 
-저장 후:
+설치 또는 갱신:
 
 ```bash
-pnpm install   # postinstall 재실행
+pnpm install
 ```
 
-## 2. 설치 결과 (듀얼)
+이미 설치된 프로젝트라면 패키지 갱신 후 `postinstall`이 다시 실행되도록 합니다.
+
+## 2. 설치 결과
+
+듀얼 타깃이 켜져 있으면 아래 산출물이 함께 정리됩니다.
 
 | 산출물 | 용도 |
-|--------|------|
-| `.claude/` | Claude Code 런타임 |
-| `.agents/skills/**` | Codex repo-local skills |
-| `.codex/agents/*.toml` | Codex custom agents |
+|---|---|
+| `.claude/` | Claude runtime 자산 |
+| `CLAUDE.md` | Claude용 런타임 컨텍스트 |
 | `plugins/claude-kit/` | Codex plugin packaging output |
-| `CLAUDE.md` | Claude 컨텍스트 |
-| `AGENTS.md` | Codex 컨텍스트 |
-| `.agents/plugins/marketplace.json` | Codex plugin 등록 |
-| `plugins/claude-kit/hooks.json` | Codex 호환 훅 매니페스트 |
+| `.agents/plugins/marketplace.json` | Codex plugin 등록 정보 |
+| `.agents/skills/**` | Codex direct-use skill surface |
+| `.codex/agents/*.toml` | Codex direct-use agent surface |
+| `AGENTS.md` | Codex runtime guidance |
 
-두 런타임은 **독립적** 으로 생성되며 서로 덮어쓰지 않습니다.
+중요:
 
-`AGENTS.md` 는 설치 프로젝트 기준 runtime guidance 입니다. `claude-kit` 저장소 내부 source 경로를 링크하지 않고, Codex 에서 바로 확인해야 하는 운영 기준만 inline 으로 담습니다.
+- command는 현재 plugin surface가 기본입니다.
+- skill과 agent는 plugin output과 direct-use output이 함께 정리됩니다.
+- `AGENTS.md`는 update 시 기존 사용자 본문을 보존하면서 managed section만 갱신됩니다.
 
-## 3. Codex CLI 준비
+## 3. Codex에서 무엇을 어떻게 쓰는가
 
-### 3.1 설치
+| 분류 | 사용 방식 |
+|---|---|
+| command | `/plugin:claude-kit:...` 형태의 plugin namespace 사용 |
+| skill | `.agents/skills/**`에 direct-use surface가 준비됨 |
+| agent | `.codex/agents/*.toml`에 direct-use surface가 준비됨 |
+| runtime guidance | `AGENTS.md`가 설치 프로젝트 기준 운영 지침을 제공 |
 
-```bash
-# Codex CLI (별도 패키지)
-# 설치 방법은 Codex 공식 가이드 참조
-```
+실무적으로는 아래처럼 이해하면 안전합니다.
 
-### 3.2 collab 설정 (subagent 사용 시)
+1. command는 plugin command라고 생각한다.
+2. skill과 agent는 direct-use surface도 함께 생성된다고 생각한다.
+3. `AGENTS.md`는 설치 프로젝트 운영 지침이며, `claude-kit` 저장소의 source map이 아니다.
 
-```toml
-# ~/.codex/config.toml
-collab = true
-```
+## 4. 하지 말아야 할 것
 
-`collab = true` 가 있어야 Codex subagent 기능이 활성화됩니다. kit 의 에이전트를 Codex 에서 쓰려면 필수.
+설치 프로젝트 사용자 기준으로는 아래 행동을 권장하지 않습니다.
 
-## 4. 환경별 커맨드 호출 차이
+- `plugins/claude-kit/**`를 source처럼 직접 수정
+- `AGENTS.md`의 managed section을 source-of-truth처럼 취급
+- `/kit-sync`, `/kit-convert`, `/kit-audit`를 소비자 runtime 기능처럼 이해
 
-같은 기능을 두 환경에서 다르게 호출합니다.
+`kit-*` toolchain은 `claude-kit` 저장소 안에서 source parity를 유지하는 maintainer workflow입니다. 설치 프로젝트에서 결과가 오래돼 보이면 source를 손대는 대신 패키지를 갱신하거나 `setup.js`를 다시 실행하는 쪽이 맞습니다.
 
-| 동작 | Claude Code | Codex |
-|------|-------------|-------|
-| dev feature 시작 | `/dev-feature <prd>` | `/plugin:claude-kit:dev-feature <prd>` |
-| 탐색 | `/dev-explore` | `/plugin:claude-kit:dev-explore` |
-| 커밋 | `/dev-commit` | `/plugin:claude-kit:dev-commit` |
+## 5. 업데이트
 
-Codex 는 플러그인 네임스페이스 prefix 가 필요합니다. `AGENTS.md` 안에서는 편의상 슬래시 단축 형태를 쓸 수 있으나 실제 호출은 네임스페이스 포함.
-
-## 5. 어느 쪽을 언제 쓰는가
-
-| 상황 | 권장 |
-|------|------|
-| 시각적 IDE 통합, 긴 대화형 탐색 | Claude Code |
-| 터미널 중심, 짧은 명령 체인 | Codex |
-| 복잡한 기획·리뷰 (토큰 여유 필요) | Claude Code |
-| 자동화된 스크립트·CI 연결 | Codex |
-| MCP 서버 필요 | Claude Code only (Codex v1 미지원) |
-
-## 6. 자산 동기화 유지
-
-일상 개발 중 자산을 새로 추가·수정하면 Claude↔Codex 간 drift 가 발생할 수 있습니다.
-
-### 6.1 자동 방어
-
-- `/kit-create` 로 자산 생성 시 양 타깃 scaffolding 자동
-- `pairing-registry.json` 에 entry 자동 추가
-- CI 에서 `node scripts/audit-pairing.js` 정기 실행 권장
-
-### 6.2 소비자 프로젝트에서의 동기화 확인
-
-소비자 프로젝트에서는 `kit-sync` 를 runtime 기능처럼 실행하지 않습니다. 설치된 출력이 최신인지 확인하려면 패키지를 업데이트하거나 `postinstall` 을 다시 실행한 뒤, 생성 결과를 확인합니다.
+일반적인 갱신 순서는 아래와 같습니다.
 
 ```bash
 pnpm update claude-kit
-# 또는 필요 시
+```
+
+필요하면 설치 스크립트 결과를 미리 확인할 수 있습니다.
+
+```bash
 node node_modules/claude-kit/scripts/setup.js --dry-run
 ```
 
-`kit-sync-agent` 와 `kit-*` maintenance toolchain 은 `claude-kit` 저장소 안에서 source parity 를 관리하는 용도입니다. Claude-only 자산 스캔, Codex 포팅 가능성 판정, `src/codex/` source 갱신, pairing-registry 갱신은 maintainers 작업으로 다룹니다.
+업데이트 시 기대 동작:
 
-### 6.3 감사
+- `.claude/settings.json`은 merge 방식으로 갱신
+- `plugins/claude-kit/`와 plugin metadata는 managed output으로 재생성
+- `.agents/skills/**`, `.codex/agents/*.toml`은 managed marker/source hash 기준으로 갱신
+- `AGENTS.md`는 managed section merge 방식으로 update
 
-```bash
-node scripts/audit-pairing.js    # pairing 일관성
-node scripts/audit-drift.js      # 내용 drift
-```
+## 6. 점검과 트러블슈팅
 
-실패 시: registry 불일치. 수동 해결 또는 `/kit-audit` 로 자동 제안.
+가볍게 확인할 수 있는 항목:
 
-## 7. 훅 호환성
+- `plugins/claude-kit/commands/`가 존재하는지
+- `.agents/plugins/marketplace.json`에 plugin 등록이 있는지
+- `AGENTS.md`가 생성되었는지
+- `.agents/skills/**`와 `.codex/agents/*.toml`이 함께 준비되었는지
 
-Codex 는 hook 매처 문법이 다릅니다. 일부는 `Full`, 일부는 `Partial`, 일부는 `Skip` 으로 분류됩니다.
+문제가 있을 때는 아래를 먼저 확인합니다.
 
-확인:
-```bash
-node scripts/codex-hook-compat.js
-```
+| 증상 | 먼저 볼 것 |
+|---|---|
+| Codex에서 command가 안 보임 | `plugins/claude-kit/commands/`, `.agents/plugins/marketplace.json` |
+| AGENTS 내용이 기대와 다름 | 기존 `AGENTS.md`의 사용자 본문과 managed section merge 여부 |
+| hook이 기대대로 안 보임 | `plugins/claude-kit/hooks.json`과 패키지 버전 |
+| pair/drift 설명이 헷갈림 | [../10-features/04-multi-target.md](../10-features/04-multi-target.md) |
 
-출력 예:
-- `output-secret-filter`: Full
-- `dev-tdd-guard`: Partial (특정 매처만)
-- `session-wrap-suggest`: Skip (Claude session state 의존)
+## 7. maintainer 문서가 필요한 경우
 
-skip 된 훅은 Codex 에서 대신 skill 이 역할을 수행합니다 (예: `session-wrap-suggest` 스킬).
+아래 질문이면 사용자 가이드가 아니라 maintainer 가이드를 보는 편이 맞습니다.
 
-## 8. 업그레이드
+- 왜 어떤 hook은 `src/codex/**`를 보고 어떤 hook은 `src/claude/**` fallback을 쓰는가
+- `pairing-registry-v2`의 `primaryCodex`, `transitionState`, `driftStatus`를 어떻게 해석하는가
+- `kit-sync-agent`나 `kit-*` 명령이 실제로 무엇을 보장하는가
+- reference의 `kit` domain을 사용자 문서와 어떻게 분리하는가
 
-```bash
-pnpm update claude-kit
-```
-
-- Claude 쪽: `.claude/settings.json` 커스텀 보존, kit 관리 키 갱신
-- Codex plugin 쪽: `plugin.json`, `marketplace.json`, `hooks.json` **재생성** (사용자 커스텀 보존 없음)
-- Codex direct-use 쪽: `.agents/skills/**`, `.codex/agents/*.toml` 은 managed marker/source hash 기준으로 갱신 또는 보존/conflict 처리
-
-기존 `AGENTS.md` 는 보존됩니다. fresh install 로 생성되는 `AGENTS.md` 는 설치 프로젝트 기준 안내만 포함하고, 내부 source 링크나 maintainer sync metadata 를 포함하지 않아야 합니다.
-
-## 9. 트러블슈팅
-
-| 증상 | 확인 |
-|------|------|
-| Codex 에서 커맨드 안 보임 | `plugins/claude-kit/commands/` 디렉터리 + `marketplace.json` 등록 |
-| 훅이 Claude 에서만 작동 | `codex-portability.json` 에서 `Skip` 여부 확인 |
-| pairing drift 경고 | `/kit-audit` 후 제안된 조치 실행 |
-| subagent 안 됨 | `~/.codex/config.toml` 의 `collab = true` 확인 |
-
-자세한 증상별: [07-troubleshooting.md](07-troubleshooting.md).
+이 경우 [../40-contributing/06-codex-sync-maintenance.md](../40-contributing/06-codex-sync-maintenance.md)를 먼저 읽으세요.
 
 ## 다음 단계
 
-- [../30-reference/07-pairing-registry.md](../30-reference/07-pairing-registry.md) — 현 pairing 상태
-- [../10-features/04-multi-target.md](../10-features/04-multi-target.md) — 기능 레벨 세부
+- [../10-features/04-multi-target.md](../10-features/04-multi-target.md) — 멀티타깃 구조 설명
+- [07-troubleshooting.md](07-troubleshooting.md) — 일반 트러블슈팅
+- [../40-contributing/06-codex-sync-maintenance.md](../40-contributing/06-codex-sync-maintenance.md) — maintainer용 codex sync 가이드
