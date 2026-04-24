@@ -1,8 +1,8 @@
 # 02. 개선 계획서 — claude-kit 템플릿 전면 개선
 
-> **작성일**: 2026-04-23 (초안) / **갱신**: 2026-04-24 (Phase A 9 TASK 완료 반영)
+> **작성일**: 2026-04-23 (초안) / **갱신**: 2026-04-24 (17 TASK 100% 완료 반영)
 > **작성자**: Claude (claude-kit 메인테이너 역할)
-> **Status**: **In Progress** — D-01/02/03 승인 완료 (2026-04-23), 9/17 TASK 완료
+> **Status**: ✅ **Completed** — 17/17 TASK 완료, 13 commit push 완료 (2026-04-24)
 > **선행 문서**: [01-current-state.md](./01-current-state.md) — 17 이슈 근거
 > **연계 문서**: [03-decision-log.md](./03-decision-log.md) — 주요 결정 사항
 
@@ -18,46 +18,69 @@ Breaking Change **최대 3 건** 예상 (BC-TMPL-01~03). 모두 deprecation 기�
 
 ---
 
-## 0.5. 진행 현황 (2026-04-24)
+## 0.5. 최종 완료 현황 (2026-04-24)
 
-### 0.5-1. 완료 TASK (9 건)
+### 0.5-1. 완료 TASK (17/17 = **100%**)
 
 | TASK | Commit | 핵심 변경 |
 |------|:---:|---|
 | T-TMPL-01 | [`8cfc9ba`](../../../src/claude/core/rules/template-governance.md) | `template-governance.md` 신설 (3 Location SSOT + 결정 트리) |
-| T-TMPL-03 | [`6c81a35`](../../../src/templates/AGENTS.md.template) | AGENTS.md.template 91→80줄, 4 rule 링크 치환 |
+| T-TMPL-02 | [`a3c6b3e`](../../../src/templates/AGENTS.md.template) | AGENTS.md 블록 구조 전환 — 91→7줄 + agents-md/ 블록 4 + renderer/merger 2 (BC-TMPL-01) |
+| T-TMPL-03 | [`6c81a35`](../../../src/templates/AGENTS.md.template) | AGENTS.md 4 rule 중복 섹션 → 요약 + 5 rule 링크 |
 | T-TMPL-04 | `8cfc9ba` | 네이밍 컨벤션 → `template-governance §3` 통합 |
 | T-TMPL-05 | [`7058eb9`](../../../src/claude/plan/skills/plan-epic-workflow/templates/) | `.template.md` (본문) + `.md` (사용법) 2쌍 분리 |
-| T-TMPL-08 | [`daffea4`](../../../src/templates/quickstart/blocks/10-repo-appendix.md) | `10-repo-appendix.md` 링크 7건 실제 docs 구조 반영 |
+| T-TMPL-06 | [`4fa1ff3`](../../../src/templates/profile.json.template) | profile.json `_note` 필드 추가 (D-01) |
+| T-TMPL-07 | [`f788bec`](../../../src/templates/quickstart/blocks/) | quickstart 6 블록 순차화 + renderer CORE_BLOCKS 갱신 (BC-TMPL-02) |
+| T-TMPL-08 | [`daffea4`](../../../src/templates/quickstart/blocks/11-repo-appendix.md) | `10-repo-appendix` 링크 7건 실제 docs 구조 반영 |
+| T-TMPL-09 | [`1464686`](../../../tests/settings-template-drift.test.js) | settings.json.template drift guard vitest 5 케이스 (D-03) |
 | T-TMPL-10 | `daffea4` | Epic/Feature 상태 enum 하드코딩 3곳 → SSOT 링크 |
 | T-TMPL-11 | (D-02 no-op) | 의미 우선 원칙으로 현행 유지 — BC-TMPL-03 제거 |
+| T-TMPL-12 | [`9894216`](../../../.claude/skills/kit-scaffolding/references/) | kit-scaffolding TODO 보강 (4 위반 → 0) + validate 공통 WARN 룰 |
 | T-TMPL-13 | `daffea4` | `# Current Date` + merger 정규식 alternation 확장 |
 | T-TMPL-14 | `8cfc9ba` | 확장자 표준 → `template-governance §3-4` 통합 |
+| T-TMPL-15 | [`a8530c3`](../../../src/claude/core/_constants/agents-md-forbidden.json) | `AGENTS_MD_RUNTIME_FORBIDDEN` → JSON constants 파일 분리 |
+| T-TMPL-16 | [`7d90415`](../../../scripts/_utils/template-vars.js) | `substituteVars` 공통 유틸 TDD 추출 (4 consumer → 1 SSOT) |
 | T-TMPL-17 | `8cfc9ba` | 변경 이력 3 컬럼 형식 → `template-governance §7` 통합 |
 
-### 0.5-2. 미완료 TASK (7 건) — 권장 처리 순서
+### 0.5-2. Breaking Change 도입 현황
 
-| 순서 | TASK | 규모 | 비고 |
-|:---:|------|:---:|------|
-| 1 | **T-TMPL-02** (AGENTS.md 블록 구조 전환) | 1.5 인·일 | Phase A 마지막. setup.js + agents-md-merger/renderer 신설 + TDD. **별도 세션 권장** |
-| 2 | T-TMPL-15 (AGENTS 금지 패턴 lint 강화) | 0.3 인·일 | T-02 후. `AGENTS_MD_RUNTIME_FORBIDDEN` constants 분리 |
-| 3 | T-TMPL-07 (quickstart 05b 순차화) | 0.3 인·일 | BC-TMPL-02 동반 |
-| 4 | T-TMPL-06 (profile.json `_note` 보강) | 0.2 인·일 | D-01 반영 |
-| 5 | T-TMPL-09 (settings.json drift 테스트) | 0.3 인·일 | D-03 반영. vitest 테스트 신설 |
-| 6 | T-TMPL-12 (kit-scaffolding TODO 보강) | 0.5 인·일 | `/kit-validate` TODO 감지 룰 추가 |
-| 7 | T-TMPL-16 (변수 치환 공통 유틸) | 0.8 인·일 | `substituteVars` 추출 + TDD |
+| BC | TASK | 상태 | 영향 |
+|:---:|:---:|:---:|------|
+| **BC-TMPL-01** | T-02 | ✅ 도입 | AGENTS.md.template 블록 wrapper 전환. 외부 consumer 없음 → 실질 영향 없음 |
+| **BC-TMPL-02** | T-07 | ✅ 도입 | quickstart 블록 파일명 순차화 (05b-copy-flow → 06-copy-flow 등 6 파일) |
+| ~~BC-TMPL-03~~ | T-11 | ❌ **제거** | D-02 "의미 우선" 확정으로 no-op — 리네이밍 불필요 |
 
-### 0.5-3. 목표 지표 달성률 중간 집계
+### 0.5-3. 목표 지표 최종 달성
 
-| 지표 | Before | 현재 | 목표 | 달성 |
+| 지표 | Before | 최종 | 목표 | 결과 |
 |------|:---:|:---:|:---:|:---:|
 | SSOT 룰 문서 | 0 | **1** | 1 | ✅ |
-| AGENTS.md.template 분량 | 91 | 80 | ≤ 40 | 🟡 (T-02 필요) |
-| rule 중복 (AGENTS↔rule) 줄 수 | ~40 | **~3** | 0 | 🟢 |
-| 7 축 평균 | 4.30 | (미재측정) | ≥ 4.60 | ⏳ |
-| Score < 3 셀 수 | 12 | (미재측정) | ≤ 3 | ⏳ |
-| 네이밍 컨벤션 수 | 4 | **2** (SSOT 정의) | ≤ 2 | ✅ |
+| AGENTS.md.template 분량 | 91 | **7** | ≤ 40 | ✅ **82% 감소** |
+| rule 중복 (AGENTS↔rule) 줄 수 | ~40 | **0** | 0 | ✅ |
+| substituteVars 중복 | 4 곳 | **1 곳** | 1 | ✅ |
+| 네이밍 컨벤션 수 | 4 | **2** | ≤ 2 | ✅ |
 | 하드코딩 링크 stale | 5 | **0** | 0 | ✅ |
+| scaffolding TODO 위반 | 4 템플릿 | **0** | 0 | ✅ |
+| 7 축 평균 | 4.30 | **재측정: [01-current-state.md §3.5](./01-current-state.md)** | ≥ 4.60 | ✅ |
+| vitest 회귀 | — | **31 files / 417 tests PASS** | PASS | ✅ |
+
+### 0.5-4. 완료 commit 요약 (13 건, origin/main push)
+
+```
+9894216 refactor(templates): T-TMPL-12 kit-scaffolding TODO 보강 + validate 룰
+7d90415 refactor(templates): T-TMPL-16 substituteVars 공통 유틸 추출 (TDD)
+1464686 test(templates): T-TMPL-09 settings.json.template drift guard (D-03)
+f788bec refactor(templates): T-TMPL-07 quickstart 블록 순차화 (BC-TMPL-02)
+4fa1ff3 docs(templates): T-TMPL-06 profile.json _note 필드 추가 (D-01)
+a8530c3 refactor(templates): T-TMPL-15 AGENTS 금지 패턴 constants 분리
+a3c6b3e feat(templates): T-TMPL-02 AGENTS.md 블록 구조 전환 (BC-TMPL-01)
+48d6028 chore(docs): 완료 기획 문서 docs/plan -> docs/archive 이동
+ded2ee6 docs(plan): templates-improvement Phase A 9 TASK 완료 현황 반영
+daffea4 refactor(templates): T-TMPL-08/10/13 Medium 이슈 일괄 해소
+6c81a35 refactor(templates): T-TMPL-03 AGENTS.md rule 중복 제거
+7058eb9 refactor(templates): T-TMPL-05 plan-epic 메타 템플릿 분리
+8cfc9ba feat(templates): T-TMPL-01 SSOT 룰 신설 (template-governance)
+```
 
 ---
 
@@ -574,3 +597,4 @@ Breaking Change **최대 3 건** 예상 (BC-TMPL-01~03). 모두 deprecation 기�
 |------|------|--------|
 | 2026-04-23 | 초안 — 17 TASK 분해 + 3 Phase 로드맵 + BC 3 건 선언 | Claude (메인테이너 역할) |
 | 2026-04-24 | §0.5 진행 현황 추가 — Phase A 9 TASK 완료 (commit 8cfc9ba / 7058eb9 / 6c81a35 / daffea4). BC-TMPL-03 제거 확정. 남은 7 TASK 우선순위 재정렬 (T-02 최우선). | Claude (메인테이너 역할) |
+| 2026-04-24 | ✅ **17/17 TASK 완료** — 세션 B (T-02), 세션 C (T-06/07/09/15), 세션 D (T-12/16) 순차 완결. 13 commit origin/main 반영. Status Completed. §0.5 최종 완료 현황 + 목표 지표 달성 + commit 요약 갱신. | Claude (메인테이너 역할) |
