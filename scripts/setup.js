@@ -33,6 +33,7 @@ const { renderClaudeManagedSection } = require('./claude-md-renderer');
 const { mergeClaudeMd } = require('./claude-md-merger');
 const { renderAgentsManagedSection } = require('./agents-md-renderer');
 const { mergeAgentsMd } = require('./agents-md-merger');
+const { substituteVars } = require('./_utils/template-vars');
 
 const SRC_BASE   = path.resolve(__dirname, '..', 'src');
 const SRC_CLAUDE = path.join(SRC_BASE, 'claude');
@@ -294,14 +295,6 @@ function readTemplate(templateDir, filename) {
   const filePath = path.join(templateDir, filename);
   if (!fs.existsSync(filePath)) return null;
   return fs.readFileSync(filePath, 'utf8');
-}
-
-function substituteVars(content, vars) {
-  let result = content;
-  for (const [key, value] of Object.entries(vars)) {
-    result = result.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
-  }
-  return result;
 }
 
 function collectAgentsMdRuntimeWarnings(content) {

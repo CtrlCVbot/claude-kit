@@ -2,6 +2,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { substituteVars } = require('./_utils/template-vars');
 
 const ROOT = path.resolve(__dirname, '..');
 const WRAPPER_TEMPLATE = path.join(ROOT, 'src', 'templates', 'CLAUDE-KIT-QUICKSTART.md.template');
@@ -364,14 +365,6 @@ function normalizeTargets(targets) {
   const order = ['claude', 'codex'];
   const set = new Set(targets.length > 0 ? targets : ['claude']);
   return order.filter(target => set.has(target));
-}
-
-function substituteVars(content, vars) {
-  let result = content;
-  for (const [key, value] of Object.entries(vars)) {
-    result = result.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
-  }
-  return result;
 }
 
 function readUtf8(filePath) {

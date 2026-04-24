@@ -13,6 +13,7 @@
 
 const fs = require('fs');
 const path = require('path');
+const { substituteVars } = require('./_utils/template-vars');
 
 const BLOCKS_DIR = path.resolve(__dirname, '..', 'src', 'templates', 'claude-md');
 
@@ -49,14 +50,6 @@ function renderBlock(filename, vars) {
   const filePath = path.join(BLOCKS_DIR, filename);
   const content = fs.readFileSync(filePath, 'utf8');
   return substituteVars(content, vars);
-}
-
-function substituteVars(content, vars) {
-  let result = content;
-  for (const [key, value] of Object.entries(vars)) {
-    result = result.replace(new RegExp(`\\{\\{${key}\\}\\}`, 'g'), value);
-  }
-  return result;
 }
 
 module.exports = {
