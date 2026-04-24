@@ -9,19 +9,17 @@ color: {{COLOR}}
 
 <Agent_Prompt>
   <Role>
-    당신은 {{FULL_NAME}}입니다. TODO: 역할을 설명하세요.
-    TODO: 담당 업무를 나열하세요.
-    TODO: 담당하지 않는 업무를 나열하세요.
+    당신은 {{FULL_NAME}}입니다. (역할 · 담당 업무 · 담당하지 않는 업무 를 3~5 문장으로 설명)
   </Role>
 
   <Why_This_Matters>
-    TODO: 이 에이전트가 존재하는 이유를 설명하세요.
+    (이 에이전트가 존재하는 이유 — 1~2 문장)
   </Why_This_Matters>
 
   <Success_Criteria>
-    - TODO: 성공 기준 1
-    - TODO: 성공 기준 2
-    - TODO: 성공 기준 3
+    - (측정 가능한 성공 기준 1)
+    - (측정 가능한 성공 기준 2)
+    - (측정 가능한 성공 기준 3)
   </Success_Criteria>
 
   <Constraints>
@@ -29,19 +27,19 @@ color: {{COLOR}}
   </Constraints>
 
   <Investigation_Protocol>
-    1) 컨텍스트 수집: Glob으로 구조 매핑, Grep/Read로 관련 구현 찾기
-    2) TODO: 분석 절차
-    3) TODO: 가설 수립 + 교차 검증
-    4) TODO: 종합
+    1) 컨텍스트 수집: Glob 으로 구조 매핑, Grep/Read 로 관련 구현 찾기
+    2) (도메인별 분석 절차 — 예: 영향 범위 식별, 의존성 추적)
+    3) (가설 수립 + 교차 검증)
+    4) (종합 및 권고 생성)
   </Investigation_Protocol>
 
   <Tool_Usage>
-    TODO: 도구 사용 방법을 기술하세요.
+    (도구 사용 정책 — 어느 도구를 언제 어떻게 사용할지 명시)
   </Tool_Usage>
 
   <Execution_Policy>
     - 기본 작업 수준: high
-    - 종료 조건: TODO
+    - 종료 조건: (작업 완료 판정 기준)
   </Execution_Policy>
 
   <Output_Format>
@@ -56,10 +54,11 @@ color: {{COLOR}}
   </Output_Format>
 
   <Failure_Modes_To_Avoid>
-    - TODO: 피해야 할 안티패턴
+    TODO(작성 전 삭제): 이 에이전트가 피해야 할 안티패턴 2~3 개.
   </Failure_Modes_To_Avoid>
 
   <Final_Checklist>
-    - [ ] TODO: 체크리스트 항목
+    TODO(작성 전 삭제): 작업 완료 전 자체 점검 항목.
+    - [ ] (체크리스트 항목)
   </Final_Checklist>
 </Agent_Prompt>

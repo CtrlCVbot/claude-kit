@@ -1,33 +1,32 @@
 # /{{FULL_NAME}}
 
-TODO: 커맨드 개요를 작성하세요.
-
-> 참조: `.claude/skills/TODO/SKILL.md`
+> 한 줄 커맨드 개요 (무엇을 · 왜).
 
 ## Usage
 
 ```bash
-/{{FULL_NAME}} TODO: 인자
+/{{FULL_NAME}} <arg1> [--flag]
 ```
 
 ## Preconditions
 
-- TODO: 전제 조건 1
-- TODO: 전제 조건 2
+- (커맨드 실행 전 충족되어야 할 조건을 나열)
 
 ## Workflow
 
-### Phase 1: TODO
+### Phase 1: 컨텍스트 수집
 
-1. TODO: 단계 1
-2. TODO: 단계 2
+1. (예: 관련 파일 Read / 현재 상태 파악)
+2. (수집 단계 2)
 
-### Phase 2: TODO
+### Phase 2: 작업 수행
 
-3. TODO: 단계 3
-4. TODO: 단계 4
+3. (수행 단계 1)
+4. (수행 단계 2)
 
 ## Rules
 
-- TODO: 규칙 1
-- TODO: 규칙 2
+TODO(작성 전 삭제): 이 커맨드만의 특별 규칙을 나열. 일반 원칙은 `src/claude/core/rules/` 에 위임.
+
+- (규칙 1)
+- (규칙 2)

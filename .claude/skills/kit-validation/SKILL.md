@@ -65,6 +65,26 @@ description: |
 | `src/claude/{domain}/hooks/{name}.js` | hook |
 | `src/claude/core/rules/{name}.md` | rule |
 
+## 공통 검증 (모든 컴포넌트 타입)
+
+### TODO 잔존 검사 (T-TMPL-12, M6)
+
+**수준**: WARN
+
+**조건**: 파일 본문에 `TODO:` 또는 `TODO(...)` 패턴이 **3 개 이상** 존재하면 warning 발행.
+
+**근거**: kit-scaffolding 으로 생성된 컴포넌트가 실제 구현 없이 TODO placeholder 상태로 커밋되는 것을 방지 (M6 이슈 — `docs/plan/templates-improvement-20260423/01-current-state.md §4.3`).
+
+**예외**:
+- 주석 내 `// TODO:` 향후 개선 계획은 허용 — 수는 2 개 이하 유지 권장
+- 룰 문서의 `TODO(작성 전 삭제)` 같은 **의도된 안내 라벨**은 허용 (2 개 이하)
+
+**수정 방법**: scaffolding 직후 각 TODO 를 실제 내용으로 치환. 모든 섹션 작성 완료 후 커밋.
+
+**적용 대상**: 5 Claude 스키마 (skill/agent/command/hook/rule) 전체 + 4 Codex 스키마 전체.
+
+**관련 룰**: [`template-governance.md §6`](../../../../src/claude/core/rules/template-governance.md) Non-Duplication
+
 ## 참조
 
 - 커맨드: `.claude/commands/kit-validate.md`
