@@ -19,10 +19,11 @@ const path = require('path');
 
 const ROOT = path.resolve(__dirname, '..');
 const REF_DIR = path.join(ROOT, 'docs', '30-reference');
+const CONTRIBUTING_DIR = path.join(ROOT, 'docs', '40-contributing');
 const SRC_CLAUDE = path.join(ROOT, 'src', 'claude');
 const CLAUDE_RUNTIME = path.join(ROOT, '.claude');
 const PAIRING_PATH = path.join(ROOT, 'src', 'pairing-registry.json');
-const TODAY = '2026-04-17';
+const TODAY = formatLocalDate(new Date());
 
 const HEADER = (title, sources) => `# ${title}
 
@@ -37,19 +38,47 @@ function toPosix(p) {
   return p.replace(/\\/g, '/');
 }
 
+function formatLocalDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 function relFromRoot(full) {
   return toPosix(path.relative(ROOT, full));
+}
+
+function oneLine(text) {
+  return String(text || '').replace(/\s+/g, ' ').trim();
 }
 
 function parseFrontmatter(md) {
   const match = md.match(/^---\n([\s\S]*?)\n---/);
   if (!match) return {};
   const fm = {};
-  for (const line of match[1].split('\n')) {
+  const lines = match[1].split('\n');
+  for (let i = 0; i < lines.length; i++) {
+    const line = lines[i];
     const colon = line.indexOf(':');
     if (colon < 0) continue;
     const key = line.slice(0, colon).trim();
     let value = line.slice(colon + 1).trim();
+    if (value === '|' || value === '>') {
+      const isFolded = value === '>';
+      const block = [];
+      i += 1;
+      while (i < lines.length) {
+        const nextLine = lines[i];
+        if (!/^\s+/.test(nextLine)) {
+          i -= 1;
+          break;
+        }
+        block.push(nextLine.replace(/^\s+/, ''));
+        i += 1;
+      }
+      value = (isFolded ? block.join(' ') : block.join('\n')).trim();
+    }
     if ((value.startsWith('"') && value.endsWith('"')) ||
         (value.startsWith("'") && value.endsWith("'"))) {
       value = value.slice(1, -1);
@@ -123,29 +152,13 @@ function genCommands() {
       rows.push({
         domain,
         name: title || '/' + f.replace(/\.md$/, ''),
-        desc: (desc || '').slice(0, 140),
-        source: relFromRoot(full),
-      });
-    }
-  }
-  // kit domain (.claude/commands/kit-*.md)
-  const kitDir = path.join(CLAUDE_RUNTIME, 'commands');
-  if (fs.existsSync(kitDir)) {
-    for (const f of fs.readdirSync(kitDir).sort()) {
-      if (!f.startsWith('kit-') || !f.endsWith('.md')) continue;
-      const full = path.join(kitDir, f);
-      const md = fs.readFileSync(full, 'utf8');
-      const { title, desc } = firstHeadingAndDesc(md);
-      rows.push({
-        domain: 'kit',
-        name: title || '/' + f.replace(/\.md$/, ''),
-        desc: (desc || '').slice(0, 140),
+        desc: oneLine(desc).slice(0, 140),
         source: relFromRoot(full),
       });
     }
   }
 
-  let out = HEADER('Commands', '`src/claude/*/commands/*.md`, `.claude/commands/kit-*.md`');
+  let out = HEADER('Commands', '`src/claude/*/commands/*.md`');
   out += `전체 ${rows.length}개.\n\n`;
   const byDomain = rows.reduce((acc, r) => {
     (acc[r.domain] ||= []).push(r);
@@ -175,25 +188,7 @@ function genAgents() {
       rows.push({
         domain,
         name: fm.name || f.replace(/\.md$/, ''),
-        desc: (fm.description || '').slice(0, 140),
-        tools: fm.tools || '',
-        model: fm.model || '',
-        source: relFromRoot(full),
-      });
-    }
-  }
-  // kit agents
-  const kitDir = path.join(CLAUDE_RUNTIME, 'agents');
-  if (fs.existsSync(kitDir)) {
-    for (const f of fs.readdirSync(kitDir).sort()) {
-      if (!f.startsWith('kit-') || !f.endsWith('.md')) continue;
-      const full = path.join(kitDir, f);
-      const md = fs.readFileSync(full, 'utf8');
-      const fm = parseFrontmatter(md);
-      rows.push({
-        domain: 'kit',
-        name: fm.name || f.replace(/\.md$/, ''),
-        desc: (fm.description || '').slice(0, 140),
+        desc: oneLine(fm.description).slice(0, 140),
         tools: fm.tools || '',
         model: fm.model || '',
         source: relFromRoot(full),
@@ -201,7 +196,7 @@ function genAgents() {
     }
   }
 
-  let out = HEADER('Agents', '`src/claude/*/agents/*.md`, `.claude/agents/kit-*.md`');
+  let out = HEADER('Agents', '`src/claude/*/agents/*.md`');
   out += `전체 ${rows.length}개.\n\n`;
   const byDomain = rows.reduce((acc, r) => {
     (acc[r.domain] ||= []).push(r);
@@ -231,30 +226,13 @@ function genSkills() {
       rows.push({
         domain,
         name: fm.name || skillName,
-        desc: (fm.description || '').slice(0, 160),
-        source: relFromRoot(skillPath),
-      });
-    }
-  }
-  // kit skills
-  const kitDir = path.join(CLAUDE_RUNTIME, 'skills');
-  if (fs.existsSync(kitDir)) {
-    for (const skillName of fs.readdirSync(kitDir).sort()) {
-      if (!skillName.startsWith('kit-')) continue;
-      const skillPath = path.join(kitDir, skillName, 'SKILL.md');
-      if (!fs.existsSync(skillPath)) continue;
-      const md = fs.readFileSync(skillPath, 'utf8');
-      const fm = parseFrontmatter(md);
-      rows.push({
-        domain: 'kit',
-        name: fm.name || skillName,
-        desc: (fm.description || '').slice(0, 160),
+        desc: oneLine(fm.description).slice(0, 160),
         source: relFromRoot(skillPath),
       });
     }
   }
 
-  let out = HEADER('Skills', '`src/claude/*/skills/*/SKILL.md`, `.claude/skills/kit-*/SKILL.md`');
+  let out = HEADER('Skills', '`src/claude/*/skills/*/SKILL.md`');
   out += `전체 ${rows.length}개.\n\n`;
   const byDomain = rows.reduce((acc, r) => {
     (acc[r.domain] ||= []).push(r);
@@ -268,6 +246,99 @@ function genSkills() {
     }
     out += '\n';
   }
+  return out;
+}
+
+function collectKitCommands() {
+  const rows = [];
+  const kitDir = path.join(CLAUDE_RUNTIME, 'commands');
+  if (!fs.existsSync(kitDir)) return rows;
+  for (const f of fs.readdirSync(kitDir).sort()) {
+    if (!f.startsWith('kit-') || !f.endsWith('.md')) continue;
+    const full = path.join(kitDir, f);
+    const md = fs.readFileSync(full, 'utf8');
+    const { title, desc } = firstHeadingAndDesc(md);
+    rows.push({
+      name: title || '/' + f.replace(/\.md$/, ''),
+      desc: oneLine(desc).slice(0, 140),
+      source: relFromRoot(full),
+    });
+  }
+  return rows;
+}
+
+function collectKitAgents() {
+  const rows = [];
+  const kitDir = path.join(CLAUDE_RUNTIME, 'agents');
+  if (!fs.existsSync(kitDir)) return rows;
+  for (const f of fs.readdirSync(kitDir).sort()) {
+    if (!f.startsWith('kit-') || !f.endsWith('.md')) continue;
+    const full = path.join(kitDir, f);
+    const md = fs.readFileSync(full, 'utf8');
+    const fm = parseFrontmatter(md);
+    rows.push({
+      name: fm.name || f.replace(/\.md$/, ''),
+      desc: oneLine(fm.description).slice(0, 140),
+      model: fm.model || '',
+      source: relFromRoot(full),
+    });
+  }
+  return rows;
+}
+
+function collectKitSkills() {
+  const rows = [];
+  const kitDir = path.join(CLAUDE_RUNTIME, 'skills');
+  if (!fs.existsSync(kitDir)) return rows;
+  for (const skillName of fs.readdirSync(kitDir).sort()) {
+    if (!skillName.startsWith('kit-')) continue;
+    const skillPath = path.join(kitDir, skillName, 'SKILL.md');
+    if (!fs.existsSync(skillPath)) continue;
+    const md = fs.readFileSync(skillPath, 'utf8');
+    const fm = parseFrontmatter(md);
+    rows.push({
+      name: fm.name || skillName,
+      desc: oneLine(fm.description).slice(0, 160),
+      source: relFromRoot(skillPath),
+    });
+  }
+  return rows;
+}
+
+function genKitMaintenanceReference() {
+  const commands = collectKitCommands();
+  const agents = collectKitAgents();
+  const skills = collectKitSkills();
+  const total = commands.length + agents.length + skills.length;
+
+  let out = HEADER(
+    'Kit Maintenance Reference',
+    '`.claude/commands/kit-*.md`, `.claude/agents/kit-*.md`, `.claude/skills/kit-*/SKILL.md`'
+  );
+  out += '> Maintainer-only. 이 문서는 설치 프로젝트 runtime reference가 아니라 `claude-kit` 저장소 유지보수용 `kit-*` toolchain 카탈로그다. 사용자용 흐름은 `docs/20-user-guide/06-codex-dual-use.md`, 유지보수 기준은 `docs/40-contributing/06-codex-sync-maintenance.md`를 먼저 본다.\n\n';
+  out += `전체 ${total}개.\n\n`;
+
+  out += '## Commands\n\n';
+  out += '| Command | Description | Source |\n|---|---|---|\n';
+  for (const r of commands) {
+    out += `| \`${r.name}\` | ${r.desc || '—'} | [${r.source}](../../${r.source}) |\n`;
+  }
+  out += '\n';
+
+  out += '## Agents\n\n';
+  out += '| Agent | Description | Model | Source |\n|---|---|---|---|\n';
+  for (const r of agents) {
+    out += `| \`${r.name}\` | ${r.desc || '—'} | ${r.model || '—'} | [${r.source}](../../${r.source}) |\n`;
+  }
+  out += '\n';
+
+  out += '## Skills\n\n';
+  out += '| Skill | Description | Source |\n|---|---|---|\n';
+  for (const r of skills) {
+    out += `| \`${r.name}\` | ${r.desc || '—'} | [${r.source}](../../${r.source}) |\n`;
+  }
+  out += '\n';
+
   return out;
 }
 
@@ -400,27 +471,31 @@ function genPairing() {
 function main() {
   const isCheck = process.argv.includes('--check');
   const tasks = [
-    { out: '01-commands.md', fn: genCommands },
-    { out: '02-agents.md', fn: genAgents },
-    { out: '03-skills.md', fn: genSkills },
-    { out: '04-hooks.md', fn: genHooks },
-    { out: '05-rules.md', fn: genRules },
-    { out: '07-pairing-registry.md', fn: genPairing },
+    { dir: REF_DIR, out: '01-commands.md', fn: genCommands },
+    { dir: REF_DIR, out: '02-agents.md', fn: genAgents },
+    { dir: REF_DIR, out: '03-skills.md', fn: genSkills },
+    { dir: REF_DIR, out: '04-hooks.md', fn: genHooks },
+    { dir: REF_DIR, out: '05-rules.md', fn: genRules },
+    { dir: REF_DIR, out: '07-pairing-registry.md', fn: genPairing },
+    { dir: CONTRIBUTING_DIR, out: '07-kit-maintenance-reference.md', fn: genKitMaintenanceReference },
   ];
 
   let drift = false;
   for (const t of tasks) {
     const content = t.fn();
-    const outPath = path.join(REF_DIR, t.out);
+    const baseDir = t.dir || REF_DIR;
+    const outPath = path.join(baseDir, t.out);
+    const relOutPath = relFromRoot(outPath);
     if (isCheck) {
       const current = fs.existsSync(outPath) ? fs.readFileSync(outPath, 'utf8') : '';
       if (current !== content) {
-        console.error(`[drift] docs/30-reference/${t.out} is out of date.`);
+        console.error(`[drift] ${relOutPath} is out of date.`);
         drift = true;
       }
     } else {
+      fs.mkdirSync(path.dirname(outPath), { recursive: true });
       fs.writeFileSync(outPath, content);
-      console.log(`generated docs/30-reference/${t.out}`);
+      console.log(`generated ${relOutPath}`);
     }
   }
 
