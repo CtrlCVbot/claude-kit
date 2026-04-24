@@ -1,2 +1,3 @@
 - [copy-domain-resync-2026-04-17](project_copy_domain_resync.md) — copy 도메인 도입으로 11개 자산 재변환 완료 (2026-04-17)
 - [copy-domain-codex-conversion-2026-04-17](project_copy_domain_codex_conversion.md) — copy 도메인 16개 신규 자산 Codex 전환 완료 (2026-04-17)
+- [zero-state-resync-2026-04-24](project_zero_state_resync_20260424.md) — src/codex + .codex 전면 삭제 후 Claude SSOT 기반 전면 재생성 작업 진행 중 (backup: `backup/codex-before-resync-20260424`)
