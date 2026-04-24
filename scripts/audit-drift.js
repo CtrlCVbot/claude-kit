@@ -14,19 +14,58 @@
 
 const fs = require('fs');
 const path = require('path');
+const crypto = require('crypto');
 const { execSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 
 const CONTENT_SAFE_EXTENSIONS = new Set(['.md', '.js', '.json', '.ts', '.yaml', '.yml']);
 
-const CORE_RULES = [
-  'coding-style', 'date-calculation', 'golden-principles',
-  'interaction', 'security', 'verification'
+const RULE_FALLBACKS = [
+  {
+    identity: 'golden-principles',
+    source: 'src/claude/core/rules/golden-principles.md',
+    artifact: 'src/templates/agents-md/10-golden-principles.md'
+  },
+  {
+    identity: 'verification',
+    source: 'src/claude/core/rules/verification.md',
+    artifact: 'src/templates/agents-md/30-verification.md',
+    markers: ['/copy-verify', 'copy-reference', '시나리오', '갭 분석']
+  },
+  {
+    identity: 'coding-style',
+    source: 'src/claude/core/rules/coding-style.md',
+    artifact: 'src/templates/agents-md/40-coding-style.md'
+  },
+  {
+    identity: 'security',
+    source: 'src/claude/core/rules/security.md',
+    artifact: 'src/templates/agents-md/50-security.md'
+  },
+  {
+    identity: 'security-no-hardcoded-secrets',
+    source: 'src/claude/core/rules/security.md',
+    artifact: 'src/templates/agents-md/55-security-no-hardcoded-secrets.md',
+    sourceSections: ['Mandatory Security Checks', 'Secret Management'],
+    markers: ['API key', 'password', 'token', 'secret'],
+    timeCheck: false
+  },
+  {
+    identity: 'interaction',
+    source: 'src/claude/core/rules/interaction.md',
+    artifact: 'src/templates/agents-md/60-interaction.md',
+    markers: ['시나리오', 'Feature 유형', '/plan-draft']
+  },
+  {
+    identity: 'date-calculation',
+    source: 'src/claude/core/rules/date-calculation.md',
+    artifact: 'src/templates/agents-md/90-date-calculation.md'
+  }
 ];
 
 const DRIFT_MARKERS = [
-  'copy', 'scenario', 'Feature 유형', '시나리오',
+  'scenario', 'Feature 유형', '시나리오',
   '/copy-', 'copy-reference', 'routing-metadata', '갭 분석',
 ];
 
@@ -58,9 +97,18 @@ function readFileSafe(filePath) {
   }
 }
 
-function findMissingMarkers(sourceContent, targetContent) {
+function stripMarkdownFrontmatter(content) {
+  if (!content.startsWith('---')) return content;
+
+  const match = content.match(/^---\r?\n[\s\S]*?\r?\n---\r?\n?/);
+  if (!match) return content;
+
+  return content.slice(match[0].length).replace(/^\s+/, '');
+}
+
+function findMissingMarkers(sourceContent, targetContent, markers = DRIFT_MARKERS) {
   const missing = [];
-  for (const marker of DRIFT_MARKERS) {
+  for (const marker of markers) {
     const srcCount = (sourceContent.match(new RegExp(escapeRegExp(marker), 'gi')) || []).length;
     const tgtCount = (targetContent.match(new RegExp(escapeRegExp(marker), 'gi')) || []).length;
     if (srcCount > 0 && tgtCount === 0) {
@@ -70,26 +118,114 @@ function findMissingMarkers(sourceContent, targetContent) {
   return missing;
 }
 
+function extractMarkdownSections(content, headings) {
+  const sections = [];
+
+  for (const heading of headings) {
+    const headingRegex = new RegExp(`^##\\s+${escapeRegExp(heading)}\\s*$`, 'm');
+    const match = headingRegex.exec(content);
+    if (!match) continue;
+
+    const sectionStart = match.index;
+    const sectionBodyStart = sectionStart + match[0].length;
+    const remainder = content.slice(sectionBodyStart);
+    const nextH2 = /\n##\s+/.exec(remainder);
+    const sectionEnd = nextH2 ? sectionBodyStart + nextH2.index : content.length;
+    sections.push(content.slice(sectionStart, sectionEnd).trim());
+  }
+
+  return sections.join('\n\n');
+}
+
+function readRuleSourceContent(rule) {
+  const rulePath = path.join(ROOT, rule.source);
+  const content = fs.readFileSync(rulePath, 'utf8');
+
+  if (!Array.isArray(rule.sourceSections) || rule.sourceSections.length === 0) {
+    return content;
+  }
+
+  const extracted = extractMarkdownSections(content, rule.sourceSections);
+  return extracted || content;
+}
+
+function loadPairingRegistryByIdentity() {
+  const registryPath = path.join(ROOT, 'src/pairing-registry.json');
+  if (!fs.existsSync(registryPath)) return new Map();
+
+  try {
+    const registry = JSON.parse(fs.readFileSync(registryPath, 'utf8'));
+    return new Map((registry.entries || []).map(entry => [entry.identity, entry]));
+  } catch {
+    return new Map();
+  }
+}
+
+function isSyncedAfterSourceChanges(entry, claudeDate, codexDate, pairingByIdentity) {
+  const pairingEntry = pairingByIdentity.get(entry.identity);
+  if (!pairingEntry || !pairingEntry.lastSyncedAt) return false;
+
+  const lastSyncedAt = new Date(pairingEntry.lastSyncedAt);
+  const latestSourceChange = new Date(Math.max(new Date(claudeDate), new Date(codexDate)));
+
+  if (Number.isNaN(lastSyncedAt.getTime()) || Number.isNaN(latestSourceChange.getTime())) {
+    return false;
+  }
+
+  return lastSyncedAt >= latestSourceChange;
+}
+
+function computeContentHash(filePath) {
+  const absPath = path.join(ROOT, filePath);
+  if (!fs.existsSync(absPath)) return null;
+
+  return crypto
+    .createHash('sha256')
+    .update(fs.readFileSync(absPath))
+    .digest('hex')
+    .slice(0, 8);
+}
+
+function isRegistryHashCurrent(entry, pairingByIdentity) {
+  const pairingEntry = pairingByIdentity.get(entry.identity);
+  if (!pairingEntry || !pairingEntry.contentHash || !entry.claudeSource) return false;
+
+  return computeContentHash(entry.claudeSource) === pairingEntry.contentHash;
+}
+
+function preservesSessionWrapSuggestIntent(hookPath, skillPath) {
+  const hookContent = readFileSafe(path.join(ROOT, hookPath));
+  const skillContent = readFileSafe(path.join(ROOT, skillPath));
+  if (!hookContent || !skillContent) return false;
+
+  const thresholdMatch = hookContent.match(/totalCalls\s*<\s*(\d+)/);
+  const threshold = thresholdMatch ? thresholdMatch[1] : null;
+  if (!threshold) return false;
+
+  return skillContent.includes(threshold)
+    && skillContent.includes(hookPath)
+    && skillContent.includes('session-wrap');
+}
+
 // --- Time-based drift checks ---
 
 function checkRuleFallbackDrift() {
   const findings = [];
-  const templatePath = 'src/templates/AGENTS.md.template';
-  const templateDate = getLastCommitDate(templatePath);
+  for (const rule of RULE_FALLBACKS) {
+    if (rule.timeCheck === false) continue;
 
-  for (const rule of CORE_RULES) {
-    const rulePath = `src/claude/core/rules/${rule}.md`;
-    const ruleDate = getLastCommitDate(rulePath);
+    const ruleDate = getLastCommitDate(rule.source);
+    const artifactDate = getLastCommitDate(rule.artifact);
 
-    if (!ruleDate || !templateDate) continue;
+    if (!ruleDate || !artifactDate) continue;
 
-    if (new Date(ruleDate) > new Date(templateDate)) {
+    if (new Date(ruleDate) > new Date(artifactDate)) {
       findings.push({
         type: 'rule-fallback-drift',
         level: 'INFO',
-        source: rulePath,
-        artifact: `${templatePath} ### ${rule}`,
-        message: `Rule "${rule}" changed after AGENTS.md.template (${ruleDate} > ${templateDate}). Template section may need update.`
+        source: rule.source,
+        artifact: rule.artifact,
+        message: `Rule "${rule.identity}" changed after fallback block (${ruleDate} > ${artifactDate}). Managed guidance may need update.`
       });
     }
   }
@@ -107,6 +243,10 @@ function checkHookFallbackDrift() {
   const skillDate = getLastCommitDate(skillPath);
 
   if (hookDate && skillDate && new Date(hookDate) > new Date(skillDate)) {
+    if (preservesSessionWrapSuggestIntent(hookPath, skillPath)) {
+      return findings;
+    }
+
     findings.push({
       type: 'hook-fallback-drift',
       level: 'INFO',
@@ -126,6 +266,7 @@ function checkPairedDirectDrift() {
   if (!fs.existsSync(portabilityPath)) return findings;
 
   const portability = JSON.parse(fs.readFileSync(portabilityPath, 'utf8'));
+  const pairingByIdentity = loadPairingRegistryByIdentity();
 
   for (const entry of portability.entries) {
     if (entry.strategy !== 'paired-direct') continue;
@@ -135,6 +276,8 @@ function checkPairedDirectDrift() {
     const codexDate = getLastCommitDate(entry.codexSource);
 
     if (!claudeDate || !codexDate) continue;
+    if (isRegistryHashCurrent(entry, pairingByIdentity)) continue;
+    if (isSyncedAfterSourceChanges(entry, claudeDate, codexDate, pairingByIdentity)) continue;
 
     const diff = Math.abs(new Date(claudeDate) - new Date(codexDate));
     const daysDiff = diff / (1000 * 60 * 60 * 24);
@@ -195,9 +338,12 @@ function detectContentDrift(identity, claudeSource, codexSource) {
   const codexPath = path.join(ROOT, codexSource);
   if (!fs.existsSync(claudePath) || !fs.existsSync(codexPath)) return null;
 
-  const claudeContent = readFileSafe(claudePath);
-  const codexContent = readFileSafe(codexPath);
-  if (!claudeContent || !codexContent) return null;
+  const claudeRawContent = readFileSafe(claudePath);
+  const codexRawContent = readFileSafe(codexPath);
+  if (!claudeRawContent || !codexRawContent) return null;
+
+  const claudeContent = stripMarkdownFrontmatter(claudeRawContent);
+  const codexContent = stripMarkdownFrontmatter(codexRawContent);
 
   const missingMarkers = findMissingMarkers(claudeContent, codexContent);
 
@@ -217,33 +363,24 @@ function detectContentDrift(identity, claudeSource, codexSource) {
 
 function checkRuleContentDrift() {
   const findings = [];
-  const templatePath = path.join(ROOT, 'src/templates/AGENTS.md.template');
-  if (!fs.existsSync(templatePath)) return findings;
+  for (const rule of RULE_FALLBACKS.filter(entry => entry.contentCheck !== false)) {
+    const rulePath = path.join(ROOT, rule.source);
+    const artifactPath = path.join(ROOT, rule.artifact);
+    if (!fs.existsSync(rulePath) || !fs.existsSync(artifactPath)) continue;
 
-  const templateContent = fs.readFileSync(templatePath, 'utf8');
-
-  for (const rule of CORE_RULES) {
-    const rulePath = path.join(ROOT, `src/claude/core/rules/${rule}.md`);
-    if (!fs.existsSync(rulePath)) continue;
-
-    const ruleContent = fs.readFileSync(rulePath, 'utf8');
-
-    // h2/h3 경계 모두에서 정지하여 오버캡처 방지
-    const sectionRegex = new RegExp(`### ${escapeRegExp(rule)}\\b[\\s\\S]*?(?=\\n##? |$)`);
-    const sectionMatch = templateContent.match(sectionRegex);
-    if (!sectionMatch) continue;
-
-    const missingMarkers = findMissingMarkers(ruleContent, sectionMatch[0]);
+    const ruleContent = readRuleSourceContent(rule);
+    const artifactContent = fs.readFileSync(artifactPath, 'utf8');
+    const missingMarkers = findMissingMarkers(ruleContent, artifactContent, rule.markers || DRIFT_MARKERS);
 
     if (missingMarkers.length > 0) {
       findings.push({
         type: 'rule-content-drift',
         level: 'INFO',
-        source: `src/claude/core/rules/${rule}.md`,
-        artifact: `src/templates/AGENTS.md.template ### ${rule}`,
-        identity: rule,
+        source: rule.source,
+        artifact: rule.artifact,
+        identity: rule.identity,
         missingMarkers,
-        message: `Rule fallback "${rule}": AGENTS.md.template section missing domain references: ${missingMarkers.join(', ')}`
+        message: `Rule fallback "${rule.identity}": fallback block missing domain references: ${missingMarkers.join(', ')}`
       });
     }
   }
@@ -256,18 +393,16 @@ function checkRuleContentDrift() {
 function checkArtifactExistence() {
   const findings = [];
 
-  // S2: AGENTS.md.template h3 sections
-  const templatePath = path.join(ROOT, 'src/templates/AGENTS.md.template');
-  if (fs.existsSync(templatePath)) {
-    const content = fs.readFileSync(templatePath, 'utf8');
-    const h3Count = (content.match(/^### /gm) || []).length;
-    if (h3Count < CORE_RULES.length) {
+  // S2: AGENTS managed fallback blocks
+  for (const rule of RULE_FALLBACKS) {
+    const artifactPath = path.join(ROOT, rule.artifact);
+    if (!fs.existsSync(artifactPath)) {
       findings.push({
         type: 'artifact-missing',
         level: 'FAIL',
-        source: 'src/templates/AGENTS.md.template',
-        artifact: '### sections',
-        message: `AGENTS.md.template has ${h3Count} h3 sections (expected ${CORE_RULES.length}). Rule fallback artifact may be deleted.`
+        source: rule.source,
+        artifact: rule.artifact,
+        message: `Managed fallback block missing for "${rule.identity}".`
       });
     }
   }
