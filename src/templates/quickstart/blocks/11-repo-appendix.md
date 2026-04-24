@@ -1,11 +1,11 @@
 ## 저장소 상세 문서
 
-아래 문서는 저장소 내부에서만 보는 상세 reference다. 설치본 핵심 온보딩은 위 본문으로 끝나고, 저장소에서는 필요할 때만 내려간다.
+아래 문서는 저장소 내부에서 더 자세히 보는 active guide/reference입니다. 설치 직후에는 `CLAUDE-KIT-QUICKSTART.md`를 먼저 보고, 저장소에서 작업할 때만 필요에 따라 참조하세요.
 
-- [문서 세트 진입점](docs/00-overview/01-what-is-claude-kit.md)
-- [핵심 개념](docs/00-overview/02-core-concepts.md)
-- [dev 도메인 상세](docs/10-features/02-dev-domain.md)
-- [타겟별 차이 (Claude / Codex)](docs/10-features/04-multi-target.md)
-- [일상 워크플로우](docs/20-user-guide/04-daily-workflow.md)
-- [용어집](docs/20-user-guide/08-glossary.md)
-- [기여 가이드](docs/40-contributing/02-adding-a-component.md)
+- [문서 세트 진입점](docs/guide/shared/00-overview.md)
+- [핵심 개념](docs/guide/shared/01-core-concepts.md)
+- [Claude Code 도메인](docs/guide/claude-code/01-core-and-dev-domains.md)
+- [Claude/Codex 매핑](docs/guide/mapping/01-claude-to-codex-surface-matrix.md)
+- [일상 워크플로우](docs/guide/shared/03-first-run-and-daily-workflow.md)
+- [용어와 운영 규칙](docs/guide/shared/05-governance-and-glossary.md)
+- [기여 가이드](docs/guide/claude-code/03-authoring-and-release.md)
