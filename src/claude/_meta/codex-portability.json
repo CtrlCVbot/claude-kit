@@ -343,6 +343,29 @@
       "confidence": "확정 (Phase 2)"
     },
     {
+      "identity": "git-workflow-v2",
+      "type": "rule",
+      "domain": "core",
+      "strategy": "paired-fallback",
+      "officialSurface": "agents_md",
+      "officialBasis": [
+        "https://developers.openai.com/codex/guides/agents-md",
+        "https://developers.openai.com/codex/rules"
+      ],
+      "evidenceLevel": "우회 가능",
+      "docConstraints": [
+        "current setup.js flow does not emit Codex rules policy files",
+        "AGENTS.md is the official instruction surface for guidance-style runtime rules",
+        "Git workflow guidance is preserved as a dedicated managed block"
+      ],
+      "fallbackTarget": "agents-guidance",
+      "fallbackArtifact": "src/templates/agents-md/25-git-workflow.md",
+      "exceptionId": "EX-015",
+      "claudeSource": "src/claude/core/rules/git-workflow-v2.md",
+      "codexSource": null,
+      "confidence": "확정 (source copied + AGENTS block)"
+    },
+    {
       "identity": "copy-evidence-reminder",
       "type": "hook",
       "domain": "copy",

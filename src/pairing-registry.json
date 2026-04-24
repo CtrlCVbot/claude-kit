@@ -1634,6 +1634,20 @@
       "driftStatus": null
     },
     {
+      "identity": "git-workflow-v2",
+      "type": "rule",
+      "domain": "core",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/core/rules/git-workflow-v2.md",
+      "codex": "src/codex/core/rules/git-workflow-v2.md",
+      "createdAt": "2026-04-24T05:16:55.002Z",
+      "lastSyncedAt": "2026-04-24T05:16:55.002Z",
+      "contentHash": "8b91eb63",
+      "primaryCodex": "fallback",
+      "driftStatus": null
+    },
+    {
       "identity": "security-no-hardcoded-secrets",
       "type": "rule",
       "domain": "core",

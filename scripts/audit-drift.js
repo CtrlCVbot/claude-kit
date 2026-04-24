@@ -34,6 +34,12 @@ const RULE_FALLBACKS = [
     markers: ['/copy-verify', 'copy-reference', '시나리오', '갭 분석']
   },
   {
+    identity: 'git-workflow-v2',
+    source: 'src/claude/core/rules/git-workflow-v2.md',
+    artifact: 'src/templates/agents-md/25-git-workflow.md',
+    markers: ['git config --local user.name', 'Co-Authored-By', 'Conventional Commits', '원자적 커밋']
+  },
+  {
     identity: 'coding-style',
     source: 'src/claude/core/rules/coding-style.md',
     artifact: 'src/templates/agents-md/40-coding-style.md'

@@ -173,6 +173,27 @@
       "fallbackTarget": "agents-guidance"
     },
     {
+      "id": "EX-015",
+      "component": "git-workflow-v2",
+      "category": "codex-conversion",
+      "rule": "rule-fallback",
+      "detail": "guidance-style Git workflow rule. current setup emitter는 Codex rules policy file을 생성하지 않으므로 `src/templates/agents-md/25-git-workflow.md` dedicated block으로 보존한다.",
+      "reason": "현재 설치 경로에서는 AGENTS.md managed block이 실제 instruction surface다. source parity를 위해 Claude/Codex rule file을 모두 두되, runtime guidance는 agents-guidance fallback으로 적용한다.",
+      "approvedBy": "maintainer",
+      "approvedDate": "2026-04-24",
+      "expiresDate": null,
+      "status": "resolved",
+      "strategy": "paired-fallback",
+      "officialSurface": "agents_md",
+      "evidenceLevel": "우회 가능",
+      "docConstraints": [
+        "current setup.js flow does not emit Codex rules policy files",
+        "AGENTS.md is the official instruction surface for guidance-style runtime rules",
+        "Git workflow guidance is preserved as a dedicated managed block until direct rules emission is designed"
+      ],
+      "fallbackTarget": "agents-guidance"
+    },
+    {
       "id": "EX-008",
       "component": "verification",
       "category": "codex-conversion",

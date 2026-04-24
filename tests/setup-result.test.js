@@ -68,6 +68,10 @@ describe('setup result logging', () => {
     })
 
     const agentsMd = readFileSync(path.join(fixtureDir, 'AGENTS.md'), 'utf8')
+    expect(agentsMd).toContain('## Git 워크플로우 (요약)')
+    expect(agentsMd).toContain('git config --local user.name')
+    expect(agentsMd).toContain('Co-Authored-By')
+    expect(agentsMd).toContain('Conventional Commits')
     expect(agentsMd).toContain('## 상호작용 기준 (요약)')
     expect(agentsMd).toContain('## 하드코딩된 비밀값 금지')
     expect(agentsMd).toContain('/copy-verify')

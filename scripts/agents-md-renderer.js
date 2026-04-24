@@ -21,6 +21,7 @@ const CORE_BLOCKS = [
   '00-preamble.md',
   '10-golden-principles.md',
   '20-workflow.md',
+  '25-git-workflow.md',
   '30-verification.md',
   '40-coding-style.md',
   '50-security.md',

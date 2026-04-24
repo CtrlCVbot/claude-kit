@@ -151,6 +151,7 @@ function checkSkillArtifacts() {
   const expectedArtifacts = [
     ['golden-principles', 'src/templates/agents-md/10-golden-principles.md'],
     ['verification', 'src/templates/agents-md/30-verification.md'],
+    ['git-workflow-v2', 'src/templates/agents-md/25-git-workflow.md'],
     ['coding-style', 'src/templates/agents-md/40-coding-style.md'],
     ['security', 'src/templates/agents-md/50-security.md'],
     ['security-no-hardcoded-secrets', 'src/templates/agents-md/55-security-no-hardcoded-secrets.md'],
