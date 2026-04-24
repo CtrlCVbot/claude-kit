@@ -8,9 +8,9 @@
 
 ## 이번 설치 결과 요약
 
-- 버전: `2.3.0`
-- 활성 도메인: `core, dev`
-- 활성 타겟: `claude`
+- 버전: `2.4.0-beta.1`
+- 활성 도메인: `core, dev, plan, copy`
+- 활성 타겟: `claude, codex`
 - 메모: 아래 요약은 현재 설치 결과를 기준으로 작성되었다.
 
 ### 생성된 주요 산출물
@@ -20,6 +20,10 @@
 | Quick Start | `CLAUDE-KIT-QUICKSTART.md` | 설치 직후 읽는 통합 온보딩 문서 |
 | Claude runtime | `.claude/` | Claude용 agents, commands, skills, hooks, rules 출력 |
 | Claude context | `CLAUDE.md` | Claude 런타임 컨텍스트 문서 |
+| Codex runtime | `plugins/claude-kit/` | Codex repo-local plugin 출력 |
+| Codex context | `AGENTS.md` | Codex 런타임 컨텍스트 문서 |
+| Codex registry | `.agents/plugins/marketplace.json` | Codex plugin 등록 정보 |
+| Codex hooks | `plugins/claude-kit/hooks.json` | Codex 호환 hook 선언 |
 
 ## 어떤 흐름을 선택할까
 
@@ -27,13 +31,14 @@
 
 | 현재 상황 | 추천 구성 | 시작 커맨드 | 왜 이 경로인가 |
 |-----------|-----------|-------------|----------------|
+| 여러 Feature 를 제품 Theme 으로 묶어 관리해야 함 | `core + dev + plan` | `/plan-epic` | **(v2.4.0 Opt-in)** Epic 계층으로 3개 이상 Feature 를 묶어 의존성/실행 순서를 한 번에 관리한다. |
 | 아이디어를 먼저 수집하고 우선순위를 정해야 함 | `core + dev + plan` | `/plan-idea` | 아이디어 -> 스크리닝 -> PRD -> 브리지까지 한 흐름으로 이어진다. |
 | 승인 전 아이디어를 걸러야 함 | `core + dev + plan` | `/plan-screen` | RICE와 승인 게이트로 실행 여부를 먼저 결정한다. |
 | 이미 요구사항이나 PRD가 있고 바로 구현하면 됨 | `core + dev` | `/dev-feature` | 기획 단계를 생략하고 Feature Package 생성부터 시작한다. |
 | 현재 출력 구조와 타겟 차이를 먼저 확인해야 함 | 현재 설치 구성 유지 | 이 문서의 Claude / Codex 차이 섹션 확인 | 설치된 runtime surface를 먼저 이해한다. |
 | 원본 화면과 현재 구현의 시각적 차이를 닫아야 함 | `core + dev + plan + copy` | `/copy-reference-refresh` | 기준 캡처 → 갭 분석 → 실행 단위 → 검증까지 한 흐름으로 이어진다. |
 
-- 현재 설치에는 `plan`이 없으므로 아래 흐름은 구조 이해용이다. 실제 실행 전에는 `plan`을 활성화해야 한다.
+- 현재 설치에는 `plan`이 포함되어 있어 아래 흐름을 바로 실행할 수 있다.
 
 ## `plan` 압축 흐름
 
@@ -41,14 +46,15 @@
 
 | 단계 | 커맨드 | 역할 | 핵심 산출물 |
 |------|--------|------|-------------|
-| P1 | `/plan-idea` | 아이디어 수집 | `.plans/ideas/00-inbox/IDEA-{YYYYMMDD}-{NNN}.md` |
+| P0 | `/plan-epic "{제목}"` | **(Opt-in, v2.4.0)** Epic 생성 — 3개 이상 Feature 묶음 관리 | `.plans/epics/00-draft/EPIC-{YYYYMMDD}-{NNN}/` |
+| P1 | `/plan-idea "{제목}" [--epic=EPIC-...]` | 아이디어 수집 (Epic 자동 연결 optional, IMP-AGENT-010) | `.plans/ideas/00-inbox/IDEA-{YYYYMMDD}-{NNN}.md` |
 | P2 | `/plan-screen` | RICE 스크리닝 + 승인 게이트 | `.plans/ideas/10-screening/SCREENING-{YYYYMMDD}-{NNN}.md` |
 | P3 | `/plan-draft` | 1차 기능 기획 + Lite/Standard 판정 | `.plans/features/drafts/{slug}/first-pass.md` |
-| P4 | `/plan-prd` | Standard 기능의 PRD 상세 작성 | `.plans/prd/00-draft/` -> `10-approved/` |
+| P4 | `/plan-prd` | Standard 기능의 PRD 상세 작성 (Epic 시 §2 성공지표 인용, IMP-AGENT-011) | `.plans/prd/00-draft/` -> `10-approved/` |
 | P5 | `/plan-wireframe` | ASCII/Mermaid 와이어프레임 | `.plans/wireframes/{slug}/` |
 | P6a | `/plan-design` | (wireframe 후 택일) Claude Design 2단계 프롬프트 | `.plans/design/{slug}/` |
 | P6b | `/plan-stitch` | (wireframe 후 택일) Stitch 디자인 반영 | `.plans/stitch/{slug}/` |
-| P7 | `/plan-bridge` | 개발 핸드오프 | bridge context 파일들 |
+| P7 | `/plan-bridge` | 개발 핸드오프 (Spike 모드 포함, IMP-AGENT-004) | bridge context 파일들 |
 | P8 | `/plan-archive` | 완료 기능 번들화 | `.plans/archive/{slug}/ARCHIVE-{KEY}.md` |
 
 - 핵심 게이트: `/plan-screen` 완료 후 사용자 **명시적 승인**이 있어야 `/plan-draft` 이후 단계로 진입할 수 있다.
@@ -59,6 +65,7 @@
 
 ```text
 .plans/
+├── epics/{status}/          Epic 컨테이너 (Opt-in, v2.4.0) — draft/planning/active/completed/archive
 ├── ideas/00-inbox/          신규 아이디어
 ├── ideas/20-approved/       승인 완료 -> /plan-draft 대상
 ├── prd/10-approved/         개발 핸드오프 직전 PRD
@@ -100,7 +107,7 @@ Quality Gate 요약:
 
 `copy`는 기준 화면(reference)과 현재 구현을 비교해 시각적/인터랙션 충실도를 검증하고 갭을 닫는 파이프라인이다.
 
-- 현재 설치에는 `copy`가 없으므로 아래 흐름은 구조 이해용이다. 실제 실행 전에는 `copy`를 활성화해야 한다.
+- 현재 설치에는 `copy`가 포함되어 있어 아래 흐름을 바로 실행할 수 있다.
 
 | 단계 | 커맨드 | 역할 | 핵심 산출물 |
 |------|--------|------|-------------|
@@ -119,7 +126,7 @@ Quality Gate 요약:
 
 ## Claude / Codex 차이
 
-- 현재 설치는 Claude 전용 구성이다. `.claude/`와 `CLAUDE.md`를 중심으로 보면 된다.
+- 현재 설치는 dual-target 구성이라 `.claude/`와 `plugins/claude-kit/`이 함께 존재한다.
 
 | 항목 | Claude | Codex |
 |------|--------|-------|
@@ -139,14 +146,21 @@ Quality Gate 요약:
 
 ### A. 아이디어에서 시작할 때 (`plan`)
 
-현재 설치에는 `plan`이 없으므로, 아래 흐름은 `plan` 활성화 후 실행한다.
+현재 설치에서 바로 실행 가능한 흐름이다.
 
 ```text
+# 기본 경로 (Epic 없음)
 /plan-idea "새 기능 아이디어"
 /plan-screen IDEA-YYYYMMDD-001
 /plan-draft IDEA-YYYYMMDD-001
 /plan-prd .plans/features/drafts/<slug>/first-pass.md
 /plan-bridge <slug>
+
+# Epic 묶음 관리 (Opt-in, v2.4.0)
+/plan-epic "OPTIC Landing 제품 라인"
+/plan-idea "F1 세부 기능" --epic=EPIC-YYYYMMDD-001
+/plan-idea "F2 세부 기능" --epic=EPIC-YYYYMMDD-001
+# 이후 /plan-screen ~ /plan-archive 기본 경로와 동일
 ```
 
 ### B. 바로 구현할 때 (`dev`)
@@ -162,7 +176,7 @@ Quality Gate 요약:
 
 ### C. 원본 대비 충실도를 검증할 때 (`copy`)
 
-현재 설치에는 `copy`가 없으므로, 아래 흐름은 `copy` 활성화 후 실행한다.
+현재 설치에서 바로 실행 가능한 흐름이다.
 
 ```text
 /copy-reference-refresh --scope header,hero --viewport 1440,768
@@ -187,7 +201,8 @@ Quality Gate 요약:
     "copy"
   ],
   "targets": [
-    "claude"
+    "claude",
+    "codex"
   ]
 }
 ```
@@ -219,6 +234,12 @@ pnpm install
 | `Evidence Manifest` | 기준 캡처(screenshot, state capture)의 메타데이터 목록 |
 | `WBS` | Work Breakdown Structure. Epic > Feature > Story > Task 4계층 분류 |
 | `시나리오 A/B/C` | A(백지), B(부분), C(충실도 교정). 카피 작업의 파이프라인 순서를 결정 |
+| `Epic` | **(v2.4.0 Opt-in)** 여러 Feature 를 묶는 상위 컨테이너. 1~3개월 단위 제품 Theme |
+| `Children Features` | Epic 의 자식 Feature 목록 + 의존성 매트릭스 + Phase 실행 순서 |
+| `Epic Binding` | Feature 측에서 Epic 을 참조하는 파일 (`00-context/08-epic-binding.md`) |
+| `Spike` | **(v2.3.1)** Standard Feature 진입 전 1일 게이트 검증 — Go/No-Go/Extend 판정 |
+| `Telemetry` | **(v2.3.1)** `~/.claude/logs/agent-telemetry.jsonl` 에이전트 호출 이벤트 로컬 집계 |
+| `Agent Frontmatter v1.1` | **(IMP-AGENT-008)** `team_owner` / `release_stage` / `schema_version` 표준 필드 |
 
 - 이 문서는 설치본 안에서 핵심 온보딩이 끝나도록 설계되어 있다.
 - 설치/업데이트 시 다시 생성되므로, 커스텀 메모는 별도 문서에 두는 편이 안전하다.

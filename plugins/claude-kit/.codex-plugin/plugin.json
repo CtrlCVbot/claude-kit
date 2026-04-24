@@ -1,0 +1,22 @@
+{
+  "name": "claude-kit",
+  "version": "2.4.0-beta.1",
+  "description": "AI governance toolkit — TDD, Hexagonal Architecture, Rich Domain Model",
+  "author": {
+    "name": "CtrlCVbot",
+    "url": "https://github.com/CtrlCVbot/claude-kit"
+  },
+  "repository": "https://github.com/CtrlCVbot/claude-kit",
+  "license": "MIT",
+  "keywords": ["governance", "tdd", "hexagonal-architecture", "domain-separation"],
+  "skills": "./skills/",
+  "hooks": "./hooks.json",
+  "interface": {
+    "displayName": "claude-kit",
+    "shortDescription": "AI governance toolkit for TDD + Hexagonal Architecture",
+    "longDescription": "AI-first development governance — TDD enforcement, code review, security pipeline, planning pipeline (P1~P7), and development workflow (A~E).",
+    "developerName": "CtrlCVbot",
+    "category": "Development",
+    "capabilities": ["Interactive", "Read", "Write"]
+  }
+}

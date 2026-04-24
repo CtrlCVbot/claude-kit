@@ -1,45 +1,594 @@
 {
-  "version": "2.3.0",
+  "version": "2.4.0-beta.1",
   "installedAt": "2026-04-16T06:03:53.845Z",
-  "updatedAt": "2026-04-21T01:45:16.266Z",
+  "updatedAt": "2026-04-24T04:28:59.158Z",
   "domains": [
     "core",
-    "dev"
+    "dev",
+    "plan",
+    "copy"
   ],
   "targets": [
-    "claude"
+    "claude",
+    "codex"
   ],
   "components": {
-    "agents": 6,
-    "commands": 21,
-    "skills": 19,
-    "hooks": 10,
-    "rules": 9
+    "agents": 21,
+    "commands": 42,
+    "skills": 34,
+    "hooks": 28,
+    "rules": 20
   },
   "byDomain": {
     "core": {
+      "commands": 1,
       "skills": 4,
-      "hooks": 7,
-      "rules": 8
+      "hooks": 14,
+      "rules": 12
     },
     "dev": {
-      "agents": 6,
+      "agents": 7,
       "commands": 21,
       "skills": 15,
       "hooks": 3,
       "rules": 1
+    },
+    "plan": {
+      "agents": 9,
+      "commands": 13,
+      "skills": 10,
+      "hooks": 6,
+      "rules": 2
+    },
+    "copy": {
+      "agents": 5,
+      "commands": 7,
+      "skills": 5,
+      "hooks": 5,
+      "rules": 5
     }
   },
-  "totalComponents": 65,
+  "totalComponents": 145,
   "preservedFiles": [
     "profile.json",
-    "CLAUDE.md"
+    "CLAUDE.md",
+    "AGENTS.md"
   ],
   "outputs": {
     "shared": {
       "root": ".",
       "generated": [
         "CLAUDE-KIT-QUICKSTART.md"
+      ]
+    },
+    "codex": {
+      "root": "plugins/claude-kit",
+      "generated": [
+        "AGENTS.md",
+        ".agents/skills/**",
+        ".codex/agents/*.toml",
+        "plugins/claude-kit/.codex-plugin/plugin.json",
+        ".agents/plugins/marketplace.json",
+        "plugins/claude-kit/hooks.json"
+      ],
+      "directUseGenerated": [
+        ".agents/skills/continuous-learning/SKILL.md",
+        ".agents/skills/session-wrap/SKILL.md",
+        ".agents/skills/session-wrap/references/output-schema.md",
+        ".agents/skills/session-wrap/references/prompt-automation-scout.md",
+        ".agents/skills/session-wrap/references/prompt-doc-updater.md",
+        ".agents/skills/session-wrap/references/prompt-duplicate-checker.md",
+        ".agents/skills/session-wrap/references/prompt-followup-suggester.md",
+        ".agents/skills/session-wrap/references/prompt-learning-extractor.md",
+        ".agents/skills/dev-architecture-decision/SKILL.md",
+        ".agents/skills/dev-domain-modeling/SKILL.md",
+        ".agents/skills/dev-feature-module/SKILL.md",
+        ".agents/skills/dev-feature-plan/SKILL.md",
+        ".agents/skills/dev-frontend-patterns/SKILL.md",
+        ".agents/skills/dev-layered-architecture/SKILL.md",
+        ".agents/skills/dev-observability/SKILL.md",
+        ".agents/skills/dev-refactoring/SKILL.md",
+        ".agents/skills/dev-security-pipeline/SKILL.md",
+        ".agents/skills/dev-tdd-workflow/SKILL.md",
+        ".agents/skills/dev-testing-backend/SKILL.md",
+        ".agents/skills/dev-testing-e2e/SKILL.md",
+        ".agents/skills/dev-testing-frontend/SKILL.md",
+        ".agents/skills/dev-verification-engine/SKILL.md",
+        ".agents/skills/dev-workflow/SKILL.md",
+        ".agents/skills/claude-design-workflow/SKILL.md",
+        ".agents/skills/plan-archive-workflow/SKILL.md",
+        ".agents/skills/plan-idea-management/SKILL.md",
+        ".agents/skills/plan-pipeline/SKILL.md",
+        ".agents/skills/plan-prd-authoring/SKILL.md",
+        ".agents/skills/plan-review-criteria/SKILL.md",
+        ".agents/skills/plan-screening-workflow/SKILL.md",
+        ".agents/skills/plan-stitch-workflow/SKILL.md",
+        ".agents/skills/plan-wireframe-design/SKILL.md",
+        ".agents/skills/copy-closeout-workflow/SKILL.md",
+        ".agents/skills/copy-evidence-management/SKILL.md",
+        ".agents/skills/copy-gap-analysis/SKILL.md",
+        ".agents/skills/copy-pipeline/SKILL.md",
+        ".agents/skills/copy-qa-workflow/SKILL.md",
+        ".codex/agents/dev-architect.toml",
+        ".codex/agents/dev-code-reviewer.toml",
+        ".codex/agents/dev-database-reviewer.toml",
+        ".codex/agents/dev-doc-updater.toml",
+        ".codex/agents/dev-implementer.toml",
+        ".codex/agents/dev-security-reviewer.toml",
+        ".codex/agents/dev-verify-agent.toml",
+        ".codex/agents/plan-bridge-writer.toml",
+        ".codex/agents/plan-design-writer.toml",
+        ".codex/agents/plan-draft-writer.toml",
+        ".codex/agents/plan-idea-collector.toml",
+        ".codex/agents/plan-idea-screener.toml",
+        ".codex/agents/plan-prd-writer.toml",
+        ".codex/agents/plan-reviewer.toml",
+        ".codex/agents/plan-stitch-integrator.toml",
+        ".codex/agents/plan-wireframe-designer.toml",
+        ".codex/agents/copy-fidelity.toml",
+        ".codex/agents/copy-interaction-fidelity.toml",
+        ".codex/agents/copy-qa-reviewer.toml",
+        ".codex/agents/copy-reference-baseline.toml"
+      ],
+      "directUsePreserved": [],
+      "directUseConflicts": [],
+      "directUseManifest": [
+        {
+          "path": ".agents/skills/continuous-learning/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/core/skills/continuous-learning/SKILL.md",
+          "sourceHash": "fd4a95e9125e8ee8d3993d8e88d362a5a69e248293f85fc3fc2a3c241882e145",
+          "outputHash": "f0241ca2c5cba2efdc45e27e666156ab4128eb2418b33e0a098168226aa4dade",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/session-wrap/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/core/skills/session-wrap/SKILL.md",
+          "sourceHash": "546d3bf99c8e8947da6e419fe901957a76dd498c9b752221561fb79fb2f382ad",
+          "outputHash": "a6b419b0fc1ab59ad8caaafde7fc770cfb16708a03a85bf07983c6499644eb9b",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/session-wrap/references/output-schema.md",
+          "kind": "skill-support",
+          "source": "src/codex/core/skills/session-wrap/references/output-schema.md",
+          "sourceHash": "de4afe114cb660632d155f1c465fc67bd794c921a046b37c81db668b514ba5c0",
+          "outputHash": "de4afe114cb660632d155f1c465fc67bd794c921a046b37c81db668b514ba5c0",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/session-wrap/references/prompt-automation-scout.md",
+          "kind": "skill-support",
+          "source": "src/codex/core/skills/session-wrap/references/prompt-automation-scout.md",
+          "sourceHash": "f5c2c7d36cc9ebbe861ea70a052917d9d7f5d52379193de5b75713e1f0e4965a",
+          "outputHash": "f5c2c7d36cc9ebbe861ea70a052917d9d7f5d52379193de5b75713e1f0e4965a",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/session-wrap/references/prompt-doc-updater.md",
+          "kind": "skill-support",
+          "source": "src/codex/core/skills/session-wrap/references/prompt-doc-updater.md",
+          "sourceHash": "8ef8e4b4d649b1c0d54cb93c07c3ba5d117014c4c6aa3991a4e62670009fa751",
+          "outputHash": "8ef8e4b4d649b1c0d54cb93c07c3ba5d117014c4c6aa3991a4e62670009fa751",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/session-wrap/references/prompt-duplicate-checker.md",
+          "kind": "skill-support",
+          "source": "src/codex/core/skills/session-wrap/references/prompt-duplicate-checker.md",
+          "sourceHash": "2955f33a8902d13f8ce508e4ab30fc8502d085178bc4995f7a7d9602b1cc6204",
+          "outputHash": "2955f33a8902d13f8ce508e4ab30fc8502d085178bc4995f7a7d9602b1cc6204",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/session-wrap/references/prompt-followup-suggester.md",
+          "kind": "skill-support",
+          "source": "src/codex/core/skills/session-wrap/references/prompt-followup-suggester.md",
+          "sourceHash": "dab5a390abd7c562bea090f2ec791e9f507896fb21b2b40f390d994f55f4f1bf",
+          "outputHash": "dab5a390abd7c562bea090f2ec791e9f507896fb21b2b40f390d994f55f4f1bf",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/session-wrap/references/prompt-learning-extractor.md",
+          "kind": "skill-support",
+          "source": "src/codex/core/skills/session-wrap/references/prompt-learning-extractor.md",
+          "sourceHash": "4f496045dba7bd567bf1a4833e15651f892c14b6ed5ef12064e8febf6850bdbb",
+          "outputHash": "4f496045dba7bd567bf1a4833e15651f892c14b6ed5ef12064e8febf6850bdbb",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/dev-architecture-decision/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/dev/skills/dev-architecture-decision/SKILL.md",
+          "sourceHash": "97f9e7f460fd05d29df9e00f3d0dc70d5f749c14384476d64efab0a455ab0b14",
+          "outputHash": "32ecbf549daf00d1e56e1754ad4f2d5ff6ac2b3631fa171fa23ecaf7c57eef97",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/dev-domain-modeling/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/dev/skills/dev-domain-modeling/SKILL.md",
+          "sourceHash": "334bdde20bd8a6544e9de9b9c40d54f2b9abde660263f9a32c464500dbabc40a",
+          "outputHash": "438b743e79f7dbeaa0f6ad42ab2ae05382f97d5638e3e1a092e78cc9e61b10c7",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/dev-feature-module/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/dev/skills/dev-feature-module/SKILL.md",
+          "sourceHash": "9d1f2e2dbecd271991f81868f7ac2a955a5fb4098a379f1fe5190caa511e2cc8",
+          "outputHash": "949e1d9ed4c79288bbd8a347177e1adec6f8e7420557adbeb144c57a2ac093b2",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/dev-feature-plan/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/dev/skills/dev-feature-plan/SKILL.md",
+          "sourceHash": "128b3c6a0abcb41420a93872dca8595ce333baa0464ff33d1f57351660171453",
+          "outputHash": "fab9c5682040f2148d8692b8d0c7dfb4eeb1b08bc07f9ff65fb3889feac6b407",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/dev-frontend-patterns/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/dev/skills/dev-frontend-patterns/SKILL.md",
+          "sourceHash": "00a7dc7c7ad5b04afb268f2d1596cb754ea34023cf87dc30fc51096d25ec059d",
+          "outputHash": "354b1b53aeea3e9c75398c0a2063aa8613a181e6d33328e070611ef8e6c76e58",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/dev-layered-architecture/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/dev/skills/dev-layered-architecture/SKILL.md",
+          "sourceHash": "e27a005bf537b64cfb55e194ec348944c91546a50c2fe4eb5d7dc9281b7ffa00",
+          "outputHash": "149908c1538bbbe8701c5374beeb0ad13cdc096d2738b1c902ff010f561f9324",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/dev-observability/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/dev/skills/dev-observability/SKILL.md",
+          "sourceHash": "06a62f7bedefe0e27edba5a417ad663aaedd257951c1cd561d74d7ca91510c11",
+          "outputHash": "87bc04eb7265edacf66fff1196a1af32f5ae87c034612888ea18a9c8c60abda6",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/dev-refactoring/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/dev/skills/dev-refactoring/SKILL.md",
+          "sourceHash": "2db66a2c731342fdfe83e78ccba755d09be9d2686a5f81fd11fecdc4d39a4c87",
+          "outputHash": "177dd69d87adb3c48714d2db0dad292cd46cd8a018c21c2da2e5065b1252d905",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/dev-security-pipeline/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/dev/skills/dev-security-pipeline/SKILL.md",
+          "sourceHash": "1425bd9dced77a0b32865c224544906324fbb97bddd81ad18e73b30df11f0106",
+          "outputHash": "6ad9eef4953fe0c878739cd0a3e139f9b60734b419127b7e959d4f30d8ac221a",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/dev-tdd-workflow/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/dev/skills/dev-tdd-workflow/SKILL.md",
+          "sourceHash": "d5845060fc83899880619944af0dbed2a3f8ecec670108ff02b9af0f4833cd53",
+          "outputHash": "a355d9665bbad9df6b33fdcd5c95bf3ada1275c610d76766e1fe1daa83b4fd93",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/dev-testing-backend/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/dev/skills/dev-testing-backend/SKILL.md",
+          "sourceHash": "0a5772eea3ec84733e1e815de9d7f921e318a6f6b99f5104036949a3f21afdf7",
+          "outputHash": "401c2ca70f8f06cdeb212a10de6b2b37395d1da3ee39a0bed33870cceee560d9",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/dev-testing-e2e/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/dev/skills/dev-testing-e2e/SKILL.md",
+          "sourceHash": "0469b42fc7c4034dacb3d5c5499bdfb7ad4413bb726776d7aa308a362c2afb93",
+          "outputHash": "79675ba9cc42108f52ea772611a5f367e48c12136ff3fcf7f3a0cfae337e2db8",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/dev-testing-frontend/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/dev/skills/dev-testing-frontend/SKILL.md",
+          "sourceHash": "ea6047445d01fb540f91908491729da8c0a189b66655bbcd61aa4293cd321c90",
+          "outputHash": "7017a0338bb488b76f716e9fe88743e7afc2521d27724165da77e0ea9ed6d9b2",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/dev-verification-engine/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/dev/skills/dev-verification-engine/SKILL.md",
+          "sourceHash": "8149f91423247c84a445ae03373157dfc69f7cf58ccf0b00601eb0c266c0f60d",
+          "outputHash": "d3a0b2db8b57c4aa1135bb46e59fff08c497ec47f030cb85f9ec77fb2bfdb317",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/dev-workflow/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/dev/skills/dev-workflow/SKILL.md",
+          "sourceHash": "d070e4dd32e569fd5a152bacc539da98ef1ae00e6ccdd4796960f22c26f066fd",
+          "outputHash": "9ce69c87c9e35f7f54cd3f56ff958455b21509830cee8d7d826fc78debc44cbc",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/claude-design-workflow/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/plan/skills/claude-design-workflow/SKILL.md",
+          "sourceHash": "504d5e53d1a391bf9701fc3548a0327eff4a6e0c18c578049ef18cae94f44d63",
+          "outputHash": "a94c93f08f835f0f09297628af46709399766656ff9025439377eab68a7addab",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/plan-archive-workflow/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/plan/skills/plan-archive-workflow/SKILL.md",
+          "sourceHash": "638942493b94ac602da30aa7e51086dc2c27707ff3e8154ae478806bbeeb5ec5",
+          "outputHash": "9dcbf40e997d509403125f252d08f66846abee6deed4a79229ba1d066dee5982",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/plan-idea-management/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/plan/skills/plan-idea-management/SKILL.md",
+          "sourceHash": "a7c826d7327f8795aa80c598949f8700680038e817e40418ab0b3e0f43b6d9c3",
+          "outputHash": "9cc7a9b357a8710e91f52a933e3def6a1865bb02435550a92f41fc83fa2b3939",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/plan-pipeline/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/plan/skills/plan-pipeline/SKILL.md",
+          "sourceHash": "57b2f1d375a8a742ed5ad2032bb4bbb3938f15f4bf71b2f79c57a1c9d62e76b5",
+          "outputHash": "639f10d3fd450e6c1c25977b9cd5a718d6525f68ef20fe61b90f4feceaff7f6f",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/plan-prd-authoring/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/plan/skills/plan-prd-authoring/SKILL.md",
+          "sourceHash": "dcd0482e623b20e0f224d886791037c5afe1bf73367b9c7dcfa6fdf7e73826e5",
+          "outputHash": "be55284032d99c16f95b02652dc4d4cb2c48e1899f9097d9083f6c5a2d796745",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/plan-review-criteria/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/plan/skills/plan-review-criteria/SKILL.md",
+          "sourceHash": "87d5c6a3fed1b0db5607921bc6c9de8dd9a1ccac771168e737220f1d40571287",
+          "outputHash": "ce6da81e90e79f3e4ef1d91c14dcee22124a688247f97d46b7da0fa91c27cbb9",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/plan-screening-workflow/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/plan/skills/plan-screening-workflow/SKILL.md",
+          "sourceHash": "c93ee1dd10cb061341ea43f7ab921e58db9ca02e1387b00dba73ed969bbd1383",
+          "outputHash": "8441c2c6975f50d1e46ed77d28dcd673f75e70d861d0d05f33e793ac5d7f1218",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/plan-stitch-workflow/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/plan/skills/plan-stitch-workflow/SKILL.md",
+          "sourceHash": "02e5568fd87ae1ae97c8fbc42f9a591f5665b84538e0ced99dcad551cec65b80",
+          "outputHash": "34ae55cabfb2f68cc2f97aad57488574462d88d4d531b5e4dcccc92742426afc",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/plan-wireframe-design/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/plan/skills/plan-wireframe-design/SKILL.md",
+          "sourceHash": "96218b0d32ede51904ee347bb28332953f09ce0d2de646cc14aad120a6c64fa2",
+          "outputHash": "c76692214d11425d51a99a1d039c77030716dede01df8f7b9ea4b0a0bc374ca1",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/copy-closeout-workflow/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/copy/skills/copy-closeout-workflow/SKILL.md",
+          "sourceHash": "aabc983dc7676a646fcab68042df0259b10912d4d6593cfd30b6adbbc135cfac",
+          "outputHash": "3c21339fdcf9030147b6586df40231ed4beb861527c8b68a6eaf79004b24ff70",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/copy-evidence-management/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/copy/skills/copy-evidence-management/SKILL.md",
+          "sourceHash": "7902e80d20955dd6fb2d2e1564c348350f4012bba11ba55522b95b11c43092a8",
+          "outputHash": "599208292025bc7af2768b04e6223712fd75a8982c4c40358c490eb4fc14569c",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/copy-gap-analysis/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/copy/skills/copy-gap-analysis/SKILL.md",
+          "sourceHash": "6d6ea74f2f6fed13e0e83195cbce87b38e5d8544b42b4c34568a2c71a8a40cb4",
+          "outputHash": "e76cd3cde7f2fbb59ce7f086d53af5152aefd28fd9311cbbbd2acdbe9f18423e",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/copy-pipeline/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/copy/skills/copy-pipeline/SKILL.md",
+          "sourceHash": "ca685c144248940bb2d648b2c363472280baf228a430f0cc1ecc7884cebb95cf",
+          "outputHash": "65f803f3713839d97f0cdb45bda238740b463fd198ab4375457ab268e678e11f",
+          "status": "generated"
+        },
+        {
+          "path": ".agents/skills/copy-qa-workflow/SKILL.md",
+          "kind": "skill",
+          "source": "src/codex/copy/skills/copy-qa-workflow/SKILL.md",
+          "sourceHash": "ffa24b083f01e4ca82472e6b36301dfa21f41c14164bcdabbeccc1a0e8b3d02d",
+          "outputHash": "007b9365b5bd0fdfe66b46b5297f3072aabcf1e5582e11e35f3e3976c05a502d",
+          "status": "generated"
+        },
+        {
+          "path": ".codex/agents/dev-architect.toml",
+          "kind": "agent",
+          "source": "src/codex/dev/agents/dev-architect.md",
+          "sourceHash": "227fd9f5642f886964ecfec20d8bc646f9505e84c4e9424ac36d272299b14afe",
+          "outputHash": "90b3d096c6157b3c8eaa2069a247833cad0f7b14d2230d3d186e028ab62a5f28",
+          "status": "generated"
+        },
+        {
+          "path": ".codex/agents/dev-code-reviewer.toml",
+          "kind": "agent",
+          "source": "src/codex/dev/agents/dev-code-reviewer.md",
+          "sourceHash": "5bb4b6eb9d3a15f049ea379a2a1b523b17117327fb0e63e49e52890d9359525c",
+          "outputHash": "da6d0dd957ea3a32864eb56aa44c593e0834e640a2d4ad8cb621624d9ab3e43d",
+          "status": "generated"
+        },
+        {
+          "path": ".codex/agents/dev-database-reviewer.toml",
+          "kind": "agent",
+          "source": "src/codex/dev/agents/dev-database-reviewer.md",
+          "sourceHash": "21d802dc81a669ddbbab409854bbc24e4c3d64fc40a5b48f1bb7adde0e1683e2",
+          "outputHash": "a1b2b73914a0f19d224c6b51f841bf578ec880aa71f92e7093dcab004d75e3c8",
+          "status": "generated"
+        },
+        {
+          "path": ".codex/agents/dev-doc-updater.toml",
+          "kind": "agent",
+          "source": "src/codex/dev/agents/dev-doc-updater.md",
+          "sourceHash": "0ee5fc8379bf839600cc15fafb93f565244b8ab5d6fdfd2f3aa7be81556de666",
+          "outputHash": "9361bb275da5595166b728dc55fffe92dc5b337a568e4e2a42dd7d1ff990d9a9",
+          "status": "generated"
+        },
+        {
+          "path": ".codex/agents/dev-implementer.toml",
+          "kind": "agent",
+          "source": "src/codex/dev/agents/dev-implementer.md",
+          "sourceHash": "48eba789163c1f3efdc83a0297d37baf579aefe242e5ccda53037d69c7d85edf",
+          "outputHash": "d8193e0e1a54c36113757f588372ee25fb025ea2fbe1493022217a66ec60cf1a",
+          "status": "generated"
+        },
+        {
+          "path": ".codex/agents/dev-security-reviewer.toml",
+          "kind": "agent",
+          "source": "src/codex/dev/agents/dev-security-reviewer.md",
+          "sourceHash": "34c528bc09829b612e6dc26ffcb37e2c8eb29be840f2f840d847f8a8a27ddb68",
+          "outputHash": "de362764ab3c36e5afb49e9175973f08f79a608b27f63b414eac49f117b122e5",
+          "status": "generated"
+        },
+        {
+          "path": ".codex/agents/dev-verify-agent.toml",
+          "kind": "agent",
+          "source": "src/codex/dev/agents/dev-verify-agent.md",
+          "sourceHash": "114da436d08760939f538a7f44d85ccebdc139eb94625421e4a8754f90954803",
+          "outputHash": "93aa673ca33dd8a06394068b91c57ce507dcf7b24a736cd0b5cbd829d87d4020",
+          "status": "generated"
+        },
+        {
+          "path": ".codex/agents/plan-bridge-writer.toml",
+          "kind": "agent",
+          "source": "src/codex/plan/agents/plan-bridge-writer.md",
+          "sourceHash": "f96375402fd06f2b5c996c7e4aea4daffd33f41e9af30b3af2b98049c71570d9",
+          "outputHash": "2f905fd4dd234a6af0ac4657afc6ea2cfedfdada3fdde5cf18d676c39d7b3de7",
+          "status": "generated"
+        },
+        {
+          "path": ".codex/agents/plan-design-writer.toml",
+          "kind": "agent",
+          "source": "src/codex/plan/agents/plan-design-writer.md",
+          "sourceHash": "6c7cc64ec885f094e08cc2dfeae33c206ac10d28344f0915e18217eed5ccdb46",
+          "outputHash": "51940bfd63784689672213e167926629a7b959749a04e956de991e36a0cd4c8c",
+          "status": "generated"
+        },
+        {
+          "path": ".codex/agents/plan-draft-writer.toml",
+          "kind": "agent",
+          "source": "src/codex/plan/agents/plan-draft-writer.md",
+          "sourceHash": "f3c3ea975e265baed34149ea1556f18701e350706b23a7a73c4c64966c7885c5",
+          "outputHash": "f1d624132f420dbd8f8137cd9b365b00112f654f2de1f4e7d25bd2552431d92f",
+          "status": "generated"
+        },
+        {
+          "path": ".codex/agents/plan-idea-collector.toml",
+          "kind": "agent",
+          "source": "src/codex/plan/agents/plan-idea-collector.md",
+          "sourceHash": "de87e7a94d876873a200f26ba7f7bd2b66a40d744bd3bbb86702fa5b4fcd0637",
+          "outputHash": "86bff7a55fb58d281ae20b880e02c5ac08e4360424b081515bf54f06cdb7ce63",
+          "status": "generated"
+        },
+        {
+          "path": ".codex/agents/plan-idea-screener.toml",
+          "kind": "agent",
+          "source": "src/codex/plan/agents/plan-idea-screener.md",
+          "sourceHash": "0d5e38e5f1f149f909c2df5ad09ffb1c3e24b9e8a26834aad4b3c318e6aabbb0",
+          "outputHash": "f44475e10f51837be60b57239465cdf81d776311bb85c028d927f84ffbbfcf9a",
+          "status": "generated"
+        },
+        {
+          "path": ".codex/agents/plan-prd-writer.toml",
+          "kind": "agent",
+          "source": "src/codex/plan/agents/plan-prd-writer.md",
+          "sourceHash": "bfb305d267831499d41a3e28390c7b3c32f6f7d8c98256bbe581e27221fc366f",
+          "outputHash": "1af9ac982fc05ff1deed0d10e1cc46d649d4e7caf255e002764cc159aa2a72b7",
+          "status": "generated"
+        },
+        {
+          "path": ".codex/agents/plan-reviewer.toml",
+          "kind": "agent",
+          "source": "src/codex/plan/agents/plan-reviewer.md",
+          "sourceHash": "1777e41cbd41be4a24ec3a532bfc6facc8282b779ac47ff60048234c37fb6dc2",
+          "outputHash": "6a9ec50a7eb11a9404a28571ee8935a5c84a04064a136a8ec8be9e9b0bd30c52",
+          "status": "generated"
+        },
+        {
+          "path": ".codex/agents/plan-stitch-integrator.toml",
+          "kind": "agent",
+          "source": "src/codex/plan/agents/plan-stitch-integrator.md",
+          "sourceHash": "394cca713865d075a2dfe86e68e9f2793c587f176e89e15d0cc59dfd8736dfd8",
+          "outputHash": "17a306c2338ff1a63cb65639a38f8d59b0490a1ac003f91395756e1be944f8fd",
+          "status": "generated"
+        },
+        {
+          "path": ".codex/agents/plan-wireframe-designer.toml",
+          "kind": "agent",
+          "source": "src/codex/plan/agents/plan-wireframe-designer.md",
+          "sourceHash": "5b905f90e2bf121b97a07ac4538a761886fedfb4ffa07f67ed794d8616ec64ee",
+          "outputHash": "dc7766ea82fe476830866d01672bd8987d38b8035a80465b79c5c5563c3c2a69",
+          "status": "generated"
+        },
+        {
+          "path": ".codex/agents/copy-fidelity.toml",
+          "kind": "agent",
+          "source": "src/codex/copy/agents/copy-fidelity.md",
+          "sourceHash": "9c542b6e76bed08d678cff29f0fd8f08216615203e32b001228784be48da2218",
+          "outputHash": "d477ee5f1056d081c631fe6dc1d31994cc8058c1704767947cad065a7ff8f9a9",
+          "status": "generated"
+        },
+        {
+          "path": ".codex/agents/copy-interaction-fidelity.toml",
+          "kind": "agent",
+          "source": "src/codex/copy/agents/copy-interaction-fidelity.md",
+          "sourceHash": "9a0422b3447433cefe8c1ef36a4b84506e68fe0c3ee7d9f54e09f3304d4686c2",
+          "outputHash": "8a2f5b0102e2c4ca2978e95317fdb86280621cbfad32b5b75c4c5e130c9ad025",
+          "status": "generated"
+        },
+        {
+          "path": ".codex/agents/copy-qa-reviewer.toml",
+          "kind": "agent",
+          "source": "src/codex/copy/agents/copy-qa-reviewer.md",
+          "sourceHash": "45b9c9e7dc469486df8249518599f1370d20f505ad703340146f714fd3091647",
+          "outputHash": "ee5f147ed36db86f77cbea48e5b5ae2d7087a8f621d8902532113aa13f54371d",
+          "status": "generated"
+        },
+        {
+          "path": ".codex/agents/copy-reference-baseline.toml",
+          "kind": "agent",
+          "source": "src/codex/copy/agents/copy-reference-baseline.md",
+          "sourceHash": "eed54921e47202a522ad47726f832507de07d8e856c253a6a3e87804975d58c5",
+          "outputHash": "1188c781f82e9a25a286bfb02aaadcc00581c5419ccf54a7d2612850721c2119",
+          "status": "generated"
+        }
       ]
     },
     "claude": {
@@ -49,5 +598,31 @@
         ".claude/settings.json"
       ]
     }
-  }
+  },
+  "skippedForCodex": [
+    {
+      "component": "session-wrap-suggest.js",
+      "reason": "paired-fallback: state-parity not reproducible (Claude session-stats.json + tmpdir marker)"
+    },
+    {
+      "component": "copy-doc-drift-check.js",
+      "reason": "paired-review: copy domain hook, Codex validation pending"
+    },
+    {
+      "component": "copy-evidence-reminder.js",
+      "reason": "paired-review: copy domain hook, Codex validation pending"
+    },
+    {
+      "component": "copy-gate-stop.js",
+      "reason": "paired-review: copy domain hook, Codex validation pending"
+    },
+    {
+      "component": "copy-scope-guard.js",
+      "reason": "paired-review: copy domain hook, Codex validation pending"
+    },
+    {
+      "component": "copy-variant-env-guard.js",
+      "reason": "paired-review: copy domain hook, Codex validation pending"
+    }
+  ]
 }
