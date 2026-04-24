@@ -67,8 +67,8 @@ argument-hint: '[--category <cat>] [--fix] [--verbose]'
 
 - README.md의 컴포넌트 카운트가 실제와 일치하는지 (FAIL: 카운트 불일치)
 - `docs/guide/09-architecture.md`의 컴포넌트 목록이 최신인지 (WARN: 누락된 컴포넌트)
-- `src/templates/AGENTS.md.template`의 `## 핵심 규칙` h3 섹션 6개 존재 (FAIL: codex-sync Phase 2 rule fallback artifact 무결성)
-  - 즉시 실행 가능 검증: `grep -c "^### " src/templates/AGENTS.md.template` → 6 미만 시 FAIL
+- `src/templates/agents-md/`의 rule fallback block 7개 존재 (FAIL: codex-sync rule fallback artifact 무결성)
+  - 대상: `10-golden-principles.md`, `30-verification.md`, `40-coding-style.md`, `50-security.md`, `55-security-no-hardcoded-secrets.md`, `60-interaction.md`, `90-date-calculation.md`
 
 ### C7: 페어링 일관성 (필수, codex-sync Phase 4 cross-check 포함)
 
@@ -82,13 +82,13 @@ argument-hint: '[--category <cat>] [--fix] [--verbose]'
   - exception `strategy=paired-direct` + pairing `status=codex-skip` (FAIL: strategy/status 모순)
   - exception `strategy=blocked` + pairing `status=paired` (FAIL: blocked인데 sibling 존재)
   - exception `strategy=paired-fallback` + `fallbackTarget=skill` → fallback artifact (`src/claude/{domain}/skills/{component}/SKILL.md`) 존재 (WARN: artifact 무결성)
-  - exception `strategy=paired-fallback` + `fallbackTarget=agents-guidance` → `src/templates/AGENTS.md.template` `### {component}` h3 존재 (WARN: artifact 무결성)
+- exception `strategy=paired-fallback` + `fallbackTarget=agents-guidance` → 대응 `src/templates/agents-md/*.md` block 존재 (WARN: artifact 무결성)
 
 #### 즉시 실행 가능 검증 명령 (codex-sync cross-phase review CC3 — silent failure 감지)
 
 C7이 cross-phase 피드백에서 식별한 silent failure 시나리오를 다음 명령으로 즉시 감지:
 
-- **S2 감지** (AGENTS.md.template 섹션 삭제): 이미 C6에 포함됨 (`grep -c "^### " src/templates/AGENTS.md.template` → 6 미만 시 FAIL)
+- **S2 감지** (managed fallback block 삭제): C6에 포함됨 (필수 block 7개 존재 여부 확인)
 - **S3 감지** (skill fallback artifact 삭제, 예: EX-001):
   ```bash
   # paired-fallback + fallbackTarget=skill entry 추출 후 각 SKILL.md 존재 확인
@@ -111,18 +111,20 @@ C7이 cross-phase 피드백에서 식별한 silent failure 시나리오를 다�
 
 > codex-sync Phase 2 피드백 N2 + Phase 3 후속 의무 + Phase 5 content drift 확장. 원본 source와 fallback artifact 간 drift를 보고.
 
-- **rule fallback drift**: `src/claude/core/rules/{name}.md` 변경 시 `src/templates/AGENTS.md.template ### {name}` 섹션 갱신 누락 감지 (INFO)
-  - 검사: 두 파일의 git log 비교 → 원본 변경 후 template 미갱신 commit 식별
+- **rule fallback drift**: `src/claude/core/rules/{name}.md` 변경 뒤 대응 `src/templates/agents-md/*.md` block이 갱신되지 않은 경우 감지 (INFO)
+  - 검사: 일반 rule은 두 파일의 git log 비교. EX-009 `security-no-hardcoded-secrets`는 partial source라 파일 단위 시간 비교에서 제외
 - **hook fallback drift**: `src/claude/{domain}/hooks/{name}.js` 변경 시 fallback skill (`src/claude/{domain}/skills/{name}/SKILL.md`) 의도 정합성 (INFO)
-  - 예: EX-001 session-wrap-suggest hook의 threshold 변경 시 skill의 trigger 조건 재확인 권장
+  - 예: EX-001 session-wrap-suggest는 hook threshold와 fallback skill trigger 문구가 동일하면 시간 차이만으로는 drift로 보지 않음
 - **paired-direct sibling drift** (시간 기반): `claudeSource`와 `codexSource`가 모두 존재하는 항목의 수정일 차이 > 7일 (INFO)
-  - 예: EX-002 output-secret-filter의 Claude/Codex 버전 분기 일관성
-- **paired-content-drift** (내용 기반, `--content` 플래그): Claude source에 존재하는 도메인 키워드(`copy`, `scenario`, `Feature 유형` 등)가 Codex source에 없는 비대칭 감지 (WARN)
+  - 예: EX-002 output-secret-filter의 Claude/Codex 버전 분기 일관성. 단, `pairing-registry.json`의 `contentHash`가 현재 Claude source hash와 일치하거나 `lastSyncedAt`이 양쪽 source 변경보다 최신이면 동기화 완료로 간주
+- **paired-content-drift** (내용 기반, `--content` 플래그): Claude source 본문에 존재하는 도메인 키워드(`scenario`, `Feature 유형`, `/copy-`, `copy-reference`, `갭 분석` 등)가 Codex source 본문에 없는 비대칭 감지 (WARN)
   - 검사: `node scripts/audit-drift.js --content` 실행
+  - frontmatter metadata는 agent 호출 관계 차이로 인한 false positive를 줄이기 위해 본문 drift 검사에서 제외
   - 해결: `/kit-sync --resync --name {identity}` 또는 `/kit-convert --name {identity} --force`
   - 예: copy 도메인 도입으로 수정된 plan-draft, dev-feature 등 기존 컴포넌트의 Claude↔Codex 내용 불일치
-- **rule-content-drift** (내용 기반, `--content` 플래그): Rule source에 존재하는 도메인 키워드가 AGENTS.md.template 섹션에 없는 비대칭 감지 (INFO)
+- **rule-content-drift** (내용 기반, `--content` 플래그): Rule source에 존재하는 도메인 키워드가 대응 fallback block에 없는 비대칭 감지 (INFO)
   - 검사: `node scripts/audit-drift.js --content` 실행
+  - EX-009는 `Mandatory Security Checks` / `Secret Management` 부분의 `API key`, `password`, `token`, `secret` marker를 dedicated block과 비교
 
 ### C8: 교차 참조 무결성 (필수)
 

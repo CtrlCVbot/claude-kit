@@ -2,10 +2,9 @@
 
 > **결론**: dev-architect → dev-doc-updater 체이닝의 핵심 계약인 `edit-coordinates` JSON 스키마의 SemVer 규칙·검증 절차·변경 절차. IMP-KIT-011. ajv 런타임 검증을 표준화하여 "암묵적 해석"을 "명시적 검증"으로 승격.
 
-**스키마**: `src/claude/dev/_schemas/edit-coordinates.schema.json` (v1.1, Draft 2020-12)
+**스키마**: `src/claude/dev/_schemas/edit-coordinates.schema.json` (v1, Draft 2020-12)
 **라우터**: `src/claude/dev/_schemas/_router.js`
 **스펙**: `docs/archive/kit-2.3.0-roadmap/03-p1-detailed-specs/IMP-KIT-011-architect-schema.md`
-**확장 스펙**: `docs/archive/kit-agent-improvements-v2.3.1/IMP-AGENT-001-binding-sync-contract.md` (v1.1)
 
 ---
 
@@ -20,7 +19,6 @@
 | 변경 | 버전 | 변경 위치 |
 |------|------|----------|
 | `rationale` 필드 optional 추가 | 1.0 → 1.1 | v1 스키마 수정 |
-| `binding_updates` 필드 optional 추가 (IMP-AGENT-001) | 1.0 → **1.1 (본 적용)** | v1 스키마 수정, `additionalProperties: true` 덕분에 하위호환 |
 | `risk` 필드 필수화 | 1.1 → 2.0 | 신규 `edit-coordinates.v2.schema.json` 파일 + 라우터에 v2 등록 |
 | description 오타 수정 | 1.0 → 1.0.1 | 파일 변경 없음 (메타데이터) |
 
@@ -74,4 +72,3 @@ dev-doc-updater가 `validate().valid === false` 감지 시:
 | 일시 | 변경 | 작성자 |
 |------|------|--------|
 | 2026-04-21 | 초안 작성 (IMP-KIT-011 거버넌스 SSOT) | Claude (메인테이너 역할) |
-| 2026-04-22 | v1.1 — `edits.items.binding_updates` optional 필드 추가 (IMP-AGENT-001). architecture-binding.yaml §2 동기화 계약 승격. 하위호환 유지 (`additionalProperties: true`). | Claude (메인테이너 역할) |

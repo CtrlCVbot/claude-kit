@@ -112,6 +112,18 @@ WRONG:   Agent(write-capable) completes → Edit(file) → "File has not been re
 - [ ] 겹치면 **Edit 전 Read를 반드시 재호출** (캐시 재인증)
 - [ ] `agent-completion-cache-invalidate` 훅 경고 메시지가 떴다면 무시하지 말 것
 
+**자동 보조 장치 (T-RACE-02)**:
+
+write-capable 에이전트 완료 시 `agent-completion-cache-invalidate` 훅이 다음을 수행:
+
+1. **`.claude/state/pending-reread.json` 에 구조화 기록** (session + agent + timestamp)
+2. SubagentStop 시 기존 systemMessage 경고 유지 (dedup)
+3. 메인이 Edit/Write 호출 시 `pre-tool-use-edit-reread` 훅이 pending 상태를 조회하여 **파일 경로 타겟팅 경고** 발행 (파일별 세션당 1 회 dedup 후 pending clear)
+
+이 장치는 **경고 강화** 역할이며 자동 Read 호출은 수행하지 않는다 (Claude Code hook 제약). 메인 에이전트는 여전히 책임지고 Read 재호출을 수행해야 한다. hook 실패 시 기존 플로우 유지 (fail-open).
+
+**Read-only 에이전트 목록 SSOT**: `src/claude/core/hooks/_read-cache-state.js` 의 `READ_ONLY_AGENTS` 상수 (agent-completion-cache-invalidate 와 pre-tool-use-edit-reread 가 공유).
+
 **에이전트 분류 원천**: 각 에이전트 파일(`src/claude/**/agents/*.md`)의 `tools:` 필드가 SSOT. Write/Edit 보유 시 write-capable. Role 서술이 아닌 **능력 기반** 분류.
 
 **Read-only 에이전트** (Read 재호출 불필요):
@@ -135,17 +147,30 @@ WRONG:   Agent(write-capable) completes → Edit(file) → "File has not been re
 | `dev-security-reviewer` | dev | Write/Edit 보유 (보고서/fix 작성) |
 | `dev-database-reviewer` | dev | Write/Edit 보유 (SQL/migration 작성) |
 | `dev-verify-agent` | dev | Write/Edit 보유 (라운드당 ≤10파일) |
-| `dev-implementer` | dev | **신설 (IMP-AGENT-005, BC-2.3.1-02)** — TDD Red-Green-Refactor 자율 실행. `/dev-run` 기본 디스패치 |
 | `plan-idea-collector` | plan | IDEA 파일 생성/수정 |
 | `plan-idea-screener` | plan | SCREENING 파일 생성 |
 | `plan-prd-writer` | plan | PRD 문서 작성 |
 | `plan-stitch-integrator` | plan | Feature Package 작성 |
 | `plan-wireframe-designer` | plan | 와이어프레임 파일 작성 |
 | `copy-reference-baseline` | copy | evidence/ 파일 생성 |
-| `copy-implementer` | copy | **신설 (IMP-AGENT-006, BC-2.3.1-03)** — VF/IF gap 소비 + Execution Unit 범위 구현. `/copy-plan-unit` 승인 후 호출 |
 | `general-purpose` | (Claude Code 기본) | 전범위 Edit 가능 |
 | `plan-draft-writer` | plan | (IMP-KIT-003, 2.2.0+ 예정) |
 | `plan-bridge-writer` | plan | (IMP-KIT-004, 2.2.0+ 예정) |
+
+### Agent File Ownership (T-RACE-01)
+
+에이전트 race 방지를 위해 파일 유형별 소유권 매트릭스를 SSOT 로 분리: **[`agent-file-ownership.md`](agent-file-ownership.md)** 참조.
+
+핵심 원칙:
+- **1 차 작성** 권한: 해당 파일을 처음 생성하는 주체 (한 파일당 1 주체)
+- **후속 갱신** 권한: 프롬프트에 명시된 필드만 수정
+- **메인 전담** 파일: 서브 에이전트 편집 금지 — 대표적으로 `.plans/epics/*/EPIC-*/01-children-features.md`
+
+**Checklist (에이전트 위임 전)**:
+
+- [ ] 위임하려는 작업의 파일이 매트릭스의 "메인 전담" 컬럼에 있는가? → 있으면 메인이 직접 Edit
+- [ ] 서브 에이전트 프롬프트에 `<File_Ownership>` 블록이 있거나 참조 링크가 명시됐는가?
+- [ ] 병렬 호출 에이전트 2+ 개가 동일 파일에 "1 차 작성/후속 갱신" 권한을 가지면 순차 실행 고려
 
 ## When to Apply
 

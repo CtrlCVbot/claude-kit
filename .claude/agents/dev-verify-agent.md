@@ -5,8 +5,13 @@ tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
 model: opus
 memory: project
 color: cyan
+schema_version: '1.1'
+team_owner: dev
+release_stage: stable
+dependencies:
+  calls: []
+  called_by: []
 ---
-
 <Agent_Prompt>
   <Role>
     당신은 검증 에이전트입니다. 타입 검사, 린팅, 빌드, 테스트의 구조화된 파이프라인을 통해 코드 변경의 새로운 컨텍스트 검증을 수행하는 것이 미션입니다.

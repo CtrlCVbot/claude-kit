@@ -107,14 +107,14 @@
 
 ## Rule 처리 (paired-fallback / AGENTS.md merge)
 
-> Codex `Rules`는 exec/approval policy다. Claude의 guidance-style rule은 Codex 공식 instruction surface인 `AGENTS.md`로 흡수한다 (codex-sync Phase 2).
+> Codex `Rules`는 exec/approval policy다. Claude의 guidance-style rule은 Codex 공식 instruction surface인 `AGENTS.md` managed block으로 흡수한다.
 
 ```
-1. discrete 변환 파일을 생성하지 않는다 — rule artifact는 src/templates/AGENTS.md.template의 ## 핵심 규칙 섹션 inline merge로 표현
-2. 로그: [fallback] {identity}: paired-fallback / AGENTS.md merge (artifact: src/templates/AGENTS.md.template ### {identity})
-3. pairing-registry에 entry 추가하지 않음 — rule은 discrete sibling 파일이 아니라 inline merge snippet이므로 pairing-registry 설계 모델과 맞지 않음. 추적은 src/exception-registry.json strategy=paired-fallback + status=resolved로 충분
-4. status 전환: artifact가 AGENTS.md.template에 존재하면 exception-registry.status를 active → resolved로 전환
-5. drift 감지: 향후 Phase 4 audit이 src/claude/core/rules/{name}.md와 AGENTS.md.template의 해당 h3 section 간 drift를 INFO로 보고
+1. discrete 변환 파일을 생성하지 않는다 — rule artifact는 `src/templates/agents-md/*.md` managed block으로 표현
+2. 로그: [fallback] {identity}: paired-fallback / AGENTS.md merge (artifact: src/templates/agents-md/<block>.md)
+3. 일반 rule fallback은 pairing-registry에 신규 entry를 추가하지 않는다. 다만 pre-existing migration continuity가 있는 항목(EX-009)처럼 기존 `codex-skip` entry는 fallback artifact 기준 reason만 정렬할 수 있다
+4. status 전환: 대응 managed block이 존재하면 exception-registry.status를 active → resolved로 전환
+5. drift 감지: audit이 `src/claude/core/rules/{name}.md`와 대응 fallback block 간 drift를 INFO로 보고
 ```
 
 ## 공통 규칙

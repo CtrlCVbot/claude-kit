@@ -63,7 +63,7 @@
 | `strategy=paired-direct` + `codexSource=null` | INFO | sibling이 미생성 상태 (예: 7개 informational hook). codex-sync Phase 5에서 evidence 재평가 후보. |
 | `strategy=paired-direct` + `codexSource` 존재 | INFO | sibling 정상. C7 audit이 pairing-registry status=paired와 일치 검증. |
 | `strategy=paired-fallback` + `fallbackTarget=skill` | WARN | `fallbackArtifact` 필드 또는 `src/claude/{domain}/skills/{identity}/SKILL.md` 존재 |
-| `strategy=paired-fallback` + `fallbackTarget=agents-guidance` | WARN | `fallbackArtifact` 필드가 `src/templates/AGENTS.md.template` 참조 + 해당 h3 존재 |
+| `strategy=paired-fallback` + `fallbackTarget=agents-guidance` | WARN | `fallbackArtifact` 필드가 `src/templates/agents-md/*.md` block 파일을 가리키고 실제 파일이 존재 |
 | `evidenceLevel=추정` + `strategy=paired-direct` | INFO | Phase 5 runtime 검증 후보 — 실제 Codex 환경에서 confirm 필요 |
 | `evidenceLevel=검증 필요` | INFO | runtime 검증 미실시 — Phase 5 또는 별도 task에서 검증 |
 | `officialBasis` 배열이 비어있음 | WARN | 공식 문서 링크가 최소 1개 권장 (특히 strategy=paired-direct/fallback) |

@@ -5,8 +5,13 @@ tools: ["Read", "Write", "Edit", "Bash", "Grep", "Glob"]
 model: opus
 memory: project
 color: red
+schema_version: '1.1'
+team_owner: dev
+release_stage: stable
+dependencies:
+  calls: []
+  called_by: ["dev-implementer"]
 ---
-
 <Agent_Prompt>
   <Role>
     당신은 보안 리뷰어입니다. 보안 취약점이 프로덕션에 도달하기 전에 식별하고 우선순위를 지정하는 것이 미션입니다.

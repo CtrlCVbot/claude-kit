@@ -9,7 +9,15 @@ Feature Package의 TASK를 TDD 기반으로 구현한다. 구현 범위와 파�
 ```bash
 /dev-run .plans/features/active/{slug}
 /dev-run .plans/features/active/{slug} --story S-HEADER-01  # copy 도메인에서 넘어온 Story ID 지정
+/dev-run .plans/features/active/{slug} --inline             # 메인 세션 직접 구현 (하위호환 플래그)
 ```
+
+### Flags
+
+| 플래그 | 기본값 | 설명 |
+|--------|--------|------|
+| `--story {ID}` | 없음 | copy 도메인에서 넘어온 Story ID 필터 |
+| `--inline` | off | 메인 세션이 직접 구현. 기본값(off)은 `dev-implementer` 에이전트 위임 (IMP-AGENT-005). 과거 동작 호환 목적. |
 
 ## Preconditions
 
@@ -29,16 +37,21 @@ Feature Package의 TASK를 TDD 기반으로 구현한다. 구현 범위와 파�
 
 ### Phase D2: TDD Implementation
 
-4. 테스트를 먼저 작성해 Red를 확인한다.
-5. 바인딩된 경로 안에서 최소 구현으로 Green을 만든다.
-6. 구조 계약을 지키는 선에서 리팩터링한다.
+4. **디스패치 결정 (IMP-AGENT-005)**:
+   - `--inline` 플래그 없으면 각 TASK를 `dev-implementer` 에이전트에 위임 (기본)
+   - `--inline` 플래그 있으면 메인 세션이 직접 구현 (과거 동작)
+   - `handoff-contract.json` 존재 시 `constraints.file_scope` 와 `task_ids` 를 에이전트 프롬프트에 포함
+5. 테스트를 먼저 작성해 Red를 확인한다.
+6. 바인딩된 경로 안에서 최소 구현으로 Green을 만든다.
+7. 구조 계약을 지키는 선에서 리팩터링한다.
+8. **Read 캐시 재인증**: 에이전트 위임 모드에서 TASK 완료 후 메인 세션이 같은 파일을 Edit하려면 Read 재호출 필요 (verification.md "Agent Edit Race" 룰).
 
 ### Phase D3: Quality Gate
 
-7. Scope Guard 통과 여부를 확인한다.
-8. TDD Guard, typecheck, lint, traceability를 확인한다.
-9. TASK 상태와 생성 파일 목록을 갱신한다.
-10. 모든 TASK가 끝나면 `03-dev-notes/dev-output-summary.md`를 만들고 `/dev-verify`로 넘긴다.
+9. Scope Guard 통과 여부를 확인한다.
+10. TDD Guard, typecheck, lint, traceability를 확인한다.
+11. TASK 상태와 생성 파일 목록을 갱신한다.
+12. 모든 TASK가 끝나면 `03-dev-notes/dev-output-summary.md`를 만들고 `/dev-verify`로 넘긴다.
 
 ## Rules
 

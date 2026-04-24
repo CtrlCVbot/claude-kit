@@ -115,6 +115,24 @@
         "hooks": [
           "node .claude/hooks/plan-doc-guard.js"
         ]
+      },
+      {
+        "matcher": "Edit|Write|NotebookEdit",
+        "hooks": [
+          "node .claude/hooks/pre-tool-use-edit-reread.js"
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
+          "node .claude/hooks/plan-idea-move-guard.js"
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          "node .claude/hooks/copy-scope-guard.js"
+        ]
       }
     ],
     "PostToolUse": [
@@ -141,6 +159,30 @@
         "hooks": [
           "node .claude/hooks/security-auto-trigger.js"
         ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          "node .claude/hooks/plan-state-sync.js"
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          "node .claude/hooks/copy-evidence-reminder.js"
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          "node .claude/hooks/copy-doc-drift-check.js"
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          "node .claude/hooks/copy-variant-env-guard.js"
+        ]
       }
     ],
     "Stop": [
@@ -148,12 +190,34 @@
         "hooks": [
           "node .claude/hooks/session-wrap-suggest.js"
         ]
+      },
+      {
+        "matcher": "^/(plan-(idea|screen|draft|prd|review|wireframe|stitch|bridge|archive)|copy-(reference-refresh|visual-review|interaction-review|gap-board|plan-unit|verify|closeout)|dev-(architecture|feature|verify|verify-all|verify-fe|commit|commit-push-pr))($|\\s)",
+        "hooks": [
+          "node .claude/hooks/feedback-collector.js"
+        ]
+      },
+      {
+        "hooks": [
+          "node .claude/hooks/plan-review-trigger.js"
+        ]
+      },
+      {
+        "hooks": [
+          "node .claude/hooks/copy-gate-stop.js"
+        ]
       }
     ],
     "SubagentStop": [
       {
         "hooks": [
           "node .claude/hooks/agent-completion-cache-invalidate.js"
+        ]
+      },
+      {
+        "matcher": "(plan-draft-writer|plan-bridge-writer|dev-architect|dev-doc-updater|plan-wireframe-designer|plan-idea-screener|plan-prd-writer|plan-reviewer|copy-reference-baseline)",
+        "hooks": [
+          "node .claude/hooks/feedback-subagent-collector.js"
         ]
       }
     ]
