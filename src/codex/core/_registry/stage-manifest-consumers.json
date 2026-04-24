@@ -1,9 +1,0 @@
-{
-  "_description": "IMP-KIT-014 — stage-manifest 소비자 등록부 (Codex sibling).",
-  "schema_version_required": ">=1.0",
-  "consumers": [
-    { "id": "dev-feature-phase-a-codex", "type": "command", "path": "src/codex/dev/commands/dev-feature.md", "reads": ["stages"] },
-    { "id": "plan-bridge-writer-codex", "type": "agent", "path": "src/codex/plan/agents/plan-bridge-writer.md", "reads": ["stages", "entryPoint"] },
-    { "id": "plan-draft-writer-codex", "type": "agent", "path": "src/codex/plan/agents/plan-draft-writer.md", "reads": ["slug", "stages"] }
-  ]
-}
