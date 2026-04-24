@@ -45,7 +45,7 @@ async execute(request) {
 
 ## 참조
 
-- 레이어 규칙: `.claude/skills/layered-architecture/SKILL.md`
+- 레이어 규칙: `.claude/skills/dev-layered-architecture/SKILL.md`
 - 도메인 위치: `packages/core/src/**/domain/`
 
 ---

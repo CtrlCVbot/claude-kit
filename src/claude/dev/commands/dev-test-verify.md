@@ -2,7 +2,7 @@
 
 변경된 코드의 테스트 품질을 Google Staff Engineer 수준으로 검증합니다.
 
-> 참조: `.claude/skills/tdd-workflow/SKILL.md`
+> 참조: `.claude/skills/dev-tdd-workflow/SKILL.md`
 
 ## 검증 항목
 1. **핵심 비즈니스 로직** -- 금액 계산, 상태 전이, 권한, 데이터 격리

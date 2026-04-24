@@ -3,7 +3,7 @@
 
 변경된 프론트엔드 코드의 테스트 품질을 검증합니다.
 
-> 참조: `.claude/skills/testing-frontend/SKILL.md`, `.claude/skills/frontend-patterns/SKILL.md`
+> 참조: `.claude/skills/dev-testing-frontend/SKILL.md`, `.claude/skills/dev-frontend-patterns/SKILL.md`
 
 ## 검증 항목
 1. **컴포넌트 렌더링** -- 테스트 존재 여부

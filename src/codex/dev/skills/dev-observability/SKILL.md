@@ -52,7 +52,7 @@ Request → Middleware (requestId 생성)
 
 ## 참조
 
-- 에러 처리: `.claude/skills/layered-architecture/SKILL.md` (에러 처리 섹션)
+- 에러 처리: `.claude/skills/dev-layered-architecture/SKILL.md` (에러 처리 섹션)
 - 테넌트 격리: `.claude/skills/tenant-isolation/SKILL.md` (Tier 3)
 
 ## Codex 참고 사항

@@ -2,7 +2,7 @@
 
 코드 구조를 안전하게 개선합니다.
 
-> 참조: `.claude/skills/refactoring/SKILL.md`
+> 참조: `.claude/skills/dev-refactoring/SKILL.md`
 
 ## 절차
 1. 리팩토링 대상 식별 (코드 냄새 분석)

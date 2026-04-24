@@ -47,5 +47,5 @@ vi.mock('./drizzle-entity-repository');
 
 ## 참조
 
-- TDD 순서: `.claude/skills/tdd-workflow/SKILL.md`
-- 프론트엔드: `.claude/skills/testing-frontend/SKILL.md`
+- TDD 순서: `.claude/skills/dev-tdd-workflow/SKILL.md`
+- 프론트엔드: `.claude/skills/dev-testing-frontend/SKILL.md`

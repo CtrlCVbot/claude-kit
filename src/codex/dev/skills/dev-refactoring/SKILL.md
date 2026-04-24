@@ -45,8 +45,8 @@ description: 안전한 리팩토링 절차. 코드 냄새 식별, 테스트 안�
 
 ## 참조
 
-- TDD: `.claude/skills/tdd-workflow/SKILL.md`
-- 레이어 규칙: `.claude/skills/layered-architecture/SKILL.md`
+- TDD: `.claude/skills/dev-tdd-workflow/SKILL.md`
+- 레이어 규칙: `.claude/skills/dev-layered-architecture/SKILL.md`
 
 ## Codex 참고 사항
 

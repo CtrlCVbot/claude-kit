@@ -57,7 +57,7 @@ vi.mock('next/cache', () => ({
 
 ## 참조
 
-- TDD 순서: `.claude/skills/tdd-workflow/SKILL.md`
+- TDD 순서: `.claude/skills/dev-tdd-workflow/SKILL.md`
 - 백엔드: `.claude/skills/testing-backend/SKILL.md`
 
 ## Codex 참고 사항

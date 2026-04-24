@@ -2,7 +2,7 @@
 
 변경된 코드의 아키텍처 규칙 준수를 검증합니다.
 
-> 참조: `.claude/skills/layered-architecture/SKILL.md`, `.claude/skills/dev-feature-module/SKILL.md`, `.claude/skills/frontend-patterns/SKILL.md`
+> 참조: `.claude/skills/dev-layered-architecture/SKILL.md`, `.claude/skills/dev-feature-module/SKILL.md`, `.claude/skills/dev-frontend-patterns/SKILL.md`
 
 ## 검증 항목
 

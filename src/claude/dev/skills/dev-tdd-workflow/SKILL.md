@@ -31,7 +31,7 @@ description: TDD Red-Green-Refactor 워크플로우. 테스트 작성, 구현 �
 
 - 차단 훅: `.claude/hooks/dev-tdd-guard.js` (exit 2)
 - 백엔드 테스트: `.claude/skills/testing-backend/SKILL.md` (Tier 2)
-- 프론트엔드 테스트: `.claude/skills/testing-frontend/SKILL.md` (Tier 2)
+- 프론트엔드 테스트: `.claude/skills/dev-testing-frontend/SKILL.md` (Tier 2)
 
 ---
 
