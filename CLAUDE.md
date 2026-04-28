@@ -102,6 +102,7 @@ AI 거버넌스 밀키트. TDD 강제 + Hexagonal + Clean Architecture + Rich Do
   - archive guard 프롬프트 (IMP-AGENT-003): archive 원본 불변 보호
   - 도메인 간 핸드오프 (IMP-AGENT-007): plan → dev → copy 크로스 링크
   - frontmatter v1.1 (IMP-AGENT-008): `team_owner` / `release_stage` / `schema_version` 필드 표준
+- **신규 스킬 (KIT 이관, 2026-04-28)**: `dev-frontend-review` (IMP-AGENT-016, 전역 `frontend-code-review` 흡수 — 프론트엔드 코드 리뷰 + references/ 3 카테고리 체크리스트)
 
 ## plan 도메인
 

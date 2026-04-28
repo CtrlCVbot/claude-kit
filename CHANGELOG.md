@@ -24,6 +24,17 @@ v2.4.0 정식 릴리스 (2026-06-23 목표) 로 이동 예정. Phase 3 전면 �
 
 본 이관은 [전역 자산 정리 작업](../mologado/docs/global-cleanup-20260427/) 의 후속. KIT 후보 5건 중 3건 진행, 2건 (frontend-code-review, verify-implementation) 은 책임 분리 발견 → 전역 KEEP.
 
+### Added — KIT 이관 dev 스킬 (2026-04-28)
+
+전역 `~/.claude/skills/frontend-code-review/` 를 claude-kit dev 도메인으로 이관 + 책임 구분 표 추가:
+
+- **Skill (IMP-AGENT-016)**: `src/claude/dev/skills/dev-frontend-review/` — 프론트엔드 (.tsx, .ts, .js) 코드 리뷰 (Pending-change / File-targeted 2 모드)
+  - `SKILL.md` + `references/code-quality.md` + `references/performance.md` + `references/business-logic.md` (4 파일)
+  - dev-frontend-patterns / dev-testing-frontend / dev-code-reviewer / `/dev-verify-fe` 와 책임 구분 표 명시
+  - dev-frontend-patterns 와 겹치는 부분은 path link 로 참조 (golden-principles #13 Document Non-Duplication)
+
+본 이관은 위 §"KIT 후보 5건 중 책임 분리 발견 2건" 의 1건 처리 (IMP-AGENT-016). 나머지 1건 (verify-implementation → IMP-AGENT-017) 은 별도 진행 예정.
+
 ---
 
 ## [2.4.0-beta.1] - 2026-04-22
