@@ -8,6 +8,22 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 
 v2.4.0 정식 릴리스 (2026-06-23 목표) 로 이동 예정. Phase 3 전면 도입 (hook enable + `/plan-epic-adopt` + Codex sibling 동기화).
 
+### Added — KIT 이관 dev 에이전트 3건 (2026-04-28)
+
+전역 `~/.claude/agents/` (Claude Forge) 의 단일 에이전트를 claude-kit dev 도메인으로 이관 + frontmatter v1.1 + claude-kit 컨벤션 적용:
+
+- **Agent (IMP-AGENT-013)**: `src/claude/dev/agents/dev-build-fixer.md` — 빌드/타입 오류 자동 수정 (전역 build-error-resolver 흡수)
+- **Agent (IMP-AGENT-014)**: `src/claude/dev/agents/dev-e2e-runner.md` — E2E 테스트 생성/실행/유지 + Vercel Agent Browser/Playwright (전역 e2e-runner 흡수)
+- **Agent (IMP-AGENT-015)**: `src/claude/dev/agents/dev-refactor-cleaner.md` — Dead code 탐지/제거 + 중복 통합 (전역 refactor-cleaner 흡수)
+
+각 에이전트 공통 적용:
+- `team_owner: dev`, `release_stage: experimental`, `schema_version: '1.1'`
+- `<File_Ownership>` 블록 (agent-file-ownership.md 참조)
+- `<Output_Format>` 블록 (writer-output-format.md 표준 + Agent Edit Race 주의)
+- 한글화 (기존 영문 → 한글 핵심 블록)
+
+본 이관은 [전역 자산 정리 작업](../mologado/docs/global-cleanup-20260427/) 의 후속. KIT 후보 5건 중 3건 진행, 2건 (frontend-code-review, verify-implementation) 은 책임 분리 발견 → 전역 KEEP.
+
 ---
 
 ## [2.4.0-beta.1] - 2026-04-22
