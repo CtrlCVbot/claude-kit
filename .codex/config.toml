@@ -1,3 +1,9 @@
+approval_policy = "on-request"
 sandbox_mode = "danger-full-access"
 
-approval_policy = "on-request"
+[shell_environment_policy]
+inherit = "core"
+
+[shell_environment_policy.set]
+CLAUDE_CODE_EXPERIMENTAL_AGENT_TEAMS = "1"
+ENABLE_TOOL_SEARCH = "auto:5"
