@@ -90,20 +90,41 @@ F1 보정은 아래 범위만 포함한다.
 
 ## 7. Archive Gate
 
-현재 archive gate 판정은 **HOLD**다.
+F1 보정 후 archive gate 판정은 **READY**다.
 
 | Gate | Status | Reason |
 | --- | --- | --- |
 | Route availability | PASS | 모든 route가 HTTP 200 |
 | Critical/high gap | PASS | high 이상 gap 없음 |
-| Medium content gap | HOLD | Codex asset naming 정확도 보정 권장 |
-| Verification evidence | PASS | build와 route smoke 통과 |
-| Archive readiness | HOLD | F1 보정 후 재검증 권장 |
+| Medium content gap | PASS | Codex asset naming 정확도 보정 완료 |
+| Verification evidence | PASS | build, route smoke, test, docs check 통과 |
+| Archive readiness | READY | A1 archive approval로 진행 가능 |
 
-## 8. Next Command
+## 8. F1 Resolution Log
+
+| Gap | Status | Resolution |
+| --- | --- | --- |
+| `R2-GAP-01` | RESOLVED | `src/lib/docs/planning-pages.ts`의 Codex asset 표기를 실제 `src/codex/plan/skills`와 현재 command authoring source 기준으로 정렬했다. |
+| `R2-GAP-02` | RESOLVED | `/planning`의 `Pipeline map` 제목과 설명을 `Core execution flow`로 바꿔 P1~P7 기본 실행 흐름과 R/I/A 운영 흐름을 구분했다. |
+| `R2-GAP-03` | RESOLVED | 이미 존재하는 skill/source와 future 후보 표현을 분리했다. |
+
+## 9. Re-check Required
+
+F1 후 아래 검증을 다시 수행했다.
+
+| Verification | Result |
+| --- | --- |
+| `pnpm docs:build` | PASS, 24 static routes generated |
+| route smoke | PASS, 21개 route HTTP 200 |
+| `pnpm test` | PASS, 34 files / 423 tests |
+| `pnpm check:docs` | PASS, reference docs up to date |
+| protected path diff | PASS, `src/claude`, `src/codex`, `scripts/setup.js` 변경 없음 |
+| `git diff --check` | PASS, whitespace issue 없음 |
+
+## 10. Next Command
 
 ```text
-F1 focused fix를 진행해주세요.
-기준 문서는 `.plans/features/active/user-guide-website/04-review/03-route-gap-review-results.md`이고,
-보정 범위는 `src/lib/docs/planning-pages.ts`와 필요 시 `src/app/planning/page.tsx`로 제한해주세요.
+A1 archive approval을 진행해주세요.
+기준 문서는 `.plans/features/active/user-guide-website/09-archive/01-archive-readiness.md`이고,
+Final archive move를 approved 상태로 갱신해주세요.
 ```

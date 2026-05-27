@@ -20,7 +20,11 @@ export default function PlanningIndexPage() {
         />
 
         <section className="section" id="pipeline-map">
-          <h2>Pipeline map</h2>
+          <h2>Core execution flow</h2>
+          <p>
+            아래 지도는 idea에서 개발 handoff까지 이어지는 기본 실행 흐름입니다. 리뷰, 수정, 개선, 아카이브 단계는 전체 명령
+            목록에서 별도 운영 흐름으로 확인합니다.
+          </p>
           <div className="step-list">
             {planningPages.slice(0, 9).map((page) => (
               <Link className="step" href={`/planning/${page.slug}`} key={page.slug}>

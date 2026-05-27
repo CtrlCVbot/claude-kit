@@ -1,7 +1,7 @@
 import type { PlanningPage } from './types'
 
 const commonClaudeAssets = ['Claude command', '관련 subagent', 'workflow skill', 'rules', 'hooks']
-const commonCodexAssets = ['Codex skill', 'custom subagent 후보', 'AGENTS.md guidance', 'hook pair 후보']
+const commonCodexAssets = ['AGENTS.md guidance', '필요 시 custom subagent 후보', '필요 시 hook pair 후보']
 
 export const planningPages: PlanningPage[] = [
   {
@@ -26,7 +26,7 @@ export const planningPages: PlanningPage[] = [
       {
         target: 'Codex',
         summary: 'Codex는 command copy가 아니라 skill 중심 workflow로 idea 등록 기준을 재현합니다.',
-        assets: ['src/codex/plan/skills/plan-idea-workflow', ...commonCodexAssets],
+        assets: ['src/codex/plan/skills/plan-idea-management/SKILL.md', ...commonCodexAssets],
         notes: ['slash command가 핵심 surface가 아닙니다.', 'skill 안에서 입력, 출력, 이동 규칙을 설명합니다.']
       }
     ]
@@ -53,7 +53,7 @@ export const planningPages: PlanningPage[] = [
       {
         target: 'Codex',
         summary: 'Codex는 screening skill과 필요 시 reviewer subagent로 평가 결과를 재현합니다.',
-        assets: ['plan-screen workflow skill', 'screening criteria guidance', 'optional reviewer subagent'],
+        assets: ['src/codex/plan/skills/plan-screening-workflow/SKILL.md', 'screening criteria guidance', 'optional reviewer subagent'],
         notes: ['평가 결과는 Codex runtime artifact가 아니라 `.plans` 산출물로 남깁니다.']
       }
     ]
@@ -80,7 +80,7 @@ export const planningPages: PlanningPage[] = [
       {
         target: 'Codex',
         summary: 'Codex는 Epic 관리 기준을 skill로 제공하고, 필요 시 planning reviewer subagent로 구조를 점검합니다.',
-        assets: ['plan-epic workflow skill 후보', 'planning reviewer subagent 후보', 'AGENTS.md planning guidance'],
+        assets: ['Codex plan-epic companion: pending', 'planning reviewer subagent 후보', 'AGENTS.md planning guidance'],
         notes: ['Codex에서도 Epic은 runtime agent가 아니라 `.plans` 관리 산출물입니다.']
       }
     ]
@@ -106,9 +106,9 @@ export const planningPages: PlanningPage[] = [
       },
       {
         target: 'Codex',
-        summary: 'Codex는 draft workflow skill로 초안 구조와 체크리스트를 제공합니다.',
-        assets: ['plan-draft workflow skill', ...commonCodexAssets],
-        notes: ['필요하면 reviewer subagent가 초안의 범위 과잉을 점검합니다.']
+        summary: 'Codex는 현재 entry flow authoring source로 초안 구조를 보존하고, 후속 skill 분리를 명시합니다.',
+        assets: ['src/codex/plan/commands/plan-draft.md', 'future skill split 후보', ...commonCodexAssets],
+        notes: ['필요하면 reviewer subagent가 초안의 범위 과잉을 점검합니다.', 'command source는 runtime artifact가 아니라 Codex authoring source입니다.']
       }
     ]
   },
@@ -134,7 +134,7 @@ export const planningPages: PlanningPage[] = [
       {
         target: 'Codex',
         summary: 'Codex는 PRD authoring skill과 reviewer subagent 후보를 통해 PRD 품질을 점검합니다.',
-        assets: ['plan-prd workflow skill', 'plan-reviewer subagent 후보'],
+        assets: ['src/codex/plan/skills/plan-prd-authoring/SKILL.md', 'plan-reviewer subagent 후보'],
         notes: ['Codex에서는 command보다 skill 문서가 public workflow에 가깝습니다.']
       }
     ]
@@ -161,7 +161,7 @@ export const planningPages: PlanningPage[] = [
       {
         target: 'Codex',
         summary: 'Codex는 wireframe skill과 optional subagent로 구조 검토를 수행합니다.',
-        assets: ['plan-wireframe workflow skill', 'wireframe designer subagent 후보'],
+        assets: ['src/codex/plan/skills/plan-wireframe-design/SKILL.md', 'wireframe designer subagent 후보'],
         notes: ['실제 이미지 생성이 아니라 구현 가능한 구조 문서에 집중합니다.']
       }
     ]
@@ -188,7 +188,7 @@ export const planningPages: PlanningPage[] = [
       {
         target: 'Codex',
         summary: 'Codex는 design workflow skill로 동일한 판단 기준을 문서화합니다.',
-        assets: ['design workflow skill 후보', 'docs component guidance'],
+        assets: ['src/codex/plan/skills/claude-design-workflow/SKILL.md', 'docs component guidance'],
         notes: ['Codex에서는 plan-design도 skill 중심으로 정리하는 것이 일관됩니다.']
       }
     ]
@@ -215,7 +215,7 @@ export const planningPages: PlanningPage[] = [
       {
         target: 'Codex',
         summary: 'Codex는 Stitch decision을 skill/checklist로 기록하고 bridge에 전달합니다.',
-        assets: ['stitch workflow skill 후보', 'bridge guidance'],
+        assets: ['src/codex/plan/skills/plan-stitch-workflow/SKILL.md', 'bridge guidance'],
         notes: ['Codex runtime 기능이라기보다 planning 기록입니다.']
       }
     ]
@@ -241,9 +241,9 @@ export const planningPages: PlanningPage[] = [
       },
       {
         target: 'Codex',
-        summary: 'Codex는 bridge를 구현 prompt와 validation plan으로 해석합니다.',
-        assets: ['bridge workflow skill 후보', 'dev workflow skill'],
-        notes: ['bridge 이후에는 코드 수정과 검증 중심으로 전환됩니다.']
+        summary: 'Codex는 현재 entry flow authoring source를 통해 bridge를 구현 prompt와 validation plan으로 해석합니다.',
+        assets: ['src/codex/plan/commands/plan-bridge.md', 'src/codex/dev/skills/dev-feature-plan/SKILL.md'],
+        notes: ['bridge 이후에는 코드 수정과 검증 중심으로 전환됩니다.', '후속으로 bridge 전용 skill 분리를 검토할 수 있습니다.']
       }
     ]
   },
@@ -269,7 +269,7 @@ export const planningPages: PlanningPage[] = [
       {
         target: 'Codex',
         summary: 'Codex는 reviewer subagent와 skill checklist로 독립 검토를 수행할 수 있습니다.',
-        assets: ['plan-reviewer subagent 후보', 'review criteria skill'],
+        assets: ['src/codex/plan/agents/plan-reviewer.md', 'src/codex/plan/skills/plan-review-criteria/SKILL.md'],
         notes: ['리뷰 결과는 수정 여부와 함께 남겨야 합니다.']
       }
     ]
@@ -322,9 +322,9 @@ export const planningPages: PlanningPage[] = [
       },
       {
         target: 'Codex',
-        summary: 'Codex는 improvement triage skill로 진입점을 제안합니다.',
-        assets: ['improvement workflow skill 후보'],
-        notes: ['기능 구현보다 분기 기준 문서화가 중요합니다.']
+        summary: 'Codex는 현재 entry flow authoring source로 개선 요청의 재진입 지점을 제안합니다.',
+        assets: ['src/codex/plan/commands/plan-improve.md', 'src/codex/plan/skills/plan-archive-workflow/SKILL.md'],
+        notes: ['기능 구현보다 분기 기준 문서화가 중요합니다.', '개선 요청은 archive context를 기반으로 재진입 경로를 고릅니다.']
       }
     ]
   },
@@ -350,7 +350,7 @@ export const planningPages: PlanningPage[] = [
       {
         target: 'Codex',
         summary: 'Codex는 archive checklist를 skill로 제공하고, 필요한 파일 위치를 점검합니다.',
-        assets: ['archive workflow skill 후보', 'AGENTS.md guidance'],
+        assets: ['src/codex/plan/skills/plan-archive-workflow/SKILL.md', 'AGENTS.md guidance'],
         notes: ['archive는 runtime 기능이 아니라 운영 산출물 정리입니다.']
       }
     ]

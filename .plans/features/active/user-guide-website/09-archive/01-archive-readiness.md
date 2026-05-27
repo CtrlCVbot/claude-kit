@@ -6,9 +6,9 @@
 
 ## 판정
 
-이번 재시작 커밋에서는 최종 archive를 수행하지 않는다.
+최종 archive 실행 준비가 완료됐다.
 
-이유는 `plan-archive-workflow`가 최종 완료/배포 결정 이후의 archive를 기대하기 때문이다. 현재는 archive readiness 증거만 남기고, 사용자가 승인하면 최종 archive를 진행한다.
+`R2` route gap review와 `F1` focused fix를 거쳐 medium 이상 gap이 해소됐고, `V1` verification refresh가 통과했다. 다음 단계는 `plan-archive-workflow` 기준으로 active 산출물을 archive package로 이동하는 것이다.
 
 ## Readiness Checklist
 
@@ -25,8 +25,9 @@
 | P7 bridge | done | `.plans/bridge/user-guide-website/**` |
 | D1 dev package | done | `.plans/features/active/user-guide-website/02-package/**` |
 | D2 implementation evidence | done | `.plans/features/active/user-guide-website/03-dev-notes/dev-output-summary.md` |
-| Verification refresh | done | `pnpm test`, `pnpm docs:build`, protected path diff 통과 |
-| Final archive move | pending | 사용자 승인 필요 |
+| Verification refresh | done | `pnpm test`, `pnpm docs:build`, `pnpm check:docs`, route smoke, protected path diff 통과 |
+| Route gap review | done | `.plans/features/active/user-guide-website/04-review/03-route-gap-review-results.md` |
+| Final archive move | approved | 사용자 요청에 따라 순차 진행 승인 |
 
 ## Archive 후보 경로
 
