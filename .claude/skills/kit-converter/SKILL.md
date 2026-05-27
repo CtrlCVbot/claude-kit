@@ -62,6 +62,21 @@ description: |
 
 command를 skill로 전환할 때 기존 paired command를 즉시 missing/drift로 판정하면 안 된다. `pairing-registry-v2`의 `transitionState`, `primaryCodex`, `codexSkill`, `driftStatus`를 먼저 갱신한다.
 
+## Claude command -> Codex skill/subagent 원칙
+
+Codex에는 built-in slash command와 앱/IDE command가 있지만, Claude Code의 `.claude/commands/*.md`와 같은 custom command authoring surface는 아니다.
+따라서 Claude command를 Codex로 옮길 때 기본값은 `skill/subagent`이고, 기존 command path가 있으면 호환 wrapper 또는 packaging reference로만 다룬다.
+
+1. `src/codex/{domain}/skills/{identity}-workflow/SKILL.md`를 만들고 실제 절차, guardrail, output format을 그 skill에 둔다.
+2. 기존 `src/codex/{domain}/commands/{identity}.md`가 있으면 invocation, routing, 관련 skill 링크만 담는 얇은 wrapper로 줄인다.
+3. 필요한 실행 역할은 새 subagent를 만들기보다 기존 `src/codex/{domain}/agents/*.md` 중 가장 좁은 역할을 먼저 재사용한다.
+4. 새 subagent는 role이 독립적이고 재사용 가능하며 기존 agent로 안전하게 표현할 수 없을 때만 만든다.
+5. `src/pairing-registry.json`에서 command entry는 `primaryCodex: "skill"`, `transitionState: "command-wrapper"`, `codexSkill: "src/codex/{domain}/skills/{identity}-workflow/SKILL.md"`로 기록한다.
+6. Codex-only workflow skill은 `status: "codex-native-only"`, `primaryCodex: "skill"` entry를 별도로 둔다.
+7. 사용자 문서에는 `plugins/claude-kit/commands/*.md`를 실행 본체처럼 쓰지 말고, plugin package artifact 또는 wrapper로 설명한다.
+
+적용 예: `plan-revise`는 Claude에 command만 있지만 Codex에서는 `plan-revise-workflow` skill이 본체이고, command는 wrapper다.
+
 ## 참조
 
 - 변환 규칙: `references/conversion-rules.md`

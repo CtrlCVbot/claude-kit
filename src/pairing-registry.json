@@ -1016,6 +1016,36 @@
       "codexSkill": null
     },
     {
+      "identity": "plan-revise",
+      "type": "command",
+      "domain": "plan",
+      "status": "paired",
+      "reason": null,
+      "claude": "src/claude/plan/commands/plan-revise.md",
+      "codex": "src/codex/plan/commands/plan-revise.md",
+      "createdAt": "2026-05-27T00:00:00.000Z",
+      "lastSyncedAt": "2026-05-27T00:00:00.000Z",
+      "contentHash": "22576133",
+      "primaryCodex": "skill",
+      "driftStatus": null,
+      "transitionState": "command-wrapper",
+      "codexSkill": "src/codex/plan/skills/plan-revise-workflow/SKILL.md"
+    },
+    {
+      "identity": "plan-revise-workflow",
+      "type": "skill",
+      "domain": "plan",
+      "status": "codex-native-only",
+      "reason": "Codex uses skill/subagent-centered workflow for plan-revise. Claude retains command-only source.",
+      "claude": null,
+      "codex": "src/codex/plan/skills/plan-revise-workflow/SKILL.md",
+      "createdAt": "2026-05-27T00:00:00.000Z",
+      "lastSyncedAt": "2026-05-27T00:00:00.000Z",
+      "contentHash": null,
+      "primaryCodex": "skill",
+      "driftStatus": null
+    },
+    {
       "identity": "plan-bridge",
       "type": "command",
       "domain": "plan",
