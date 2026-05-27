@@ -208,3 +208,30 @@ planning command 상세와 실행 예시 route를 먼저 렌더링 가능하게 
 /examples/website-build-artifacts
 /examples/website-build-commands
 ```
+
+## Pipeline restart and canonical `.plans` completion
+
+| 항목 | 내용 |
+| --- | --- |
+| 재시작 이유 | 구현은 완료됐지만 P3 이후 `.plans` 산출물이 누락되어 canonical pipeline 기록을 복구함 |
+| 기준 위치 | `.plans/features/active/user-guide-website/` |
+| 범위 | P3 `/plan-draft`부터 A1 archive readiness까지 전 단계 |
+| archive 상태 | content parity, Vercel Preview, guide sync가 남아 실제 archive는 보류 |
+
+### 추가된 canonical 산출물
+
+```text
+.plans/features/active/user-guide-website/00-context/00-pipeline-restart-note.md
+.plans/features/active/user-guide-website/00-context/01-stage-index.md
+.plans/features/active/user-guide-website/01-draft/01-feature-draft.md
+.plans/features/active/user-guide-website/02-prd/01-prd.md
+.plans/features/active/user-guide-website/03-wireframe/01-wireframe.md
+.plans/features/active/user-guide-website/04-design/01-design-checkpoint.md
+.plans/features/active/user-guide-website/05-stitch/01-stitch-decision.md
+.plans/features/active/user-guide-website/06-bridge/01-dev-handoff.md
+.plans/features/active/user-guide-website/07-dev/01-feature-package.md
+.plans/features/active/user-guide-website/07-dev/02-implementation-log.md
+.plans/features/active/user-guide-website/08-review/01-plan-review.md
+.plans/features/active/user-guide-website/08-review/02-dev-review.md
+.plans/features/active/user-guide-website/09-archive/01-archive-readiness.md
+```
