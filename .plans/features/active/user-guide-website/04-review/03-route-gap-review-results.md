@@ -1,8 +1,8 @@
 # Route Gap Review Results: user-guide-website
 
-> **Review date**: 2026-05-27  
-> **Review stage**: `R2` route gap review  
-> **Source plan**: `.plans/features/active/user-guide-website/04-review/02-route-gap-review-pipeline.md`  
+> **Review date**: 2026-05-27
+> **Review stage**: `R2` route gap review
+> **Source plan**: `.plans/features/active/user-guide-website/04-review/02-route-gap-review-pipeline.md`
 > **Mode**: review-first, code-fix-second
 
 ## 1. Executive Summary
