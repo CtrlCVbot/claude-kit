@@ -12,6 +12,6 @@
 | P6 | `/plan-stitch` | `05-stitch/01-stitch-decision.md` | 완료 | `skip-with-reason`, 기존 HTML reference 우선 |
 | P7 | `/plan-bridge` | `06-bridge/01-dev-handoff.md` | 완료 | 구현 handoff |
 | D1 | `/dev-feature` | `07-dev/01-feature-package.md` | 완료 | task split |
-| D2 | `/dev-run` | `07-dev/02-implementation-log.md` | 완료 | 실제 구현/검증 기록 |
+| D2 | `/dev-run` | `07-dev/02-implementation-log.md` ~ `07-dev/06-commit-history-and-handoff.md` | 완료 | 실제 구현/검증/route/component/data/commit 기록 |
 | R1 | `/plan-review`, `/dev-review` | `08-review/*.md` | 완료 | self-review |
 | A1 | `/plan-archive` readiness | `09-archive/01-archive-readiness.md` | 완료 | archive 가능성 판단. 실제 archive는 보류 |

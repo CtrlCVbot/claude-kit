@@ -64,3 +64,11 @@
 
 현재 구현은 route와 구조 중심의 1차 구현이다. 기존 HTML 상세 문서의 `Runtime Flow`, `Output Lifecycle`, `Failure Modes`, command별 asset table은 다음 content parity 작업에서 더 자세히 반영해야 한다.
 
+## 세부 구현 문서
+
+| 문서 | 역할 |
+| --- | --- |
+| `03-implementation-source-map.md` | 구현 파일과 책임 추적 |
+| `04-route-component-data-inventory.md` | route, component, data 연결 관계 |
+| `05-verification-runbook.md` | 검증 명령, 결과, preview 실행 방법 |
+| `06-commit-history-and-handoff.md` | 커밋 이력과 후속 handoff |

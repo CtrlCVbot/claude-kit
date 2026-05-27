@@ -13,6 +13,7 @@
 | Production build | PASS | `pnpm docs:build` |
 | Protected path diff | PASS | core 기능 source 미변경 |
 | Accessibility baseline | PASS | Runtime tab에 role/aria 적용 |
+| Implementation documentation | PASS | source map, route/component/data inventory, verification runbook, commit handoff 추가 |
 | Content parity | WARN | 상세 HTML 내용은 요약 반영 상태 |
 
 ## Findings
@@ -38,4 +39,3 @@
 ## 결론
 
 구현은 1차 preview 가능한 상태다. `claude-kit` core 기능에는 영향이 없고, 다음 작업은 content parity와 Vercel Preview safety를 별도 Feature로 진행하는 것이 맞다.
-

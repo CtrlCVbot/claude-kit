@@ -231,7 +231,20 @@ planning command 상세와 실행 예시 route를 먼저 렌더링 가능하게 
 .plans/features/active/user-guide-website/06-bridge/01-dev-handoff.md
 .plans/features/active/user-guide-website/07-dev/01-feature-package.md
 .plans/features/active/user-guide-website/07-dev/02-implementation-log.md
+.plans/features/active/user-guide-website/07-dev/03-implementation-source-map.md
+.plans/features/active/user-guide-website/07-dev/04-route-component-data-inventory.md
+.plans/features/active/user-guide-website/07-dev/05-verification-runbook.md
+.plans/features/active/user-guide-website/07-dev/06-commit-history-and-handoff.md
 .plans/features/active/user-guide-website/08-review/01-plan-review.md
 .plans/features/active/user-guide-website/08-review/02-dev-review.md
 .plans/features/active/user-guide-website/09-archive/01-archive-readiness.md
 ```
+
+### Implementation documentation coverage
+
+| 범위 | 문서 |
+| --- | --- |
+| 구현 파일과 책임 | `.plans/features/active/user-guide-website/07-dev/03-implementation-source-map.md` |
+| route/component/data 연결 | `.plans/features/active/user-guide-website/07-dev/04-route-component-data-inventory.md` |
+| 검증 명령과 preview 방법 | `.plans/features/active/user-guide-website/07-dev/05-verification-runbook.md` |
+| 커밋 이력과 handoff | `.plans/features/active/user-guide-website/07-dev/06-commit-history-and-handoff.md` |

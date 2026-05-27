@@ -14,6 +14,7 @@
 | Feature run | `.plans/features/active/user-guide-website/` | ready after follow-up |
 | Execution log | `docs/plans/user-guide-website/execution-log.md` | ready |
 | Implementation | `src/app`, `src/components/docs`, `src/lib/docs` | first-pass complete |
+| Implementation docs | `.plans/features/active/user-guide-website/07-dev/03-implementation-source-map.md` ~ `06-commit-history-and-handoff.md` | ready |
 
 ## Archive 보류 이유
 
@@ -34,4 +35,3 @@
 ## 현재 결론
 
 Archive는 아직 실행하지 않는다. 대신 이번 문서는 archive 준비 상태와 보류 이유를 명확히 남기는 A1 checkpoint로 둔다.
-
