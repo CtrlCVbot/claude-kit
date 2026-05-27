@@ -1,27 +1,30 @@
 {
   "user-guide-website": {
-    "currentStage": "archive-readiness",
+    "currentStage": "archived",
     "idea": "IDEA-20260527-001",
     "epic": "EPIC-20260527-001",
     "stages": {
-      "P1": { "status": "done", "artifact": ".plans/ideas/20-approved/IDEA-20260527-001.md" },
-      "P2": { "status": "done", "artifact": ".plans/ideas/10-screening/SCREENING-20260527-001.md" },
-      "P2.5": { "status": "done", "artifact": ".plans/epics/20-active/EPIC-20260527-001/" },
-      "P3": { "status": "done", "artifact": ".plans/features/active/user-guide-website/01-draft/01-feature-draft.md" },
-      "P4": { "status": "done", "artifact": ".plans/prd/10-approved/user-guide-website-prd.md" },
-      "P5": { "status": "done", "artifact": ".plans/wireframes/user-guide-website/" },
-      "P5.5": { "status": "done", "artifact": ".plans/features/active/user-guide-website/00-context/03-design-checkpoint.md" },
-      "P6": { "status": "done", "artifact": ".plans/stitch/user-guide-website/" },
-      "P7": { "status": "done", "artifact": ".plans/bridge/user-guide-website/" },
-      "D1": { "status": "done", "artifact": ".plans/features/active/user-guide-website/02-package/" },
-      "D2": { "status": "verified", "artifact": ".plans/features/active/user-guide-website/03-dev-notes/dev-output-summary.md" },
-      "R1": { "status": "done", "artifact": ".plans/features/active/user-guide-website/04-review/01-self-review.md" },
-      "A1": { "status": "ready", "artifact": ".plans/features/active/user-guide-website/09-archive/01-archive-readiness.md" }
+      "P1": { "status": "done", "artifact": ".plans/archive/user-guide-website/sources/ideas/IDEA-20260527-001.md" },
+      "P2": { "status": "done", "artifact": ".plans/archive/user-guide-website/sources/ideas/SCREENING-20260527-001.md" },
+      "P2.5": { "status": "done", "artifact": ".plans/archive/user-guide-website/sources/epic/EPIC-20260527-001/" },
+      "P3": { "status": "done", "artifact": ".plans/archive/user-guide-website/sources/feature/01-draft/01-feature-draft.md" },
+      "P4": { "status": "done", "artifact": ".plans/archive/user-guide-website/sources/prd/user-guide-website-prd.md" },
+      "P5": { "status": "done", "artifact": ".plans/archive/user-guide-website/sources/wireframes/" },
+      "P5.5": { "status": "done", "artifact": ".plans/archive/user-guide-website/sources/feature/00-context/03-design-checkpoint.md" },
+      "P6": { "status": "done", "artifact": ".plans/archive/user-guide-website/sources/stitch/" },
+      "P7": { "status": "done", "artifact": ".plans/archive/user-guide-website/sources/bridge/" },
+      "D1": { "status": "done", "artifact": ".plans/archive/user-guide-website/sources/feature/02-package/" },
+      "D2": { "status": "verified", "artifact": ".plans/archive/user-guide-website/sources/feature/03-dev-notes/dev-output-summary.md" },
+      "R1": { "status": "done", "artifact": ".plans/archive/user-guide-website/sources/feature/04-review/01-self-review.md" },
+      "R2": { "status": "done", "artifact": ".plans/archive/user-guide-website/sources/feature/04-review/03-route-gap-review-results.md" },
+      "A1": { "status": "done", "artifact": ".plans/archive/user-guide-website/sources/feature/09-archive/01-archive-readiness.md" },
+      "A2": { "status": "done", "artifact": ".plans/archive/user-guide-website/ARCHIVE-UGW.md" }
     },
     "verification": {
       "pnpm test": "passed",
       "pnpm docs:build": "passed",
-      "protectedPathDiff": "passed"
+      "protectedPathDiff": "passed",
+      "routeSmoke": "passed"
     }
   }
 }
