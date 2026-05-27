@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>/plan-epic 상세 | claude-kit</title>
+  <meta name="description" content="/plan-epic command 상세 실행 가이드">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 건너뛰기</a>
+
+  <header class="app-header">
+    <a class="brand" href="index.html" aria-label="planning guide home">
+      <span class="brand-mark">ck</span>
+      <span>
+        <strong>/plan-epic</strong>
+        <small>Epic lifecycle and feature hierarchy</small>
+      </span>
+    </a>
+    <div class="search-box" role="search" aria-label="문서 검색 placeholder">
+      <span>Planning command detail</span>
+      <kbd>P0</kbd>
+    </div>
+  </header>
+
+  <div class="layout" id="top">
+    <aside class="sidebar" aria-label="/plan-epic 네비게이션">
+      <nav>
+        <p class="nav-group">/plan-epic</p>
+        <a href="#overview" class="active">개요</a>
+        <a href="#usage">실행 예시</a>
+        <a href="#runtime">Claude / Codex</a>
+        <a href="#flow">Runtime Flow</a>
+        <a href="#outputs">Output Lifecycle</a>
+        <a href="#rules">Rules and Guards</a>
+        <a href="#failure">Failure Modes</a>
+        <a href="#next">Next Step</a>
+
+        <p class="nav-group">다른 페이지</p>
+        <a href="index.html">Planning overview</a>
+        <a href="reference.html">Function reference</a>
+        <a href="lifecycle.html">Output lifecycle</a>
+        <a href="plan-idea.html">/plan-idea</a>
+        <a href="../index.html">Guide home</a>
+      </nav>
+    </aside>
+
+    <main id="content" class="content">
+      <section id="overview" class="doc-section intro">
+        <p class="breadcrumb">claude-kit / planning / plan-epic</p>
+        <h1>/plan-epic</h1>
+        <p class="lead">
+          <code>/plan-epic</code>은 여러 Feature를 하나의 상위 목적과 phase roadmap으로 묶는 opt-in 계층 관리 명령입니다.
+          Epic 없이도 기존 flat planning flow는 그대로 동작하지만, cross-cutting 목표나 다중 Feature 묶음에는 Epic이 더 안전한 기준점이 됩니다.
+        </p>
+
+        <div class="command-meta">
+          <div><strong>Primary skill</strong><code>plan-epic-workflow</code></div>
+          <div><strong>Main rule</strong><code>plan-epic-hierarchy</code></div>
+          <div><strong>Main hook</strong><code>plan-epic-integrity</code></div>
+          <div><strong>Primary output</strong><code>.plans/epics/**</code></div>
+        </div>
+      </section>
+
+      <section id="usage" class="doc-section">
+        <h2>실행 예시</h2>
+        <pre><code>/plan-epic
+/plan-epic "OPTIC Landing 제품 라인"
+/plan-epic list
+/plan-epic list --status=active
+/plan-epic show EPIC-20260422-001
+/plan-epic show EPIC-20260422-001 --verbose
+/plan-epic advance EPIC-20260422-001 --to=planning
+/plan-epic advance EPIC-20260422-001 --to=active
+/plan-epic archive EPIC-20260422-001
+/plan-epic phase generate --phase=B --features=F2,F4</code></pre>
+
+        <p>
+          Epic은 opt-in입니다. Feature가 2개 미만이거나 상위 목표가 불명확하면 독립 Feature flow를 쓰는 편이 낫습니다.
+        </p>
+      </section>
+
+      <section id="runtime" class="doc-section">
+        <h2>Claude / Codex 탭</h2>
+        <div class="runtime-tabs">
+          <input class="tab-input" type="radio" name="plan-epic-runtime-tabs" id="plan-epic-tab-claude" checked>
+          <input class="tab-input" type="radio" name="plan-epic-runtime-tabs" id="plan-epic-tab-codex">
+          <div class="tab-list" role="tablist" aria-label="/plan-epic runtime tabs">
+            <label class="tab-label" for="plan-epic-tab-claude" role="tab">Claude</label>
+            <label class="tab-label" for="plan-epic-tab-codex" role="tab">Codex</label>
+          </div>
+          <div class="tab-panels">
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Claude</h3>
+              <table>
+                <tbody>
+                  <tr><th>Command source</th><td><code>src/claude/plan/commands/plan-epic.md</code></td></tr>
+                  <tr><th>Runtime command</th><td><code>.claude/commands/plan-epic.md</code></td></tr>
+                  <tr><th>Primary skill</th><td><code>plan-epic-workflow</code></td></tr>
+                  <tr><th>Hooks</th><td><code>plan-epic-integrity</code>, <code>plan-state-sync</code></td></tr>
+                  <tr><th>Rules</th><td><code>plan-epic-hierarchy</code>, <code>agent-file-ownership</code>, <code>dry-run-mode</code></td></tr>
+                  <tr><th>Script</th><td><code>src/claude/plan/scripts/epic-advance-rewrite.js</code></td></tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section class="runtime-panel tab-panel warning-panel" role="tabpanel">
+              <h3>Codex</h3>
+              <table>
+                <tbody>
+                  <tr><th>Codex source status</th><td><span class="status-badge warn">source-gap</span> <code>src/codex/plan/skills/plan-epic-workflow/SKILL.md</code> authoring source 미확인</td></tr>
+                  <tr><th>Runtime skill</th><td><code>.agents/skills/plan-epic-workflow/SKILL.md</code> runtime output 확인됨</td></tr>
+                  <tr><th>Runtime subagent</th><td>전용 <code>plan-epic</code> subagent 미확인</td></tr>
+                  <tr><th>Instruction surface</th><td><code>AGENTS.md</code> 일반 guidance + instruction rule synthesis 후보</td></tr>
+                  <tr><th>Hook status</th><td><span class="status-badge partial">partial</span> Epic integrity hook은 Codex 지원 상태 별도 검증 필요</td></tr>
+                  <tr><th>Conversion status</th><td><span class="status-badge warn">manual-review</span> Codex source sibling 보강 필요</td></tr>
+                </tbody>
+              </table>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section id="flow" class="doc-section">
+        <h2>Runtime Flow</h2>
+        <ol class="steps compact">
+          <li><strong>Activation 기준 검증</strong><p>Epic이 필요한 규모인지 확인합니다. 기준 미충족 시 독립 Feature를 권장하고 생성하지 않습니다.</p></li>
+          <li><strong>ID와 디렉터리 생성</strong><p><code>EPIC-{YYYYMMDD}-{NNN}</code> ID를 만들고 <code>.plans/epics/00-draft/EPIC-.../</code>를 생성합니다.</p></li>
+          <li><strong>Epic Brief 작성</strong><p><code>plan-epic-workflow</code> 템플릿을 기준으로 목적, 성공 지표, 범위를 채웁니다.</p></li>
+          <li><strong>Children Features 연결</strong><p>자식 Feature가 결정되어 있으면 <code>01-children-features.md</code>를 만들고 binding을 기록합니다.</p></li>
+          <li><strong>상태 전이</strong><p><code>draft -> planning -> active -> completed -> archived</code> 순방향만 허용합니다.</p></li>
+          <li><strong>링크 재작성</strong><p>상태 이동 시 Epic 경로가 바뀌면 관련 <code>.plans/**/*.md</code> 링크를 재작성합니다.</p></li>
+        </ol>
+      </section>
+
+      <section id="outputs" class="doc-section">
+        <h2>Output Lifecycle</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>단계</th>
+              <th>파일/폴더</th>
+              <th>작업</th>
+              <th>규칙</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Create</td><td><code>.plans/epics/00-draft/EPIC-.../</code></td><td>디렉터리 생성</td><td>Activation 기준 통과 필요</td></tr>
+            <tr><td>Create</td><td><code>00-epic-brief.md</code></td><td>Epic Brief 작성</td><td>목적, 성공 지표, 범위 포함</td></tr>
+            <tr><td>Create/Update</td><td><code>01-children-features.md</code></td><td>자식 Feature 목록과 Phase roadmap 관리</td><td>Feature binding 일관성 유지</td></tr>
+            <tr><td>Update</td><td><code>.plans/epics/index.md</code></td><td>상태와 요약 갱신</td><td>list/show의 기준</td></tr>
+            <tr><td>Move</td><td><code>00-draft -> 10-planning -> 20-active -> 80-completed -> 90-archive</code></td><td>상태 전이 이동</td><td>순방향만 허용, gate 검증</td></tr>
+            <tr><td>Rewrite</td><td><code>.plans/**/*.md</code></td><td>Epic 경로 링크 재작성</td><td><code>epic-advance-rewrite.js</code> 사용</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="rules" class="doc-section">
+        <h2>Rules and Guards</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>자산</th>
+              <th>역할</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>plan-epic-hierarchy</code></td><td>Epic/Feature/Task 3단 계층, activation 기준, 상태 전이 gate의 SSOT입니다.</td></tr>
+            <tr><td><code>plan-epic-integrity</code></td><td>Epic과 Feature binding cross-reference를 검증합니다. 기본은 FLAG 성격으로 문서화합니다.</td></tr>
+            <tr><td><code>agent-file-ownership</code></td><td>Epic 파일 편집 권한과 agent race를 방지하는 보조 규칙입니다.</td></tr>
+            <tr><td><code>dry-run-mode</code></td><td>상태 전이 또는 생성 전 예상 변경을 확인할 때 사용합니다.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="failure" class="doc-section">
+        <h2>Failure Modes</h2>
+        <ul>
+          <li>Feature가 2개 미만이면 Epic 생성은 over-engineering으로 거부될 수 있습니다.</li>
+          <li>상태 전이는 순방향만 허용합니다. 역방향 이동은 기본적으로 차단합니다.</li>
+          <li>자식 Feature가 없으면 <code>draft -> planning</code> gate를 통과할 수 없습니다.</li>
+          <li>승인된 자식 Feature가 없으면 <code>planning -> active</code> gate를 통과할 수 없습니다.</li>
+          <li>모든 자식 Feature가 archived가 아니면 completed/archive 전이가 거부됩니다.</li>
+          <li>Codex authoring source가 없으므로 Codex 상세 구현은 manual-review 상태로 다뤄야 합니다.</li>
+        </ul>
+      </section>
+
+      <section id="next" class="doc-section">
+        <h2>Next Step</h2>
+        <p>
+          Epic을 생성한 뒤에는 <a href="plan-idea.html"><code>/plan-idea "..." --epic=EPIC-...</code></a>으로 자식 IDEA를 연결합니다.
+          기존 Feature를 소급 연결하는 명령은 현재 상세 패키지의 후속 문서에서 별도 gap으로 추적합니다.
+        </p>
+      </section>
+    </main>
+
+    <aside class="toc" aria-label="이 페이지에서">
+      <p>이 페이지에서</p>
+      <a href="#overview">개요</a>
+      <a href="#usage">실행 예시</a>
+      <a href="#runtime">Claude / Codex</a>
+      <a href="#flow">Runtime Flow</a>
+      <a href="#outputs">Output Lifecycle</a>
+      <a href="#rules">Rules and Guards</a>
+      <a href="#failure">Failure Modes</a>
+      <a href="#next">Next Step</a>
+    </aside>
+  </div>
+</body>
+</html>

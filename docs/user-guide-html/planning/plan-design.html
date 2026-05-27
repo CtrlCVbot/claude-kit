@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>/plan-design 상세 | claude-kit</title>
+  <meta name="description" content="/plan-design command 상세 실행 가이드">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 건너뛰기</a>
+
+  <header class="app-header">
+    <a class="brand" href="index.html" aria-label="planning guide home">
+      <span class="brand-mark">ck</span>
+      <span>
+        <strong>/plan-design</strong>
+        <small>Claude Design prompt package</small>
+      </span>
+    </a>
+    <div class="search-box" role="search" aria-label="문서 검색 placeholder">
+      <span>Planning command detail</span>
+      <kbd>P0</kbd>
+    </div>
+  </header>
+
+  <div class="layout" id="top">
+    <aside class="sidebar" aria-label="/plan-design 네비게이션">
+      <nav>
+        <p class="nav-group">/plan-design</p>
+        <a href="#overview" class="active">개요</a>
+        <a href="#usage">실행 예시</a>
+        <a href="#runtime">Claude / Codex</a>
+        <a href="#flow">Runtime Flow</a>
+        <a href="#outputs">Output Lifecycle</a>
+        <a href="#rules">Rules and Guards</a>
+        <a href="#failure">Failure Modes</a>
+        <a href="#next">Next Step</a>
+
+        <p class="nav-group">다른 페이지</p>
+        <a href="index.html">Planning overview</a>
+        <a href="reference.html">Function reference</a>
+        <a href="lifecycle.html">Output lifecycle</a>
+        <a href="plan-wireframe.html">/plan-wireframe</a>
+        <a href="plan-stitch.html">/plan-stitch</a>
+        <a href="plan-bridge.html">/plan-bridge</a>
+        <a href="../index.html">Guide home</a>
+      </nav>
+    </aside>
+
+    <main id="content" class="content">
+      <section id="overview" class="doc-section intro">
+        <p class="breadcrumb">claude-kit / planning / plan-design</p>
+        <h1>/plan-design</h1>
+        <p class="lead">
+          <code>/plan-design</code>은 PRD와 wireframe을 통합해 Claude Code Design용 2단계 프롬프트를 생성하고,
+          필요하면 결과 URL을 manifest에 등록하는 기본 디자인 파이프라인입니다.
+        </p>
+
+        <div class="command-meta">
+          <div><strong>Primary agent</strong><code>plan-design-writer</code></div>
+          <div><strong>Main skill</strong><code>claude-design-workflow</code></div>
+          <div><strong>Primary output</strong><code>.plans/design/{slug}/</code></div>
+          <div><strong>Next command</strong><code>/plan-bridge</code></div>
+        </div>
+      </section>
+
+      <section id="usage" class="doc-section">
+        <h2>실행 예시</h2>
+        <pre><code>/plan-design {slug}
+/plan-design {slug} --fidelity wireframe
+/plan-design {slug} --fidelity high
+/plan-design {slug} --register &lt;url&gt;
+/plan-design {slug} --ignore-mismatch
+/plan-design {slug} --force-sequential --sequential-reason "이유"</code></pre>
+      </section>
+
+      <section id="runtime" class="doc-section">
+        <h2>Claude / Codex 탭</h2>
+        <div class="runtime-tabs">
+          <input class="tab-input" type="radio" name="plan-design-runtime-tabs" id="plan-design-tab-claude" checked>
+          <input class="tab-input" type="radio" name="plan-design-runtime-tabs" id="plan-design-tab-codex">
+          <div class="tab-list" role="tablist" aria-label="/plan-design runtime tabs">
+            <label class="tab-label" for="plan-design-tab-claude" role="tab">Claude</label>
+            <label class="tab-label" for="plan-design-tab-codex" role="tab">Codex</label>
+          </div>
+          <div class="tab-panels">
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Claude</h3>
+              <table>
+                <tbody>
+                  <tr><th>Command source</th><td><code>src/claude/plan/commands/plan-design.md</code></td></tr>
+                  <tr><th>Runtime command</th><td><code>.claude/commands/plan-design.md</code></td></tr>
+                  <tr><th>Sub agent</th><td><code>plan-design-writer</code></td></tr>
+                  <tr><th>Skill</th><td><code>claude-design-workflow</code></td></tr>
+                  <tr><th>Templates</th><td><code>design-prompt-wireframe</code>, <code>design-prompt-highfidelity</code></td></tr>
+                  <tr><th>Rules</th><td>wireframe 선행, URL 도메인 검증, routing metadata 제한 갱신</td></tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Codex</h3>
+              <table>
+                <tbody>
+                  <tr><th>Codex source</th><td><code>src/codex/plan/commands/plan-design.md</code></td></tr>
+                  <tr><th>Runtime skill</th><td><code>.agents/skills/claude-design-workflow/SKILL.md</code></td></tr>
+                  <tr><th>Runtime subagent</th><td><code>.codex/agents/plan-design-writer.toml</code></td></tr>
+                  <tr><th>Instruction surface</th><td>Claude Design 실행 안내와 URL 등록 규칙</td></tr>
+                  <tr><th>Hook status</th><td><span class="status-badge partial">partial</span> routing metadata 보호는 runtime별 확인 필요</td></tr>
+                  <tr><th>Conversion status</th><td><span class="status-badge ok">paired</span> command, agent, skill source 확인됨</td></tr>
+                </tbody>
+              </table>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section id="flow" class="doc-section">
+        <h2>Runtime Flow</h2>
+        <ol class="steps compact">
+          <li><strong>입력 검증</strong><p>routing metadata, 승인된 PRD, wireframe 디렉터리 존재를 확인합니다.</p></li>
+          <li><strong>배타 게이트 확인</strong><p><code>post_wireframe_path</code>가 <code>stitch</code>이면 순차 실행 사유가 필요합니다.</p></li>
+          <li><strong>agent spawn</strong><p><code>plan-design-writer</code>가 PRD와 wireframe을 통합 로드합니다.</p></li>
+          <li><strong>프롬프트 생성</strong><p>wireframe 모드와 high fidelity 모드용 프롬프트를 생성합니다.</p></li>
+          <li><strong>URL 등록</strong><p><code>--register</code> 사용 시 <code>https://claude.ai</code> URL만 manifest에 등록합니다.</p></li>
+          <li><strong>Human Checkpoint</strong><p>사용자는 프롬프트 파일을 Claude Design에 붙여넣고 결과 URL을 등록합니다.</p></li>
+        </ol>
+      </section>
+
+      <section id="outputs" class="doc-section">
+        <h2>Output Lifecycle</h2>
+        <table>
+          <thead><tr><th>단계</th><th>파일/폴더</th><th>작업</th><th>규칙</th></tr></thead>
+          <tbody>
+            <tr><td>Input</td><td><code>.plans/prd/10-approved/{slug}-prd.md</code></td><td>읽기</td><td>first-pass 단독은 거부</td></tr>
+            <tr><td>Input</td><td><code>.plans/wireframes/{slug}/</code></td><td>읽기</td><td>wireframe 선행 필수</td></tr>
+            <tr><td>Create</td><td><code>.plans/design/{slug}/prompt-01-wireframe.md</code></td><td>wireframe 프롬프트 생성</td><td><code>--fidelity high</code>이면 생략</td></tr>
+            <tr><td>Create</td><td><code>prompt-02-highfidelity.md</code></td><td>high fidelity 프롬프트 생성</td><td><code>--fidelity wireframe</code>이면 생략</td></tr>
+            <tr><td>Create/Update</td><td><code>manifest.md</code></td><td>URL 등록</td><td><code>--register</code> 사용 시</td></tr>
+            <tr><td>Update</td><td><code>07-routing-metadata.md</code></td><td><code>post_wireframe_path</code> 갱신</td><td>허용 필드만 수정</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="rules" class="doc-section">
+        <h2>Rules and Guards</h2>
+        <table>
+          <tbody>
+            <tr><th>Wireframe required</th><td>wireframe 없이 호출하면 거부합니다.</td></tr>
+            <tr><th>Claude URL validation</th><td><code>--register</code>는 scheme <code>https</code>, hostname <code>claude.ai</code>만 허용합니다.</td></tr>
+            <tr><th>Sequential reason</th><td><code>/plan-stitch</code> 이후 실행하려면 <code>--force-sequential</code>과 사유가 필요합니다.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="failure" class="doc-section">
+        <h2>Failure Modes</h2>
+        <ul>
+          <li>routing metadata가 없거나 <code>category: Standard</code>가 아니면 중단합니다.</li>
+          <li>wireframe 디렉터리가 없으면 <code>/plan-wireframe</code> 선행을 안내합니다.</li>
+          <li>PRD와 wireframe 화면 매핑이 맞지 않으면 기본적으로 거부하고 <code>--ignore-mismatch</code>가 있을 때만 경고로 낮춥니다.</li>
+          <li>Claude Design URL이 아닌 값을 등록하려 하면 거부합니다.</li>
+        </ul>
+      </section>
+
+      <section id="next" class="doc-section">
+        <h2>Next Step</h2>
+        <p>디자인 프롬프트와 manifest가 준비되면 <a href="plan-bridge.html"><code>/plan-bridge {slug}</code></a>로 개발 handoff를 준비합니다.</p>
+      </section>
+    </main>
+
+    <aside class="toc" aria-label="이 페이지에서">
+      <p>이 페이지에서</p>
+      <a href="#overview">개요</a>
+      <a href="#usage">실행 예시</a>
+      <a href="#runtime">Claude / Codex</a>
+      <a href="#flow">Runtime Flow</a>
+      <a href="#outputs">Output Lifecycle</a>
+      <a href="#rules">Rules and Guards</a>
+      <a href="#failure">Failure Modes</a>
+      <a href="#next">Next Step</a>
+    </aside>
+  </div>
+</body>
+</html>

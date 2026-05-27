@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>/plan-improve 상세 | claude-kit</title>
+  <meta name="description" content="/plan-improve command 상세 실행 가이드">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 건너뛰기</a>
+
+  <header class="app-header">
+    <a class="brand" href="index.html" aria-label="planning guide home">
+      <span class="brand-mark">ck</span>
+      <span>
+        <strong>/plan-improve</strong>
+        <small>Improvement request after archive</small>
+      </span>
+    </a>
+    <div class="search-box" role="search" aria-label="문서 검색 placeholder">
+      <span>Planning command detail</span>
+      <kbd>P1</kbd>
+    </div>
+  </header>
+
+  <div class="layout" id="top">
+    <aside class="sidebar" aria-label="/plan-improve 네비게이션">
+      <nav>
+        <p class="nav-group">/plan-improve</p>
+        <a href="#overview" class="active">개요</a>
+        <a href="#usage">실행 예시</a>
+        <a href="#runtime">Claude / Codex</a>
+        <a href="#flow">Runtime Flow</a>
+        <a href="#outputs">Output Lifecycle</a>
+        <a href="#rules">Rules and Guards</a>
+        <a href="#failure">Failure Modes</a>
+        <a href="#next">Next Step</a>
+
+        <p class="nav-group">다른 페이지</p>
+        <a href="index.html">Planning overview</a>
+        <a href="reference.html">Function reference</a>
+        <a href="lifecycle.html">Output lifecycle</a>
+        <a href="plan-archive.html">/plan-archive</a>
+        <a href="plan-draft.html">/plan-draft</a>
+        <a href="plan-bridge.html">/plan-bridge</a>
+        <a href="../index.html">Guide home</a>
+      </nav>
+    </aside>
+
+    <main id="content" class="content">
+      <section id="overview" class="doc-section intro">
+        <p class="breadcrumb">claude-kit / planning / plan-improve</p>
+        <h1>/plan-improve</h1>
+        <p class="lead">
+          <code>/plan-improve</code>는 이미 archive된 기능에 대한 개선 요청을 등록하고,
+          변경 영향도에 따라 Dev only 또는 planning pipeline 재진입 지점을 추천합니다.
+        </p>
+
+        <div class="command-meta">
+          <div><strong>Primary source</strong><code>ARCHIVE-{KEY}.md</code></div>
+          <div><strong>Main skill</strong><code>plan-archive-workflow</code></div>
+          <div><strong>Primary output</strong><code>IMP-{KEY}-{NNN}.md</code></div>
+          <div><strong>Next command</strong>추천 재진입 단계</div>
+        </div>
+      </section>
+
+      <section id="usage" class="doc-section">
+        <h2>실행 예시</h2>
+        <pre><code>/plan-improve {slug} "개선 제목"
+/plan-improve {slug} list
+/plan-improve {slug} analyze IMP-{KEY}-{NNN}
+/plan-improve {slug} execute IMP-{KEY}-{NNN}</code></pre>
+      </section>
+
+      <section id="runtime" class="doc-section">
+        <h2>Claude / Codex 탭</h2>
+        <div class="runtime-tabs">
+          <input class="tab-input" type="radio" name="plan-improve-runtime-tabs" id="plan-improve-tab-claude" checked>
+          <input class="tab-input" type="radio" name="plan-improve-runtime-tabs" id="plan-improve-tab-codex">
+          <div class="tab-list" role="tablist" aria-label="/plan-improve runtime tabs">
+            <label class="tab-label" for="plan-improve-tab-claude" role="tab">Claude</label>
+            <label class="tab-label" for="plan-improve-tab-codex" role="tab">Codex</label>
+          </div>
+          <div class="tab-panels">
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Claude</h3>
+              <table>
+                <tbody>
+                  <tr><th>Command source</th><td><code>src/claude/plan/commands/plan-improve.md</code></td></tr>
+                  <tr><th>Runtime command</th><td><code>.claude/commands/plan-improve.md</code></td></tr>
+                  <tr><th>Skill</th><td><code>plan-archive-workflow</code></td></tr>
+                  <tr><th>Agent</th><td>전용 agent보다 archive context와 재진입 판단 중심</td></tr>
+                  <tr><th>Rules</th><td>IMP 상태 머신, 영향도 매트릭스, 재진입 규칙</td></tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Codex</h3>
+              <table>
+                <tbody>
+                  <tr><th>Codex source</th><td><code>src/codex/plan/commands/plan-improve.md</code></td></tr>
+                  <tr><th>Runtime skill</th><td><code>.agents/skills/plan-archive-workflow/SKILL.md</code></td></tr>
+                  <tr><th>Runtime subagent</th><td>전용 subagent 없음. archive workflow skill 중심</td></tr>
+                  <tr><th>Instruction surface</th><td><code>AGENTS.md</code>와 archive/improvement guidance</td></tr>
+                  <tr><th>Conversion status</th><td><span class="status-badge ok">paired</span> command와 skill source 확인됨</td></tr>
+                </tbody>
+              </table>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section id="flow" class="doc-section">
+        <h2>Runtime Flow</h2>
+        <ol class="steps compact">
+          <li><strong>archive 로드</strong><p><code>.plans/archive/{slug}/ARCHIVE-{KEY}.md</code>를 읽어 전체 맥락을 확보합니다.</p></li>
+          <li><strong>개선 요청 등록</strong><p>카테고리, 우선순위, 상세 설명을 받아 IMP 문서를 만듭니다.</p></li>
+          <li><strong>영향도 분석</strong><p>UI, 데이터, API, 성능, 접근성 영향도를 평가합니다.</p></li>
+          <li><strong>재진입 추천</strong><p>변경 규모에 따라 Dev only, P7, P5, P3, P1 중 하나를 추천합니다.</p></li>
+          <li><strong>승인 확인</strong><p><code>execute</code>는 IMP가 <code>approved</code> 상태일 때만 진행합니다.</p></li>
+          <li><strong>이력 갱신</strong><p>완료 후 IMP 상태와 ARCHIVE 개선 이력을 업데이트합니다.</p></li>
+        </ol>
+      </section>
+
+      <section id="outputs" class="doc-section">
+        <h2>Output Lifecycle</h2>
+        <table>
+          <thead><tr><th>단계</th><th>파일/출력</th><th>작업</th><th>규칙</th></tr></thead>
+          <tbody>
+            <tr><td>Input</td><td><code>.plans/archive/{slug}/ARCHIVE-{KEY}.md</code></td><td>읽기</td><td>archive된 기능만 대상</td></tr>
+            <tr><td>Create</td><td><code>.plans/archive/{slug}/improvements/IMP-{KEY}-{NNN}.md</code></td><td>개선 요청 생성</td><td>초기 상태는 <code>draft</code></td></tr>
+            <tr><td>Analyze</td><td>영향도 매트릭스</td><td>재진입 지점 추천</td><td>사용자 승인 전 실행만</td></tr>
+            <tr><td>Update</td><td>IMP 상태</td><td><code>approved</code>, <code>in-progress</code>, <code>done</code> 전환</td><td>승인 상태를 명시</td></tr>
+            <tr><td>Update</td><td>ARCHIVE 개선 이력</td><td>완료 row 추가</td><td>완료 후 기록</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="rules" class="doc-section">
+        <h2>Rules and Guards</h2>
+        <table>
+          <tbody>
+            <tr><th>Archive first</th><td>active feature가 아니라 archive bundle을 기준으로 개선을 등록합니다.</td></tr>
+            <tr><th>Approval gate</th><td><code>execute</code>는 <code>approved</code> IMP만 진행합니다.</td></tr>
+            <tr><th>Re-entry discipline</th><td>변경 규모가 크면 기존 파일을 바로 고치지 않고 planning 단계로 재진입합니다.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="failure" class="doc-section">
+        <h2>Failure Modes</h2>
+        <ul>
+          <li>archive bundle이 없으면 먼저 <code>/plan-archive</code>를 안내합니다.</li>
+          <li>승인되지 않은 IMP를 <code>execute</code>하려 하면 중단합니다.</li>
+          <li>근본적 재설계는 기존 archive 수정이 아니라 새 <code>/plan-idea</code> 진입으로 분리합니다.</li>
+        </ul>
+      </section>
+
+      <section id="next" class="doc-section">
+        <h2>Next Step</h2>
+        <p>
+          개선 요청이 경량이면 개발로 이동하고, 재기획이 필요하면
+          <a href="plan-draft.html"><code>/plan-draft</code></a>,
+          <a href="plan-wireframe.html"><code>/plan-wireframe</code></a>,
+          <a href="plan-bridge.html"><code>/plan-bridge</code></a> 중 추천 단계로 돌아갑니다.
+        </p>
+      </section>
+    </main>
+
+    <aside class="toc" aria-label="이 페이지에서">
+      <p>이 페이지에서</p>
+      <a href="#overview">개요</a>
+      <a href="#usage">실행 예시</a>
+      <a href="#runtime">Claude / Codex</a>
+      <a href="#flow">Runtime Flow</a>
+      <a href="#outputs">Output Lifecycle</a>
+      <a href="#rules">Rules and Guards</a>
+      <a href="#failure">Failure Modes</a>
+      <a href="#next">Next Step</a>
+    </aside>
+  </div>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>/plan-archive 상세 | claude-kit</title>
+  <meta name="description" content="/plan-archive command 상세 실행 가이드">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 건너뛰기</a>
+
+  <header class="app-header">
+    <a class="brand" href="index.html" aria-label="planning guide home">
+      <span class="brand-mark">ck</span>
+      <span>
+        <strong>/plan-archive</strong>
+        <small>Completed feature archive bundle</small>
+      </span>
+    </a>
+    <div class="search-box" role="search" aria-label="문서 검색 placeholder">
+      <span>Planning command detail</span>
+      <kbd>P1</kbd>
+    </div>
+  </header>
+
+  <div class="layout" id="top">
+    <aside class="sidebar" aria-label="/plan-archive 네비게이션">
+      <nav>
+        <p class="nav-group">/plan-archive</p>
+        <a href="#overview" class="active">개요</a>
+        <a href="#usage">실행 예시</a>
+        <a href="#runtime">Claude / Codex</a>
+        <a href="#flow">Runtime Flow</a>
+        <a href="#outputs">Output Lifecycle</a>
+        <a href="#rules">Rules and Guards</a>
+        <a href="#failure">Failure Modes</a>
+        <a href="#next">Next Step</a>
+
+        <p class="nav-group">다른 페이지</p>
+        <a href="index.html">Planning overview</a>
+        <a href="reference.html">Function reference</a>
+        <a href="lifecycle.html">Output lifecycle</a>
+        <a href="plan-bridge.html">/plan-bridge</a>
+        <a href="plan-improve.html">/plan-improve</a>
+        <a href="plan-review.html">/plan-review</a>
+        <a href="../index.html">Guide home</a>
+      </nav>
+    </aside>
+
+    <main id="content" class="content">
+      <section id="overview" class="doc-section intro">
+        <p class="breadcrumb">claude-kit / planning / plan-archive</p>
+        <h1>/plan-archive</h1>
+        <p class="lead">
+          <code>/plan-archive</code>는 완료된 기능의 기획과 개발 산출물을 archive bundle로 묶고,
+          원본 파일을 <code>sources/</code>로 이동해 이후 개선 요청의 기준점을 만듭니다.
+        </p>
+
+        <div class="command-meta">
+          <div><strong>Primary skill</strong><code>plan-archive-workflow</code></div>
+          <div><strong>Primary output</strong><code>ARCHIVE-{KEY}.md</code></div>
+          <div><strong>Source preservation</strong><code>git mv</code> 기반 <code>sources/</code> 이동</div>
+          <div><strong>Next command</strong><code>/plan-improve</code></div>
+        </div>
+      </section>
+
+      <section id="usage" class="doc-section">
+        <h2>실행 예시</h2>
+        <pre><code>/plan-archive {slug}
+/plan-archive list
+/plan-archive show {slug}
+/plan-archive status
+/plan-archive {slug} --feature F{N}</code></pre>
+      </section>
+
+      <section id="runtime" class="doc-section">
+        <h2>Claude / Codex 탭</h2>
+        <div class="runtime-tabs">
+          <input class="tab-input" type="radio" name="plan-archive-runtime-tabs" id="plan-archive-tab-claude" checked>
+          <input class="tab-input" type="radio" name="plan-archive-runtime-tabs" id="plan-archive-tab-codex">
+          <div class="tab-list" role="tablist" aria-label="/plan-archive runtime tabs">
+            <label class="tab-label" for="plan-archive-tab-claude" role="tab">Claude</label>
+            <label class="tab-label" for="plan-archive-tab-codex" role="tab">Codex</label>
+          </div>
+          <div class="tab-panels">
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Claude</h3>
+              <table>
+                <tbody>
+                  <tr><th>Command source</th><td><code>src/claude/plan/commands/plan-archive.md</code></td></tr>
+                  <tr><th>Runtime command</th><td><code>.claude/commands/plan-archive.md</code></td></tr>
+                  <tr><th>Skill</th><td><code>plan-archive-workflow</code></td></tr>
+                  <tr><th>Agent</th><td>전용 agent보다 archive workflow skill 중심</td></tr>
+                  <tr><th>Rules</th><td>완료 검증, 원본 보존, index 갱신, active 정리</td></tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Codex</h3>
+              <table>
+                <tbody>
+                  <tr><th>Codex source</th><td><code>src/codex/plan/commands/plan-archive.md</code></td></tr>
+                  <tr><th>Runtime skill</th><td><code>.agents/skills/plan-archive-workflow/SKILL.md</code></td></tr>
+                  <tr><th>Runtime subagent</th><td>전용 subagent 없음. archive workflow skill 중심</td></tr>
+                  <tr><th>Instruction surface</th><td><code>AGENTS.md</code>와 archive guidance</td></tr>
+                  <tr><th>Conversion status</th><td><span class="status-badge ok">paired</span> command와 skill source 확인됨</td></tr>
+                </tbody>
+              </table>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section id="flow" class="doc-section">
+        <h2>Runtime Flow</h2>
+        <ol class="steps compact">
+          <li><strong>완료 검증</strong><p>Lite 또는 Standard pipeline과 Dev 완료 상태를 확인합니다.</p></li>
+          <li><strong>소스 수집</strong><p>ideas, features, PRD, wireframes, stitch, bridge 산출물을 slug 기준으로 찾습니다.</p></li>
+          <li><strong>사용자 확인</strong><p>이동할 파일 목록과 archive 대상 범위를 보여주고 확인을 받습니다.</p></li>
+          <li><strong>archive 구조 생성</strong><p><code>.plans/archive/{slug}/sources/</code>와 <code>improvements/</code>를 준비합니다.</p></li>
+          <li><strong>원본 이동</strong><p><code>git mv</code>로 원본 파일을 <code>sources/</code> 아래로 옮깁니다.</p></li>
+          <li><strong>번들 생성</strong><p><code>ARCHIVE-{KEY}.md</code>에 산출물 내용을 인라인합니다.</p></li>
+          <li><strong>인덱스 갱신</strong><p><code>archive/index.md</code>, backlog, screening matrix를 archive 경로로 갱신합니다.</p></li>
+        </ol>
+      </section>
+
+      <section id="outputs" class="doc-section">
+        <h2>Output Lifecycle</h2>
+        <table>
+          <thead><tr><th>단계</th><th>파일/폴더</th><th>작업</th><th>규칙</th></tr></thead>
+          <tbody>
+            <tr><td>Input</td><td><code>.plans/features/active/{slug}/</code></td><td>완료 상태 확인</td><td>미완료 단계가 있으면 중단</td></tr>
+            <tr><td>Create</td><td><code>.plans/archive/{slug}/</code></td><td>archive root 생성</td><td>없으면 생성</td></tr>
+            <tr><td>Move</td><td><code>.plans/archive/{slug}/sources/</code></td><td>원본 이동</td><td><code>git mv</code>로 이력 보존</td></tr>
+            <tr><td>Create</td><td><code>ARCHIVE-{KEY}.md</code></td><td>통합 bundle 생성</td><td>모든 산출물 인라인</td></tr>
+            <tr><td>Create</td><td><code>improvements/</code></td><td>개선 요청 디렉터리 생성</td><td><code>/plan-improve</code> 입력</td></tr>
+            <tr><td>Update</td><td><code>archive/index.md</code>, backlog, screening matrix</td><td>경로와 상태 갱신</td><td>active에서 archived로 전환</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="rules" class="doc-section">
+        <h2>Rules and Guards</h2>
+        <table>
+          <tbody>
+            <tr><th>Pipeline complete</th><td>Lite는 P1, P2, P3, P5, P7, Dev 완료가 필요합니다. Standard는 P1부터 P7과 Dev 완료가 필요합니다.</td></tr>
+            <tr><th>Source preservation</th><td>원본 삭제가 아니라 <code>sources/</code> 이동으로 history를 보존합니다.</td></tr>
+            <tr><th>Single bundle</th><td>사용자가 나중에 하나의 <code>ARCHIVE-{KEY}.md</code>만 읽어도 맥락을 복원할 수 있어야 합니다.</td></tr>
+            <tr><th>Improvement handoff</th><td>archive 이후 변경은 직접 수정이 아니라 <code>/plan-improve</code>로 시작합니다.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="failure" class="doc-section">
+        <h2>Failure Modes</h2>
+        <ul>
+          <li>pipeline이나 Dev 단계가 끝나지 않았으면 archive하지 않습니다.</li>
+          <li>이동 대상 목록을 사용자가 확인하지 않으면 원본 이동을 진행하지 않습니다.</li>
+          <li>archive index나 backlog 갱신이 실패하면 bundle만 생성된 상태로 완료를 주장하지 않습니다.</li>
+        </ul>
+      </section>
+
+      <section id="next" class="doc-section">
+        <h2>Next Step</h2>
+        <p>아카이브 완료 후 개선 요청이 생기면 <a href="plan-improve.html"><code>/plan-improve {slug} "제목"</code></a>으로 이어집니다.</p>
+      </section>
+    </main>
+
+    <aside class="toc" aria-label="이 페이지에서">
+      <p>이 페이지에서</p>
+      <a href="#overview">개요</a>
+      <a href="#usage">실행 예시</a>
+      <a href="#runtime">Claude / Codex</a>
+      <a href="#flow">Runtime Flow</a>
+      <a href="#outputs">Output Lifecycle</a>
+      <a href="#rules">Rules and Guards</a>
+      <a href="#failure">Failure Modes</a>
+      <a href="#next">Next Step</a>
+    </aside>
+  </div>
+</body>
+</html>

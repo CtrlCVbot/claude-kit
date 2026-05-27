@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>/plan-stitch 상세 | claude-kit</title>
+  <meta name="description" content="/plan-stitch command 상세 실행 가이드">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 건너뛰기</a>
+
+  <header class="app-header">
+    <a class="brand" href="index.html" aria-label="planning guide home">
+      <span class="brand-mark">ck</span>
+      <span>
+        <strong>/plan-stitch</strong>
+        <small>Google Stitch and integration validation</small>
+      </span>
+    </a>
+    <div class="search-box" role="search" aria-label="문서 검색 placeholder">
+      <span>Planning command detail</span>
+      <kbd>P0</kbd>
+    </div>
+  </header>
+
+  <div class="layout" id="top">
+    <aside class="sidebar" aria-label="/plan-stitch 네비게이션">
+      <nav>
+        <p class="nav-group">/plan-stitch</p>
+        <a href="#overview" class="active">개요</a>
+        <a href="#usage">실행 예시</a>
+        <a href="#runtime">Claude / Codex</a>
+        <a href="#flow">Runtime Flow</a>
+        <a href="#outputs">Output Lifecycle</a>
+        <a href="#rules">Rules and Guards</a>
+        <a href="#failure">Failure Modes</a>
+        <a href="#next">Next Step</a>
+
+        <p class="nav-group">다른 페이지</p>
+        <a href="index.html">Planning overview</a>
+        <a href="reference.html">Function reference</a>
+        <a href="lifecycle.html">Output lifecycle</a>
+        <a href="plan-wireframe.html">/plan-wireframe</a>
+        <a href="plan-design.html">/plan-design</a>
+        <a href="plan-bridge.html">/plan-bridge</a>
+        <a href="../index.html">Guide home</a>
+      </nav>
+    </aside>
+
+    <main id="content" class="content">
+      <section id="overview" class="doc-section intro">
+        <p class="breadcrumb">claude-kit / planning / plan-stitch</p>
+        <h1>/plan-stitch</h1>
+        <p class="lead">
+          <code>/plan-stitch</code>는 Google Stitch 활용 또는 PRD/Wireframe 통합 검증을 선택적으로 보강하는 경로입니다.
+          기본적으로 <code>/plan-design</code>과 택일하지만, 필요하면 순차 실행 사유를 남기고 둘 다 사용할 수 있습니다.
+        </p>
+
+        <div class="command-meta">
+          <div><strong>Primary agent</strong><code>plan-stitch-integrator</code></div>
+          <div><strong>Main skill</strong><code>plan-stitch-workflow</code></div>
+          <div><strong>Primary output</strong><code>.plans/stitch/{slug}/</code></div>
+          <div><strong>Next command</strong><code>/plan-bridge</code></div>
+        </div>
+      </section>
+
+      <section id="usage" class="doc-section">
+        <h2>실행 예시</h2>
+        <pre><code>/plan-stitch {slug}
+/plan-stitch {slug} --force-sequential --sequential-reason "이유"</code></pre>
+      </section>
+
+      <section id="runtime" class="doc-section">
+        <h2>Claude / Codex 탭</h2>
+        <div class="runtime-tabs">
+          <input class="tab-input" type="radio" name="plan-stitch-runtime-tabs" id="plan-stitch-tab-claude" checked>
+          <input class="tab-input" type="radio" name="plan-stitch-runtime-tabs" id="plan-stitch-tab-codex">
+          <div class="tab-list" role="tablist" aria-label="/plan-stitch runtime tabs">
+            <label class="tab-label" for="plan-stitch-tab-claude" role="tab">Claude</label>
+            <label class="tab-label" for="plan-stitch-tab-codex" role="tab">Codex</label>
+          </div>
+          <div class="tab-panels">
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Claude</h3>
+              <table>
+                <tbody>
+                  <tr><th>Command source</th><td><code>src/claude/plan/commands/plan-stitch.md</code></td></tr>
+                  <tr><th>Runtime command</th><td><code>.claude/commands/plan-stitch.md</code></td></tr>
+                  <tr><th>Sub agent</th><td><code>plan-stitch-integrator</code></td></tr>
+                  <tr><th>Skill</th><td><code>plan-stitch-workflow</code></td></tr>
+                  <tr><th>Hooks</th><td><code>plan-doc-guard</code>, <code>plan-state-sync</code></td></tr>
+                  <tr><th>Rules</th><td>wireframe 선행, post-wireframe path 배타 게이트</td></tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Codex</h3>
+              <table>
+                <tbody>
+                  <tr><th>Codex source</th><td><code>src/codex/plan/commands/plan-stitch.md</code></td></tr>
+                  <tr><th>Runtime skill</th><td><code>.agents/skills/plan-stitch-workflow/SKILL.md</code></td></tr>
+                  <tr><th>Runtime subagent</th><td><code>.codex/agents/plan-stitch-integrator.toml</code></td></tr>
+                  <tr><th>Instruction surface</th><td>Google Stitch 선택 경로와 통합 검증 guidance</td></tr>
+                  <tr><th>Hook status</th><td><span class="status-badge partial">partial</span> metadata guard는 runtime별 검증 필요</td></tr>
+                  <tr><th>Conversion status</th><td><span class="status-badge ok">paired</span> command, agent, skill source 확인됨</td></tr>
+                </tbody>
+              </table>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section id="flow" class="doc-section">
+        <h2>Runtime Flow</h2>
+        <ol class="steps compact">
+          <li><strong>입력 검증</strong><p>routing metadata와 wireframe 디렉터리 존재를 확인합니다.</p></li>
+          <li><strong>배타 게이트 확인</strong><p><code>post_wireframe_path</code>가 <code>design</code>이면 순차 실행 플래그가 필요합니다.</p></li>
+          <li><strong>산출물 로드</strong><p>승인 PRD와 wireframe 산출물을 함께 읽습니다.</p></li>
+          <li><strong>agent spawn</strong><p><code>plan-stitch-integrator</code>가 PRD와 화면 간 일관성을 검증합니다.</p></li>
+          <li><strong>매핑 생성</strong><p>REQ-ID와 Screen-ID 매핑, 누락 탐지, 통합 컨텍스트를 생성합니다.</p></li>
+          <li><strong>PCC-05</strong><p>wireframe 레이아웃이 통합에 반영되었는지 확인합니다.</p></li>
+        </ol>
+      </section>
+
+      <section id="outputs" class="doc-section">
+        <h2>Output Lifecycle</h2>
+        <table>
+          <thead><tr><th>단계</th><th>파일/폴더</th><th>작업</th><th>규칙</th></tr></thead>
+          <tbody>
+            <tr><td>Input</td><td><code>.plans/prd/10-approved/{slug}-prd.md</code></td><td>읽기</td><td>승인 PRD 권장</td></tr>
+            <tr><td>Input</td><td><code>.plans/wireframes/{slug}/</code></td><td>읽기</td><td>wireframe 선행 필수</td></tr>
+            <tr><td>Create</td><td><code>.plans/stitch/{slug}/mapping.md</code></td><td>REQ-ID ↔ Screen-ID 매핑</td><td>누락 탐지 포함</td></tr>
+            <tr><td>Create</td><td><code>context.md</code></td><td>개발 handoff 컨텍스트 생성</td><td>Feature Package 입력 후보</td></tr>
+            <tr><td>Create</td><td><code>validation.md</code></td><td>통합 검증 결과 기록</td><td>PCC-05 기준</td></tr>
+            <tr><td>Update</td><td><code>07-routing-metadata.md</code></td><td><code>post_wireframe_path</code> 갱신</td><td><code>stitch</code> 또는 <code>design+stitch</code></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="rules" class="doc-section">
+        <h2>Rules and Guards</h2>
+        <table>
+          <tbody>
+            <tr><th>Wireframe required</th><td>wireframe 없이 호출하면 중단합니다.</td></tr>
+            <tr><th>Sequential reason</th><td><code>/plan-design</code> 이후 실행하려면 <code>--force-sequential</code>과 사유가 필요합니다.</td></tr>
+            <tr><th>PCC-05</th><td>PRD와 wireframe 통합 결과가 Feature Package 입력으로 충분한지 확인합니다.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="failure" class="doc-section">
+        <h2>Failure Modes</h2>
+        <ul>
+          <li>wireframe 디렉터리가 없으면 <code>/plan-wireframe</code> 선행을 안내합니다.</li>
+          <li><code>post_wireframe_path</code>가 <code>design</code>인데 순차 실행 사유가 없으면 중단합니다.</li>
+          <li>REQ-ID와 Screen-ID 매핑이 불충분하면 <code>validation.md</code>에서 수정 대상으로 남깁니다.</li>
+        </ul>
+      </section>
+
+      <section id="next" class="doc-section">
+        <h2>Next Step</h2>
+        <p>통합 산출물이 준비되면 <a href="plan-bridge.html"><code>/plan-bridge {slug}</code></a>로 개발 handoff를 준비합니다.</p>
+      </section>
+    </main>
+
+    <aside class="toc" aria-label="이 페이지에서">
+      <p>이 페이지에서</p>
+      <a href="#overview">개요</a>
+      <a href="#usage">실행 예시</a>
+      <a href="#runtime">Claude / Codex</a>
+      <a href="#flow">Runtime Flow</a>
+      <a href="#outputs">Output Lifecycle</a>
+      <a href="#rules">Rules and Guards</a>
+      <a href="#failure">Failure Modes</a>
+      <a href="#next">Next Step</a>
+    </aside>
+  </div>
+</body>
+</html>

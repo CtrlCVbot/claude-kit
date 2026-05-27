@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>/plan-wireframe 상세 | claude-kit</title>
+  <meta name="description" content="/plan-wireframe command 상세 실행 가이드">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 건너뛰기</a>
+
+  <header class="app-header">
+    <a class="brand" href="index.html" aria-label="planning guide home">
+      <span class="brand-mark">ck</span>
+      <span>
+        <strong>/plan-wireframe</strong>
+        <small>Screen structure and navigation flow</small>
+      </span>
+    </a>
+    <div class="search-box" role="search" aria-label="문서 검색 placeholder">
+      <span>Planning command detail</span>
+      <kbd>P0</kbd>
+    </div>
+  </header>
+
+  <div class="layout" id="top">
+    <aside class="sidebar" aria-label="/plan-wireframe 네비게이션">
+      <nav>
+        <p class="nav-group">/plan-wireframe</p>
+        <a href="#overview" class="active">개요</a>
+        <a href="#usage">실행 예시</a>
+        <a href="#runtime">Claude / Codex</a>
+        <a href="#flow">Runtime Flow</a>
+        <a href="#outputs">Output Lifecycle</a>
+        <a href="#rules">Rules and Guards</a>
+        <a href="#failure">Failure Modes</a>
+        <a href="#next">Next Step</a>
+
+        <p class="nav-group">다른 페이지</p>
+        <a href="index.html">Planning overview</a>
+        <a href="reference.html">Function reference</a>
+        <a href="lifecycle.html">Output lifecycle</a>
+        <a href="plan-prd.html">/plan-prd</a>
+        <a href="plan-design.html">/plan-design</a>
+        <a href="plan-stitch.html">/plan-stitch</a>
+        <a href="../index.html">Guide home</a>
+      </nav>
+    </aside>
+
+    <main id="content" class="content">
+      <section id="overview" class="doc-section intro">
+        <p class="breadcrumb">claude-kit / planning / plan-wireframe</p>
+        <h1>/plan-wireframe</h1>
+        <p class="lead">
+          <code>/plan-wireframe</code>은 승인된 PRD를 기반으로 화면 목록, ASCII 레이아웃, Mermaid 네비게이션 흐름, 컴포넌트 명세를 만든다.
+          <code>/plan-design</code>과 <code>/plan-stitch</code>는 이 단계 이후에만 선택할 수 있습니다.
+        </p>
+
+        <div class="command-meta">
+          <div><strong>Primary agent</strong><code>plan-wireframe-designer</code></div>
+          <div><strong>Main skill</strong><code>plan-wireframe-design</code></div>
+          <div><strong>Primary output</strong><code>.plans/wireframes/{slug}/</code></div>
+          <div><strong>Next command</strong><code>/plan-design</code> 또는 <code>/plan-stitch</code></div>
+        </div>
+      </section>
+
+      <section id="usage" class="doc-section">
+        <h2>실행 예시</h2>
+        <pre><code>/plan-wireframe {slug}
+/plan-wireframe {slug} --revise</code></pre>
+      </section>
+
+      <section id="runtime" class="doc-section">
+        <h2>Claude / Codex 탭</h2>
+        <div class="runtime-tabs">
+          <input class="tab-input" type="radio" name="plan-wireframe-runtime-tabs" id="plan-wireframe-tab-claude" checked>
+          <input class="tab-input" type="radio" name="plan-wireframe-runtime-tabs" id="plan-wireframe-tab-codex">
+          <div class="tab-list" role="tablist" aria-label="/plan-wireframe runtime tabs">
+            <label class="tab-label" for="plan-wireframe-tab-claude" role="tab">Claude</label>
+            <label class="tab-label" for="plan-wireframe-tab-codex" role="tab">Codex</label>
+          </div>
+          <div class="tab-panels">
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Claude</h3>
+              <table>
+                <tbody>
+                  <tr><th>Command source</th><td><code>src/claude/plan/commands/plan-wireframe.md</code></td></tr>
+                  <tr><th>Runtime command</th><td><code>.claude/commands/plan-wireframe.md</code></td></tr>
+                  <tr><th>Sub agent</th><td><code>plan-wireframe-designer</code></td></tr>
+                  <tr><th>Skills</th><td><code>plan-wireframe-design</code>, <code>plan-review-criteria</code></td></tr>
+                  <tr><th>Hooks</th><td><code>plan-review-trigger</code>, <code>plan-doc-guard</code></td></tr>
+                  <tr><th>Rules</th><td>PCC-04, PRD 화면별 wireframe 존재 검증</td></tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Codex</h3>
+              <table>
+                <tbody>
+                  <tr><th>Codex source</th><td><code>src/codex/plan/commands/plan-wireframe.md</code></td></tr>
+                  <tr><th>Runtime skill</th><td><code>.agents/skills/plan-wireframe-design/SKILL.md</code></td></tr>
+                  <tr><th>Runtime subagent</th><td><code>.codex/agents/plan-wireframe-designer.toml</code></td></tr>
+                  <tr><th>Instruction surface</th><td><code>AGENTS.md</code>와 wireframe guidance</td></tr>
+                  <tr><th>Hook status</th><td><span class="status-badge partial">partial</span> review trigger와 doc guard는 runtime별 확인 필요</td></tr>
+                  <tr><th>Conversion status</th><td><span class="status-badge ok">paired</span> command, agent, skill source 확인됨</td></tr>
+                </tbody>
+              </table>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section id="flow" class="doc-section">
+        <h2>Runtime Flow</h2>
+        <ol class="steps compact">
+          <li><strong>PRD 로드</strong><p><code>.plans/prd/10-approved/{slug}-prd.md</code>를 읽습니다.</p></li>
+          <li><strong>agent spawn</strong><p><code>plan-wireframe-designer</code>가 화면 목록과 흐름을 추출합니다.</p></li>
+          <li><strong>화면별 구조 설계</strong><p>ASCII art 레이아웃, 상태, 동작, 반응형 고려사항을 정리합니다.</p></li>
+          <li><strong>네비게이션 작성</strong><p>Mermaid 기반 화면 이동 흐름을 기록합니다.</p></li>
+          <li><strong>자동 리뷰</strong><p><code>/plan-review</code>를 통해 wireframe 품질을 검증합니다.</p></li>
+          <li><strong>PCC-04</strong><p>PRD의 모든 화면이 wireframe에 반영되었는지 확인합니다.</p></li>
+        </ol>
+      </section>
+
+      <section id="outputs" class="doc-section">
+        <h2>Output Lifecycle</h2>
+        <table>
+          <thead><tr><th>단계</th><th>파일/폴더</th><th>작업</th><th>규칙</th></tr></thead>
+          <tbody>
+            <tr><td>Input</td><td><code>.plans/prd/10-approved/{slug}-prd.md</code></td><td>읽기</td><td>승인된 PRD 필수</td></tr>
+            <tr><td>Create</td><td><code>.plans/wireframes/{slug}/screens.md</code></td><td>화면별 wireframe 생성</td><td>PRD 화면 목록 반영</td></tr>
+            <tr><td>Create</td><td><code>navigation.md</code></td><td>네비게이션 플로우 생성</td><td>Mermaid 흐름 포함</td></tr>
+            <tr><td>Create</td><td><code>components.md</code></td><td>컴포넌트 명세 생성</td><td>상태와 동작 포함</td></tr>
+            <tr><td>Create</td><td><code>decision-log.md</code></td><td>의사결정 근거 기록</td><td>viewport 판정 등 기록</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="rules" class="doc-section">
+        <h2>Rules and Guards</h2>
+        <table>
+          <tbody>
+            <tr><th>Approved PRD gate</th><td>승인된 PRD 없이 wireframe을 생성하지 않습니다.</td></tr>
+            <tr><th>PCC-04</th><td>모든 PRD 화면에 wireframe이 존재하는지 확인합니다.</td></tr>
+            <tr><th>Post-wireframe branch</th><td>후속 단계는 <code>/plan-design</code>, <code>/plan-stitch</code>, 또는 skip 후 <code>/plan-bridge</code>입니다.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="failure" class="doc-section">
+        <h2>Failure Modes</h2>
+        <ul>
+          <li>승인된 PRD가 없으면 wireframe 생성을 시작하지 않습니다.</li>
+          <li>PRD 화면이 wireframe에 누락되면 PCC-04에서 실패 또는 수정 대상이 됩니다.</li>
+          <li>wireframe 없이 <code>/plan-design</code> 또는 <code>/plan-stitch</code>를 실행하면 거부되어야 합니다.</li>
+        </ul>
+      </section>
+
+      <section id="next" class="doc-section">
+        <h2>Next Step</h2>
+        <p>
+          시각 자산이 필요하면 <a href="plan-design.html"><code>/plan-design {slug}</code></a>,
+          통합 검증이 필요하면 <a href="plan-stitch.html"><code>/plan-stitch {slug}</code></a>,
+          간단한 Feature라면 <a href="plan-bridge.html"><code>/plan-bridge {slug}</code></a>로 이어집니다.
+        </p>
+      </section>
+    </main>
+
+    <aside class="toc" aria-label="이 페이지에서">
+      <p>이 페이지에서</p>
+      <a href="#overview">개요</a>
+      <a href="#usage">실행 예시</a>
+      <a href="#runtime">Claude / Codex</a>
+      <a href="#flow">Runtime Flow</a>
+      <a href="#outputs">Output Lifecycle</a>
+      <a href="#rules">Rules and Guards</a>
+      <a href="#failure">Failure Modes</a>
+      <a href="#next">Next Step</a>
+    </aside>
+  </div>
+</body>
+</html>

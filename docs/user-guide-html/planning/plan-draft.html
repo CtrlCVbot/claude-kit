@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>/plan-draft 상세 | claude-kit</title>
+  <meta name="description" content="/plan-draft command 상세 실행 가이드">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 건너뛰기</a>
+
+  <header class="app-header">
+    <a class="brand" href="index.html" aria-label="planning guide home">
+      <span class="brand-mark">ck</span>
+      <span>
+        <strong>/plan-draft</strong>
+        <small>First-pass feature planning</small>
+      </span>
+    </a>
+    <div class="search-box" role="search" aria-label="문서 검색 placeholder">
+      <span>Planning command detail</span>
+      <kbd>P0</kbd>
+    </div>
+  </header>
+
+  <div class="layout" id="top">
+    <aside class="sidebar" aria-label="/plan-draft 네비게이션">
+      <nav>
+        <p class="nav-group">/plan-draft</p>
+        <a href="#overview" class="active">개요</a>
+        <a href="#usage">실행 예시</a>
+        <a href="#runtime">Claude / Codex</a>
+        <a href="#flow">Runtime Flow</a>
+        <a href="#outputs">Output Lifecycle</a>
+        <a href="#rules">Rules and Guards</a>
+        <a href="#failure">Failure Modes</a>
+        <a href="#next">Next Step</a>
+
+        <p class="nav-group">다른 페이지</p>
+        <a href="index.html">Planning overview</a>
+        <a href="reference.html">Function reference</a>
+        <a href="lifecycle.html">Output lifecycle</a>
+        <a href="plan-screen.html">/plan-screen</a>
+        <a href="plan-prd.html">/plan-prd</a>
+        <a href="../index.html">Guide home</a>
+      </nav>
+    </aside>
+
+    <main id="content" class="content">
+      <section id="overview" class="doc-section intro">
+        <p class="breadcrumb">claude-kit / planning / plan-draft</p>
+        <h1>/plan-draft</h1>
+        <p class="lead">
+          <code>/plan-draft</code>는 approved IDEA와 screening 결과를 바탕으로 첫 번째 Feature Overview를 만들고,
+          Lite/Standard, 시나리오, Feature 유형을 함께 판정해 이후 pipeline 경로를 결정합니다.
+        </p>
+
+        <div class="command-meta">
+          <div><strong>Primary agent</strong><code>plan-draft-writer</code></div>
+          <div><strong>Main skill</strong><code>plan-pipeline</code></div>
+          <div><strong>Primary output</strong><code>first-pass.md</code></div>
+          <div><strong>Next command</strong><code>/plan-prd</code> 또는 <code>/dev-feature</code></div>
+        </div>
+      </section>
+
+      <section id="usage" class="doc-section">
+        <h2>실행 예시</h2>
+        <pre><code>/plan-draft IDEA-20260325-001</code></pre>
+      </section>
+
+      <section id="runtime" class="doc-section">
+        <h2>Claude / Codex 탭</h2>
+        <div class="runtime-tabs">
+          <input class="tab-input" type="radio" name="plan-draft-runtime-tabs" id="plan-draft-tab-claude" checked>
+          <input class="tab-input" type="radio" name="plan-draft-runtime-tabs" id="plan-draft-tab-codex">
+          <div class="tab-list" role="tablist" aria-label="/plan-draft runtime tabs">
+            <label class="tab-label" for="plan-draft-tab-claude" role="tab">Claude</label>
+            <label class="tab-label" for="plan-draft-tab-codex" role="tab">Codex</label>
+          </div>
+          <div class="tab-panels">
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Claude</h3>
+              <table>
+                <tbody>
+                  <tr><th>Command source</th><td><code>src/claude/plan/commands/plan-draft.md</code></td></tr>
+                  <tr><th>Runtime command</th><td><code>.claude/commands/plan-draft.md</code></td></tr>
+                  <tr><th>Sub agent</th><td><code>plan-draft-writer</code></td></tr>
+                  <tr><th>Skills</th><td><code>plan-pipeline</code>, <code>plan-review-criteria</code></td></tr>
+                  <tr><th>Hooks</th><td><code>plan-review-trigger</code>, <code>plan-state-sync</code></td></tr>
+                  <tr><th>Rules</th><td>routing metadata와 auto review 정책</td></tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Codex</h3>
+              <table>
+                <tbody>
+                  <tr><th>Codex source</th><td><code>src/codex/plan/commands/plan-draft.md</code></td></tr>
+                  <tr><th>Runtime skill</th><td><code>.agents/skills/plan-pipeline/SKILL.md</code></td></tr>
+                  <tr><th>Runtime subagent</th><td><code>.codex/agents/plan-draft-writer.toml</code></td></tr>
+                  <tr><th>Instruction surface</th><td><code>AGENTS.md</code>와 Codex runtime guidance</td></tr>
+                  <tr><th>Hook status</th><td><span class="status-badge partial">partial</span> review trigger는 runtime별 검증 필요</td></tr>
+                  <tr><th>Conversion status</th><td><span class="status-badge ok">paired</span> command, agent, skill source 확인됨</td></tr>
+                </tbody>
+              </table>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section id="flow" class="doc-section">
+        <h2>Runtime Flow</h2>
+        <ol class="steps compact">
+          <li><strong>입력 검증</strong><p>IDEA가 <code>20-approved</code>에 있고 상태가 <code>approved</code>인지 확인합니다.</p></li>
+          <li><strong>agent spawn</strong><p><code>plan-draft-writer</code>가 IDEA와 SCREENING 결과를 로드합니다.</p></li>
+          <li><strong>컨텍스트 수집</strong><p><code>CLAUDE.md</code>, <code>AGENTS.md</code>, architecture 정보를 참조합니다.</p></li>
+          <li><strong>3중 판정</strong><p>Lite/Standard, 시나리오 A/B/C, Feature 유형 copy/dev를 명시적 근거와 함께 판정합니다.</p></li>
+          <li><strong>routing metadata 생성</strong><p>후속 command가 같은 결정을 따라갈 수 있게 routing 정보를 기록합니다.</p></li>
+          <li><strong>자동 리뷰와 checkpoint</strong><p>설정에 따라 <code>/plan-review</code>를 호출하고 사용자가 scope를 확인합니다.</p></li>
+        </ol>
+      </section>
+
+      <section id="outputs" class="doc-section">
+        <h2>Output Lifecycle</h2>
+        <table>
+          <thead>
+            <tr><th>단계</th><th>파일/폴더</th><th>작업</th><th>규칙</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Input</td><td><code>.plans/ideas/20-approved/IDEA-*.md</code></td><td>읽기</td><td>approved 상태 필수</td></tr>
+            <tr><td>Create</td><td><code>.plans/features/drafts/{slug}/first-pass.md</code></td><td>Standard draft 생성</td><td>Standard 판정 시</td></tr>
+            <tr><td>Create</td><td><code>.plans/features/active/{slug}.md</code></td><td>Lite feature 생성</td><td>Lite 판정 시</td></tr>
+            <tr><td>Create/Update</td><td><code>.plans/features/active/{slug}/00-context/07-routing-metadata.md</code></td><td>routing metadata 기록</td><td>시나리오, 유형, 규모 포함</td></tr>
+            <tr><td>Review</td><td>draft output</td><td>자동 리뷰 후보</td><td><code>autoReview</code> 설정에 따름</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="rules" class="doc-section">
+        <h2>Rules and Guards</h2>
+        <table>
+          <tbody>
+            <tr><th>Approved IDEA gate</th><td><code>screened</code>, <code>on-hold</code>, <code>rejected</code> 상태는 거부합니다.</td></tr>
+            <tr><th>Routing metadata</th><td>후속 경로와 override 이력을 기록하는 감사 추적 기준입니다.</td></tr>
+            <tr><th><code>plan-review-trigger</code></th><td>자동 리뷰 누락을 감지하고 보조 안내합니다.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="failure" class="doc-section">
+        <h2>Failure Modes</h2>
+        <ul>
+          <li>IDEA가 <code>20-approved</code>에 없으면 draft 생성을 거부합니다.</li>
+          <li>Lite/Standard 판정 근거가 불명확하면 Human Checkpoint에서 보정해야 합니다.</li>
+          <li>Hybrid 감지는 자동 실행이 아니라 후속 레퍼런스 캡처 안내로 이어질 수 있습니다.</li>
+          <li>Blueprint Fast-Track은 blueprint를 실행 SSOT로 쓰지 않고 source spec으로만 참조합니다.</li>
+        </ul>
+      </section>
+
+      <section id="next" class="doc-section">
+        <h2>Next Step</h2>
+        <p>
+          Standard dev Feature는 <a href="plan-prd.html"><code>/plan-prd {slug}</code></a>로 이어집니다.
+          Lite dev Feature는 <code>/dev-feature</code>로 바로 넘어갈 수 있습니다.
+        </p>
+      </section>
+    </main>
+
+    <aside class="toc" aria-label="이 페이지에서">
+      <p>이 페이지에서</p>
+      <a href="#overview">개요</a>
+      <a href="#usage">실행 예시</a>
+      <a href="#runtime">Claude / Codex</a>
+      <a href="#flow">Runtime Flow</a>
+      <a href="#outputs">Output Lifecycle</a>
+      <a href="#rules">Rules and Guards</a>
+      <a href="#failure">Failure Modes</a>
+      <a href="#next">Next Step</a>
+    </aside>
+  </div>
+</body>
+</html>

@@ -1,0 +1,181 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>/plan-revise 상세 | claude-kit</title>
+  <meta name="description" content="/plan-revise command 상세 실행 가이드">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 건너뛰기</a>
+
+  <header class="app-header">
+    <a class="brand" href="index.html" aria-label="planning guide home">
+      <span class="brand-mark">ck</span>
+      <span>
+        <strong>/plan-revise</strong>
+        <small>Revision protocol for existing planning artifacts</small>
+      </span>
+    </a>
+    <div class="search-box" role="search" aria-label="문서 검색 placeholder">
+      <span>Planning command detail</span>
+      <kbd>P1</kbd>
+    </div>
+  </header>
+
+  <div class="layout" id="top">
+    <aside class="sidebar" aria-label="/plan-revise 네비게이션">
+      <nav>
+        <p class="nav-group">/plan-revise</p>
+        <a href="#overview" class="active">개요</a>
+        <a href="#usage">실행 예시</a>
+        <a href="#runtime">Claude / Codex</a>
+        <a href="#flow">Runtime Flow</a>
+        <a href="#outputs">Output Lifecycle</a>
+        <a href="#rules">Rules and Guards</a>
+        <a href="#failure">Failure Modes</a>
+        <a href="#next">Next Step</a>
+
+        <p class="nav-group">다른 페이지</p>
+        <a href="index.html">Planning overview</a>
+        <a href="reference.html">Function reference</a>
+        <a href="lifecycle.html">Output lifecycle</a>
+        <a href="plan-review.html">/plan-review</a>
+        <a href="plan-prd.html">/plan-prd</a>
+        <a href="plan-bridge.html">/plan-bridge</a>
+        <a href="../index.html">Guide home</a>
+      </nav>
+    </aside>
+
+    <main id="content" class="content">
+      <section id="overview" class="doc-section intro">
+        <p class="breadcrumb">claude-kit / planning / plan-revise</p>
+        <h1>/plan-revise</h1>
+        <p class="lead">
+          <code>/plan-revise</code>는 이미 만들어진 기획 산출물에 사용자 수정 요청을 반영하는 표준 수정 프로토콜입니다.
+          새 파일을 만드는 명령이 아니라, 기존 artifact를 안전하게 읽고 필요한 섹션만 수정합니다.
+        </p>
+
+        <div class="command-meta">
+          <div><strong>Primary agent</strong>경로 패턴으로 자동 추론</div>
+          <div><strong>Main rule</strong><code>checkpoint-policy.md §8</code></div>
+          <div><strong>Primary output</strong>수정된 기존 파일</div>
+          <div><strong>Codex status</strong><span class="status-badge ok">skill-centered</span> workflow skill + subagent 중심</div>
+        </div>
+      </section>
+
+      <section id="usage" class="doc-section">
+        <h2>실행 예시</h2>
+        <pre><code>/plan-revise {artifact-path} "수정 지시"
+/plan-revise .plans/prd/10-approved/hero-refresh-prd.md "결정 포인트 근거 확장"
+/plan-revise .plans/wireframes/hero-refresh/screens.md "모바일 빈 상태 화면 추가"</code></pre>
+      </section>
+
+      <section id="runtime" class="doc-section">
+        <h2>Claude / Codex 탭</h2>
+        <div class="runtime-tabs">
+          <input class="tab-input" type="radio" name="plan-revise-runtime-tabs" id="plan-revise-tab-claude" checked>
+          <input class="tab-input" type="radio" name="plan-revise-runtime-tabs" id="plan-revise-tab-codex">
+          <div class="tab-list" role="tablist" aria-label="/plan-revise runtime tabs">
+            <label class="tab-label" for="plan-revise-tab-claude" role="tab">Claude</label>
+            <label class="tab-label" for="plan-revise-tab-codex" role="tab">Codex</label>
+          </div>
+          <div class="tab-panels">
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Claude</h3>
+              <table>
+                <tbody>
+                  <tr><th>Command source</th><td><code>src/claude/plan/commands/plan-revise.md</code></td></tr>
+                  <tr><th>Runtime command</th><td><code>.claude/commands/plan-revise.md</code></td></tr>
+                  <tr><th>Agent selection</th><td>artifact path로 writer 계 agent 자동 추론</td></tr>
+                  <tr><th>Rules</th><td><code>checkpoint-policy</code>, <code>writer-output-format</code>, <code>agent-file-ownership</code></td></tr>
+                  <tr><th>Hook impact</th><td>수정 후 <code>/plan-review</code> 또는 관련 guard 재실행 권장</td></tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Codex</h3>
+              <table>
+                <tbody>
+                  <tr><th>Codex source</th><td><code>src/codex/plan/skills/plan-revise-workflow/SKILL.md</code></td></tr>
+                  <tr><th>Runtime skill</th><td><code>.agents/skills/plan-revise-workflow/SKILL.md</code>가 실제 workflow 본체입니다.</td></tr>
+                  <tr><th>Runtime subagent</th><td><code>plan-revise-workflow</code>가 대상 경로에 따라 <code>plan-prd-writer</code>, <code>plan-wireframe-designer</code> 등을 선택합니다.</td></tr>
+                  <tr><th>Instruction surface</th><td><code>AGENTS.md</code>와 paired writer/rule guidance</td></tr>
+                  <tr><th>Conversion status</th><td><span class="status-badge ok">skill-centered</span> Codex에서는 workflow skill을 primary로 사용합니다.</td></tr>
+                </tbody>
+              </table>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section id="flow" class="doc-section">
+        <h2>Runtime Flow</h2>
+        <ol class="steps compact">
+          <li><strong>workflow skill 진입</strong><p>Codex에서는 <code>plan-revise-workflow</code> skill이 절차, guardrail, subagent 선택의 기준이 됩니다.</p></li>
+          <li><strong>경로 검증</strong><p>대상 파일 존재 여부와 archive 내부 파일 여부를 확인합니다.</p></li>
+          <li><strong>subagent 추론</strong><p>파일 경로 패턴으로 <code>plan-prd-writer</code>, <code>plan-bridge-writer</code> 같은 재호출 대상을 고릅니다.</p></li>
+          <li><strong>수정 prompt 생성</strong><p>이전 산출물, 사용자 요청, 보존할 섹션, 수정할 섹션을 구조화합니다.</p></li>
+          <li><strong>writer 재호출</strong><p>선택된 agent가 기존 파일을 읽고 필요한 섹션만 수정합니다.</p></li>
+          <li><strong>변경 이력 기록</strong><p>수정된 파일의 변경 이력 섹션에 요청 반영 row를 남깁니다.</p></li>
+          <li><strong>재검증 안내</strong><p>필요하면 <code>/plan-review</code>로 변경 산출물을 다시 검토합니다.</p></li>
+        </ol>
+      </section>
+
+      <section id="outputs" class="doc-section">
+        <h2>Output Lifecycle</h2>
+        <table>
+          <thead><tr><th>단계</th><th>파일/출력</th><th>작업</th><th>규칙</th></tr></thead>
+          <tbody>
+            <tr><td>Input</td><td><code>{artifact-path}</code></td><td>읽기</td><td>기존 파일 필수</td></tr>
+            <tr><td>Update</td><td>수정 대상 파일</td><td>섹션 단위 수정</td><td>새 파일 생성 금지</td></tr>
+            <tr><td>Update</td><td>변경 이력 섹션</td><td>수정 요청 기록</td><td>누가 무엇을 바꿨는지 남김</td></tr>
+            <tr><td>Output</td><td>결과 요약</td><td>수정 파일, 변경 섹션, 보존 섹션 표시</td><td>재검증 안내 포함</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="rules" class="doc-section">
+        <h2>Rules and Guards</h2>
+        <table>
+          <tbody>
+            <tr><th>Archive immutable</th><td><code>.plans/archive/**/*.md</code>는 원본 불변 원칙에 따라 수정하지 않습니다.</td></tr>
+            <tr><th>No new file</th><td>새 artifact가 필요하면 원본 생성 command를 다시 사용합니다.</td></tr>
+            <tr><th>Critical checkpoint</th><td>critical checkpoint는 일반 수정으로 우회하지 않습니다.</td></tr>
+            <tr><th>Epic ownership</th><td>Epic 전용 소유 파일은 메인 흐름에서만 수정합니다.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="failure" class="doc-section">
+        <h2>Failure Modes</h2>
+        <ul>
+          <li>대상 파일이 없으면 HARD FAIL로 중단합니다.</li>
+          <li>archive 내부 파일이면 수정하지 않고 개선 요청 또는 새 파이프라인 진입을 안내합니다.</li>
+          <li>경로 패턴으로 agent를 추론할 수 없으면 사용자에게 담당 agent 명시를 요청합니다.</li>
+          <li>Codex에서는 <code>plan-revise-workflow</code>가 경로로 subagent를 고르되, 애매한 경로는 담당 subagent를 사용자에게 확인합니다.</li>
+        </ul>
+      </section>
+
+      <section id="next" class="doc-section">
+        <h2>Next Step</h2>
+        <p>수정 후에는 <a href="plan-review.html"><code>/plan-review {path}</code></a>를 실행해 변경 산출물을 다시 확인합니다.</p>
+      </section>
+    </main>
+
+    <aside class="toc" aria-label="이 페이지에서">
+      <p>이 페이지에서</p>
+      <a href="#overview">개요</a>
+      <a href="#usage">실행 예시</a>
+      <a href="#runtime">Claude / Codex</a>
+      <a href="#flow">Runtime Flow</a>
+      <a href="#outputs">Output Lifecycle</a>
+      <a href="#rules">Rules and Guards</a>
+      <a href="#failure">Failure Modes</a>
+      <a href="#next">Next Step</a>
+    </aside>
+  </div>
+</body>
+</html>

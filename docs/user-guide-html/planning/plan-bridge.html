@@ -1,0 +1,185 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>/plan-bridge 상세 | claude-kit</title>
+  <meta name="description" content="/plan-bridge command 상세 실행 가이드">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 건너뛰기</a>
+
+  <header class="app-header">
+    <a class="brand" href="index.html" aria-label="planning guide home">
+      <span class="brand-mark">ck</span>
+      <span>
+        <strong>/plan-bridge</strong>
+        <small>Development handoff and structure gate</small>
+      </span>
+    </a>
+    <div class="search-box" role="search" aria-label="문서 검색 placeholder">
+      <span>Planning command detail</span>
+      <kbd>P0</kbd>
+    </div>
+  </header>
+
+  <div class="layout" id="top">
+    <aside class="sidebar" aria-label="/plan-bridge 네비게이션">
+      <nav>
+        <p class="nav-group">/plan-bridge</p>
+        <a href="#overview" class="active">개요</a>
+        <a href="#usage">실행 예시</a>
+        <a href="#runtime">Claude / Codex</a>
+        <a href="#flow">Runtime Flow</a>
+        <a href="#outputs">Output Lifecycle</a>
+        <a href="#rules">Rules and Guards</a>
+        <a href="#failure">Failure Modes</a>
+        <a href="#next">Next Step</a>
+
+        <p class="nav-group">다른 페이지</p>
+        <a href="index.html">Planning overview</a>
+        <a href="reference.html">Function reference</a>
+        <a href="lifecycle.html">Output lifecycle</a>
+        <a href="plan-design.html">/plan-design</a>
+        <a href="plan-stitch.html">/plan-stitch</a>
+        <a href="../index.html">Guide home</a>
+      </nav>
+    </aside>
+
+    <main id="content" class="content">
+      <section id="overview" class="doc-section intro">
+        <p class="breadcrumb">claude-kit / planning / plan-bridge</p>
+        <h1>/plan-bridge</h1>
+        <p class="lead">
+          <code>/plan-bridge</code>는 Standard Feature의 기획 산출물을 개발 파이프라인으로 넘기기 전에
+          구조 SSOT, feature binding, bridge context, post-wireframe 선택 상태를 확인하는 handoff gate입니다.
+        </p>
+
+        <div class="command-meta">
+          <div><strong>Primary agent</strong><code>plan-bridge-writer</code></div>
+          <div><strong>Main skill</strong><code>plan-pipeline</code></div>
+          <div><strong>Primary output</strong><code>00-context/bridge-*.md</code></div>
+          <div><strong>Next command</strong><code>/dev-feature</code></div>
+        </div>
+      </section>
+
+      <section id="usage" class="doc-section">
+        <h2>실행 예시</h2>
+        <pre><code>/plan-bridge {slug}</code></pre>
+      </section>
+
+      <section id="runtime" class="doc-section">
+        <h2>Claude / Codex 탭</h2>
+        <div class="runtime-tabs">
+          <input class="tab-input" type="radio" name="plan-bridge-runtime-tabs" id="plan-bridge-tab-claude" checked>
+          <input class="tab-input" type="radio" name="plan-bridge-runtime-tabs" id="plan-bridge-tab-codex">
+          <div class="tab-list" role="tablist" aria-label="/plan-bridge runtime tabs">
+            <label class="tab-label" for="plan-bridge-tab-claude" role="tab">Claude</label>
+            <label class="tab-label" for="plan-bridge-tab-codex" role="tab">Codex</label>
+          </div>
+          <div class="tab-panels">
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Claude</h3>
+              <table>
+                <tbody>
+                  <tr><th>Command source</th><td><code>src/claude/plan/commands/plan-bridge.md</code></td></tr>
+                  <tr><th>Runtime command</th><td><code>.claude/commands/plan-bridge.md</code></td></tr>
+                  <tr><th>Sub agent</th><td><code>plan-bridge-writer</code></td></tr>
+                  <tr><th>Skills</th><td><code>plan-pipeline</code>, <code>plan-review-criteria</code></td></tr>
+                  <tr><th>Hooks</th><td><code>plan-doc-guard</code>, <code>plan-state-sync</code></td></tr>
+                  <tr><th>Rules</th><td>Standard Feature gate, structure SSOT, feature binding</td></tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Codex</h3>
+              <table>
+                <tbody>
+                  <tr><th>Codex source</th><td><code>src/codex/plan/commands/plan-bridge.md</code></td></tr>
+                  <tr><th>Runtime skill</th><td><code>.agents/skills/plan-pipeline/SKILL.md</code></td></tr>
+                  <tr><th>Runtime subagent</th><td><code>.codex/agents/plan-bridge-writer.toml</code></td></tr>
+                  <tr><th>Instruction surface</th><td>development handoff와 generated output boundary guidance</td></tr>
+                  <tr><th>Hook status</th><td><span class="status-badge partial">partial</span> document guard는 runtime별 검증 필요</td></tr>
+                  <tr><th>Conversion status</th><td><span class="status-badge ok">paired</span> command, agent source 확인됨</td></tr>
+                </tbody>
+              </table>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section id="flow" class="doc-section">
+        <h2>Runtime Flow</h2>
+        <ol class="steps compact">
+          <li><strong>입력 검증</strong><p>routing metadata와 Standard category를 확인합니다.</p></li>
+          <li><strong>기획 산출물 확인</strong><p>승인 PRD 또는 First Pass, wireframe, stitch 산출물을 수집합니다.</p></li>
+          <li><strong>agent spawn</strong><p><code>plan-bridge-writer</code>가 구조 SSOT와 feature binding gate를 확인합니다.</p></li>
+          <li><strong>bridge 문서 처리</strong><p>wireframe, stitch, context bridge 문서를 생성 또는 갱신합니다.</p></li>
+          <li><strong>post-wireframe checkpoint</strong><p>design/stitch가 선택되지 않았다면 진행, 선택, skip 여부를 사용자에게 확인합니다.</p></li>
+          <li><strong>다음 경로 결정</strong><p>feature type과 hybrid 여부에 따라 <code>/dev-feature</code> 또는 copy reference flow를 안내합니다.</p></li>
+        </ol>
+      </section>
+
+      <section id="outputs" class="doc-section">
+        <h2>Output Lifecycle</h2>
+        <table>
+          <thead><tr><th>단계</th><th>파일/폴더</th><th>작업</th><th>규칙</th></tr></thead>
+          <tbody>
+            <tr><td>Input</td><td><code>00-context/07-routing-metadata.md</code></td><td>읽기</td><td><code>category: Standard</code> 필수</td></tr>
+            <tr><td>Input</td><td><code>.plans/prd/10-approved/{slug}-prd.md</code> 또는 <code>first-pass.md</code></td><td>읽기</td><td>둘 중 하나 필요</td></tr>
+            <tr><td>Create/Update</td><td><code>03-bridge-wireframe.md</code></td><td>wireframe bridge 생성</td><td>재실행 정책 적용</td></tr>
+            <tr><td>Create/Update</td><td><code>04-bridge-stitch.md</code></td><td>stitch bridge 생성</td><td>stitch 산출물 있을 때</td></tr>
+            <tr><td>Create/Update</td><td><code>05-bridge-context.md</code></td><td>개발 handoff context 생성</td><td>manual edit 섹션 보존</td></tr>
+            <tr><td>Read-only</td><td><code>07-routing-metadata.md</code></td><td>drift 감지</td><td>자의적 변경 금지</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="rules" class="doc-section">
+        <h2>Rules and Guards</h2>
+        <table>
+          <tbody>
+            <tr><th>Standard only</th><td>Lite Feature는 bridge를 생략하고 <code>/dev-feature</code> 또는 reference flow로 직행합니다.</td></tr>
+            <tr><th>Structure SSOT</th><td><code>.plans/project/00-dev-architecture.md</code>가 승인되어 있어야 합니다.</td></tr>
+            <tr><th>Feature binding</th><td><code>00-context/06-architecture-binding.md</code>가 기능별 구조 판단 기준입니다.</td></tr>
+            <tr><th>Post-wireframe checkpoint</th><td>design/stitch/skipped 상태를 routing metadata에 남깁니다.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="failure" class="doc-section">
+        <h2>Failure Modes</h2>
+        <ul>
+          <li>Lite Feature에서 호출하면 거부하고 더 짧은 경로를 안내합니다.</li>
+          <li>구조 SSOT가 없거나 승인되지 않았으면 <code>/dev-architecture</code>를 안내합니다.</li>
+          <li>feature binding이 없으면 <code>/dev-architecture {slug}</code>를 안내합니다.</li>
+          <li>routing metadata drift가 감지되면 <code>/plan-draft --rescore</code>를 안내하고 중단합니다.</li>
+          <li>wireframe 후속 단계가 선택되지 않았으면 사용자가 design, stitch, skip 중 하나를 선택해야 합니다.</li>
+        </ul>
+      </section>
+
+      <section id="next" class="doc-section">
+        <h2>Next Step</h2>
+        <p>
+          bridge가 통과하면 dev Feature는 <code>/dev-feature {slug}</code>로 이어집니다.
+          copy Feature 또는 hybrid Feature는 <code>/copy-reference-refresh</code>와 병행될 수 있습니다.
+        </p>
+      </section>
+    </main>
+
+    <aside class="toc" aria-label="이 페이지에서">
+      <p>이 페이지에서</p>
+      <a href="#overview">개요</a>
+      <a href="#usage">실행 예시</a>
+      <a href="#runtime">Claude / Codex</a>
+      <a href="#flow">Runtime Flow</a>
+      <a href="#outputs">Output Lifecycle</a>
+      <a href="#rules">Rules and Guards</a>
+      <a href="#failure">Failure Modes</a>
+      <a href="#next">Next Step</a>
+    </aside>
+  </div>
+</body>
+</html>

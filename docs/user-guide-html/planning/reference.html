@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Planning 기능 Reference | claude-kit</title>
+  <meta name="description" content="claude-kit planning pipeline agents, skills, hooks, rules reference">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 건너뛰기</a>
+
+  <header class="app-header">
+    <a class="brand" href="index.html" aria-label="planning guide home">
+      <span class="brand-mark">ck</span>
+      <span>
+        <strong>Planning Reference</strong>
+        <small>Agents, skills, hooks, and rules</small>
+      </span>
+    </a>
+    <div class="search-box" role="search" aria-label="문서 검색 placeholder">
+      <span>agentic 기능 색인</span>
+      <kbd>REF</kbd>
+    </div>
+  </header>
+
+  <div class="layout" id="top">
+    <aside class="sidebar" aria-label="Planning 기능 reference 네비게이션">
+      <nav>
+        <p class="nav-group">Reference</p>
+        <a href="#overview" class="active">개요</a>
+        <a href="#command-map">Command map</a>
+        <a href="#agents">Agents</a>
+        <a href="#skills">Skills</a>
+        <a href="#hooks">Hooks</a>
+        <a href="#rules">Rules</a>
+        <a href="#codex">Codex 기준</a>
+
+        <p class="nav-group">다른 페이지</p>
+        <a href="index.html">Planning overview</a>
+        <a href="lifecycle.html">산출물 lifecycle</a>
+        <a href="plan-review.html">/plan-review</a>
+        <a href="plan-revise.html">/plan-revise</a>
+        <a href="../index.html">Guide home</a>
+      </nav>
+    </aside>
+
+    <main id="content" class="content">
+      <section id="overview" class="doc-section intro">
+        <p class="breadcrumb">claude-kit / planning / reference</p>
+        <h1>Planning 기능 Reference</h1>
+        <p class="lead">
+          이 페이지는 planning pipeline에서 사용하는 agents, skills, hooks, instruction rules를 한곳에 모은 색인입니다.
+          각 상세 command 페이지를 읽다가 "어떤 기능 자산이 실제로 쓰이나?"가 궁금할 때 이 페이지로 돌아오면 됩니다.
+        </p>
+
+        <div class="notice">
+          <strong>읽는 기준</strong>
+          <p>
+            Claude는 <code>.claude/commands</code>와 <code>.claude/agents</code> 중심으로 실행되고,
+            Codex는 주로 <code>.agents/skills</code>와 <code>.codex/agents</code> 중심으로 같은 업무 흐름을 소비합니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="command-map" class="doc-section">
+        <h2>Command map</h2>
+        <p>각 <code>/plan-*</code> 명령이 주로 호출하는 기능 자산입니다. 상세 파일 이동 규칙은 <a href="lifecycle.html">산출물 lifecycle</a>을 봅니다.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>Command</th>
+              <th>Primary agent/subagent</th>
+              <th>Primary skill</th>
+              <th>Hooks / rules</th>
+              <th>Codex note</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><a href="plan-epic.html"><code>/plan-epic</code></a></td><td>전용 subagent 없음</td><td><code>plan-epic-workflow</code></td><td><code>plan-epic-hierarchy</code>, <code>plan-epic-integrity</code></td><td><span class="status-badge warn">source-gap</span> runtime skill은 있으나 Codex authoring source 보강 필요</td></tr>
+            <tr><td><a href="plan-idea.html"><code>/plan-idea</code></a></td><td><code>plan-idea-collector</code></td><td><code>plan-idea-management</code></td><td><code>plan-idea-move-guard</code></td><td><span class="status-badge ok">paired</span> skill + subagent 중심</td></tr>
+            <tr><td><a href="plan-screen.html"><code>/plan-screen</code></a></td><td><code>plan-idea-screener</code></td><td><code>plan-screening-workflow</code></td><td><code>rice-lane-weighted-adjustment</code>, <code>plan-idea-move-guard</code></td><td><span class="status-badge ok">paired</span> screening skill 중심</td></tr>
+            <tr><td><a href="plan-draft.html"><code>/plan-draft</code></a></td><td><code>plan-draft-writer</code></td><td><code>plan-pipeline</code></td><td><code>plan-review-trigger</code></td><td><span class="status-badge ok">paired</span> writer subagent 중심</td></tr>
+            <tr><td><a href="plan-prd.html"><code>/plan-prd</code></a></td><td><code>plan-prd-writer</code></td><td><code>plan-prd-authoring</code></td><td><code>plan-doc-guard</code>, <code>plan-review-trigger</code></td><td><span class="status-badge ok">paired</span> PRD authoring skill 중심</td></tr>
+            <tr><td><a href="plan-wireframe.html"><code>/plan-wireframe</code></a></td><td><code>plan-wireframe-designer</code></td><td><code>plan-wireframe-design</code></td><td><code>plan-doc-guard</code>, <code>plan-review-trigger</code></td><td><span class="status-badge ok">paired</span> wireframe skill + designer subagent</td></tr>
+            <tr><td><a href="plan-design.html"><code>/plan-design</code></a></td><td><code>plan-design-writer</code></td><td><code>claude-design-workflow</code></td><td><code>plan-doc-guard</code></td><td><span class="status-badge ok">paired</span> Claude Design workflow skill</td></tr>
+            <tr><td><a href="plan-stitch.html"><code>/plan-stitch</code></a></td><td><code>plan-stitch-integrator</code></td><td><code>plan-stitch-workflow</code></td><td><code>plan-doc-guard</code></td><td><span class="status-badge ok">paired</span> integration skill + subagent</td></tr>
+            <tr><td><a href="plan-bridge.html"><code>/plan-bridge</code></a></td><td><code>plan-bridge-writer</code></td><td><code>plan-pipeline</code></td><td><code>plan-doc-guard</code></td><td><span class="status-badge ok">paired</span> handoff writer subagent</td></tr>
+            <tr><td><a href="plan-review.html"><code>/plan-review</code></a></td><td><code>plan-reviewer</code></td><td><code>plan-review-criteria</code></td><td><code>plan-review-trigger</code></td><td><span class="status-badge ok">paired</span> read-only reviewer subagent</td></tr>
+            <tr><td><a href="plan-revise.html"><code>/plan-revise</code></a></td><td>대상 경로별 writer 선택</td><td><code>plan-revise-workflow</code></td><td><code>checkpoint-policy</code>, <code>writer-output-format</code></td><td><span class="status-badge ok">skill-centered</span> Codex-only workflow skill</td></tr>
+            <tr><td><a href="plan-archive.html"><code>/plan-archive</code></a></td><td>전용 subagent 없음</td><td><code>plan-archive-workflow</code></td><td>archive 불변성, source collection</td><td><span class="status-badge ok">paired</span> archive workflow skill</td></tr>
+            <tr><td><a href="plan-improve.html"><code>/plan-improve</code></a></td><td>전용 subagent 없음</td><td><code>plan-archive-workflow</code></td><td>archive 원본 불변성</td><td><span class="status-badge ok">paired</span> improvement request flow</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="agents" class="doc-section">
+        <h2>Agents</h2>
+        <p>Claude agent는 <code>src/claude/plan/agents/*.md</code>, Codex subagent authoring source는 <code>src/codex/plan/agents/*.md</code>에 있습니다.</p>
+
+        <table>
+          <thead><tr><th>Agent</th><th>주 사용 명령</th><th>역할</th><th>Codex 상태</th></tr></thead>
+          <tbody>
+            <tr><td><code>plan-idea-collector</code></td><td><code>/plan-idea</code>, <code>/plan-revise</code></td><td>아이디어 입력을 구조화하고 IDEA 문서를 생성/보정</td><td><span class="status-badge ok">paired</span></td></tr>
+            <tr><td><code>plan-idea-screener</code></td><td><code>/plan-screen</code>, <code>/plan-revise</code></td><td>RICE 또는 5축 평가로 Go/Hold/Kill 근거 작성</td><td><span class="status-badge ok">paired</span></td></tr>
+            <tr><td><code>plan-draft-writer</code></td><td><code>/plan-draft</code>, <code>/plan-revise</code></td><td>First Pass, Lite/Standard routing, draft brief 작성</td><td><span class="status-badge ok">paired</span></td></tr>
+            <tr><td><code>plan-prd-writer</code></td><td><code>/plan-prd</code>, <code>/plan-revise</code></td><td>PRD 작성과 승인 가능한 요구사항 구조화</td><td><span class="status-badge ok">paired</span></td></tr>
+            <tr><td><code>plan-wireframe-designer</code></td><td><code>/plan-wireframe</code>, <code>/plan-revise</code></td><td>화면 구조, navigation, component spec 작성</td><td><span class="status-badge ok">paired</span></td></tr>
+            <tr><td><code>plan-design-writer</code></td><td><code>/plan-design</code>, <code>/plan-revise</code></td><td>Claude Design용 wireframe/high fidelity prompt package 작성</td><td><span class="status-badge ok">paired</span></td></tr>
+            <tr><td><code>plan-stitch-integrator</code></td><td><code>/plan-stitch</code>, <code>/plan-revise</code></td><td>PRD/Wireframe/Stitch 통합, 매핑, validation 작성</td><td><span class="status-badge ok">paired</span></td></tr>
+            <tr><td><code>plan-bridge-writer</code></td><td><code>/plan-bridge</code>, <code>/plan-revise</code></td><td>개발 handoff context와 architecture binding 작성</td><td><span class="status-badge ok">paired</span></td></tr>
+            <tr><td><code>plan-reviewer</code></td><td><code>/plan-review</code></td><td>PCC와 planning quality를 read-only로 검토</td><td><span class="status-badge ok">paired</span></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="skills" class="doc-section">
+        <h2>Skills</h2>
+        <p>Skill은 반복 가능한 절차와 체크리스트를 담습니다. Codex에서는 skill이 사용자 실행 흐름의 중심이 되는 경우가 많습니다.</p>
+
+        <table>
+          <thead><tr><th>Skill</th><th>주 사용 명령</th><th>Claude source</th><th>Codex source</th></tr></thead>
+          <tbody>
+            <tr><td><code>plan-idea-management</code></td><td><code>/plan-idea</code></td><td><code>src/claude/plan/skills/plan-idea-management/</code></td><td><code>src/codex/plan/skills/plan-idea-management/</code></td></tr>
+            <tr><td><code>plan-screening-workflow</code></td><td><code>/plan-screen</code></td><td><code>src/claude/plan/skills/plan-screening-workflow/</code></td><td><code>src/codex/plan/skills/plan-screening-workflow/</code></td></tr>
+            <tr><td><code>plan-pipeline</code></td><td><code>/plan-draft</code>, <code>/plan-bridge</code></td><td><code>src/claude/plan/skills/plan-pipeline/</code></td><td><code>src/codex/plan/skills/plan-pipeline/</code></td></tr>
+            <tr><td><code>plan-prd-authoring</code></td><td><code>/plan-prd</code></td><td><code>src/claude/plan/skills/plan-prd-authoring/</code></td><td><code>src/codex/plan/skills/plan-prd-authoring/</code></td></tr>
+            <tr><td><code>plan-wireframe-design</code></td><td><code>/plan-wireframe</code></td><td><code>src/claude/plan/skills/plan-wireframe-design/</code></td><td><code>src/codex/plan/skills/plan-wireframe-design/</code></td></tr>
+            <tr><td><code>claude-design-workflow</code></td><td><code>/plan-design</code></td><td><code>src/claude/plan/skills/claude-design-workflow/</code></td><td><code>src/codex/plan/skills/claude-design-workflow/</code></td></tr>
+            <tr><td><code>plan-stitch-workflow</code></td><td><code>/plan-stitch</code></td><td><code>src/claude/plan/skills/plan-stitch-workflow/</code></td><td><code>src/codex/plan/skills/plan-stitch-workflow/</code></td></tr>
+            <tr><td><code>plan-review-criteria</code></td><td><code>/plan-review</code></td><td><code>src/claude/plan/skills/plan-review-criteria/</code></td><td><code>src/codex/plan/skills/plan-review-criteria/</code></td></tr>
+            <tr><td><code>plan-archive-workflow</code></td><td><code>/plan-archive</code>, <code>/plan-improve</code></td><td><code>src/claude/plan/skills/plan-archive-workflow/</code></td><td><code>src/codex/plan/skills/plan-archive-workflow/</code></td></tr>
+            <tr><td><code>plan-epic-workflow</code></td><td><code>/plan-epic</code></td><td><code>src/claude/plan/skills/plan-epic-workflow/</code></td><td><span class="status-badge warn">source-gap</span> runtime output만 확인됨</td></tr>
+            <tr><td><code>plan-revise-workflow</code></td><td><code>/plan-revise</code></td><td>Claude command 기반</td><td><code>src/codex/plan/skills/plan-revise-workflow/</code></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="hooks" class="doc-section">
+        <h2>Hooks</h2>
+        <p>Hook은 자동 guard나 reminder입니다. Codex에서는 hook surface 지원 범위를 별도 확인해야 하므로, HTML 가이드에서는 상태를 명시합니다.</p>
+
+        <table>
+          <thead><tr><th>Hook</th><th>Claude source</th><th>Codex source</th><th>역할</th></tr></thead>
+          <tbody>
+            <tr><td><code>plan-doc-guard.js</code></td><td><code>src/claude/plan/hooks/plan-doc-guard.js</code></td><td><code>src/codex/plan/hooks/plan-doc-guard.js</code></td><td>planning 문서 edit scope 보호</td></tr>
+            <tr><td><code>plan-idea-move-guard.js</code></td><td><code>src/claude/plan/hooks/plan-idea-move-guard.js</code></td><td><code>src/codex/plan/hooks/plan-idea-move-guard.js</code></td><td>IDEA folder transition 보호</td></tr>
+            <tr><td><code>plan-review-trigger.js</code></td><td><code>src/claude/plan/hooks/plan-review-trigger.js</code></td><td><code>src/codex/plan/hooks/plan-review-trigger.js</code></td><td>주요 산출물 변경 후 review 권장</td></tr>
+            <tr><td><code>plan-epic-integrity.js</code></td><td><code>src/claude/plan/hooks/plan-epic-integrity.js</code></td><td><span class="status-badge partial">fallback</span> Codex source 미확인</td><td>Epic과 Feature binding cross-reference 검증</td></tr>
+            <tr><td><code>plan-state-sync.js</code></td><td><code>src/claude/plan/hooks/plan-state-sync.js</code></td><td><span class="status-badge partial">fallback</span> Codex source 미확인</td><td>planning 상태 동기화</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="rules" class="doc-section">
+        <h2>Rules</h2>
+        <p>여기서의 rule은 작업 지침(instruction rule)입니다. Codex exec-policy rule과는 다르며, Codex에서는 주로 <code>AGENTS.md</code> guidance 또는 skill guardrail로 소비됩니다.</p>
+
+        <table>
+          <thead><tr><th>Rule</th><th>Claude source</th><th>Codex source</th><th>역할</th></tr></thead>
+          <tbody>
+            <tr><td><code>plan-epic-hierarchy.md</code></td><td><code>src/claude/plan/rules/plan-epic-hierarchy.md</code></td><td><code>src/codex/plan/rules/plan-epic-hierarchy.md</code></td><td>Epic/Feature/Task 계층, 상태 전이, gate 조건의 SSOT</td></tr>
+            <tr><td><code>rice-lane-weighted-adjustment.md</code></td><td><code>src/claude/plan/rules/rice-lane-weighted-adjustment.md</code></td><td><code>src/codex/plan/rules/rice-lane-weighted-adjustment.md</code></td><td>RICE lane 가중 조정과 Lite/Standard 승격 기준</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="codex" class="doc-section">
+        <h2>Codex 기준</h2>
+        <table>
+          <thead><tr><th>기준</th><th>설명</th></tr></thead>
+          <tbody>
+            <tr><td>Workflow 본체</td><td>긴 절차는 <code>.agents/skills/*/SKILL.md</code>를 먼저 봅니다.</td></tr>
+            <tr><td>역할 위임</td><td>역할이 분명한 작성/리뷰 작업은 <code>.codex/agents/*.toml</code> subagent가 담당합니다.</td></tr>
+            <tr><td>Instruction</td><td>반복 지침은 <code>AGENTS.md</code>와 skill guardrail에 반영됩니다.</td></tr>
+            <tr><td>Hook</td><td>Claude hook과 1:1 동작을 가정하지 않고, Codex 지원 상태를 별도 확인합니다.</td></tr>
+            <tr><td>Source gap</td><td>runtime output은 있지만 <code>src/codex/**</code> authoring source가 없으면 manual-review 대상으로 봅니다.</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <aside class="toc" aria-label="이 페이지에서">
+      <p>이 페이지에서</p>
+      <a href="#overview">개요</a>
+      <a href="#command-map">Command map</a>
+      <a href="#agents">Agents</a>
+      <a href="#skills">Skills</a>
+      <a href="#hooks">Hooks</a>
+      <a href="#rules">Rules</a>
+      <a href="#codex">Codex 기준</a>
+    </aside>
+  </div>
+</body>
+</html>

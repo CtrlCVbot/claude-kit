@@ -1,0 +1,268 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>기획 파이프라인 상세 가이드 | claude-kit</title>
+  <meta name="description" content="claude-kit /plan-* 기획 파이프라인 상세 지도">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 건너뛰기</a>
+
+  <header class="app-header">
+    <a class="brand" href="../index.html#planning" aria-label="claude-kit guide home">
+      <span class="brand-mark">ck</span>
+      <span>
+        <strong>Planning Guide</strong>
+        <small>Command-level pipeline reference</small>
+      </span>
+    </a>
+    <div class="search-box" role="search" aria-label="문서 검색 placeholder">
+      <span>/plan-* 상세 문서</span>
+      <kbd>HTML</kbd>
+    </div>
+  </header>
+
+  <div class="layout" id="top">
+    <aside class="sidebar" aria-label="기획 상세 네비게이션">
+      <nav>
+        <p class="nav-group">기획 상세</p>
+        <a href="#overview" class="active">전체 지도</a>
+        <a href="plan-idea.html">/plan-idea</a>
+        <a href="plan-epic.html">/plan-epic</a>
+        <a href="plan-screen.html">/plan-screen</a>
+        <a href="plan-draft.html">/plan-draft</a>
+        <a href="plan-prd.html">/plan-prd</a>
+        <a href="plan-wireframe.html">/plan-wireframe</a>
+        <a href="plan-design.html">/plan-design</a>
+        <a href="plan-stitch.html">/plan-stitch</a>
+        <a href="plan-bridge.html">/plan-bridge</a>
+        <a href="plan-review.html">/plan-review</a>
+        <a href="plan-revise.html">/plan-revise</a>
+        <a href="plan-improve.html">/plan-improve</a>
+        <a href="plan-archive.html">/plan-archive</a>
+        <a href="lifecycle.html">산출물 lifecycle</a>
+        <a href="reference.html">기능 reference</a>
+        <a href="#pipeline-map">파이프라인 맵</a>
+        <a href="#design-branch">디자인 분기</a>
+        <a href="#page-standard">상세 페이지 표준</a>
+
+        <p class="nav-group">상위 문서</p>
+        <a href="../index.html">HTML 가이드 홈</a>
+        <a href="../../guide/claude-code/02-plan-pipeline.md">Plan Pipeline 원문</a>
+        <a href="../../30-reference/01-commands.md">Command reference</a>
+      </nav>
+    </aside>
+
+    <main id="content" class="content">
+      <section id="overview" class="doc-section intro">
+        <p class="breadcrumb">claude-kit / planning / overview</p>
+        <h1>기획 파이프라인 상세 지도</h1>
+        <p class="lead">
+          이 문서는 <code>/plan-*</code> 명령을 실제 실행 단위로 설명하는 상세 문서 패키지의 시작점입니다.
+          각 명령은 실행 목적, 호출되는 agents와 skills, hooks와 instruction rules, 생성·수정·이동되는 산출물, Claude/Codex 차이를 함께 다룹니다.
+        </p>
+
+        <div class="notice">
+          <strong>/plan-epic 포함</strong>
+          <p>
+            Epic은 여러 Feature를 묶는 상위 기획 단위입니다. 기존 flat flow와 호환되는 opt-in 기능이지만, 상세 가이드에서는 planning pipeline의 1급 항목으로 다룹니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="pilot-pages" class="doc-section">
+        <h2>상세 페이지</h2>
+        <p>
+          현재 상세 페이지는 idea intake, Epic 계층, screening, draft, PRD 작성, wireframe, design/stitch 분기, bridge, review, revise, archive, improve까지 이어지는 planning 핵심 흐름을 다룹니다.
+          각 페이지는 동일한 Claude/Codex 탭과 output lifecycle 구조를 사용합니다.
+        </p>
+
+        <div class="answer-grid">
+          <article>
+            <span>P0</span>
+            <h3>/plan-idea</h3>
+            <p>아이디어 등록, 조회, dry-run, Epic 자동 연결을 설명합니다.</p>
+            <a class="inline-action" href="plan-idea.html">상세 보기</a>
+          </article>
+          <article>
+            <span>P0</span>
+            <h3>/plan-epic</h3>
+            <p>Epic 생성, 조회, 상태 전이, phase roadmap, Feature binding을 설명합니다.</p>
+            <a class="inline-action" href="plan-epic.html">상세 보기</a>
+          </article>
+          <article>
+            <span>P0</span>
+            <h3>/plan-screen</h3>
+            <p>RICE 또는 5축 평가, Go/Hold/Kill 제안, 승인 기반 folder transition을 설명합니다.</p>
+            <a class="inline-action" href="plan-screen.html">상세 보기</a>
+          </article>
+          <article>
+            <span>P0</span>
+            <h3>/plan-draft</h3>
+            <p>approved IDEA에서 첫 Feature Overview와 routing metadata를 만드는 흐름을 설명합니다.</p>
+            <a class="inline-action" href="plan-draft.html">상세 보기</a>
+          </article>
+          <article>
+            <span>P0</span>
+            <h3>/plan-prd</h3>
+            <p>First-Pass 기반 PRD 작성, 리뷰, 승인, 다음 wireframe 진입 조건을 설명합니다.</p>
+            <a class="inline-action" href="plan-prd.html">상세 보기</a>
+          </article>
+          <article>
+            <span>P0</span>
+            <h3>/plan-wireframe</h3>
+            <p>승인된 PRD를 화면 구조, navigation, component 단위 wireframe으로 전환합니다.</p>
+            <a class="inline-action" href="plan-wireframe.html">상세 보기</a>
+          </article>
+          <article>
+            <span>P0</span>
+            <h3>/plan-design</h3>
+            <p>Claude Code Design용 wireframe/high fidelity 프롬프트 패키지를 생성합니다.</p>
+            <a class="inline-action" href="plan-design.html">상세 보기</a>
+          </article>
+          <article>
+            <span>P0</span>
+            <h3>/plan-stitch</h3>
+            <p>Google Stitch 선택 경로 또는 PRD/Wireframe 통합 검증 보강 경로를 설명합니다.</p>
+            <a class="inline-action" href="plan-stitch.html">상세 보기</a>
+          </article>
+          <article>
+            <span>P0</span>
+            <h3>/plan-bridge</h3>
+            <p>기획 산출물을 개발자가 실행 가능한 Feature Package 입력으로 넘깁니다.</p>
+            <a class="inline-action" href="plan-bridge.html">상세 보기</a>
+          </article>
+          <article>
+            <span>P1</span>
+            <h3>/plan-review</h3>
+            <p>기획 산출물 품질, PCC 일관성, reviewPassed 게이트를 검증합니다.</p>
+            <a class="inline-action" href="plan-review.html">상세 보기</a>
+          </article>
+          <article>
+            <span>P1</span>
+            <h3>/plan-revise</h3>
+            <p>기존 기획 산출물의 수정 요청을 표준 프로토콜로 반영합니다.</p>
+            <a class="inline-action" href="plan-revise.html">상세 보기</a>
+          </article>
+          <article>
+            <span>P1</span>
+            <h3>/plan-archive</h3>
+            <p>완료된 기능 산출물을 archive bundle과 sources 디렉터리로 정리합니다.</p>
+            <a class="inline-action" href="plan-archive.html">상세 보기</a>
+          </article>
+          <article>
+            <span>P1</span>
+            <h3>/plan-improve</h3>
+            <p>아카이브된 기능의 개선 요청을 등록하고 재진입 지점을 추천합니다.</p>
+            <a class="inline-action" href="plan-improve.html">상세 보기</a>
+          </article>
+          <article>
+            <span>Reference</span>
+            <h3>산출물 lifecycle</h3>
+            <p>생성, 승인, 수정, 이동, archive까지 `.plans/**` 경로와 소유 규칙을 한곳에서 봅니다.</p>
+            <a class="inline-action" href="lifecycle.html">상세 보기</a>
+          </article>
+          <article>
+            <span>Reference</span>
+            <h3>기능 reference</h3>
+            <p>planning agents, skills, hooks, rules를 Claude/Codex 기준으로 한눈에 봅니다.</p>
+            <a class="inline-action" href="reference.html">상세 보기</a>
+          </article>
+        </div>
+      </section>
+
+      <section id="pipeline-map" class="doc-section">
+        <h2>기획 파이프라인 맵</h2>
+        <p>
+          기본 흐름은 아이디어에서 시작해 PRD, wireframe, design 또는 stitch, bridge로 이어집니다.
+          Epic은 필요할 때 상위 컨테이너로 켜는 opt-in 경로입니다.
+        </p>
+
+        <div class="timeline">
+          <article><span>0</span><strong><a href="plan-epic.html">/plan-epic</a></strong><p>선택 사항. 여러 Feature를 묶는 상위 목적, 성공 지표, Phase를 관리합니다.</p></article>
+          <article><span>1</span><strong><a href="plan-idea.html">/plan-idea</a></strong><p>아이디어를 <code>.plans/ideas/00-inbox/</code>에 등록하고 필요 시 Epic에 연결합니다.</p></article>
+          <article><span>2</span><strong><a href="plan-screen.html">/plan-screen</a></strong><p>RICE 또는 5축 평가로 Go/Hold/Kill을 판정하고 folder transition을 수행합니다.</p></article>
+          <article><span>3</span><strong><a href="plan-draft.html">/plan-draft</a></strong><p>First Pass와 draft brief를 만들고 Lite/Standard 경로를 정합니다.</p></article>
+          <article><span>4</span><strong><a href="plan-prd.html">/plan-prd</a></strong><p>승인 가능한 PRD를 작성합니다.</p></article>
+          <article><span>R</span><strong><a href="plan-review.html">/plan-review</a></strong><p>주요 게이트마다 품질과 PCC 일관성을 검증합니다.</p></article>
+          <article><span>R2</span><strong><a href="plan-revise.html">/plan-revise</a></strong><p>리뷰나 사용자 피드백에 따른 기존 산출물 수정을 처리합니다.</p></article>
+          <article><span>5</span><strong><a href="plan-wireframe.html">/plan-wireframe</a></strong><p>요구사항과 화면 구조를 연결합니다.</p></article>
+          <article><span>6A</span><strong><a href="plan-design.html">/plan-design</a></strong><p>Claude Code Design용 wireframe/high fidelity 프롬프트를 생성합니다.</p></article>
+          <article><span>6B</span><strong><a href="plan-stitch.html">/plan-stitch</a></strong><p>Google Stitch 선택 경로 또는 통합 검증 보강 경로입니다.</p></article>
+          <article><span>7</span><strong><a href="plan-bridge.html">/plan-bridge</a></strong><p>개발자가 실행할 수 있는 Feature Package로 넘깁니다.</p></article>
+          <article><span>8</span><strong><a href="plan-archive.html">/plan-archive</a></strong><p>완료된 산출물을 archive bundle로 정리합니다.</p></article>
+          <article><span>9</span><strong><a href="plan-improve.html">/plan-improve</a></strong><p>아카이브된 기능의 개선 요청을 등록하고 재진입 지점을 추천합니다.</p></article>
+        </div>
+        <p>
+          각 단계가 어떤 파일을 생성하고 어디로 이동시키는지는 <a href="lifecycle.html">산출물 lifecycle</a>에서 전체 경로 기준으로 확인합니다.
+        </p>
+      </section>
+
+      <section id="design-branch" class="doc-section">
+        <h2>디자인 분기 기준</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>경로</th>
+              <th>언제 쓰나</th>
+              <th>다음 단계</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>/plan-design</code></td>
+              <td>Claude Code Design을 사용해 2단계 프롬프트와 design manifest가 필요할 때</td>
+              <td><code>/plan-bridge</code></td>
+            </tr>
+            <tr>
+              <td><code>/plan-stitch</code></td>
+              <td>Google Stitch 또는 PRD/Wireframe 통합 검증을 선택적으로 보강할 때</td>
+              <td><code>/plan-bridge</code></td>
+            </tr>
+            <tr>
+              <td><code>/plan-design -> /plan-stitch</code></td>
+              <td>Claude Design 산출물을 만든 뒤 Stitch로 통합 보강이 필요할 때</td>
+              <td>순차 실행 사유 기록 후 <code>/plan-bridge</code></td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="page-standard" class="doc-section">
+        <h2>상세 페이지 표준</h2>
+        <p>각 command 상세 페이지는 같은 형식을 따른다. 사용자는 command마다 다른 문서 구조를 새로 배울 필요가 없습니다.</p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>섹션</th>
+              <th>설명</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Overview</td><td>목적, 선행 조건, 다음 단계</td></tr>
+            <tr><td>Claude / Codex 탭</td><td>각 runtime이 같은 기능 identity를 어떻게 소비하는지 비교</td></tr>
+            <tr><td>Runtime Flow</td><td>command 실행부터 agent spawn, skill/rule 참조, hook guard, output 생성까지</td></tr>
+            <tr><td>Output Lifecycle</td><td>생성, 수정, 이동, archive 대상 파일과 폴더</td></tr>
+            <tr><td>Rules and Guards</td><td>instruction rule, hook guard, validation gate</td></tr>
+            <tr><td>Failure Modes</td><td>중단 조건, 거부 조건, 수동 확인 조건</td></tr>
+            <tr><td>Lifecycle reference</td><td><a href="lifecycle.html">산출물 생성·이동·archive 경로</a>를 공통 참조로 둔다.</td></tr>
+            <tr><td>Function reference</td><td><a href="reference.html">agents, skills, hooks, rules 색인</a>을 공통 참조로 둔다.</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <aside class="toc" aria-label="이 페이지에서">
+      <p>이 페이지에서</p>
+      <a href="#overview">전체 지도</a>
+      <a href="#pilot-pages">P0 pilot</a>
+      <a href="#pipeline-map">파이프라인 맵</a>
+      <a href="#design-branch">디자인 분기</a>
+      <a href="#page-standard">페이지 표준</a>
+    </aside>
+  </div>
+</body>
+</html>

@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>/plan-screen 상세 | claude-kit</title>
+  <meta name="description" content="/plan-screen command 상세 실행 가이드">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 건너뛰기</a>
+
+  <header class="app-header">
+    <a class="brand" href="index.html" aria-label="planning guide home">
+      <span class="brand-mark">ck</span>
+      <span>
+        <strong>/plan-screen</strong>
+        <small>Idea scoring and approval gate</small>
+      </span>
+    </a>
+    <div class="search-box" role="search" aria-label="문서 검색 placeholder">
+      <span>Planning command detail</span>
+      <kbd>P0</kbd>
+    </div>
+  </header>
+
+  <div class="layout" id="top">
+    <aside class="sidebar" aria-label="/plan-screen 네비게이션">
+      <nav>
+        <p class="nav-group">/plan-screen</p>
+        <a href="#overview" class="active">개요</a>
+        <a href="#usage">실행 예시</a>
+        <a href="#runtime">Claude / Codex</a>
+        <a href="#flow">Runtime Flow</a>
+        <a href="#outputs">Output Lifecycle</a>
+        <a href="#rules">Rules and Guards</a>
+        <a href="#failure">Failure Modes</a>
+        <a href="#next">Next Step</a>
+
+        <p class="nav-group">다른 페이지</p>
+        <a href="index.html">Planning overview</a>
+        <a href="reference.html">Function reference</a>
+        <a href="lifecycle.html">Output lifecycle</a>
+        <a href="plan-idea.html">/plan-idea</a>
+        <a href="plan-draft.html">/plan-draft</a>
+        <a href="../index.html">Guide home</a>
+      </nav>
+    </aside>
+
+    <main id="content" class="content">
+      <section id="overview" class="doc-section intro">
+        <p class="breadcrumb">claude-kit / planning / plan-screen</p>
+        <h1>/plan-screen</h1>
+        <p class="lead">
+          <code>/plan-screen</code>은 등록된 IDEA를 RICE 또는 5축 가중 프레임워크로 평가하고 Go, Hold, Kill 판정을 제안한 뒤,
+          사용자 승인에 따라 idea folder와 index 상태를 전환하는 screening gate입니다.
+        </p>
+
+        <div class="command-meta">
+          <div><strong>Primary agent</strong><code>plan-idea-screener</code></div>
+          <div><strong>Main skill</strong><code>plan-screening-workflow</code></div>
+          <div><strong>Main rule</strong><code>rice-lane-weighted-adjustment</code></div>
+          <div><strong>Next command</strong><code>/plan-draft IDEA-...</code></div>
+        </div>
+      </section>
+
+      <section id="usage" class="doc-section">
+        <h2>실행 예시</h2>
+        <pre><code>/plan-screen IDEA-20260325-001
+/plan-screen IDEA-20260325-001 --framework rice
+/plan-screen IDEA-20260325-001 --framework 5axis
+/plan-screen IDEA-20260325-001 --rescore
+/plan-screen --pending
+/plan-screen --pending --auto-approve</code></pre>
+      </section>
+
+      <section id="runtime" class="doc-section">
+        <h2>Claude / Codex 탭</h2>
+        <div class="runtime-tabs">
+          <input class="tab-input" type="radio" name="plan-screen-runtime-tabs" id="plan-screen-tab-claude" checked>
+          <input class="tab-input" type="radio" name="plan-screen-runtime-tabs" id="plan-screen-tab-codex">
+          <div class="tab-list" role="tablist" aria-label="/plan-screen runtime tabs">
+            <label class="tab-label" for="plan-screen-tab-claude" role="tab">Claude</label>
+            <label class="tab-label" for="plan-screen-tab-codex" role="tab">Codex</label>
+          </div>
+          <div class="tab-panels">
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Claude</h3>
+              <table>
+                <tbody>
+                  <tr><th>Command source</th><td><code>src/claude/plan/commands/plan-screen.md</code></td></tr>
+                  <tr><th>Runtime command</th><td><code>.claude/commands/plan-screen.md</code></td></tr>
+                  <tr><th>Sub agent</th><td><code>plan-idea-screener</code></td></tr>
+                  <tr><th>Skills</th><td><code>plan-screening-workflow</code>, <code>plan-review-criteria</code></td></tr>
+                  <tr><th>Hooks</th><td><code>plan-idea-move-guard</code>, <code>plan-state-sync</code></td></tr>
+                  <tr><th>Rules</th><td><code>rice-lane-weighted-adjustment</code></td></tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Codex</h3>
+              <table>
+                <tbody>
+                  <tr><th>Codex source</th><td><code>src/codex/plan/commands/plan-screen.md</code></td></tr>
+                  <tr><th>Runtime skill</th><td><code>.agents/skills/plan-screening-workflow/SKILL.md</code></td></tr>
+                  <tr><th>Runtime subagent</th><td><code>.codex/agents/plan-idea-screener.toml</code></td></tr>
+                  <tr><th>Instruction surface</th><td><code>AGENTS.md</code> 일반 guidance + instruction rule synthesis</td></tr>
+                  <tr><th>Hook status</th><td><span class="status-badge partial">partial</span> folder transition guard는 runtime별 검증 필요</td></tr>
+                  <tr><th>Conversion status</th><td><span class="status-badge ok">paired</span> command, agent, skill source 확인됨</td></tr>
+                </tbody>
+              </table>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section id="flow" class="doc-section">
+        <h2>Runtime Flow</h2>
+        <ol class="steps compact">
+          <li><strong>프레임워크 결정</strong><p><code>--framework</code>, 프로젝트 기본값, <code>rice</code> fallback 순서로 평가 기준을 정합니다.</p></li>
+          <li><strong>대상 확인</strong><p><code>backlog.md</code>에서 IDEA 위치를 찾고 대상 파일을 읽습니다.</p></li>
+          <li><strong>agent spawn</strong><p><code>plan-idea-screener</code>가 점수와 Go/Hold/Kill 제안을 생성합니다.</p></li>
+          <li><strong>screening 파일 생성</strong><p><code>SCREENING-*.md</code>와 <code>screening-matrix.md</code>를 갱신합니다.</p></li>
+          <li><strong>Human checkpoint</strong><p>점수 확인 후 승인, 보류, 반려 결정을 사용자에게 요청합니다.</p></li>
+          <li><strong>folder transition</strong><p>승인 결과에 따라 <code>20-approved</code> 또는 <code>90-archive</code>로 이동합니다.</p></li>
+        </ol>
+      </section>
+
+      <section id="outputs" class="doc-section">
+        <h2>Output Lifecycle</h2>
+        <table>
+          <thead>
+            <tr><th>단계</th><th>파일/폴더</th><th>작업</th><th>규칙</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Input</td><td><code>.plans/ideas/00-inbox/IDEA-*.md</code></td><td>읽기</td><td>backlog index 기준 위치 확인</td></tr>
+            <tr><td>Create</td><td><code>.plans/ideas/10-screening/SCREENING-*.md</code></td><td>점수 파일 생성</td><td>첫 줄에 framework 명시</td></tr>
+            <tr><td>Update</td><td><code>screening-matrix.md</code></td><td>요약 행 반영</td><td>framework 컬럼 포함</td></tr>
+            <tr><td>Move</td><td><code>00-inbox -> 10-screening -> 20-approved</code></td><td>승인 이동</td><td>사용자 승인 필요</td></tr>
+            <tr><td>Move</td><td><code>10-screening -> 90-archive</code></td><td>보류 또는 반려 이동</td><td>상태는 <code>on-hold</code> 또는 <code>rejected</code></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="rules" class="doc-section">
+        <h2>Rules and Guards</h2>
+        <table>
+          <tbody>
+            <tr><th><code>rice-lane-weighted-adjustment</code></th><td>RICE 공식 판정과 Lite/Standard lane 승격 조건의 SSOT입니다.</td></tr>
+            <tr><th><code>plan-idea-move-guard</code></th><td>idea folder 이동이 허용된 경로인지 검증합니다.</td></tr>
+            <tr><th>Human Checkpoint</th><td>Go/Hold/Kill 제안은 자동 완료가 아니라 사용자 승인 이후 상태를 전환합니다.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="failure" class="doc-section">
+        <h2>Failure Modes</h2>
+        <ul>
+          <li><code>--framework</code> 값이 <code>rice</code> 또는 <code>5axis</code>가 아니면 즉시 실패해야 합니다.</li>
+          <li>IDEA가 backlog index에서 확인되지 않으면 screening을 중단합니다.</li>
+          <li>이미 screening된 파일을 다른 framework로 재평가하면 기존 결과 보존 정책을 따라야 합니다.</li>
+          <li>사용자 승인 전에는 approved 상태로 이동하지 않습니다.</li>
+        </ul>
+      </section>
+
+      <section id="next" class="doc-section">
+        <h2>Next Step</h2>
+        <p>승인된 아이디어는 <a href="plan-draft.html"><code>/plan-draft IDEA-...</code></a>로 이어집니다.</p>
+      </section>
+    </main>
+
+    <aside class="toc" aria-label="이 페이지에서">
+      <p>이 페이지에서</p>
+      <a href="#overview">개요</a>
+      <a href="#usage">실행 예시</a>
+      <a href="#runtime">Claude / Codex</a>
+      <a href="#flow">Runtime Flow</a>
+      <a href="#outputs">Output Lifecycle</a>
+      <a href="#rules">Rules and Guards</a>
+      <a href="#failure">Failure Modes</a>
+      <a href="#next">Next Step</a>
+    </aside>
+  </div>
+</body>
+</html>

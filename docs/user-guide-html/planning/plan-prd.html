@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>/plan-prd 상세 | claude-kit</title>
+  <meta name="description" content="/plan-prd command 상세 실행 가이드">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 건너뛰기</a>
+
+  <header class="app-header">
+    <a class="brand" href="index.html" aria-label="planning guide home">
+      <span class="brand-mark">ck</span>
+      <span>
+        <strong>/plan-prd</strong>
+        <small>Detailed PRD authoring and approval</small>
+      </span>
+    </a>
+    <div class="search-box" role="search" aria-label="문서 검색 placeholder">
+      <span>Planning command detail</span>
+      <kbd>P0</kbd>
+    </div>
+  </header>
+
+  <div class="layout" id="top">
+    <aside class="sidebar" aria-label="/plan-prd 네비게이션">
+      <nav>
+        <p class="nav-group">/plan-prd</p>
+        <a href="#overview" class="active">개요</a>
+        <a href="#usage">실행 예시</a>
+        <a href="#runtime">Claude / Codex</a>
+        <a href="#flow">Runtime Flow</a>
+        <a href="#outputs">Output Lifecycle</a>
+        <a href="#rules">Rules and Guards</a>
+        <a href="#failure">Failure Modes</a>
+        <a href="#next">Next Step</a>
+
+        <p class="nav-group">다른 페이지</p>
+        <a href="index.html">Planning overview</a>
+        <a href="reference.html">Function reference</a>
+        <a href="lifecycle.html">Output lifecycle</a>
+        <a href="plan-draft.html">/plan-draft</a>
+        <a href="../index.html">Guide home</a>
+      </nav>
+    </aside>
+
+    <main id="content" class="content">
+      <section id="overview" class="doc-section intro">
+        <p class="breadcrumb">claude-kit / planning / plan-prd</p>
+        <h1>/plan-prd</h1>
+        <p class="lead">
+          <code>/plan-prd</code>는 First-Pass 문서를 기반으로 10개 섹션 PRD를 작성하고,
+          리뷰와 Human Checkpoint를 거쳐 승인된 PRD를 다음 wireframe 또는 copy 분석 단계로 넘깁니다.
+        </p>
+
+        <div class="command-meta">
+          <div><strong>Primary agent</strong><code>plan-prd-writer</code></div>
+          <div><strong>Main skill</strong><code>plan-prd-authoring</code></div>
+          <div><strong>Review skill</strong><code>plan-review-criteria</code></div>
+          <div><strong>Next command</strong><code>/plan-wireframe</code></div>
+        </div>
+      </section>
+
+      <section id="usage" class="doc-section">
+        <h2>실행 예시</h2>
+        <pre><code>/plan-prd {slug}
+/plan-prd {slug} --revise
+/plan-prd {slug} --scope
+/plan-prd {slug} --detail</code></pre>
+      </section>
+
+      <section id="runtime" class="doc-section">
+        <h2>Claude / Codex 탭</h2>
+        <div class="runtime-tabs">
+          <input class="tab-input" type="radio" name="plan-prd-runtime-tabs" id="plan-prd-tab-claude" checked>
+          <input class="tab-input" type="radio" name="plan-prd-runtime-tabs" id="plan-prd-tab-codex">
+          <div class="tab-list" role="tablist" aria-label="/plan-prd runtime tabs">
+            <label class="tab-label" for="plan-prd-tab-claude" role="tab">Claude</label>
+            <label class="tab-label" for="plan-prd-tab-codex" role="tab">Codex</label>
+          </div>
+          <div class="tab-panels">
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Claude</h3>
+              <table>
+                <tbody>
+                  <tr><th>Command source</th><td><code>src/claude/plan/commands/plan-prd.md</code></td></tr>
+                  <tr><th>Runtime command</th><td><code>.claude/commands/plan-prd.md</code></td></tr>
+                  <tr><th>Sub agent</th><td><code>plan-prd-writer</code></td></tr>
+                  <tr><th>Skills</th><td><code>plan-prd-authoring</code>, <code>plan-review-criteria</code></td></tr>
+                  <tr><th>Hooks</th><td><code>plan-review-trigger</code>, <code>plan-doc-guard</code></td></tr>
+                  <tr><th>Rules</th><td>PRD 10개 섹션, 요구사항 ID, PCC-03</td></tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Codex</h3>
+              <table>
+                <tbody>
+                  <tr><th>Codex source</th><td><code>src/codex/plan/commands/plan-prd.md</code></td></tr>
+                  <tr><th>Runtime skill</th><td><code>.agents/skills/plan-prd-authoring/SKILL.md</code></td></tr>
+                  <tr><th>Runtime subagent</th><td><code>.codex/agents/plan-prd-writer.toml</code></td></tr>
+                  <tr><th>Instruction surface</th><td><code>AGENTS.md</code>와 PRD 작성 guidance</td></tr>
+                  <tr><th>Hook status</th><td><span class="status-badge partial">partial</span> doc guard와 review trigger는 runtime별 검증 필요</td></tr>
+                  <tr><th>Conversion status</th><td><span class="status-badge ok">paired</span> command, agent, skill source 확인됨</td></tr>
+                </tbody>
+              </table>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section id="flow" class="doc-section">
+        <h2>Runtime Flow</h2>
+        <ol class="steps compact">
+          <li><strong>First-Pass 로드</strong><p><code>.plans/features/drafts/{slug}/first-pass.md</code>를 읽습니다.</p></li>
+          <li><strong>agent spawn</strong><p><code>plan-prd-writer</code>가 PRD 10개 섹션을 작성합니다.</p></li>
+          <li><strong>요구사항 ID 채번</strong><p><code>REQ-{feature}-{seq}</code> 형식으로 요구사항을 추적 가능하게 만듭니다.</p></li>
+          <li><strong>자동 리뷰</strong><p><code>/plan-review</code>를 호출해 PRD 품질을 검증합니다.</p></li>
+          <li><strong>PCC-03 검증</strong><p>기획 범위가 PRD에 반영되었는지 확인합니다.</p></li>
+          <li><strong>Human Checkpoint</strong><p>승인, 수정, 반려 중 하나로 다음 상태를 결정합니다.</p></li>
+        </ol>
+      </section>
+
+      <section id="outputs" class="doc-section">
+        <h2>Output Lifecycle</h2>
+        <table>
+          <thead>
+            <tr><th>단계</th><th>파일/폴더</th><th>작업</th><th>규칙</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Input</td><td><code>.plans/features/drafts/{slug}/first-pass.md</code></td><td>읽기</td><td>Standard flow 기준</td></tr>
+            <tr><td>Create</td><td><code>.plans/prd/00-draft/{slug}-prd.md</code></td><td>PRD 초안 생성</td><td>10개 섹션 포함</td></tr>
+            <tr><td>Promote</td><td><code>.plans/prd/10-approved/{slug}-prd.md</code></td><td>승인 PRD로 승격</td><td>Human Checkpoint 통과 필요</td></tr>
+            <tr><td>Create</td><td><code>{slug}-scope-prd.md</code></td><td>시나리오 C 범위 PRD</td><td><code>--scope</code> 사용 시</td></tr>
+            <tr><td>Create</td><td><code>{slug}-detail-prd.md</code></td><td>시나리오 C 상세 PRD</td><td>갭 데이터 기반 <code>--detail</code></td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="rules" class="doc-section">
+        <h2>Rules and Guards</h2>
+        <table>
+          <tbody>
+            <tr><th><code>plan-prd-authoring</code></th><td>PRD 10개 필수 섹션과 작성 품질 기준을 제공합니다.</td></tr>
+            <tr><th><code>plan-review-criteria</code></th><td>PCC 검증과 승인 전 리뷰 기준을 제공합니다.</td></tr>
+            <tr><th><code>plan-doc-guard</code></th><td>기획 문서 구조와 형식이 깨지지 않도록 guard 역할을 합니다.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="failure" class="doc-section">
+        <h2>Failure Modes</h2>
+        <ul>
+          <li>First-Pass 문서가 없으면 PRD 생성을 시작하지 않습니다.</li>
+          <li>PRD 10개 섹션 중 핵심 섹션이 빠지면 승인 전 수정해야 합니다.</li>
+          <li>요구사항 ID가 없으면 wireframe과 dev handoff에서 추적성이 약해집니다.</li>
+          <li>시나리오 C에서는 범위 PRD와 상세 PRD를 혼동하지 않아야 합니다.</li>
+        </ul>
+      </section>
+
+      <section id="next" class="doc-section">
+        <h2>Next Step</h2>
+        <p>
+          승인된 PRD는 <code>/plan-wireframe {slug}</code>로 이어집니다.
+          시나리오 C 범위 PRD는 <code>/copy-reference-refresh</code>, 갭 분석, <code>/plan-prd {slug} --detail</code> 순서로 이어질 수 있습니다.
+        </p>
+      </section>
+    </main>
+
+    <aside class="toc" aria-label="이 페이지에서">
+      <p>이 페이지에서</p>
+      <a href="#overview">개요</a>
+      <a href="#usage">실행 예시</a>
+      <a href="#runtime">Claude / Codex</a>
+      <a href="#flow">Runtime Flow</a>
+      <a href="#outputs">Output Lifecycle</a>
+      <a href="#rules">Rules and Guards</a>
+      <a href="#failure">Failure Modes</a>
+      <a href="#next">Next Step</a>
+    </aside>
+  </div>
+</body>
+</html>

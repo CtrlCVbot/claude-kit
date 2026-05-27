@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>/plan-review 상세 | claude-kit</title>
+  <meta name="description" content="/plan-review command 상세 실행 가이드">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 건너뛰기</a>
+
+  <header class="app-header">
+    <a class="brand" href="index.html" aria-label="planning guide home">
+      <span class="brand-mark">ck</span>
+      <span>
+        <strong>/plan-review</strong>
+        <small>Planning quality review and PCC gate</small>
+      </span>
+    </a>
+    <div class="search-box" role="search" aria-label="문서 검색 placeholder">
+      <span>Planning command detail</span>
+      <kbd>P1</kbd>
+    </div>
+  </header>
+
+  <div class="layout" id="top">
+    <aside class="sidebar" aria-label="/plan-review 네비게이션">
+      <nav>
+        <p class="nav-group">/plan-review</p>
+        <a href="#overview" class="active">개요</a>
+        <a href="#usage">실행 예시</a>
+        <a href="#runtime">Claude / Codex</a>
+        <a href="#flow">Runtime Flow</a>
+        <a href="#outputs">Output Lifecycle</a>
+        <a href="#rules">Rules and Guards</a>
+        <a href="#failure">Failure Modes</a>
+        <a href="#next">Next Step</a>
+
+        <p class="nav-group">다른 페이지</p>
+        <a href="index.html">Planning overview</a>
+        <a href="reference.html">Function reference</a>
+        <a href="lifecycle.html">Output lifecycle</a>
+        <a href="plan-revise.html">/plan-revise</a>
+        <a href="plan-bridge.html">/plan-bridge</a>
+        <a href="plan-archive.html">/plan-archive</a>
+        <a href="../index.html">Guide home</a>
+      </nav>
+    </aside>
+
+    <main id="content" class="content">
+      <section id="overview" class="doc-section intro">
+        <p class="breadcrumb">claude-kit / planning / plan-review</p>
+        <h1>/plan-review</h1>
+        <p class="lead">
+          <code>/plan-review</code>는 아이디어, PRD, wireframe, Feature Package 같은 기획 산출물을 읽기 전용으로 검토하고
+          <code>PASS</code>, <code>WARN</code>, <code>FAIL</code> 판정을 남기는 품질 게이트입니다.
+        </p>
+
+        <div class="command-meta">
+          <div><strong>Primary agent</strong><code>plan-reviewer</code></div>
+          <div><strong>Main skill</strong><code>plan-review-criteria</code></div>
+          <div><strong>Primary output</strong>리뷰 리포트, <code>stage-manifest.json</code></div>
+          <div><strong>Next command</strong><code>/plan-revise</code> 또는 다음 승인 단계</div>
+        </div>
+      </section>
+
+      <section id="usage" class="doc-section">
+        <h2>실행 예시</h2>
+        <pre><code>/plan-review {path}
+/plan-review {path} --type=prd
+/plan-review {path} --type=wireframe
+/plan-review --pcc {slug}</code></pre>
+      </section>
+
+      <section id="runtime" class="doc-section">
+        <h2>Claude / Codex 탭</h2>
+        <div class="runtime-tabs">
+          <input class="tab-input" type="radio" name="plan-review-runtime-tabs" id="plan-review-tab-claude" checked>
+          <input class="tab-input" type="radio" name="plan-review-runtime-tabs" id="plan-review-tab-codex">
+          <div class="tab-list" role="tablist" aria-label="/plan-review runtime tabs">
+            <label class="tab-label" for="plan-review-tab-claude" role="tab">Claude</label>
+            <label class="tab-label" for="plan-review-tab-codex" role="tab">Codex</label>
+          </div>
+          <div class="tab-panels">
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Claude</h3>
+              <table>
+                <tbody>
+                  <tr><th>Command source</th><td><code>src/claude/plan/commands/plan-review.md</code></td></tr>
+                  <tr><th>Runtime command</th><td><code>.claude/commands/plan-review.md</code></td></tr>
+                  <tr><th>Sub agent</th><td><code>plan-reviewer</code></td></tr>
+                  <tr><th>Skills</th><td><code>plan-review-criteria</code></td></tr>
+                  <tr><th>Hooks</th><td><code>plan-review-trigger</code></td></tr>
+                  <tr><th>Rules</th><td>4축 평가, severity 분류, PCC 검증</td></tr>
+                </tbody>
+              </table>
+            </section>
+
+            <section class="runtime-panel tab-panel" role="tabpanel">
+              <h3>Codex</h3>
+              <table>
+                <tbody>
+                  <tr><th>Codex source</th><td><code>src/codex/plan/commands/plan-review.md</code></td></tr>
+                  <tr><th>Runtime skill</th><td><code>.agents/skills/plan-review-criteria/SKILL.md</code></td></tr>
+                  <tr><th>Runtime subagent</th><td><code>.codex/agents/plan-reviewer.toml</code></td></tr>
+                  <tr><th>Instruction surface</th><td><code>AGENTS.md</code>와 planning review guidance</td></tr>
+                  <tr><th>Hook status</th><td><span class="status-badge partial">partial</span> 자동 trigger는 runtime별 확인 필요</td></tr>
+                  <tr><th>Conversion status</th><td><span class="status-badge ok">paired</span> command, agent, skill source 확인됨</td></tr>
+                </tbody>
+              </table>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <section id="flow" class="doc-section">
+        <h2>Runtime Flow</h2>
+        <ol class="steps compact">
+          <li><strong>대상 식별</strong><p>리뷰 대상 경로와 문서 유형을 확인합니다.</p></li>
+          <li><strong>read-only review</strong><p><code>plan-reviewer</code>가 산출물을 읽고 체크리스트를 적용합니다.</p></li>
+          <li><strong>4축 평가</strong><p>완전성, 일관성, 실현가능성, 사용자 중심성을 평가합니다.</p></li>
+          <li><strong>PCC 검증</strong><p><code>--pcc</code> 사용 시 단계 간 산출물 일관성을 검증합니다.</p></li>
+          <li><strong>severity 분류</strong><p>이슈를 <code>CRITICAL</code>, <code>HIGH</code>, <code>MEDIUM</code>, <code>LOW</code>로 나눕니다.</p></li>
+          <li><strong>판정 기록</strong><p>통과 시 <code>.plans/stage-manifest.json</code>에 <code>reviewPassed</code>를 기록합니다.</p></li>
+        </ol>
+      </section>
+
+      <section id="outputs" class="doc-section">
+        <h2>Output Lifecycle</h2>
+        <table>
+          <thead><tr><th>단계</th><th>파일/출력</th><th>작업</th><th>규칙</th></tr></thead>
+          <tbody>
+            <tr><td>Input</td><td>리뷰 대상 산출물</td><td>읽기</td><td>수정하지 않음</td></tr>
+            <tr><td>Input</td><td>선행 산출물 묶음</td><td>PCC 비교</td><td><code>--pcc</code> 사용 시</td></tr>
+            <tr><td>Output</td><td>리뷰 리포트</td><td>요약, 발견 사항, 권고 출력</td><td>Approve/Revise/Reject 포함</td></tr>
+            <tr><td>Update</td><td><code>.plans/stage-manifest.json</code></td><td><code>reviewPassed</code> 기록</td><td>PASS일 때만</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="rules" class="doc-section">
+        <h2>Rules and Guards</h2>
+        <table>
+          <tbody>
+            <tr><th>Read-only review</th><td>리뷰 대상 파일을 직접 수정하지 않고, 수정은 <code>/plan-revise</code>로 분리합니다.</td></tr>
+            <tr><th>PCC gate</th><td>Idea, Screen, Feature, PRD, Wireframe, Stitch, Epic binding의 일관성을 확인합니다.</td></tr>
+            <tr><th>Bridge pre-check</th><td><code>/plan-bridge</code>는 필요한 단계의 <code>reviewPassed</code> 상태를 참조합니다.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="failure" class="doc-section">
+        <h2>Failure Modes</h2>
+        <ul>
+          <li>대상 파일이 없으면 리뷰를 시작하지 않습니다.</li>
+          <li><code>CRITICAL</code> 또는 필수 PCC 불일치가 있으면 <code>FAIL</code>로 판정합니다.</li>
+          <li><code>reviewPassed</code>가 없으면 다음 단계가 차단될 수 있습니다.</li>
+        </ul>
+      </section>
+
+      <section id="next" class="doc-section">
+        <h2>Next Step</h2>
+        <p>
+          수정이 필요하면 <a href="plan-revise.html"><code>/plan-revise</code></a>로 보정하고,
+          PASS 상태라면 <a href="plan-bridge.html"><code>/plan-bridge</code></a> 또는 <a href="plan-archive.html"><code>/plan-archive</code></a>로 이어갑니다.
+        </p>
+      </section>
+    </main>
+
+    <aside class="toc" aria-label="이 페이지에서">
+      <p>이 페이지에서</p>
+      <a href="#overview">개요</a>
+      <a href="#usage">실행 예시</a>
+      <a href="#runtime">Claude / Codex</a>
+      <a href="#flow">Runtime Flow</a>
+      <a href="#outputs">Output Lifecycle</a>
+      <a href="#rules">Rules and Guards</a>
+      <a href="#failure">Failure Modes</a>
+      <a href="#next">Next Step</a>
+    </aside>
+  </div>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>기획 산출물 Lifecycle | claude-kit</title>
+  <meta name="description" content="claude-kit planning pipeline 산출물 생성, 수정, 이동, archive 경로 가이드">
+  <link rel="stylesheet" href="../styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 건너뛰기</a>
+
+  <header class="app-header">
+    <a class="brand" href="index.html" aria-label="planning guide home">
+      <span class="brand-mark">ck</span>
+      <span>
+        <strong>Output Lifecycle</strong>
+        <small>Planning artifact paths and movement rules</small>
+      </span>
+    </a>
+    <div class="search-box" role="search" aria-label="문서 검색 placeholder">
+      <span>.plans/** lifecycle</span>
+      <kbd>REF</kbd>
+    </div>
+  </header>
+
+  <div class="layout" id="top">
+    <aside class="sidebar" aria-label="산출물 lifecycle 네비게이션">
+      <nav>
+        <p class="nav-group">Lifecycle</p>
+        <a href="#overview" class="active">개요</a>
+        <a href="#quick-map">빠른 경로표</a>
+        <a href="#command-outputs">명령별 산출물</a>
+        <a href="#movement">이동 규칙</a>
+        <a href="#review-revise">리뷰와 수정</a>
+        <a href="#archive">Archive</a>
+        <a href="#codex">Codex 기준</a>
+        <a href="#checklist">체크리스트</a>
+
+        <p class="nav-group">다른 페이지</p>
+        <a href="index.html">Planning overview</a>
+        <a href="reference.html">기능 reference</a>
+        <a href="plan-idea.html">/plan-idea</a>
+        <a href="plan-epic.html">/plan-epic</a>
+        <a href="plan-review.html">/plan-review</a>
+        <a href="plan-archive.html">/plan-archive</a>
+        <a href="../index.html">Guide home</a>
+      </nav>
+    </aside>
+
+    <main id="content" class="content">
+      <section id="overview" class="doc-section intro">
+        <p class="breadcrumb">claude-kit / planning / lifecycle</p>
+        <h1>기획 산출물 Lifecycle</h1>
+        <p class="lead">
+          이 페이지는 <code>/plan-*</code> 명령이 만드는 파일과 폴더를 한곳에 모은 reference입니다.
+          상세 command 페이지를 읽기 전에 전체 경로를 파악하거나, 산출물이 어디로 이동해야 하는지 확인할 때 사용합니다.
+        </p>
+
+        <div class="notice">
+          <strong>핵심 원칙</strong>
+          <p>
+            산출물은 pipeline 단계에 따라 생성, 승인, 보정, archive됩니다.
+            이미 archive된 원본은 직접 수정하지 않고 <code>/plan-improve</code>로 개선 요청을 새로 등록합니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="quick-map" class="doc-section">
+        <h2>빠른 경로표</h2>
+        <table>
+          <thead>
+            <tr>
+              <th>영역</th>
+              <th>대표 경로</th>
+              <th>소유 단계</th>
+              <th>역할</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td>Idea inbox</td><td><code>.plans/ideas/00-inbox/IDEA-*.md</code></td><td><code>/plan-idea</code></td><td>초기 아이디어 등록</td></tr>
+            <tr><td>Screening</td><td><code>.plans/ideas/10-screening/SCREENING-*.md</code></td><td><code>/plan-screen</code></td><td>평가 근거와 Go/Hold/Kill 판정</td></tr>
+            <tr><td>Approved idea</td><td><code>.plans/ideas/20-approved/IDEA-*.md</code></td><td><code>/plan-screen</code></td><td>draft 진입 가능한 아이디어</td></tr>
+            <tr><td>Epic</td><td><code>.plans/epics/{state}/EPIC-*/</code></td><td><code>/plan-epic</code></td><td>여러 Feature를 묶는 상위 목적</td></tr>
+            <tr><td>Draft</td><td><code>.plans/features/drafts/{slug}/first-pass.md</code></td><td><code>/plan-draft</code></td><td>Standard Feature의 초기 기획</td></tr>
+            <tr><td>Active Feature</td><td><code>.plans/features/active/{slug}/</code></td><td><code>/plan-bridge</code></td><td>개발 handoff 전후 context</td></tr>
+            <tr><td>PRD</td><td><code>.plans/prd/00-draft/</code> → <code>10-approved/</code></td><td><code>/plan-prd</code></td><td>요구사항 문서 작성과 승인</td></tr>
+            <tr><td>Wireframe</td><td><code>.plans/wireframes/{slug}/</code></td><td><code>/plan-wireframe</code></td><td>화면 구조와 navigation 정의</td></tr>
+            <tr><td>Design</td><td><code>.plans/design/{slug}/</code></td><td><code>/plan-design</code></td><td>Claude Design 프롬프트와 manifest</td></tr>
+            <tr><td>Stitch</td><td><code>.plans/stitch/{slug}/</code></td><td><code>/plan-stitch</code></td><td>Google Stitch 또는 통합 검증 산출물</td></tr>
+            <tr><td>Archive</td><td><code>.plans/archive/{slug}/</code></td><td><code>/plan-archive</code></td><td>완료 스냅샷, 원본, 개선 요청 보관</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="command-outputs" class="doc-section">
+        <h2>명령별 산출물</h2>
+        <div class="timeline">
+          <article><span>0</span><strong><a href="plan-epic.html">/plan-epic</a></strong><p><code>.plans/epics/00-draft/EPIC-*/00-epic-brief.md</code>, <code>01-children-features.md</code>, <code>.plans/epics/index.md</code>를 생성하거나 갱신합니다.</p></article>
+          <article><span>1</span><strong><a href="plan-idea.html">/plan-idea</a></strong><p><code>.plans/ideas/00-inbox/IDEA-*.md</code>와 <code>.plans/ideas/backlog.md</code>를 갱신합니다.</p></article>
+          <article><span>2</span><strong><a href="plan-screen.html">/plan-screen</a></strong><p><code>SCREENING-*.md</code>와 <code>screening-matrix.md</code>를 만들고, 승인 시 IDEA를 <code>20-approved</code>로 이동합니다.</p></article>
+          <article><span>3</span><strong><a href="plan-draft.html">/plan-draft</a></strong><p>Lite는 active 단일 문서로, Standard는 <code>drafts/{slug}/first-pass.md</code>와 routing metadata로 분기합니다.</p></article>
+          <article><span>4</span><strong><a href="plan-prd.html">/plan-prd</a></strong><p><code>00-draft/{slug}-prd.md</code>를 작성하고 승인되면 <code>10-approved/{slug}-prd.md</code>로 승격합니다.</p></article>
+          <article><span>5</span><strong><a href="plan-wireframe.html">/plan-wireframe</a></strong><p><code>.plans/wireframes/{slug}/</code> 아래 화면 구조, navigation, component specification을 저장합니다.</p></article>
+          <article><span>6A</span><strong><a href="plan-design.html">/plan-design</a></strong><p><code>prompt-01-wireframe.md</code>, <code>prompt-02-highfidelity.md</code>, <code>manifest.md</code>를 <code>.plans/design/{slug}/</code>에 둡니다.</p></article>
+          <article><span>6B</span><strong><a href="plan-stitch.html">/plan-stitch</a></strong><p><code>.plans/stitch/{slug}/</code>에 PRD/Wireframe 매핑과 통합 검증 결과를 저장합니다.</p></article>
+          <article><span>7</span><strong><a href="plan-bridge.html">/plan-bridge</a></strong><p><code>.plans/features/active/{slug}/00-context/</code>에 개발 handoff context와 architecture binding을 정리합니다.</p></article>
+          <article><span>8</span><strong><a href="plan-archive.html">/plan-archive</a></strong><p><code>ARCHIVE-{KEY}.md</code>, <code>sources/</code>, <code>improvements/</code>를 만들고 index를 갱신합니다.</p></article>
+        </div>
+      </section>
+
+      <section id="movement" class="doc-section">
+        <h2>이동 규칙</h2>
+        <table>
+          <thead><tr><th>상황</th><th>이동</th><th>주의</th></tr></thead>
+          <tbody>
+            <tr><td>Idea 승인</td><td><code>00-inbox</code> 또는 <code>10-screening</code> → <code>20-approved</code></td><td>사용자 승인 없이 자동 승격하지 않습니다.</td></tr>
+            <tr><td>PRD 승인</td><td><code>.plans/prd/00-draft/</code> → <code>.plans/prd/10-approved/</code></td><td>wireframe 진입 전 승인 상태를 확인합니다.</td></tr>
+            <tr><td>Epic 상태 전이</td><td><code>.plans/epics/{prev}/EPIC-*/</code> → <code>{next}/EPIC-*/</code></td><td>tracked면 <code>git mv</code>, untracked면 일반 이동을 사용합니다.</td></tr>
+            <tr><td>Feature 완료</td><td>active 산출물 → <code>.plans/archive/{slug}/sources/</code></td><td>원본 보존을 위해 archive bundle과 sources를 함께 둡니다.</td></tr>
+            <tr><td>Archive 이후 개선</td><td>원본 수정 없음. <code>improvements/IMP-*.md</code> 생성</td><td>archive 원본은 불변으로 봅니다.</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="review-revise" class="doc-section">
+        <h2>리뷰와 수정</h2>
+        <p>
+          <code>/plan-review</code>는 read-only 검토가 기본입니다. 산출물을 직접 고치지 않고, 보정이 필요하면 <code>/plan-revise</code>로 넘깁니다.
+          <code>/plan-revise</code>는 기존 파일만 수정하며 새 산출물을 만들지 않습니다.
+        </p>
+
+        <table>
+          <thead><tr><th>대상</th><th>수정 방식</th><th>담당 writer</th></tr></thead>
+          <tbody>
+            <tr><td><code>.plans/ideas/**/IDEA-*.md</code></td><td>기존 IDEA section 보정</td><td><code>plan-idea-collector</code></td></tr>
+            <tr><td><code>.plans/ideas/**/SCREENING-*.md</code></td><td>평가 근거 보정</td><td><code>plan-idea-screener</code></td></tr>
+            <tr><td><code>.plans/features/drafts/**</code></td><td>draft/first-pass 보정</td><td><code>plan-draft-writer</code></td></tr>
+            <tr><td><code>.plans/prd/10-approved/**</code></td><td>승인 PRD 보정</td><td><code>plan-prd-writer</code></td></tr>
+            <tr><td><code>.plans/wireframes/**</code></td><td>화면 구조 보정</td><td><code>plan-wireframe-designer</code></td></tr>
+            <tr><td><code>.plans/archive/**</code></td><td>직접 수정 금지</td><td><code>/plan-improve</code>로 전환</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="archive" class="doc-section">
+        <h2>Archive 구조</h2>
+        <pre><code>.plans/archive/{slug}/
+├── ARCHIVE-{KEY}.md
+├── sources/
+│   ├── ideas/
+│   ├── prd/
+│   ├── wireframes/
+│   ├── design/
+│   ├── stitch/
+│   └── feature-context/
+└── improvements/
+    └── IMP-{KEY}-{NNN}.md</code></pre>
+        <p>
+          archive는 완료 시점의 증거 묶음입니다. 완료 후 개선 요청은 <code>improvements/</code>에 새 문서로 기록하고, 원본을 직접 수정하지 않습니다.
+        </p>
+      </section>
+
+      <section id="codex" class="doc-section">
+        <h2>Codex 기준</h2>
+        <p>
+          Codex 탭은 같은 lifecycle을 다른 runtime surface로 설명합니다.
+          사용자 실행 절차는 주로 <code>.agents/skills/**</code>와 <code>.codex/agents/*.toml</code>을 기준으로 읽고, 일반 지침은 <code>AGENTS.md</code>가 보조합니다.
+        </p>
+
+        <table>
+          <thead><tr><th>Claude 개념</th><th>Codex에서 보는 기준</th><th>예시</th></tr></thead>
+          <tbody>
+            <tr><td>Command workflow</td><td>Skill 중심 workflow</td><td><code>plan-revise-workflow</code>, <code>plan-archive-workflow</code></td></tr>
+            <tr><td>Writer agent</td><td>Subagent</td><td><code>.codex/agents/plan-prd-writer.toml</code></td></tr>
+            <tr><td>Instruction rule</td><td><code>AGENTS.md</code> guidance 또는 skill 내부 guardrail</td><td><code>checkpoint-policy</code>, <code>writer-output-format</code></td></tr>
+            <tr><td>Hook guard</td><td>지원 여부를 별도 확인</td><td>문서 guard, review trigger, archive guard</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="checklist" class="doc-section">
+        <h2>실행 전 체크리스트</h2>
+        <ul>
+          <li>지금 산출물이 어느 stage 폴더에 있는지 확인합니다.</li>
+          <li>새 파일 생성인지, 기존 파일 수정인지, archive 이후 개선 요청인지 구분합니다.</li>
+          <li>승인 또는 상태 전이에는 사용자 확인이 필요한지 확인합니다.</li>
+          <li>archive 내부 원본을 수정하려는 경우 즉시 멈추고 <code>/plan-improve</code>로 전환합니다.</li>
+          <li>Codex에서는 관련 skill과 subagent를 먼저 확인하고, plugin output을 source of truth로 보지 않습니다.</li>
+        </ul>
+      </section>
+    </main>
+
+    <aside class="toc" aria-label="이 페이지에서">
+      <p>이 페이지에서</p>
+      <a href="#overview">개요</a>
+      <a href="#quick-map">빠른 경로표</a>
+      <a href="#command-outputs">명령별 산출물</a>
+      <a href="#movement">이동 규칙</a>
+      <a href="#review-revise">리뷰와 수정</a>
+      <a href="#archive">Archive</a>
+      <a href="#codex">Codex 기준</a>
+      <a href="#checklist">체크리스트</a>
+    </aside>
+  </div>
+</body>
+</html>

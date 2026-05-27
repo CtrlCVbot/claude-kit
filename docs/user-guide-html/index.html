@@ -1,0 +1,586 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>claude-kit 사용자 가이드</title>
+  <meta name="description" content="claude-kit 기획, 개발, Codex 변환 파이프라인을 실제 사용 순서로 정리한 HTML 가이드">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <a class="skip-link" href="#content">본문으로 건너뛰기</a>
+
+  <header class="app-header">
+    <a class="brand" href="#top" aria-label="claude-kit guide home">
+      <span class="brand-mark">ck</span>
+      <span>
+        <strong>claude-kit Guide</strong>
+        <small>Planning, development, and Codex conversion</small>
+      </span>
+    </a>
+    <div class="search-box" role="search" aria-label="문서 검색 placeholder">
+      <span>문서 안에서 찾기</span>
+      <kbd>Ctrl K</kbd>
+    </div>
+  </header>
+
+  <div class="layout" id="top">
+    <aside class="sidebar" aria-label="문서 네비게이션">
+      <nav>
+        <p class="nav-group">시작하기</p>
+        <a href="#overview" class="active">개요</a>
+        <a href="#quickstart">빠른 시작</a>
+        <a href="#when-to-use">언제 무엇을 쓰나</a>
+
+        <p class="nav-group">작업 흐름</p>
+        <a href="#planning">기획 파이프라인</a>
+        <a href="#design-branch">디자인 분기</a>
+        <a href="#development">개발 파이프라인</a>
+
+        <p class="nav-group">Codex</p>
+        <a href="#codex">Codex 병행 사용</a>
+        <a href="#conversion">Claude to Codex 변환</a>
+
+        <p class="nav-group">참고</p>
+        <a href="#catalog">명령과 자산 카탈로그</a>
+        <a href="#troubleshooting">문제 해결</a>
+        <a href="#source-docs">원본 문서</a>
+      </nav>
+    </aside>
+
+    <main id="content" class="content">
+      <section id="overview" class="doc-section intro">
+        <p class="breadcrumb">claude-kit / 사용자 가이드 / 개요</p>
+        <h1>claude-kit 실제 사용 가이드</h1>
+        <p class="lead">
+          이 문서는 <code>claude-kit</code>의 기획 파이프라인, 개발 파이프라인, Codex 전환 흐름을 실제 작업 순서로 따라갈 수 있게 정리한 HTML 문서입니다.
+          제품 소개용 랜딩 페이지가 아니라, 처음 설치한 사용자와 maintainer가 반복해서 확인하는 작업 문서입니다.
+        </p>
+
+        <div class="notice">
+          <strong>핵심 기준</strong>
+          <p>
+            Claude Code의 <code>commands</code>, <code>agents</code>, <code>skills</code>, <code>hooks</code>, <code>rules</code>는 Codex에서 그대로 복사해 쓰는 대상이 아닙니다.
+            Codex에서는 <code>skills</code>, custom subagents, <code>AGENTS.md</code>, hook config 같은 공식 surface에 맞게 다시 표현합니다.
+          </p>
+        </div>
+
+        <h2>이 문서가 답하는 질문</h2>
+        <div class="answer-grid">
+          <article>
+            <span>01</span>
+            <h3>기획은 어디서 시작하나?</h3>
+            <p><code>/plan-idea</code>에서 시작해 PRD, wireframe, design, bridge까지 어떤 순서로 이어지는지 설명합니다.</p>
+          </article>
+          <article>
+            <span>02</span>
+            <h3>개발은 무엇을 기준으로 하나?</h3>
+            <p>Feature Package를 TDD 구현, 검증, 리뷰, 커밋으로 넘기는 <code>/dev-*</code> 흐름을 설명합니다.</p>
+          </article>
+          <article>
+            <span>03</span>
+            <h3>Codex에서는 무엇이 달라지나?</h3>
+            <p><code>src/claude</code> 자산을 <code>src/codex</code> authoring source로 전환하는 기준을 설명합니다.</p>
+          </article>
+        </div>
+
+        <h2>현재 런타임 자산 요약</h2>
+        <div class="metric-grid">
+          <div><strong>49</strong><span>Claude commands</span></div>
+          <div><strong>23</strong><span>Claude agents</span></div>
+          <div><strong>37</strong><span>Claude skills</span></div>
+          <div><strong>29</strong><span>Claude hooks</span></div>
+          <div><strong>24</strong><span>Codex agents</span></div>
+        </div>
+      </section>
+
+      <section id="quickstart" class="doc-section">
+        <h2>빠른 시작</h2>
+        <p>
+          처음에는 전체 기능을 외우려고 하지 말고, 현재 작업이 기획인지 개발인지 Codex 전환인지 먼저 고르면 됩니다.
+          그다음 해당 entry command를 실행하고, 생성된 산출물을 확인합니다.
+        </p>
+
+        <h3>첫 10분 체크리스트</h3>
+        <ol class="steps">
+          <li>
+            <strong>설치 output 확인</strong>
+            <p><code>.claude/</code>, <code>.agents/skills/</code>, <code>.codex/</code>가 현재 프로젝트에 맞게 생성되어 있는지 확인합니다.</p>
+          </li>
+          <li>
+            <strong>작업 흐름 선택</strong>
+            <p>아이디어 정리라면 <code>/plan-idea</code>, 승인된 PRD 기반 개발이라면 <code>/plan-bridge</code> 또는 <code>/dev-feature</code>, Codex 전환이라면 <code>/kit-convert</code>로 시작합니다.</p>
+          </li>
+          <li>
+            <strong>산출물 위치 확인</strong>
+            <p>기획 산출물은 <code>.plans/</code>, Claude authoring source는 <code>src/claude</code>, Codex authoring source는 <code>src/codex</code>를 기준으로 확인합니다. 기획 파일 이동 규칙은 <a href="./planning/lifecycle.html">산출물 lifecycle</a>을 봅니다.</p>
+          </li>
+          <li>
+            <strong>검증을 한 번 끼워 넣기</strong>
+            <p>개발 작업은 <code>/dev-verify</code>, Codex 전환 작업은 <code>/kit-validate</code> 또는 <code>/kit-audit</code>로 누락과 drift를 확인합니다.</p>
+          </li>
+        </ol>
+
+        <h3>자주 쓰는 시작 명령</h3>
+        <pre><code>/plan-idea
+/plan-epic
+/plan-screen
+/plan-prd
+/plan-wireframe
+/plan-design
+/plan-bridge
+/dev-architecture
+/dev-feature
+/dev-run
+/dev-verify
+/kit-convert</code></pre>
+      </section>
+
+      <section id="when-to-use" class="doc-section">
+        <h2>언제 무엇을 쓰나</h2>
+        <p>
+          <code>claude-kit</code>은 하나의 큰 명령으로 모든 일을 처리하기보다, 목적별 pipeline을 작게 나눕니다.
+          아래 표에서 지금 상황에 가장 가까운 줄을 고르면 됩니다.
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>상황</th>
+              <th>시작 명령</th>
+              <th>다음에 확인할 것</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>아이디어를 기록하고 정리해야 함</td>
+              <td><code>/plan-idea</code></td>
+              <td>idea record, 태그, 문제 정의</td>
+            </tr>
+            <tr>
+              <td>여러 Feature를 하나의 상위 목표로 묶어야 함</td>
+              <td><code>/plan-epic</code></td>
+              <td>Epic Brief, Children Features, phase roadmap</td>
+            </tr>
+            <tr>
+              <td>아이디어 우선순위를 판단해야 함</td>
+              <td><code>/plan-screen</code></td>
+              <td>Go / Hold / Kill, RICE 또는 5축 평가</td>
+            </tr>
+            <tr>
+              <td>PRD와 화면 구조가 필요함</td>
+              <td><code>/plan-prd</code>, <code>/plan-wireframe</code></td>
+              <td>승인된 PRD, screen map, 요구사항 매핑</td>
+            </tr>
+            <tr>
+              <td>Claude Code Design으로 디자인 프롬프트가 필요함</td>
+              <td><code>/plan-design</code></td>
+              <td><code>.plans/design/{slug}/</code>, Claude Design URL</td>
+            </tr>
+            <tr>
+              <td>Google Stitch로 디자인 통합을 보강하고 싶음</td>
+              <td><code>/plan-stitch</code></td>
+              <td><code>.plans/stitch/{slug}/</code>, mapping, validation</td>
+            </tr>
+            <tr>
+              <td>개발로 넘길 준비가 필요함</td>
+              <td><code>/plan-bridge</code></td>
+              <td>Feature Package, dev handoff, TASK 분해</td>
+            </tr>
+            <tr>
+              <td>승인된 기능을 구현해야 함</td>
+              <td><code>/dev-feature</code>, <code>/dev-run</code></td>
+              <td>구조 SSOT, TDD 루프, 검증 명령</td>
+            </tr>
+            <tr>
+              <td>Claude 기능을 Codex용으로 전환해야 함</td>
+              <td><code>/kit-convert</code></td>
+              <td><code>src/codex</code>, pairing registry, validation report</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="planning" class="doc-section">
+        <h2>기획 파이프라인</h2>
+        <p>
+          <code>plan</code> domain은 아이디어를 실제 개발 가능한 package로 다듬는 흐름입니다.
+          핵심은 “좋은 아이디어”를 바로 구현하지 않고, 문제 정의, PRD, 화면 구조, 디자인 산출물, 개발 handoff를 순서대로 확보하는 것입니다.
+        </p>
+
+        <div class="notice subtle">
+          <strong>상세 문서로 이동</strong>
+          <p>
+            각 <code>/plan-*</code> 명령의 agents, skills, hooks, rules는
+            <a href="./planning/reference.html">Planning 기능 reference</a>에서 확인하고,
+            생성·이동·archive 경로는 <a href="./planning/lifecycle.html">산출물 lifecycle</a>에서 확인합니다.
+          </p>
+        </div>
+
+        <h3>대표 흐름</h3>
+        <div class="timeline">
+          <article><span>0</span><strong>/plan-epic</strong><p>선택 사항. 여러 Feature를 묶는 상위 목표와 phase roadmap을 관리합니다.</p></article>
+          <article><span>1</span><strong>/plan-idea</strong><p>아이디어를 구조화하고 backlog 또는 inbox에 등록합니다.</p></article>
+          <article><span>2</span><strong>/plan-screen</strong><p>RICE 또는 5축 평가로 Go, Hold, Kill 판단을 제안합니다.</p></article>
+          <article><span>3</span><strong>/plan-draft</strong><p>First Pass 문서를 만들고 Lite 또는 Standard 경로를 판단합니다.</p></article>
+          <article><span>4</span><strong>/plan-prd</strong><p>문제, 목표, 요구사항, UX, 기술, 리스크를 담은 PRD를 작성합니다.</p></article>
+          <article><span>5</span><strong>/plan-wireframe</strong><p>ASCII 또는 Mermaid 기반으로 화면 구조와 사용자 흐름을 정리합니다.</p></article>
+          <article><span>6A</span><strong>/plan-design</strong><p>Claude Code Design용 2단계 프롬프트와 design package를 생성합니다.</p></article>
+          <article><span>6B</span><strong>/plan-stitch</strong><p>필요 시 Google Stitch 기반 통합, 매핑, 검증 산출물을 생성합니다.</p></article>
+          <article><span>7</span><strong>/plan-bridge</strong><p>기획 산출물을 개발자가 실행할 수 있는 Feature Package로 넘깁니다.</p></article>
+          <article><span>8</span><strong>/plan-archive</strong><p>완료된 기획/개발 산출물을 archive bundle로 정리합니다.</p></article>
+        </div>
+
+        <h3>기획 단계의 완료 기준</h3>
+        <ul>
+          <li>아이디어는 승인 전까지 개발 pipeline으로 넘기지 않습니다.</li>
+          <li>PRD는 문제, 목표, 요구사항, UX, 기술 제약, 리스크를 포함해야 합니다.</li>
+          <li>Wireframe은 PRD의 주요 요구사항과 화면이 서로 연결되어야 합니다.</li>
+          <li>Design 또는 Stitch 산출물은 <code>/plan-bridge</code>가 개발 handoff를 만들 수 있을 정도로 충분해야 합니다.</li>
+        </ul>
+      </section>
+
+      <section id="design-branch" class="doc-section">
+        <h2>디자인 분기: /plan-design과 /plan-stitch</h2>
+        <p>
+          <code>/plan-design</code>과 <code>/plan-stitch</code>는 경쟁 관계가 아닙니다.
+          기본은 Claude Code Design을 위한 <code>/plan-design</code>이고, Google Stitch 기반 보강이 필요할 때 <code>/plan-stitch</code>를 선택합니다.
+          프로젝트에 따라 둘 중 하나만 쓸 수도 있고, 둘 다 순차적으로 쓸 수도 있습니다.
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>명령</th>
+              <th>역할</th>
+              <th>주요 입력</th>
+              <th>주요 산출물</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>/plan-design</code></td>
+              <td>Claude Design용 wireframe/high fidelity 프롬프트 생성</td>
+              <td>승인된 PRD, wireframe</td>
+              <td><code>.plans/design/{slug}/prompt-01-wireframe.md</code>, <code>prompt-02-highfidelity.md</code>, <code>manifest.md</code></td>
+            </tr>
+            <tr>
+              <td><code>/plan-stitch</code></td>
+              <td>Google Stitch 활용 또는 PRD/Wireframe 통합 검증 보강</td>
+              <td>승인된 PRD, wireframe, 필요 시 design 산출물</td>
+              <td><code>.plans/stitch/{slug}/mapping.md</code>, <code>context.md</code>, <code>validation.md</code></td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>허용되는 디자인 경로</h3>
+        <div class="route-list">
+          <div>
+            <strong>기본 경로</strong>
+            <code>PRD -> /plan-wireframe -> /plan-design -> /plan-bridge</code>
+            <p>Claude Code Design 중심으로 충분할 때 사용합니다.</p>
+          </div>
+          <div>
+            <strong>Stitch 선택 경로</strong>
+            <code>PRD -> /plan-wireframe -> /plan-stitch -> /plan-bridge</code>
+            <p>Google Stitch를 중심으로 디자인 통합과 검증을 진행할 때 사용합니다.</p>
+          </div>
+          <div>
+            <strong>순차 보강 경로</strong>
+            <code>PRD -> /plan-wireframe -> /plan-design -> /plan-stitch -> /plan-bridge</code>
+            <p>Claude Design 산출물을 만든 뒤 Stitch로 추가 통합이 필요할 때 사용합니다. 이 경우 sequential reason을 남깁니다.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="development" class="doc-section">
+        <h2>개발 파이프라인</h2>
+        <p>
+          <code>dev</code> domain은 승인된 Feature Package를 코드 변경으로 전환합니다.
+          좋은 개발 흐름은 “코드를 많이 쓰는 것”보다 작업 범위를 작게 잡고, 실패 테스트와 검증 결과를 증거로 남기는 것입니다.
+        </p>
+
+        <h3>표준 개발 흐름</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>단계</th>
+              <th>명령</th>
+              <th>목적</th>
+              <th>완료 기준</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>구조 확인</td>
+              <td><code>/dev-architecture</code></td>
+              <td>구조 SSOT와 feature binding 확인</td>
+              <td>수정 위치와 boundary가 설명됨</td>
+            </tr>
+            <tr>
+              <td>기능 계획</td>
+              <td><code>/dev-feature</code></td>
+              <td>PRD를 Feature Overview와 TASK로 전환</td>
+              <td>작업 단위와 acceptance criteria가 있음</td>
+            </tr>
+            <tr>
+              <td>구현</td>
+              <td><code>/dev-run</code></td>
+              <td>TDD Red-Green-Refactor 루프 수행</td>
+              <td>관련 코드와 테스트가 함께 변경됨</td>
+            </tr>
+            <tr>
+              <td>검증</td>
+              <td><code>/dev-verify</code></td>
+              <td>테스트, 빌드, lint, 요구사항 검증</td>
+              <td>실행한 명령과 결과가 보고됨</td>
+            </tr>
+            <tr>
+              <td>리뷰</td>
+              <td><code>/dev-review</code>, <code>/dev-security-review</code></td>
+              <td>회귀, 보안, 문서 누락 확인</td>
+              <td>남은 리스크와 후속 작업이 분리됨</td>
+            </tr>
+            <tr>
+              <td>마감</td>
+              <td><code>/dev-commit</code>, <code>/dev-commit-push-pr</code></td>
+              <td>커밋 또는 PR 준비</td>
+              <td>논리적 변경 단위로 기록됨</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>개발에서 자주 쓰는 에이전트와 스킬</h3>
+        <p>
+          구조 판단에는 <code>dev-architect</code>, 구현에는 <code>dev-implementer</code>, 리뷰에는 <code>dev-code-reviewer</code>,
+          보안 점검에는 <code>dev-security-reviewer</code>, 검증에는 <code>dev-verify-agent</code>를 우선 확인합니다.
+        </p>
+      </section>
+
+      <section id="codex" class="doc-section">
+        <h2>Codex 병행 사용</h2>
+        <p>
+          Codex는 Claude runtime 파일을 그대로 읽지 않습니다.
+          같은 기능 identity를 유지하더라도 Codex에서는 공식 runtime surface에 맞는 자산으로 표현해야 합니다.
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>기능</th>
+              <th>Claude 쪽 표현</th>
+              <th>Codex 쪽 표현</th>
+              <th>주의점</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>명령</td>
+              <td><code>.claude/commands/*.md</code></td>
+              <td>Codex skill</td>
+              <td>파일 복사가 아니라 사용자 entrypoint를 skill로 재표현합니다.</td>
+            </tr>
+            <tr>
+              <td>에이전트</td>
+              <td><code>.claude/agents/*.md</code></td>
+              <td><code>.codex/agents/*.toml</code></td>
+              <td>역할, trigger, output shape를 좁게 정의해야 합니다.</td>
+            </tr>
+            <tr>
+              <td>스킬</td>
+              <td><code>.claude/skills/*/SKILL.md</code></td>
+              <td><code>.agents/skills/*/SKILL.md</code></td>
+              <td>대체로 재사용 가능하지만 Codex runtime 기준 검증이 필요합니다.</td>
+            </tr>
+            <tr>
+              <td>훅</td>
+              <td><code>.claude/hooks/*.js</code></td>
+              <td>hook pair 또는 skip</td>
+              <td>공식 hook surface와 플랫폼 제한을 먼저 확인합니다.</td>
+            </tr>
+            <tr>
+              <td>작업 지침</td>
+              <td><code>.claude/rules/*.md</code></td>
+              <td><code>AGENTS.md</code> synthesis</td>
+              <td>일반 지침은 Codex exec-policy rule과 구분합니다.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <div class="notice subtle">
+          <strong>source와 runtime을 구분하세요</strong>
+          <p>
+            <code>src/codex</code>는 Codex runtime output이 아니라 Codex용 authoring source입니다.
+            실제 runtime output은 설치 또는 emitter 단계에서 <code>.agents/skills</code>, <code>.codex/agents</code>, <code>AGENTS.md</code> 등으로 생성됩니다.
+          </p>
+        </div>
+      </section>
+
+      <section id="conversion" class="doc-section">
+        <h2>Claude to Codex 변환 기준</h2>
+        <p>
+          현재 conversion-first 기준은 <code>src/claude -> conversion -> src/codex</code>입니다.
+          처음 만들 때 두 target을 동시에 생성하는 것이 아니라, 이미 존재하는 Claude 자산을 분석하고 Codex authoring source로 전환하는 흐름이 1차 목표입니다.
+        </p>
+
+        <h3>기본 매핑</h3>
+        <table>
+          <thead>
+            <tr>
+              <th>Claude source kind</th>
+              <th>Codex target</th>
+              <th>변환 판단</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><code>agent</code></td>
+              <td><code>subagent</code></td>
+              <td>좁은 역할, 명시적 산출물, read-heavy 작업이면 우선 변환합니다.</td>
+            </tr>
+            <tr>
+              <td><code>command</code></td>
+              <td><code>skill</code></td>
+              <td>사용자 entrypoint를 Codex skill workflow로 재작성합니다.</td>
+            </tr>
+            <tr>
+              <td><code>skill</code></td>
+              <td><code>skill</code></td>
+              <td>형식과 runtime 전제만 검증하고 재사용합니다.</td>
+            </tr>
+            <tr>
+              <td><code>hook</code></td>
+              <td><code>hook-pair</code> 또는 <code>codex-skip</code></td>
+              <td>이벤트, matcher, 플랫폼 제한을 만족할 때만 변환합니다.</td>
+            </tr>
+            <tr>
+              <td><code>instruction-rule</code></td>
+              <td><code>AGENTS.md synthesis</code></td>
+              <td>행동 지침으로 요약하고 exec-policy rule로 자동 변환하지 않습니다.</td>
+            </tr>
+          </tbody>
+        </table>
+
+        <h3>변환 단계</h3>
+        <ol class="steps compact">
+          <li><strong>Inventory</strong><p><code>src/claude</code> 전체 자산을 수집하고 identity를 붙입니다.</p></li>
+          <li><strong>Classify</strong><p><code>auto-convert</code>, <code>convert-with-review</code>, <code>skip</code>을 판단합니다.</p></li>
+          <li><strong>Generate</strong><p><code>src/codex</code>에 conversion-generated authoring source를 생성합니다.</p></li>
+          <li><strong>Review</strong><p>semantic drift, runtime gap, 수동 보정 필요 영역을 확인합니다.</p></li>
+          <li><strong>Validate</strong><p>schema, pairing, parity, skip reason을 검증합니다.</p></li>
+        </ol>
+      </section>
+
+      <section id="catalog" class="doc-section">
+        <h2>명령과 자산 카탈로그</h2>
+        <p>
+          모든 명령을 외우는 대신, 목적별로 자주 쓰는 command와 source 위치를 기억하면 됩니다.
+          상세 목록은 reference 문서를 확인하고, HTML에서는 실사용 경로만 빠르게 보여줍니다.
+        </p>
+
+        <h3>자주 쓰는 명령 묶음</h3>
+        <table>
+          <tbody>
+            <tr><th>기획</th><td><code>/plan-epic</code>, <code>/plan-idea</code>, <code>/plan-screen</code>, <code>/plan-prd</code>, <code>/plan-wireframe</code>, <code>/plan-design</code>, <code>/plan-bridge</code></td></tr>
+            <tr><th>디자인 선택</th><td><code>/plan-stitch</code>는 Google Stitch 활용 또는 통합 검증 보강이 필요할 때 사용합니다.</td></tr>
+            <tr><th>개발</th><td><code>/dev-architecture</code>, <code>/dev-feature</code>, <code>/dev-run</code>, <code>/dev-verify</code></td></tr>
+            <tr><th>리뷰</th><td><code>/dev-review</code>, <code>/dev-security-review</code>, <code>/dev-test-verify</code></td></tr>
+            <tr><th>Codex 유지보수</th><td><code>/kit-analyze</code>, <code>/kit-convert</code>, <code>/kit-validate</code>, <code>/kit-audit</code></td></tr>
+          </tbody>
+        </table>
+
+        <h3>source와 output 위치</h3>
+        <div class="path-grid">
+          <div><strong>Claude source</strong><code>src/claude/{core,dev,plan}</code></div>
+          <div><strong>Codex source</strong><code>src/codex/{core,dev,plan}</code></div>
+          <div><strong>Claude runtime</strong><code>.claude/commands</code>, <code>.claude/agents</code>, <code>.claude/skills</code>, <code>.claude/hooks</code></div>
+          <div><strong>Codex runtime</strong><code>.agents/skills</code>, <code>.codex/agents</code>, <code>AGENTS.md</code></div>
+        </div>
+      </section>
+
+      <section id="troubleshooting" class="doc-section">
+        <h2>문제 해결</h2>
+        <p>
+          문제가 생기면 generated output만 고치지 말고 source, template, emitter, runtime output 중 어디가 실제 원인인지 먼저 나눠 봅니다.
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>증상</th>
+              <th>확인 위치</th>
+              <th>다음 행동</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>설치 후 명령이 보이지 않음</td>
+              <td><code>.claude/commands</code>, profile, setup output</td>
+              <td>postinstall 또는 setup 재실행 여부를 확인합니다.</td>
+            </tr>
+            <tr>
+              <td>기획 산출물이 개발로 이어지지 않음</td>
+              <td><code>/plan-bridge</code>, Feature Package, routing metadata</td>
+              <td>PRD, wireframe, design 또는 stitch 산출물이 충분한지 확인합니다.</td>
+            </tr>
+            <tr>
+              <td>Codex 기능이 Claude와 다르게 보임</td>
+              <td><code>src/codex</code>, <code>.agents/skills</code>, <code>.codex/agents</code></td>
+              <td>Codex는 direct copy가 아니라 target-specific authoring source를 사용한다는 점을 확인합니다.</td>
+            </tr>
+            <tr>
+              <td>hook이 실행되지 않음</td>
+              <td>event, matcher, platform support</td>
+              <td>Codex hook 지원 범위 또는 <code>codex-skip</code> 사유를 확인합니다.</td>
+            </tr>
+            <tr>
+              <td>문서와 실제 파일이 다름</td>
+              <td><code>docs/guide</code>, <code>docs/codex-compatibility</code>, source tree</td>
+              <td>HTML이 gateway 문서인지, source guide가 갱신되어야 하는지 구분합니다.</td>
+            </tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section id="source-docs" class="doc-section">
+        <h2>원본 문서</h2>
+        <p>
+          이 HTML 가이드는 원본 문서를 대체하지 않습니다.
+          반복 사용자가 빠르게 길을 찾도록 돕는 gateway이고, 상세 기준은 아래 문서군에서 확인합니다.
+        </p>
+
+        <table>
+          <thead>
+            <tr>
+              <th>문서군</th>
+              <th>역할</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><code>docs/guide/shared/*</code></td><td>공통 개념, 설치, 첫 실행, 문제 해결, glossary</td></tr>
+            <tr><td><code>docs/guide/claude-code/*</code></td><td>Claude Code 자산과 plan/dev pipeline 설명</td></tr>
+            <tr><td><code>docs/guide/codex/*</code></td><td>Codex runtime surface와 병행 사용 기준</td></tr>
+            <tr><td><code>docs/guide/mapping/*</code></td><td>Claude to Codex mapping, pairing registry, parity 기준</td></tr>
+            <tr><td><code>docs/guide/sync/*</code></td><td>source of truth와 generated output 경계</td></tr>
+            <tr><td><code>docs/30-reference/*</code></td><td>commands, agents, skills의 reference catalog</td></tr>
+          </tbody>
+        </table>
+      </section>
+    </main>
+
+    <aside class="toc" aria-label="이 페이지에서">
+      <p>이 페이지에서</p>
+      <a href="#overview">개요</a>
+      <a href="#quickstart">빠른 시작</a>
+      <a href="#when-to-use">언제 무엇을 쓰나</a>
+      <a href="#planning">기획 파이프라인</a>
+      <a href="#design-branch">디자인 분기</a>
+      <a href="#development">개발 파이프라인</a>
+      <a href="#codex">Codex 병행 사용</a>
+      <a href="#conversion">변환 기준</a>
+      <a href="#catalog">카탈로그</a>
+      <a href="#troubleshooting">문제 해결</a>
+    </aside>
+  </div>
+</body>
+</html>
