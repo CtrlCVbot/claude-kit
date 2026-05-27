@@ -1,6 +1,7 @@
 {
   "name": "claude-kit",
   "version": "2.4.0-beta.1",
+  "packageManager": "pnpm@9.0.6",
   "description": "AI 거버넌스 밀키트. TDD 강제 + Hexagonal + Clean Architecture + Rich Domain Model. Claude + Codex 멀티타겟.",
   "scripts": {
     "postinstall": "node scripts/setup.js",
