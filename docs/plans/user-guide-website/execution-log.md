@@ -172,3 +172,39 @@ planning command 상세와 실행 예시 route를 먼저 렌더링 가능하게 
 | 1 | planning content detail 보강 | HTML 대비 누락 정보를 더 세밀하게 확인 |
 | 2 | pipeline example page 내용 보강 | 실제 산출물과 execution log를 더 촘촘히 연결 |
 | 3 | Vercel Preview safety 정리 | 배포 전 package 영향과 route/link 검증 정리 |
+
+## Validation evidence
+
+| 검증 | 결과 | 근거 |
+| --- | --- | --- |
+| lockfile consistency | 통과 | `pnpm install --frozen-lockfile` |
+| 기존 test suite | 통과 | `pnpm test`, 34 files / 423 tests |
+| Next.js production build | 통과 | `pnpm docs:build`, 24 static pages generated |
+| route smoke | 통과 | 21개 route HTTP 200 확인 |
+| protected path diff | 통과 | `src/claude`, `src/codex`, `src/templates`, `scripts/setup.js`, `.claude`, `.agents`, `.codex` 변경 없음 |
+
+### Route smoke 대상
+
+```text
+/
+/planning
+/planning/lifecycle
+/planning/reference
+/planning/plan-idea
+/planning/plan-screen
+/planning/plan-epic
+/planning/plan-draft
+/planning/plan-prd
+/planning/plan-wireframe
+/planning/plan-design
+/planning/plan-stitch
+/planning/plan-bridge
+/planning/plan-review
+/planning/plan-revise
+/planning/plan-improve
+/planning/plan-archive
+/examples/website-build-pipeline
+/examples/website-build-epic
+/examples/website-build-artifacts
+/examples/website-build-commands
+```
