@@ -16,6 +16,9 @@ Codex dual-use는 같은 프로젝트에서 Claude와 Codex를 함께 쓰되, Co
 
 > 참고: 이 출력들은 `profile.json`의 `targets`에 `codex`가 있을 때만 생성/갱신됩니다. `pnpm rebuild claude-kit` 후에도 보이지 않으면 먼저 target 설정을 확인합니다.
 
+agentic workflow처럼 여러 단계와 subagent 선택이 필요한 기능은 `.agents/skills/**`와 `.codex/agents/*.toml`을 먼저 봅니다.
+`plugins/claude-kit/commands/**`는 command 이름을 보존하는 package/wrapper output일 수 있으며, workflow 본체의 source of truth로 다루지 않습니다.
+
 ## 하지 말아야 할 것
 
 - `plugins/claude-kit/**`를 source처럼 직접 수정하기
