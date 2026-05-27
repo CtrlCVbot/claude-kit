@@ -11,11 +11,11 @@ flowchart TD
   D --> E
 ```
 
-## Navigation Rules
+## 내비게이션 규칙
 
-| Rule | Detail |
+| 규칙 | 내용 |
 | --- | --- |
-| Home is the entry point | It must explain what the website is and what it is not |
-| Planning index is the command map | It routes users into specific command pages |
-| Command pages are detailed | They explain agents, skills, hooks, rules, artifacts, and runtime tabs |
-| Examples are evidence-backed | They link to `.plans` and `docs/plans` artifacts |
+| Home은 진입점이다 | 웹사이트가 무엇이고 무엇이 아닌지 설명한다. |
+| Planning index는 command map이다 | 사용자를 각 command 상세 페이지로 연결한다. |
+| Command page는 상세 문서다 | agents, skills, hooks, rules, artifacts, runtime tab을 설명한다. |
+| Example page는 증거 기반이다 | `.plans`와 `docs/plans` 산출물을 연결한다. |

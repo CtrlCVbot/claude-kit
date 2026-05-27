@@ -1,14 +1,14 @@
 # Context Index: user-guide-website
 
-| File | Purpose |
+| 파일 | 역할 |
 | --- | --- |
-| `01-prd-freeze.md` | Snapshot of approved PRD decisions |
-| `02-decision-log.md` | Decision history for this restart |
-| `03-design-checkpoint.md` | P5.5 design checkpoint |
-| `06-architecture-binding.md` | Feature-specific binding to architecture SSOT |
-| `08-epic-binding.md` | Link to parent Epic and child feature map |
+| `01-prd-freeze.md` | 승인 PRD 결정 스냅샷 |
+| `02-decision-log.md` | 이번 재시작의 결정 이력 |
+| `03-design-checkpoint.md` | P5.5 디자인 checkpoint |
+| `06-architecture-binding.md` | architecture SSOT와 feature 연결 |
+| `08-epic-binding.md` | 상위 Epic과 child feature 연결 |
 
-## Required Reads for Dev
+## Dev 단계 필수 읽기 문서
 
 1. `.plans/prd/10-approved/user-guide-website-prd.md`
 2. `.plans/bridge/user-guide-website/03-bridge-wireframe.md`

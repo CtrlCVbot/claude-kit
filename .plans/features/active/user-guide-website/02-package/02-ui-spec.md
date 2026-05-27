@@ -1,27 +1,27 @@
 # UI Spec: user-guide-website
 
-## Screen Coverage
+## 화면 커버리지
 
-| SCR-ID | UI Goal | Requirement |
+| SCR-ID | UI 목표 | 요구사항 |
 | --- | --- | --- |
-| SCR-001 | Docs home | REQ-UGW-001, REQ-UGW-004 |
-| SCR-002 | Planning index | REQ-UGW-002 |
-| SCR-003 | Command detail | REQ-UGW-002, REQ-UGW-003 |
-| SCR-004 | Lifecycle/reference | REQ-UGW-002, REQ-UGW-006 |
-| SCR-005 | Pipeline example | REQ-UGW-004, REQ-UGW-005 |
+| `SCR-001` | Docs home | `REQ-UGW-001`, `REQ-UGW-004` |
+| `SCR-002` | Planning index | `REQ-UGW-002` |
+| `SCR-003` | Command detail | `REQ-UGW-002`, `REQ-UGW-003` |
+| `SCR-004` | Lifecycle/reference | `REQ-UGW-002`, `REQ-UGW-006` |
+| `SCR-005` | Pipeline example | `REQ-UGW-004`, `REQ-UGW-005` |
 
-## Component Requirements
+## 컴포넌트 요구사항
 
-| Component | Requirement | Notes |
+| Component | 요구사항 | 메모 |
 | --- | --- | --- |
-| `DocsShell` | REQ-UGW-001 | Shared layout and navigation |
-| `PageHeader` | REQ-UGW-001 | Consistent title/summary block |
-| `PlanningCommandPage` | REQ-UGW-002 | Detailed command docs |
-| `RuntimeTabs` | REQ-UGW-003 | Claude/Codex runtime comparison |
-| Example route template | REQ-UGW-004 | Prompt and artifact evidence |
+| `DocsShell` | `REQ-UGW-001` | 공통 layout과 navigation |
+| `PageHeader` | `REQ-UGW-001` | 일관된 title/summary block |
+| `PlanningCommandPage` | `REQ-UGW-002` | 상세 command docs |
+| `RuntimeTabs` | `REQ-UGW-003` | Claude/Codex runtime comparison |
+| Example route template | `REQ-UGW-004` | Prompt와 artifact evidence |
 
-## Accessibility Notes
+## 접근성 메모
 
-- Tabs must be usable without relying only on color.
-- Link text must explain the destination.
-- Tables must keep short headers and scannable cells.
+- 탭은 색상에만 의존하지 않아야 한다.
+- 링크 텍스트는 이동 목적을 알 수 있어야 한다.
+- 표는 짧은 header와 읽기 쉬운 cell을 유지한다.

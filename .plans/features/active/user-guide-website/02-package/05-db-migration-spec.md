@@ -1,7 +1,7 @@
 # DB Migration Spec: user-guide-website
 
-No database migration is required.
+DB migration은 필요하지 않다.
 
-## Reason
+## 이유
 
-The feature is a static documentation website. It does not introduce persistence, user accounts, or server-side data mutation.
+이 기능은 정적 문서 웹사이트다. 저장소, 사용자 계정, 서버 데이터 변경을 도입하지 않는다.

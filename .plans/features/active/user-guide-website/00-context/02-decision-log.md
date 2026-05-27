@@ -1,10 +1,10 @@
-# Decision Log: user-guide-website
+# 결정 로그: user-guide-website
 
-| DEC-ID | Date | Decision | Reason |
+| DEC-ID | 날짜 | 결정 | 이유 |
 | --- | --- | --- | --- |
-| DEC-UGW-001 | 2026-05-27 | Restart planning artifacts instead of claiming the previous pass was fully pipeline-generated | Previous docs were partially retroactive |
-| DEC-UGW-002 | 2026-05-27 | Archive old planning docs before replacement | Preserve history and avoid destructive deletion |
-| DEC-UGW-003 | 2026-05-27 | Treat existing Next.js implementation as prototype/evidence | It exists, but the pipeline artifacts must be rebuilt first |
-| DEC-UGW-004 | 2026-05-27 | Use docs-first UI rather than landing-page framing | User explicitly asked for detailed docs pages |
-| DEC-UGW-005 | 2026-05-27 | Keep Google Stitch as `review-only` checkpoint | Design structure is already available and external generation is not required |
-| DEC-UGW-006 | 2026-05-27 | Do not production deploy in this run | Preview/build safety is sufficient for this stage |
+| `DEC-UGW-001` | 2026-05-27 | 이전 planning artifact를 그대로 완료로 보지 않고 재시작한다. | 이전 산출물이 일부 retroactive였기 때문이다. |
+| `DEC-UGW-002` | 2026-05-27 | 기존 문서는 archive 후 교체한다. | 이력을 보존하고 파괴적 삭제를 피하기 위해서다. |
+| `DEC-UGW-003` | 2026-05-27 | 기존 Next.js 구현은 prototype/evidence로 취급한다. | 구현은 존재하지만 pipeline 산출물은 다시 만들어야 한다. |
+| `DEC-UGW-004` | 2026-05-27 | UI는 docs-first로 유지한다. | 사용자가 landing page보다 상세 문서를 원했다. |
+| `DEC-UGW-005` | 2026-05-27 | Google Stitch는 `review-only`로 기록한다. | 외부 디자인 생성이 이번 작업의 핵심이 아니다. |
+| `DEC-UGW-006` | 2026-05-27 | production 배포는 이번 범위에서 제외한다. | Preview/build 검증이 먼저다. |

@@ -1,8 +1,8 @@
 # API Spec: user-guide-website
 
-No runtime API is required.
+이 기능에는 runtime API가 필요하지 않다.
 
-The website uses static TypeScript content under `src/lib/docs/**`.
+문서 웹사이트는 `src/lib/docs/**`의 static TypeScript content를 사용한다.
 
 ## Non-API Contract
 

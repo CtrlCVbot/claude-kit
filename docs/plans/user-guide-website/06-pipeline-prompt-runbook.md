@@ -1,23 +1,23 @@
-# Pipeline Prompt Runbook
+# 파이프라인 프롬프트 런북
 
-## Purpose
+## 목적
 
-This runbook records the minimal prompts used to execute the user-guide website work through `claude-kit`.
+이 문서는 `docs/user-guide-html`을 Next.js/Vercel 문서 사이트로 전환하는 과정을 `claude-kit` 파이프라인으로 실행할 때 사용한 프롬프트를 보존한다.
 
-Each prompt is intentionally short. Shared constraints live in the Common Rules section and are referenced by every stage instead of being repeated.
+프롬프트는 일부러 짧게 유지한다. 반복되는 제약은 공통 규칙에 모아두고, 각 단계는 그 규칙을 참조한다.
 
-## Common Rules
+## 공통 규칙
 
-| Rule | Meaning |
+| 규칙 | 내용 |
 | --- | --- |
-| Core first | `claude-kit` runtime/tooling features are the product; the website is a docs surface |
-| Protected paths | Do not edit `src/claude`, `src/codex`, `src/templates`, `scripts/setup.js`, `.claude`, `.agents`, `.codex` |
-| HTML reference | Preserve `docs/user-guide-html/**` as migration/reference material |
-| Evidence-first | Every stage must leave a prompt, action, artifact, verification, and review record |
-| P5.5/P6 required | `/plan-design` and `/plan-stitch` must be recorded even when external tools are not used |
-| Archive-first | Existing planning docs are archived before replacement |
+| Core first | `claude-kit` 기능이 우선이고 웹사이트는 docs surface다. |
+| Protected paths | `src/claude`, `src/codex`, `src/templates`, `scripts/setup.js`, `.claude`, `.agents`, `.codex`는 수정하지 않는다. |
+| HTML reference | `docs/user-guide-html/**`은 migration/reference 자료로 보존한다. |
+| 증거 우선 | 각 단계마다 프롬프트, 실행 내용, 산출물, 검증, 리뷰를 남긴다. |
+| P5.5/P6 required | `/plan-design`, `/plan-stitch`는 실제 외부 도구 사용 여부와 무관하게 기록한다. |
+| Archive-first | 기존 planning docs는 삭제하지 않고 archive 후 교체한다. |
 
-## 0. Restart Preparation
+## 0. 재시작 준비
 
 ```text
 현재까지 작성된 user-guide-website 기획/구현 문서를 archive-first 방식으로 보존하고,
@@ -36,7 +36,7 @@ claude-kit 파이프라인을 실제로 다시 실행할 준비 상태를 점검
 
 목표는 사용자용 claude-kit 가이드를 웹사이트로 제공하고, 이 전환 과정 자체를 claude-kit 파이프라인 예시로 문서화하는 것입니다.
 
-공통 규칙은 docs/plans/user-guide-website/06-pipeline-prompt-runbook.md의 Common Rules를 따릅니다."
+공통 규칙은 docs/plans/user-guide-website/06-pipeline-prompt-runbook.md의 공통 규칙을 따릅니다."
 ```
 
 ## 2. P2 `/plan-screen`
@@ -145,7 +145,7 @@ user-guide-website를 개발 handoff 패키지로 정리해주세요.
 ```text
 /dev-feature .plans/bridge/user-guide-website/05-bridge-context.md
 
-user-guide-website를 개발 가능한 Feature Package로 전환해주세요.
+user-guide-website를 개발 가능한 기능 패키지로 전환해주세요.
 
 반드시 dev-feature-plan 스킬 기준을 따르고,
 architecture SSOT, architecture binding, bridge docs를 확인한 뒤
@@ -157,8 +157,8 @@ Feature Overview와 01~10 package 문서를 작성해주세요.
 ```text
 /dev-run .plans/features/active/user-guide-website/02-package
 
-현재 구현된 Next.js docs site를 Feature Package 기준으로 검증하고,
-TASK/REQ/TC별 구현 증거와 남은 갭을 기록해주세요.
+현재 구현된 Next.js docs site를 기능 패키지 기준으로 검증하고,
+TASK/REQ/TC별 구현 증거와 남은 gap을 기록해주세요.
 ```
 
 ## 12. R1 Review

@@ -1,31 +1,31 @@
-# Artifact Index
+# 산출물 인덱스
 
-## `.plans` Artifacts
+## `.plans` 산출물
 
-| Area | Path |
+| 영역 | 위치 |
 | --- | --- |
-| Idea | `.plans/ideas/20-approved/IDEA-20260527-001.md` |
-| Screening | `.plans/ideas/10-screening/SCREENING-20260527-001.md` |
+| 아이디어 | `.plans/ideas/20-approved/IDEA-20260527-001.md` |
+| 스크리닝 | `.plans/ideas/10-screening/SCREENING-20260527-001.md` |
 | Epic | `.plans/epics/20-active/EPIC-20260527-001/` |
 | PRD | `.plans/prd/10-approved/user-guide-website-prd.md` |
-| Wireframes | `.plans/wireframes/user-guide-website/` |
-| Stitch | `.plans/stitch/user-guide-website/` |
+| 와이어프레임 | `.plans/wireframes/user-guide-website/` |
+| Stitch 검토 | `.plans/stitch/user-guide-website/` |
 | Bridge | `.plans/bridge/user-guide-website/` |
 | Architecture SSOT | `.plans/project/00-dev-architecture.md` |
-| Feature package | `.plans/features/active/user-guide-website/02-package/` |
-| Dev evidence | `.plans/features/active/user-guide-website/03-dev-notes/dev-output-summary.md` |
-| Review | `.plans/features/active/user-guide-website/04-review/01-self-review.md` |
+| 기능 패키지 | `.plans/features/active/user-guide-website/02-package/` |
+| 개발 증거 | `.plans/features/active/user-guide-website/03-dev-notes/dev-output-summary.md` |
+| 리뷰 | `.plans/features/active/user-guide-website/04-review/01-self-review.md` |
 | Archive readiness | `.plans/features/active/user-guide-website/09-archive/01-archive-readiness.md` |
 
-## Docs Package Artifacts
+## 문서 패키지 산출물
 
-| File | Purpose |
+| 파일 | 역할 |
 | --- | --- |
-| `00-overview.md` | Restart overview and reading order |
-| `01-skill-application-map.md` | Skill-to-artifact map |
-| `02-artifact-index.md` | Output index |
-| `04-implementation-roadmap.md` | Stage roadmap |
-| `05-safety-and-non-regression-plan.md` | Safety gates |
-| `06-pipeline-prompt-runbook.md` | Prompts used by the pipeline |
-| `execution-log.md` | Stage-by-stage prompt/action/artifact/review log |
-| `07-handoff.md` | Next work handoff |
+| `00-overview.md` | 재시작 목적과 읽는 순서 |
+| `01-skill-application-map.md` | 스킬별 산출물 맵 |
+| `02-artifact-index.md` | 전체 산출물 인덱스 |
+| `04-implementation-roadmap.md` | 단계별 실행 로드맵 |
+| `05-safety-and-non-regression-plan.md` | 안전 및 비회귀 계획 |
+| `06-pipeline-prompt-runbook.md` | 실제 사용한 프롬프트 모음 |
+| `execution-log.md` | 단계별 실행 로그 |
+| `07-handoff.md` | 다음 작업 handoff |

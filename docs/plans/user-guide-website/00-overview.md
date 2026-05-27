@@ -1,16 +1,16 @@
-# User Guide Website Pipeline Restart
+# 사용자 가이드 웹사이트 파이프라인 재시작
 
-## Purpose
+## 목적
 
-This package documents the user-guide website work as an actual `claude-kit` pipeline execution, not as a retroactive summary.
+이 문서 패키지는 `docs/user-guide-html/**` 기반 사용자 가이드 웹사이트 작업을 `claude-kit` 파이프라인으로 실제 실행한 기록이다.
 
-The website itself is a secondary docs surface. The primary product remains `claude-kit`: its commands, agents, skills, hooks, rules, source layout, installer, and multi-target behavior must not regress.
+이번 작업의 핵심은 “구현 후 문서만 맞추기”가 아니라, 각 단계의 스킬 기준에 맞춰 `.plans` 산출물을 다시 만들고 그 과정을 증거로 남기는 것이다.
 
-## Restart Decision
+## 재시작 결정
 
-The earlier planning docs and `.plans` records were archived on 2026-05-27 because they described the intended pipeline but did not fully satisfy the required skill outputs, especially the `dev-feature-plan` package structure.
+이전 산출물은 유용한 초안이었지만, 일부 단계가 실제 스킬 출력 구조를 완전히 따르지 않았다. 특히 `/dev-feature` 단계에서 필요한 `dev-feature-plan` 구조가 부족했다.
 
-This restart rebuilds the active artifacts from the pipeline order:
+그래서 기존 문서는 삭제하지 않고 archive로 보존한 뒤, 아래 순서로 활성 산출물을 다시 작성했다.
 
 ```text
 P1 plan-idea
@@ -27,39 +27,41 @@ P1 plan-idea
 -> A1 archive readiness
 ```
 
-## Stable Inputs
+## 핵심 원칙
 
-| Input | Role |
+| 원칙 | 설명 |
 | --- | --- |
-| `docs/user-guide-html/**` | Existing HTML reference to preserve as migration evidence |
-| `src/app/**`, `src/components/docs/**`, `src/lib/docs/**` | Current Next.js implementation, treated as prototype/evidence until matched by package docs |
-| `.agents/skills/**/SKILL.md` | Actual skill contracts used for this restart |
-| `docs/plans/user-guide-website/_archive/2026-05-27-pipeline-restart/**` | Historical docs only |
-| `.plans/_archive/2026-05-27-user-guide-website-pre-restart/**` | Historical `.plans` only |
+| `claude-kit` 우선 | 웹사이트는 부가 문서 surface이고, 핵심 기능은 `claude-kit` 자체다. |
+| archive-first | 기존 산출물은 삭제하지 않고 archive에 보존한다. |
+| evidence-first | 각 단계마다 프롬프트, 실행 내용, 산출물, 검증, 리뷰를 남긴다. |
+| protected path 유지 | `src/claude`, `src/codex`, `src/templates`, `scripts/setup.js` 등 핵심 경로는 건드리지 않는다. |
+| 구현은 증거로 취급 | 이미 구현된 Next.js 코드는 prototype/evidence로 보고, 새 `.plans` 기준에 다시 매핑한다. |
 
-## Active Outputs
+## 주요 입력
 
-| Output | Description |
+| 입력 | 역할 |
 | --- | --- |
-| `.plans/ideas/**` | P1/P2 idea and screening artifacts |
-| `.plans/epics/**` | P2.5 Epic scope and child features |
-| `.plans/prd/**` | P4 approved PRD |
-| `.plans/wireframes/**` | P5 screen, navigation, and component wireframes |
-| `.plans/stitch/**` | P6 mapping and integration checkpoint |
-| `.plans/bridge/**` | P7 bridge documents required by `dev-feature-plan` |
-| `.plans/features/active/user-guide-website/**` | D1/D2 feature package and implementation evidence |
-| `docs/plans/user-guide-website/**` | Human-readable runbook, roadmap, execution log, review, and handoff docs |
+| `docs/user-guide-html/**` | HTML 가이드 원본 참고 자료 |
+| `src/app/**` | 현재 Next.js route 구현 증거 |
+| `src/components/docs/**` | 현재 문서 UI 컴포넌트 구현 증거 |
+| `src/lib/docs/**` | 현재 문서 데이터 모델 구현 증거 |
+| `.agents/skills/**/SKILL.md` | 실제 파이프라인 스킬 계약 |
+| `_archive/**` | 이전 산출물 보존 영역 |
 
-## Non-Goals
+## 활성 산출물
 
-| Non-goal | Reason |
+| 산출물 | 설명 |
 | --- | --- |
-| Rewrite `src/claude`, `src/codex`, or installer internals | The website is docs-only support, not core runtime change |
-| Delete the existing implementation | Current code is useful prototype evidence |
-| Treat archive files as current state | Restart requires fresh active artifacts |
-| Claim skill usage without evidence | Every stage log must name the skill and output |
+| `.plans/ideas/**` | P1/P2 아이디어와 스크리닝 산출물 |
+| `.plans/epics/**` | P2.5 Epic과 child feature 구조 |
+| `.plans/prd/**` | P4 승인 PRD |
+| `.plans/wireframes/**` | P5 화면, 내비게이션, 컴포넌트 설계 |
+| `.plans/stitch/**` | P6 요구사항-화면 매핑과 통합 검증 |
+| `.plans/bridge/**` | P7 개발 handoff 문서 |
+| `.plans/features/active/user-guide-website/**` | D1/D2 Feature Package와 검증 기록 |
+| `docs/plans/user-guide-website/**` | 사람이 읽는 실행 계획, 로그, handoff 문서 |
 
-## Reading Order
+## 읽는 순서
 
 1. `06-pipeline-prompt-runbook.md`
 2. `04-implementation-roadmap.md`

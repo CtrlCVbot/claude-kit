@@ -2,12 +2,12 @@
 
 ```mermaid
 flowchart TD
-  A["Open docs home"] --> B["Read planning overview"]
-  B --> C["Open command detail"]
-  C --> D["Switch Claude/Codex runtime tab"]
-  B --> E["Open lifecycle/reference"]
-  A --> F["Open pipeline example"]
-  F --> G["Inspect prompt, artifact, verification, review"]
+  A["문서 홈 열기"] --> B["Planning overview 읽기"]
+  B --> C["Command detail 열기"]
+  C --> D["Claude/Codex runtime tab 전환"]
+  B --> E["Lifecycle/reference 열기"]
+  A --> F["Pipeline example 열기"]
+  F --> G["Prompt, artifact, verification, review 확인"]
 ```
 
 ## Traceability Flow

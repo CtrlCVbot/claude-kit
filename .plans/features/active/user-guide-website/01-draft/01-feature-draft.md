@@ -1,44 +1,44 @@
 # Feature Draft: user-guide-website
 
-- **Stage**: P3 `/plan-draft`
-- **Input**: `IDEA-20260527-001`, `EPIC-20260527-001`
-- **Prompt source**: `docs/plans/user-guide-website/06-pipeline-prompt-runbook.md#4-p3-plan-draft`
+- **단계**: P3 `/plan-draft`
+- **입력**: `IDEA-20260527-001`, `EPIC-20260527-001`
+- **프롬프트 출처**: `docs/plans/user-guide-website/06-pipeline-prompt-runbook.md#4-p3-plan-draft`
 
-## One-Line Summary
+## 한 줄 요약
 
-Turn the existing HTML guide into a maintainable Next.js documentation website while preserving `claude-kit` core behavior and documenting the full pipeline as an example.
+기존 HTML 가이드를 유지보수 가능한 Next.js 문서 웹사이트로 전환하고, 그 과정을 `claude-kit` 파이프라인 예시로 기록한다.
 
-## Primary Users
+## 주요 사용자
 
-| User | Need |
+| 사용자 | 필요 |
 | --- | --- |
-| New `claude-kit` user | Understand planning and development commands quickly |
-| Maintainer | Verify that docs website changes do not touch core runtime |
-| Claude/Codex user | Compare how pipeline concepts map across runtimes |
+| 신규 `claude-kit` 사용자 | planning/development command를 단계별로 이해 |
+| maintainer | 웹사이트 변경이 runtime 기능을 침범하지 않는지 확인 |
+| Claude/Codex 병행 사용자 | runtime 차이와 산출물 위치를 명확히 이해 |
 
-## User Flow
+## 사용자 흐름
 
-1. User opens the docs website.
-2. User reads the overview and planning pipeline.
-3. User drills into a command page such as `/plan-idea` or `/plan-epic`.
-4. User switches Claude/Codex tabs where relevant.
-5. User opens lifecycle/reference/example pages for deeper process details.
+1. 사용자가 문서 웹사이트를 연다.
+2. overview와 planning pipeline을 읽는다.
+3. `/plan-idea`, `/plan-epic` 같은 command 상세 페이지로 이동한다.
+4. 필요한 곳에서 Claude/Codex tab을 전환한다.
+5. lifecycle, reference, example page에서 더 깊은 흐름을 확인한다.
 
-## Route Impact
+## Route 영향
 
-| Route | Purpose |
+| Route | 목적 |
 | --- | --- |
-| `/` | Overview and entry points |
+| `/` | Overview와 진입점 |
 | `/planning` | Planning pipeline map |
 | `/planning/[slug]` | Command detail pages |
 | `/planning/lifecycle` | Artifact lifecycle |
 | `/planning/reference` | Reference and rules |
 | `/examples/[slug]` | Pipeline execution examples |
 
-## Protected Boundaries
+## 보호 경계
 
-Do not modify `src/claude/**`, `src/codex/**`, `src/templates/**`, `scripts/setup.js`, `.claude/**`, `.agents/**`, or `.codex/**` for this feature.
+이 기능으로 `src/claude/**`, `src/codex/**`, `src/templates/**`, `scripts/setup.js`, `.claude/**`, `.agents/**`, `.codex/**`를 수정하지 않는다.
 
-## Draft Decision
+## Draft 결정
 
-Proceed to Standard PRD because the work has multiple routes, content models, UI components, and verification gates.
+여러 route, content model, UI component, verification gate가 있으므로 Standard PRD로 진행한다.

@@ -1,35 +1,35 @@
 # Dev Output Summary: user-guide-website
 
-- **Stage**: D2 `/dev-run`
-- **Skill contract**: `dev-workflow`
+- **단계**: D2 `/dev-run`
+- **스킬 계약**: `dev-workflow`
 - **Package source**: `.plans/features/active/user-guide-website/02-package/`
-- **Prompt source**: `docs/plans/user-guide-website/06-pipeline-prompt-runbook.md#11-d2-dev-run`
+- **프롬프트 출처**: `docs/plans/user-guide-website/06-pipeline-prompt-runbook.md#11-d2-dev-run`
 
-## Current Implementation Evidence
+## 현재 구현 증거
 
-The current implementation already exists and is treated as prototype/evidence. This summary maps it to the restarted Feature Package.
+현재 구현은 이미 존재하는 prototype/evidence로 취급한다. 아래 표는 해당 구현을 재시작된 Feature Package에 매핑한 결과다.
 
-| TASK | Requirement | Evidence | Status |
+| TASK | 요구사항 | 증거 | 상태 |
 | --- | --- | --- | --- |
-| TASK-UGW-001 | REQ-UGW-001 | `src/app/page.tsx`, `src/app/planning/page.tsx`, `src/components/docs/DocsShell.tsx` | evidence-done |
-| TASK-UGW-002 | REQ-UGW-002 | `src/app/planning/[slug]/page.tsx`, `src/app/planning/lifecycle/page.tsx`, `src/app/planning/reference/page.tsx`, `src/lib/docs/planning-pages.ts` | evidence-done |
-| TASK-UGW-003 | REQ-UGW-003 | `src/components/docs/RuntimeTabs.tsx` | evidence-done |
-| TASK-UGW-004 | REQ-UGW-004 | `src/app/examples/[slug]/page.tsx`, `src/lib/docs/examples.ts` | evidence-done |
-| TASK-UGW-005 | REQ-UGW-005 | `package.json`, `next.config.mjs`, build command | verified |
-| TASK-UGW-006 | REQ-UGW-006 | `docs/plans/user-guide-website/**`, `.plans/**` | done-docs |
+| `TASK-UGW-001` | `REQ-UGW-001` | `src/app/page.tsx`, `src/app/planning/page.tsx`, `src/components/docs/DocsShell.tsx` | evidence-done |
+| `TASK-UGW-002` | `REQ-UGW-002` | `src/app/planning/[slug]/page.tsx`, `src/app/planning/lifecycle/page.tsx`, `src/app/planning/reference/page.tsx`, `src/lib/docs/planning-pages.ts` | evidence-done |
+| `TASK-UGW-003` | `REQ-UGW-003` | `src/components/docs/RuntimeTabs.tsx` | evidence-done |
+| `TASK-UGW-004` | `REQ-UGW-004` | `src/app/examples/[slug]/page.tsx`, `src/lib/docs/examples.ts` | evidence-done |
+| `TASK-UGW-005` | `REQ-UGW-005` | `package.json`, `next.config.mjs`, build command | verified |
+| `TASK-UGW-006` | `REQ-UGW-006` | `docs/plans/user-guide-website/**`, `.plans/**` | done-docs |
 
-## Verification Commands
+## 검증 명령
 
-| Command | Purpose | Status |
+| 명령 | 목적 | 상태 |
 | --- | --- | --- |
-| `pnpm test` | Existing regression suite | passed: 34 files, 423 tests |
-| `pnpm docs:build` | Next.js docs build | passed: 24 static routes generated |
-| protected path diff | Ensure no runtime source paths changed | passed: no protected files listed |
+| `pnpm test` | 기존 회귀 테스트 | 통과: 34 files, 423 tests |
+| `pnpm docs:build` | Next.js docs build | 통과: 24 static routes generated |
+| protected path diff | runtime source 변경 여부 확인 | 통과: 보호 경로 변경 없음 |
 
-## Implementation Boundary Result
+## 구현 경계 결과
 
-No implementation edit is made in this restart pass. The current code is only mapped to the package. Any code gap found by later verification should be fixed in a separate implementation commit.
+이번 한글화와 파이프라인 재시작은 문서 산출물 정렬 작업이다. 구현 code gap이 발견되면 별도 구현 커밋으로 분리한다.
 
-## Next Dev Action
+## 다음 dev action
 
-Keep this package active until the user decides whether to perform final archive or continue with follow-up website polish.
+최종 archive를 진행할지, 아니면 웹사이트 route별 세부 gap review를 먼저 진행할지 결정한다.

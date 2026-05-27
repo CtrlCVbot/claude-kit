@@ -1,14 +1,14 @@
 # Stitch Context: user-guide-website
 
-## Integration Context
+## 통합 판단
 
-The current HTML guide and Next.js prototype already provide enough structure for this documentation website. Google Stitch is not used as a generation source in this restart.
+현재 HTML guide와 Next.js prototype만으로 문서 사이트 구조를 판단하기에 충분하다. 이번 재시작에서는 Google Stitch를 생성 도구로 사용하지 않는다.
 
-## Handoff Notes
+## Handoff 메모
 
-| Topic | Handoff |
+| 항목 | 내용 |
 | --- | --- |
-| HTML reference | Keep `docs/user-guide-html/**` as source comparison material |
-| Next implementation | Verify `src/app`, `src/components/docs`, and `src/lib/docs` against package tasks |
-| Runtime tabs | Confirm tab labels and content do not imply unsupported Codex command behavior |
-| Pipeline examples | Link examples back to prompt runbook and execution log |
+| HTML reference | `docs/user-guide-html/**`을 source comparison material로 유지한다. |
+| Next implementation | `src/app`, `src/components/docs`, `src/lib/docs`를 package task 기준으로 검증한다. |
+| Runtime tabs | Codex가 Claude slash command를 직접 지원한다고 오해하게 만들지 않는다. |
+| Pipeline examples | example page는 prompt runbook과 execution log에 연결한다. |
