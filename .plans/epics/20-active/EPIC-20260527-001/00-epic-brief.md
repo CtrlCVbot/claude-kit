@@ -1,49 +1,47 @@
-# EPIC-20260527-001: claude-kit 사용자 가이드 문서 웹사이트화
+# EPIC-20260527-001: claude-kit user-guide website
 
-- **상태**: active
+- **Status**: active
 - **Parent idea**: `IDEA-20260527-001`
-- **시작일**: 2026-05-27
-- **목표 배포**: Vercel Preview 우선
-- **핵심 제약**: `claude-kit` core 기능 비회귀
+- **Created**: 2026-05-27
+- **Prompt source**: `docs/plans/user-guide-website/06-pipeline-prompt-runbook.md#3-p25-plan-epic`
 
-## 목표
+## Goal
 
-`docs/user-guide-html`의 기존 사용자 가이드와 이번 전환 과정을 Next.js 기반 문서 웹사이트로 제공한다.
+Provide a Next.js documentation website for the existing `docs/user-guide-html/**` guide and use the implementation process itself as a visible `claude-kit` pipeline example.
 
-웹사이트는 `claude-kit`의 핵심 기능이 아니라 docs surface다. 따라서 기획, 개발, 검증, 배포 예시는 자세히 보여주되 `src/claude`, `src/codex`, installer, runtime output 같은 핵심 자산은 건드리지 않는다.
+## Why Epic Is Needed
 
-## 성공 기준
+This satisfies the Epic activation criteria:
 
-| 영역 | 성공 기준 |
+| Criterion | Match |
 | --- | --- |
-| 문서 탐색 | 홈, planning index, command 상세, lifecycle, reference, example route가 연결된다. |
-| 콘텐츠 보존 | 기존 HTML 가이드의 핵심 정보가 Next.js 문서 구조에 누락 없이 반영된다. |
-| 예시화 | 이 웹사이트 전환 과정 자체가 `claude-kit` pipeline 예시로 문서화된다. |
-| 안전성 | protected path 변경이 없고, 변경 범위가 docs website surface에 갇힌다. |
-| 검증 | local build, route/link smoke, protected path diff 확인을 통과한다. |
+| 3+ related features | Six child features are required |
+| Cross-cutting requirements | Protected path guard, build safety, content parity, accessibility |
+| Explicit sequencing | Shell before content, content before example polish, build safety before handoff |
 
-## 범위
+## Scope
 
-포함 범위는 Next.js 문서 shell, planning content migration, Claude/Codex runtime 탭과 matrix, pipeline example pages, Preview 검증 준비, 후속 guide sync다.
-
-제외 범위는 Production 배포, 인증/CMS, installer 변경, `src/claude`/`src/codex` 기능 변경, `.claude`/`.agents` runtime output 수정이다.
-
-## 주요 리스크
-
-| 리스크 | 대응 |
+| In scope | Out of scope |
 | --- | --- |
-| 웹사이트 구현이 package publish 범위와 섞임 | package config 영향과 `files` 정책을 별도 검토한다. |
-| HTML 대비 정보 누락 | route coverage와 HTML parity checklist를 만든다. |
-| 예시 페이지가 실제 작업과 불일치 | `execution-log.md`에 단계별 실제 진행 로그를 남긴다. |
-| 의존성 추가로 기존 테스트 영향 | 의존성 변경 커밋을 분리하고 `pnpm test`와 build를 실행한다. |
+| Next.js docs routes | Production Vercel deployment |
+| Planning command detail pages | Core command/agent/skill behavior changes |
+| Pipeline example pages | Installer changes |
+| Build/link/protected-path verification | `src/claude` or `src/codex` runtime changes |
 
-## 마일스톤
+## Success Metrics
 
-| Wave | 목표 | 완료 조건 |
-| --- | --- | --- |
-| Wave 1 | Planning artifacts | idea, screening, epic, feature brief, execution log 생성 |
-| Wave 2 | Docs shell | Next.js shell과 기본 route 구성 |
-| Wave 3 | Content migration | planning 문서 상세 route와 탭형 UI 구성 |
-| Wave 4 | Example docs | pipeline 실행 예시와 산출물 흐름 페이지 추가 |
-| Wave 5 | Safety validation | build/link/protected path 검증과 후속 문서 반영 |
+| Metric | Target |
+| --- | --- |
+| Main docs routes | Home, planning index, command pages, lifecycle, reference, examples |
+| Pipeline traceability | Every stage has a file-backed artifact |
+| Build | `pnpm docs:build` passes |
+| Non-regression | No protected path edits |
 
+## Key Risks
+
+| Risk | Mitigation |
+| --- | --- |
+| Pipeline documentation becomes performative | Require skill, prompt, artifact, verification, review per stage |
+| Website work touches core runtime | Protected path review and diff check |
+| HTML content gets lost | Use HTML inventory and route/source mapping |
+| Next.js build affects package consumers | Keep docs scripts explicit and do not alter postinstall behavior |

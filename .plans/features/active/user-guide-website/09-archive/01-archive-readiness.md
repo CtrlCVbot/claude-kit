@@ -1,37 +1,41 @@
-# A1 `/plan-archive` Readiness: User Guide Website
+# Archive Readiness: user-guide-website
 
-- **Feature**: `user-guide-website`
-- **Status**: not archived
-- **Reason**: 1차 구현은 완료됐지만 content parity와 Vercel Preview safety가 후속 작업으로 남아 있다.
+- **Stage**: A1 `/plan-archive --dry-run`
+- **Skill contract**: `plan-archive-workflow`
+- **Prompt source**: `docs/plans/user-guide-website/06-pipeline-prompt-runbook.md#13-a1-archive-readiness`
 
-## Archive 대상 산출물
+## Decision
 
-| 구분 | 경로 | 상태 |
+Archive is **not finalized** in this restart commit.
+
+Reason: `plan-archive-workflow` expects a final completion/deployment decision. This restart creates archive readiness evidence but keeps the feature active until the user approves final archive.
+
+## Readiness Checklist
+
+| Check | Status | Evidence |
 | --- | --- | --- |
-| Idea | `.plans/ideas/20-approved/IDEA-20260527-001.md` | ready |
-| Screening | `.plans/ideas/10-screening/SCREENING-20260527-001.md` | ready |
-| Epic | `.plans/epics/20-active/EPIC-20260527-001/` | active |
-| Feature run | `.plans/features/active/user-guide-website/` | ready after follow-up |
-| Execution log | `docs/plans/user-guide-website/execution-log.md` | ready |
-| Implementation | `src/app`, `src/components/docs`, `src/lib/docs` | first-pass complete |
-| Implementation docs | `.plans/features/active/user-guide-website/07-dev/03-implementation-source-map.md` ~ `06-commit-history-and-handoff.md` | ready |
+| P1 idea | done | `.plans/ideas/20-approved/IDEA-20260527-001.md` |
+| P2 screening | done | `.plans/ideas/10-screening/SCREENING-20260527-001.md` |
+| P2.5 epic | done | `.plans/epics/20-active/EPIC-20260527-001/**` |
+| P3 draft | done | `.plans/features/active/user-guide-website/01-draft/01-feature-draft.md` |
+| P4 PRD | done | `.plans/prd/10-approved/user-guide-website-prd.md` |
+| P5 wireframe | done | `.plans/wireframes/user-guide-website/**` |
+| P5.5 design | done | `.plans/features/active/user-guide-website/00-context/03-design-checkpoint.md` |
+| P6 stitch | done | `.plans/stitch/user-guide-website/**` |
+| P7 bridge | done | `.plans/bridge/user-guide-website/**` |
+| D1 dev package | done | `.plans/features/active/user-guide-website/02-package/**` |
+| D2 implementation evidence | partial | `.plans/features/active/user-guide-website/03-dev-notes/dev-output-summary.md` |
+| Verification refresh | done | `pnpm test`, `pnpm docs:build`, protected path diff all passed |
+| Final archive move | pending | Requires approval after verification |
 
-## Archive 보류 이유
+## Archive Candidate Paths
 
-| 이유 | 설명 |
+| Source | Candidate archive destination |
 | --- | --- |
-| Content parity | 기존 HTML 상세 표와 failure modes가 아직 요약형으로만 반영됐다. |
-| Preview safety | Vercel Preview 실행/증거가 아직 없다. |
-| Guide sync | `docs/guide`, `docs/meta-tooling`, README 반영 여부가 아직 확정되지 않았다. |
-
-## Archive 전 필요 작업
-
-1. command 상세 페이지의 content parity 보강
-2. Vercel Preview 또는 local preview evidence 정리
-3. guide/meta-tooling/README 반영 여부 결정
-4. Epic children feature 상태 갱신
-5. `/plan-archive EPIC-20260527-001` 실행
-
-## 현재 결론
-
-Archive는 아직 실행하지 않는다. 대신 이번 문서는 archive 준비 상태와 보류 이유를 명확히 남기는 A1 checkpoint로 둔다.
+| `.plans/ideas/**IDEA-20260527-001**` | `.plans/archive/user-guide-website/sources/ideas/` |
+| `.plans/epics/20-active/EPIC-20260527-001/**` | `.plans/archive/user-guide-website/sources/epic/` |
+| `.plans/features/active/user-guide-website/**` | `.plans/archive/user-guide-website/sources/feature/` |
+| `.plans/prd/10-approved/user-guide-website-prd.md` | `.plans/archive/user-guide-website/sources/prd/` |
+| `.plans/wireframes/user-guide-website/**` | `.plans/archive/user-guide-website/sources/wireframes/` |
+| `.plans/stitch/user-guide-website/**` | `.plans/archive/user-guide-website/sources/stitch/` |
+| `.plans/bridge/user-guide-website/**` | `.plans/archive/user-guide-website/sources/bridge/` |

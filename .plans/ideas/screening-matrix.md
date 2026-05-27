@@ -1,6 +1,5 @@
 # Screening Matrix
 
-| ID | 제목 | 상태 | 판정 | 점수 | 등록일 | 메모 |
-| --- | --- | --- | --- | ---: | --- | --- |
-| IDEA-20260527-001 | 사용자 가이드 HTML을 Next.js 문서 웹사이트로 전환 | approved | Go | 84 | 2026-05-27 | Epic 분리 후 Feature 단위 진행 |
-
+| IDEA | Title | Target | Status | Location | Created | Framework | Score | Decision |
+| --- | --- | --- | --- | --- | --- | --- | ---: | --- |
+| IDEA-20260527-001 | Next.js user-guide website for claude-kit docs | docs | screened | `10-screening/SCREENING-20260527-001.md` | 2026-05-27 | rice | 60.0 | Go |

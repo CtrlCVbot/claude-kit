@@ -1,43 +1,73 @@
 # Children Features: EPIC-20260527-001
 
-## Feature 목록
+## Feature Map
 
-| Feature | 우선순위 | 시작 조건 | 권장 시작점 | 완료 기준 |
+| ID | Feature | Purpose | Depends on | Pipeline handling |
 | --- | --- | --- | --- | --- |
-| `docs-shell` | P0 | Epic 승인 | `/plan-draft` | 홈, planning index, docs shell route가 렌더링된다. |
-| `planning-content-migration` | P0 | `docs-shell` 기본 route | `/plan-draft` | 기존 planning HTML 핵심 내용이 route data로 이동한다. |
-| `runtime-tabs-and-matrices` | P1 | content model 확정 | `/plan-prd` | Claude/Codex 탭과 capability matrix가 접근 가능하게 동작한다. |
-| `pipeline-example-pages` | P1 | Epic 산출물 존재 | `/plan-draft` | 웹사이트 구현 과정 예시 route가 제공된다. |
-| `vercel-preview-safety` | P1 | 주요 route 구현 | `/plan-prd` | build, link, protected path, Preview 기준이 문서화되고 검증된다. |
-| `guide-sync` | P2 | 구현 결과 확정 | `/plan-bridge` | `docs/guide`, `docs/meta-tooling`, README 반영 여부가 정리된다. |
+| F1 | `docs-shell` | Layout, navigation, shared docs shell | none | Full planning inside parent package |
+| F2 | `planning-content-migration` | Convert planning pages and command detail pages | F1 | Full planning inside parent package |
+| F3 | `runtime-tabs-and-matrices` | Claude/Codex tabbed views and matrices | F1, F2 | Included as interaction requirement |
+| F4 | `pipeline-example-pages` | Explain this website build as a pipeline example | F1, F2 | Included as content requirement |
+| F5 | `vercel-preview-safety` | Build and preview safety | F1-F4 | Verification and release checklist |
+| F6 | `guide-sync` | Future sync to `docs/guide`, `docs/meta-tooling`, README | F1-F5 | Follow-up handoff |
 
-## 의존성
+## Dependency Matrix
 
-```mermaid
-flowchart TD
-  A["docs-shell"] --> B["planning-content-migration"]
-  A --> C["runtime-tabs-and-matrices"]
-  B --> D["pipeline-example-pages"]
-  C --> D
-  D --> E["vercel-preview-safety"]
-  E --> F["guide-sync"]
-```
+| Feature | F1 | F2 | F3 | F4 | F5 | F6 |
+| --- | --- | --- | --- | --- | --- | --- |
+| F1 `docs-shell` | - | before | before | before | before | before |
+| F2 `planning-content-migration` | after | - | before | before | before | before |
+| F3 `runtime-tabs-and-matrices` | after | after | - | parallel | before | before |
+| F4 `pipeline-example-pages` | after | after | parallel | - | before | before |
+| F5 `vercel-preview-safety` | after | after | after | after | - | before |
+| F6 `guide-sync` | after | after | after | after | after | - |
 
-## Feature별 pipeline 결정
+## Feature Idea Briefs
 
-| Feature | idea/screen | draft | PRD | wireframe | design | stitch | bridge | dev |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| `docs-shell` | full | required | required | required | required | checkpoint | required | required |
-| `planning-content-migration` | full | required | required | optional | required | checkpoint | required | required |
-| `runtime-tabs-and-matrices` | lightweight | optional | required | optional | required | checkpoint | required | required |
-| `pipeline-example-pages` | full | required | required | required | required | checkpoint | required | required |
-| `vercel-preview-safety` | full | optional | required | not needed | applicability | applicability | required | required |
-| `guide-sync` | brief | not needed | optional | not needed | applicability | applicability | required | docs-only |
+### F1 `docs-shell`
 
-## 공통 완료 조건
+- **Problem**: Static HTML pages are hard to navigate and extend.
+- **User value**: Users get a stable landing, sidebar, and page layout.
+- **Scope**: Next.js app shell, navigation model, base styling.
+- **Risk**: Could become a product landing page instead of docs.
+- **Decision**: Full planning inside parent package.
 
-- 각 Feature는 `Feature idea brief`를 가진다.
-- P5.5 `/plan-design`과 P6 `/plan-stitch`는 실제 활용 여부와 관계없이 checkpoint를 남긴다.
-- core protected path 변경은 Feature 범위 밖으로 본다.
-- 각 구현 단위는 review와 commit으로 닫는다.
+### F2 `planning-content-migration`
 
+- **Problem**: Planning pages exist but are not deeply structured as a navigable docs site.
+- **User value**: Each command page can explain inputs, artifacts, and locations.
+- **Scope**: Planning index and command detail pages.
+- **Risk**: Content loss during migration.
+- **Decision**: Full planning inside parent package.
+
+### F3 `runtime-tabs-and-matrices`
+
+- **Problem**: Claude and Codex behavior can be confused.
+- **User value**: Runtime differences are visible without duplicating pages.
+- **Scope**: Tab component, matrices, capability tables.
+- **Risk**: Tabs could hide important limitations.
+- **Decision**: Treat as interaction requirement.
+
+### F4 `pipeline-example-pages`
+
+- **Problem**: Users need to see the pipeline in action, not only read command references.
+- **User value**: The website build becomes a concrete example.
+- **Scope**: Example pages and pipeline artifact explanation.
+- **Risk**: If the pipeline log is weak, example pages become misleading.
+- **Decision**: Require execution log evidence.
+
+### F5 `vercel-preview-safety`
+
+- **Problem**: Adding Next.js can change package/build assumptions.
+- **User value**: Preview is safe and reversible.
+- **Scope**: Build, route smoke, protected path diff, preview handoff.
+- **Risk**: Production deployment too early.
+- **Decision**: Preview-only in this stage.
+
+### F6 `guide-sync`
+
+- **Problem**: Once the website exists, source guide docs may drift.
+- **User value**: Follow-up docs remain aligned.
+- **Scope**: Handoff list only.
+- **Risk**: Scope creep into unrelated docs.
+- **Decision**: Follow-up handoff, not implementation in this run.
