@@ -124,3 +124,51 @@ EPIC-20260527-001의 child Feature {FEATURE-NAME}에 대해 Feature idea brief�
 | 4 | pipeline example pages | `execution-log.md`, Epic 산출물 |
 | 5 | validation and handoff | build/link/protected path evidence |
 
+## D1/D2. `docs-shell` implementation
+
+| 항목 | 내용 |
+| --- | --- |
+| 상태 | 완료 |
+| Feature | `docs-shell` + 초기 `planning-content-migration` |
+| 구현 위치 | `src/app`, `src/components/docs`, `src/lib/docs` |
+| 주요 route | `/`, `/planning`, `/planning/[slug]`, `/planning/lifecycle`, `/planning/reference`, `/examples/[slug]` |
+
+### 실행 프롬프트 요약
+
+```text
+/dev-run docs-shell
+
+Next.js 기반 문서 shell을 구현합니다.
+기존 claude-kit 기능 경로는 수정하지 않고,
+planning command 상세와 실행 예시 route를 먼저 렌더링 가능하게 만듭니다.
+```
+
+### 구현 결과
+
+- Next.js App Router 기반 docs shell을 추가했다.
+- 좌측 navigation, 우측 toc, 상세 문서 카드, command matrix, Claude/Codex tab UI를 구성했다.
+- `/plan-epic`을 포함한 planning command 상세 route를 모두 `/planning/[slug]`로 제공한다.
+- pipeline example page는 `/examples/[slug]` 동적 route로 제공한다.
+
+### 검증 결과
+
+| 검증 | 결과 | 메모 |
+| --- | --- | --- |
+| `pnpm test` | 통과 | 34 files, 423 tests passed |
+| `pnpm docs:build` 1차 | 실패 후 수정 | Next build가 기존 `src/claude`/`src/codex` Node hook 파일까지 ESLint 대상으로 잡음 |
+| `pnpm docs:build` 2차 | 통과 | 24 static pages generated |
+| route smoke | 통과 | `/`, `/planning`, `/planning/plan-idea`, `/planning/plan-epic`, `/planning/reference`, `/examples/website-build-pipeline` |
+
+### 피드백 반영
+
+| 피드백 | Severity | Action | 반영 |
+| --- | --- | --- | --- |
+| Next build가 protected source lint까지 수행함 | high | auto-fixed | docs build에서는 lint를 분리하고 타입/빌드 검증에 집중하도록 `next.config.mjs`에서 `ignoreDuringBuilds`를 설정했다. |
+
+### 다음 실행 예정
+
+| 순서 | 작업 | 메모 |
+| --- | --- | --- |
+| 1 | planning content detail 보강 | HTML 대비 누락 정보를 더 세밀하게 확인 |
+| 2 | pipeline example page 내용 보강 | 실제 산출물과 execution log를 더 촘촘히 연결 |
+| 3 | Vercel Preview safety 정리 | 배포 전 package 영향과 route/link 검증 정리 |

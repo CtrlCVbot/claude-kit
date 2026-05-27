@@ -4,6 +4,9 @@
   "description": "AI 거버넌스 밀키트. TDD 강제 + Hexagonal + Clean Architecture + Rich Domain Model. Claude + Codex 멀티타겟.",
   "scripts": {
     "postinstall": "node scripts/setup.js",
+    "docs:dev": "next dev",
+    "docs:build": "next build",
+    "docs:start": "next start",
     "generate:docs": "node scripts/docs-generate.js",
     "check:docs": "node scripts/docs-generate.js --check",
     "test": "vitest run",
@@ -28,8 +31,15 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@types/node": "^20.0.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
     "@vitest/coverage-v8": "^2.0.0",
     "ajv": "^8.18.0",
+    "next": "^15.1.0",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "typescript": "^5.7.0",
     "vitest": "^2.0.0"
   }
 }
